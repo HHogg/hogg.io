@@ -1,0 +1,14 @@
+/* stylelint-disable */
+
+.LockPickVisual {
+  background-image:
+    linear-gradient(to right,
+      var(--color-background--shade-3) var(--border-size--x1),
+      transparent var(--border-size--x1)),
+    linear-gradient(to bottom,
+      var(--color-background--shade-3)
+      var(--border-size--x1),
+      transparent var(--border-size--x1));
+  background-position: center;
+  background-size: var(--size--x12) var(--size--x12);
+}

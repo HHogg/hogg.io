@@ -1,0 +1,18 @@
+:root {
+  --element-size: 6rem;
+}
+
+.Element:not(.Element--disabled):hover,
+.Element--active {
+  background-color: var(--color-text--shade-1);
+  color: var(--color-background--shade-1);
+  transition-property: background-color, color;
+  transition-duration: var(--transition-time--fast);
+  transition-timing-function: var(--transition-function);
+}
+
+.Element--disabled {
+  border-color: var(--color-text--shade-3);
+  background-color: var(--color-background--shade-3);
+  color: var(--color-text--shade-3);
+}
