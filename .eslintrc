@@ -1,0 +1,4 @@
+{
+  "extends": ["eslint-config-preshape"],
+  "files": "src/**/*.js"
+}

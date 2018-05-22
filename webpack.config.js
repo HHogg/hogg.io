@@ -1,0 +1,46 @@
+const webpack = require('webpack');
+const { resolve } = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const port = process.env.PORT || 4001;
+
+module.exports = {
+  entry: [
+    'react-hot-loader/patch',
+    `webpack-dev-server/client?http://localhost:${port}`,
+    'webpack/hot/only-dev-server',
+    './src/index.js',
+  ],
+  output:  {
+    filename: 'bundle.js',
+    publicPath: '/',
+  },
+  module: {
+    rules: [{
+      test: /\.js$/,
+      use: ['babel-loader'],
+      include: [/src/],
+    }, {
+      test: /\.css$/,
+      use: ['style-loader', 'css-loader', 'postcss-loader'],
+    }, {
+      test: /\.md$/,
+      use: ['raw-loader'],
+    }],
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin(),
+    new HtmlWebpackPlugin({
+      template: './src/index.ejs',
+    }),
+  ],
+  devtool: 'source-map',
+  devServer: {
+    contentBase: resolve(__dirname, 'src'),
+    historyApiFallback: true,
+    host: 'localhost',
+    hot: true,
+    port,
+  },
+};
