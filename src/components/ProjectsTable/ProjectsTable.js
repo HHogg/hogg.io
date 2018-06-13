@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { routeTransitionTime, Appear, Grid, GridItem, Link, Responsive } from 'preshape';
+import { routeTransitionTime, transitionTimeFast, Appear, Grid, GridItem, Link, Responsive } from 'preshape';
 import projectsList from '../Projects/projectsList';
 import Element from '../Element/Element';
 
-const ELEMENT_TRANSITION_STEP = 100;
+const ELEMENT_TRANSITION_STEP = transitionTimeFast / 2;
 
 const widthSmall = '22rem';
 const widthMedium = '42rem';
+
+export const projectTableTransitionTime = routeTransitionTime + (ELEMENT_TRANSITION_STEP * projectsList.length);
 
 export default class ProjectsTable extends Component {
   render() {
