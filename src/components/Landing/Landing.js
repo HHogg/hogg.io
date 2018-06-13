@@ -76,9 +76,8 @@ export default class Landing extends Component {
                   like astronomy, maths, science, quirky history, anything futurology
                   but I frequently dip into my creative side with some design.</Text>
 
-                <Text margin="x3">I studied at <Link href="http://www.open.ac.uk/">The Open
-                  University</Link> where I received my BSc Computing and Design
-                  Honours degree.</Text>
+                <Text margin="x3">I studied at The Open University where I received my BSc
+                  Computing and Design Honours degree.</Text>
 
                 <Text margin="x3">When I'm not stringing characters together, I'm
                   a less than stable climbing frame for my two daughters.</Text>
