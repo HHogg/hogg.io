@@ -26,6 +26,12 @@ export default class LightRayVisual extends Component {
   componentDidMount() {
     const { height, width } = this.props;
 
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+
+    document.addEventListener('mousedown', this.handleMouseDown);
+    document.addEventListener('mouseup', this.handleMouseUp);
+
     this.lightX = width / 2;
     this.lightY = height / 2;
 
@@ -44,6 +50,11 @@ export default class LightRayVisual extends Component {
     });
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.handleMouseDown);
+    document.removeEventListener('mouseup', this.handleMouseUp);
+  }
+
   componentDidUpdate(prevProps) {
     const { height, shapeCount, shapeSize, theme, width } = this.props;
 
@@ -59,7 +70,6 @@ export default class LightRayVisual extends Component {
 
   handleMouseDown(e) {
     this.isMouseDown = true;
-    this.handleMouseMove(e);
   }
 
   handleMouseUp() {
@@ -68,19 +78,17 @@ export default class LightRayVisual extends Component {
 
   handleMouseMove(e) {
     if (this.isMouseDown && this.props.moveLightSource) {
-      this.lightX = e.clientX - this.containerX;
-      this.lightY = e.clientY - this.containerY;
+      const { left, top } = e.target.getBoundingClientRect();
+
+      this.lightX = e.clientX - left;
+      this.lightY = e.clientY - top;
     }
   }
 
   setCanvasSize(width, height) {
-    const { top, left } = this.container.getBoundingClientRect();
-
     this.two.renderer.setSize(width, height);
     this.two.width = this.two.renderer.width;
     this.two.height = this.two.renderer.height;
-    this.containerY = top;
-    this.containerX = left;
   }
 
   drawLight(force) {
@@ -170,9 +178,8 @@ export default class LightRayVisual extends Component {
           absolute="fullscreen"
           animation="Fade"
           backgroundColor="shade-3"
-          onMouseDown={ (e) => this.handleMouseDown(e) }
+          onMouseDown={ (e) => this.handleMouseMove(e) }
           onMouseMove={ (e) => this.handleMouseMove(e) }
-          onMouseUp={ (e) => this.handleMouseUp(e) }
           ref={ (container) => this.container = findDOMNode(container) }
           theme="night"
           time="slow" />
