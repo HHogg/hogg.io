@@ -2,6 +2,11 @@ language: node_js
 cache: yarn
 branches:
   only:
-    - master
+  - master
 before_deploy:
-  - yarn build
+- yarn build
+deploy:
+  provider: firebase
+  skip_cleanup: true
+  token:
+    secure: ZSBfO4OwSP4wJccv4Tqd8sM1TSKH/yQFpoVou1aujJAiaEj6LjeO/bSXaC1eUN9/XgdEOlZ8n5zcCrp+/43YyF/BAyBgKnUJAjuWa65VgNmfE9H2wgojGF/TLoYFGliHy0E9jihNVNOAJDzs0Pw7XY+uzk/syfT4B3N3QqnbkL7txPudkVc69eVKs8NiAtE7d0a6Md7J//KFBQSCm1fAbIxknHPiJEN3bX55xRwsCxCoZU8mP2mPm5zGaH2AeCZJKZZNhPbS3MpW/TORjr0zPXGsjqyDuiJX6Ng+zbG2hnvB56UmuANoidZ9eyGUcNTSqmVqxav+XEMwbK+V4tbu8sUT9+UpYILcX89JBQhGfe6eBrwuwWaYvO7SEI8NNKBEnYIbsac74nroJRPHtGRl1lkdZI+dwxupZIl4jd7FemwqgmypuM5QpU+tIB7nxTwEV17ygZSH+k5jiKOlQ/hlVvq7+dEZ9yXV7Jkb31rF7UoOKLVt3OFORN0e4YVR4v16HjzoE1yTsI5O3pWOcH+PmuYl/vWOr4Z+zfC7rSw6354bCWGxrrocrXIS3/jO3H+FveuuOt/O5QOAPoKTO8xyWCaEDIfbbC1or3Y21ai7b/PrJtgKgRCGIfkvwK56x52u5VH/JHtCEJuJ8HhP8crCBsYSfbpFruZd7MLrjttL4ZU=
