@@ -11,7 +11,7 @@ import {
   ListItem,
   Text,
 } from 'preshape';
-import ProjectsTable from '../ProjectsTable/ProjectsTable';
+import ProjectsTable, { projectTableTransitionTime } from '../ProjectsTable/ProjectsTable';
 
 export default class Landing extends Component {
   static propTypes = {
@@ -63,7 +63,7 @@ export default class Landing extends Component {
             <ProjectsTable history={ history } />
           </Base>
 
-          <Appear delay={ transitionTimeFast * 3 } margin="x16">
+          <Appear delay={ projectTableTransitionTime } margin="x16">
             <Flex direction="horizontal">
               <Flex grow initial="none">
                 <Text margin="x3" size="heading" strong>About Me</Text>
