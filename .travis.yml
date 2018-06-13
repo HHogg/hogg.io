@@ -3,9 +3,5 @@ cache: yarn
 branches:
   only:
     - master
-deploy:
-  provider: firebase
-  token:
-    secure: "TOKEN"
 before_deploy:
   - yarn build

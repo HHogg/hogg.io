@@ -7,7 +7,8 @@
     "lint:css": "stylelint site/**/*.css src/**/*.css",
     "lint:js": "eslint site/**/*.js src/**/*.js",
     "lint": "yarn lint:js && yarn lint:css",
-    "start": "NODE_ENV=development BABEL_ENV=development webpack-dev-server"
+    "start": "NODE_ENV=development BABEL_ENV=development webpack-dev-server",
+    "test": "echo true"
   },
   "dependencies": {
     "@tweenjs/tween.js": "^17.2.0",
