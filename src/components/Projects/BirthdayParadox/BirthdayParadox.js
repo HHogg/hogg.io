@@ -55,6 +55,10 @@ export default class BirthdayParadox extends Component {
     this.runSimulation();
   }
 
+  componentWillUnmount() {
+    this.worker.terminate();
+  }
+
   runSimulation() {
     this.setState({
       data: [],
