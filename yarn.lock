@@ -5557,9 +5557,9 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-preshape@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/preshape/-/preshape-1.0.0.tgz#32d5e72dc6af09e0fa3bf0a0e5c0b21aae3cf4a3"
+preshape@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/preshape/-/preshape-1.0.1.tgz#3587e0b1c27cdaada30abf8b10da0cb13d69d6df"
   dependencies:
     classnames "^2.2.5"
     lodash.debounce "^4.0.8"
@@ -6956,9 +6956,9 @@ svgo@^0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
-sysplot@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/sysplot/-/sysplot-1.0.0.tgz#ae3ed06baea4478255ec8fe2ceb3672ccfc54ce5"
+sysplot@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/sysplot/-/sysplot-1.0.1.tgz#69b2bde35301fd8fe9907a4509f32992375f79ee"
   dependencies:
     sat "^0.7.0"
 
