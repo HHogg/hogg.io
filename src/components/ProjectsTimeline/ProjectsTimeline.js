@@ -42,11 +42,7 @@ export default class ProjectsTimeline extends Component {
                       <ProjectDescription code={ code } />
 
                       <Text margin="x3">
-                        <Markdown>{ timeline.summary }</Markdown>
-                      </Text>
-
-                      <Text margin="x2">
-                        <Markdown>{ timeline.description }</Markdown>
+                        <Markdown>{ timeline }</Markdown>
                       </Text>
                     </TimelineItemDescription>
                   </TimelineItem>

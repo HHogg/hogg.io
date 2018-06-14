@@ -1,183 +1,130 @@
-export default [{
+const BirthdayParadox = {
   code: 'Bi',
-  context: 'personal',
-  description: 'Experiment to visualise the [Birthday Paradox](https://en.wikipedia.org/wiki/Birthday_problem).',
   name: 'Birthday Paradox',
-  labels: [
-    'javascript',
-    'statistics',
-  ],
   to: '/projects/birthday-paradox',
-  type: 'experiment',
+  labels: ['javascript', 'web worker', 'recharts', 'data'],
+  description: 'Experiment to visualise the [Birthday Paradox](https://en.wikipedia.org/wiki/Birthday_problem).',
   year: 2018,
-  x: 5,
-  y: 1,
-}, {
+};
+
+const Brandwatch = {
   code: 'Br',
-  context: 'professional',
-  description: '**Javascript Developer** - Brandwatch audience insights and targeted marketing',
   name: 'Brandwatch',
-  labels: [
-    'javascript',
-    'nodejs',
-    'css',
-    'react',
-    'redux',
-  ],
-  link: 'https://www.brandwatch.com/',
-  timeline: {
-    description: 'My time at Brandwatch is spent building the frontend to the [Audiences](https://brandwatch.com/audiences) product, leading the development of [Axiom](https://axiom.brandwatch.com) (the company\'s Pattern Library and Design System) and helping out with various development projects.',
-    summary: '[Brandwatch](https://brandwatch.com) is a social media monitoring platform. They provide tools to monitor, analyse and engage with conversations across the internet.',
-  },
   to: '/timeline/#Br',
-  type: 'application',
+  labels: ['javascript', 'nodejs', 'css', 'react', 'redux'],
+  description: '**Javascript Developer** - Brandwatch audience insights and targeted marketing',
+  timeline: `[Brandwatch](https://brandwatch.com) is a social media monitoring platform. They provide tools to monitor, analyse and engage with conversations across the internet.
+
+  My time at Brandwatch is spent building the frontend to the [Audiences](https://brandwatch.com/audiences) product, leading the development of [Axiom](https://axiom.brandwatch.com) (the company's Pattern Library and Design System) and helping out with various development projects.`,
   year: 2015,
-  x: 1,
-  y: 3,
-}, {
+};
+
+const Erebus = {
   code: 'Er',
-  context: 'personal',
+  name: 'Erebus',
+  to: '',
+  labels: [],
   description: '',
   disabled: true,
-  name: 'Erebus',
-  to: '/projects/erebus',
-  type: 'game',
-  year: 2018,
-  x: 4,
-  y: 3,
-}, {
+};
+
+const LockPick = {
   code: 'Lp',
-  context: 'personal',
-  description: 'Experiment to create a Fallout style lock picking simulator.',
   name: 'Lock Pick',
   to: '/projects/lock-pick',
-  type: 'experiment',
+  labels: ['javascript', 'two.js'],
+  description: 'Experiment to create a Fallout style lock picking simulator.',
   year: 2018,
-  x: 5,
-  y: 3,
-}, {
+};
+
+const LightRay = {
   code: 'Lr',
-  context: 'personal',
-  description: 'Experiment to explore shape intersections to replicate light rays and shadow effects.',
-  labels: [
-    'javascript',
-  ],
   name: 'Light Ray',
   to: '/projects/light-ray',
-  type: 'experiment',
-  year: 2018,
-  x: 5,
-  y: 2,
-}, {
-  code: 'Pr',
-  context: 'personal',
-  description: 'A super simple design system and library of composable React components to rapidly build UIs.',
-  github: 'https://github.com/HHogg/preshape',
-  href: 'https://preshape.hogg.io',
-  labels: [
-    'javascript',
-    'react',
-    'css',
-    'design system',
-    'pattern library',
-  ],
-  link: 'https://preshape.hogg.io',
-  name: 'Preshape',
-  type: 'library',
+  labels: ['javascript', 'geometry'],
+  description: 'Experiment to explore shape intersections to replicate light rays and shadow effects.',
   year: 2017,
-  x: 3,
-  y: 3,
-}, {
+};
+
+const Preshape = {
+  code: 'Pr',
+  name: 'Preshape',
+  href: 'https://preshape.hogg.io',
+};
+
+const Pure360 = {
   code: 'Pu',
-  context: 'professional',
-  description: '**UI Developer** - Email & SMS marketing provider',
-  labels: [
-    'javascript',
-    'nodejs',
-    'scala',
-    'angular',
-    'less',
-  ],
-  link: 'https://www.pure360.com/',
   name: 'Pure360',
-  timeline: {
-    description: 'My time at Pure360 as a UI Developer was primarily focused on building the UI to their Drag and Drop email creation tool and helped build the platform for campaign management and tracking.',
-    summary: '[Pure360](https://pure360.com/) is an Email Service Provider (ESP) offering a Software-as-a-service platform that allows businesses to manage their subscribers, create emails and track campaigns.',
-  },
   to: '/timeline',
-  type: 'application',
+  labels: ['javascript', 'nodejs', 'scala', 'angular', 'less'],
+  description: '**UI Developer** - Email & SMS marketing provider',
+  timeline: `[Pure360](https://pure360.com/) is an Email Service Provider (ESP) offering a Software-as-a-service platform that allows businesses to manage their subscribers, create emails and track campaigns.
+
+  My time at Pure360 as a UI Developer was primarily focused on building the UI to their Drag and Drop email creation tool and helped build the platform for campaign management and tracking.`,
   year: 2014,
-  x: 1,
-  y: 1,
-}, {
+};
+
+const Reedsy = {
   code: 'Re',
-  context: 'professional',
-  description: '**Senior Developer** - Self publishing platform',
-  labels: [
-    'javascript',
-    'nodejs',
-    'ruby',
-    'angular',
-    'sass',
-  ],
-  link: 'https://reedsy.com/',
   name: 'Reedsy',
-  timeline: {
-    description: 'My time at Reedsy was spent building the marketplace to connect book publishing professionals, the collaborative book editing application (harnessing the [Operational Transformation](https://operational-transformation.github.io/) technology), and the Pattern Library to implement the design system across these two application.',
-    summary: '[Reedsy](https://reedsy.com) is a curated marketplace for self publishing authors. They provide a platform to handle connections, communication and payments between authors and professionals, and a suite of tools to write and publish books.',
-  },
   to: '/timeline/#Re',
-  type: 'application',
+  labels: ['javascript', 'nodejs', 'ruby', 'angular', 'sass'],
+  description: '**Senior Developer** - Self publishing platform',
+  timeline: `[Reedsy](https://reedsy.com) is a curated marketplace for self publishing authors. They provide a platform to handle connections, communication and payments between authors and professionals, and a suite of tools to write and publish books.
+
+  My time at Reedsy was spent building the marketplace to connect book publishing professionals, the collaborative book editing application (harnessing the [Operational Transformation](https://operational-transformation.github.io/) technology), and the Pattern Library to implement the design system across these two application.`,
   year: 2015,
-  x: 1,
-  y: 2,
-}, {
+};
+
+const RemarkableReact = {
   code: 'Rm',
-  context: 'personal',
-  description: 'A React renderer for the [remarkable](https://jonschlinkert.github.io/remarkable/demo/) markdown parsing library.',
-  github: 'https://github.com/HHogg/remarkable-react',
-  labels: ['react', 'javascript'],
   name: 'Remarkable React',
   to: '/projects/remarkable-react',
-  type: 'library',
+  labels: ['react', 'javascript', 'library'],
+  github: 'https://github.com/HHogg/remarkable-react',
+  description: 'A React renderer for the [remarkable](https://jonschlinkert.github.io/remarkable/demo/) markdown parsing library.',
   year: 2016,
-  x: 2,
-  y: 3,
-}, {
+};
+
+const SysPlot = {
   code: 'Sp',
-  context: 'personal',
-  description: 'A library that systematically generates a plane for plotting shapes, with a variety of algorithms to choose from.',
-  github: 'https://github.com/HHogg/sysplot',
-  labels: [
-    'javascript',
-  ],
   name: 'SysPlot',
   to: '/projects/sysplot',
-  type: 'library',
+  labels: ['javascript', 'library'],
+  github: 'https://github.com/HHogg/sysplot',
+  description: 'A library that systematically generates a plane for plotting shapes, with a variety of algorithms to choose from.',
   year: 2018,
-  x: 2,
-  y: 2,
-}, {
+};
+
+const SnakeHeuristics = {
   code: 'Sn',
-  context: 'personal',
-  description: 'A game of pathfinding',
-  github: 'https://github.com/HHogg/snake-heuristics',
-  href: 'https://snake.hogg.io',
-  labels: [
-    'javascript',
-    'nodejs',
-    'react',
-    'css',
-    'cloud functions',
-    { label: 'pwa', title: 'Progressive Web App' },
-    { label: 'firestore', title: 'Firebase Firestore' },
-  ],
-  link: 'https://snake.hogg.io',
   name: 'Snake Heuristics',
-  type: 'talk',
-  year: 2017,
-  x: 4,
-  y: 2,
+  href: 'https://snake.hogg.io',
+};
+
+
+export default [{
+  ...Pure360, x: 1, y: 1,
+}, {
+  ...Reedsy, x: 1, y: 2,
+}, {
+  ...Brandwatch, x: 1, y: 3,
+}, {
+  ...SysPlot, x: 2, y: 2,
+}, {
+  ...RemarkableReact, x: 2, y: 3,
+}, {
+  ...Preshape, x: 3, y: 3,
+}, {
+  ...SnakeHeuristics, x: 4, y: 2,
+}, {
+  ...Erebus, x: 4, y: 3,
+}, {
+  ...LightRay, x: 5, y: 1,
+}, {
+  ...BirthdayParadox, x: 5, y: 2,
+}, {
+  ...LockPick, x: 5, y: 3,
 }]
 
 .sort((a, b) => a.y - b.y || a.x - b.x)
