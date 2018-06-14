@@ -13,6 +13,16 @@ const toLines = ({ vertices }) =>
       : [vertices[0].x, vertices[0].y],
   ]);
 
+const moveEvent = (event) => event.touches ? ({
+  clientX: event.touches[0].clientX,
+  clientY: event.touches[0].clientY,
+  target: event.target,
+}) : ({
+  clientX: event.clientX,
+  clientY: event.clientY,
+  target: event.target,
+});
+
 export default class LightRayVisual extends Component {
   static propTypes = {
     height: PropTypes.number.isRequired,
@@ -28,9 +38,13 @@ export default class LightRayVisual extends Component {
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
 
     document.addEventListener('mousedown', this.handleMouseDown);
     document.addEventListener('mouseup', this.handleMouseUp);
+    document.addEventListener('touchend', this.handleMouseUp);
+    document.body.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+    document.addEventListener('touchstart', this.handleMouseDown);
 
     this.lightX = width / 2;
     this.lightY = height / 2;
@@ -53,6 +67,9 @@ export default class LightRayVisual extends Component {
   componentWillUnmount() {
     document.removeEventListener('mousedown', this.handleMouseDown);
     document.removeEventListener('mouseup', this.handleMouseUp);
+    document.removeEventListener('touchend', this.handleMouseUp);
+    document.body.removeEventListener('touchmove', this.handleTouchMove);
+    document.removeEventListener('touchstart', this.handleMouseDown);
   }
 
   componentDidUpdate(prevProps) {
@@ -68,7 +85,7 @@ export default class LightRayVisual extends Component {
     }
   }
 
-  handleMouseDown(e) {
+  handleMouseDown() {
     this.isMouseDown = true;
   }
 
@@ -76,12 +93,18 @@ export default class LightRayVisual extends Component {
     this.isMouseDown = false;
   }
 
-  handleMouseMove(e) {
+  handleMouseMove({ clientX, clientY, target }) {
     if (this.isMouseDown && this.props.moveLightSource) {
-      const { left, top } = e.target.getBoundingClientRect();
+      const { left, top } = target.getBoundingClientRect();
 
-      this.lightX = e.clientX - left;
-      this.lightY = e.clientY - top;
+      this.lightX = clientX - left;
+      this.lightY = clientY - top;
+    }
+  }
+
+  handleTouchMove(event) {
+    if (event.target === this.two.renderer.domElement) {
+      event.preventDefault();
     }
   }
 
@@ -178,8 +201,10 @@ export default class LightRayVisual extends Component {
           absolute="fullscreen"
           animation="Fade"
           backgroundColor="shade-3"
-          onMouseDown={ (e) => this.handleMouseMove(e) }
-          onMouseMove={ (e) => this.handleMouseMove(e) }
+          onMouseDown={ (e) => this.handleMouseMove(moveEvent(e)) }
+          onMouseMove={ (e) => this.handleMouseMove(moveEvent(e)) }
+          onTouchMove={ (e) => this.handleMouseMove(moveEvent(e)) }
+          onTouchStart={ (e) => this.handleMouseMove(moveEvent(e)) }
           ref={ (container) => this.container = findDOMNode(container) }
           theme="night"
           time="slow" />
