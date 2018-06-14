@@ -25,12 +25,13 @@ export default class Root extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      visited: false,
       theme: 'day',
     };
   }
 
   render() {
-    const { theme } = this.state;
+    const { theme, visited } = this.state;
 
     return (
       <Application
@@ -61,7 +62,11 @@ export default class Root extends Component {
             Component={ Flex }
             direction="vertical"
             grow>
-          <Route component={ Landing } exact path="/" />
+          <Route exact path="/" render={ () =>
+            <Landing
+                onLand={ () => this.setState({ visited: true }) }
+                visited={ visited } />
+          } />
           <Route component={ ProjectsTimeline } exact path="/timeline" />
 
           { projectsList
