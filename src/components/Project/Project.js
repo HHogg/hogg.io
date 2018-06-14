@@ -10,7 +10,6 @@ import { widthSmall, widthMedium } from '../Root';
 import BackToProjects from './BackToProjects';
 import Element from '../Element/Element';
 import ProjectDescription from './ProjectDescription';
-import ProjectLinks from './ProjectLinks';
 
 export default class Project extends Component {
   static propTypes = {
@@ -20,8 +19,7 @@ export default class Project extends Component {
 
   render() {
     const { children, code } = this.props;
-    const { github, link, name, number } = projectsMap[code];
-    const hasLinks = !!(github || link);
+    const { name, number } = projectsMap[code];
 
     return (
       <Flex
@@ -46,12 +44,6 @@ export default class Project extends Component {
                   { match(widthSmall) && (
                     <Flex grow shrink>
                       <ProjectDescription code={ code } />
-                    </Flex>
-                  ) }
-
-                  { hasLinks && (
-                    <Flex>
-                      <ProjectLinks code={ code } />
                     </Flex>
                   ) }
                 </Flex>

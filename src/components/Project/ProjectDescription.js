@@ -11,6 +11,7 @@ export default class ProjectDescription extends Component {
   render() {
     const {
       description,
+      github,
       labels,
       name,
       year,
@@ -23,7 +24,7 @@ export default class ProjectDescription extends Component {
         </Text>
 
         <Text color="shade-3">
-          <Markdown>{ description }</Markdown>
+          <Markdown>{ `${description} ${ github ? `[[${github}](${github})]` : ''}` }</Markdown>
         </Text>
 
         <Labels margin="x2">
