@@ -3,6 +3,8 @@ cache: yarn
 branches:
   only:
   - master
+script:
+- yarn lint
 before_deploy:
 - yarn build
 deploy:
