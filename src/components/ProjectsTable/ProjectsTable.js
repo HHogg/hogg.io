@@ -1,5 +1,13 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { routeTransitionTime, transitionTimeFast, Appear, Grid, GridItem, Link, Responsive } from 'preshape';
+import {
+  transitionTimeFast,
+  Appear,
+  Grid,
+  GridItem,
+  Link,
+  Responsive,
+} from 'preshape';
 import projectsList from '../Projects/projectsList';
 import Element from '../Element/Element';
 
@@ -8,10 +16,16 @@ const ELEMENT_TRANSITION_STEP = transitionTimeFast / 2;
 const widthSmall = '22rem';
 const widthMedium = '42rem';
 
-export const projectTableTransitionTime = routeTransitionTime + (ELEMENT_TRANSITION_STEP * projectsList.length);
+export const projectTableTransitionTime = ELEMENT_TRANSITION_STEP * projectsList.length;
 
 export default class ProjectsTable extends Component {
+  static propTypes = {
+    delay: PropTypes.number.isRequired,
+  };
+
   render() {
+    const { delay } = this.props;
+
     return (
       <Responsive queries={ [widthSmall, widthMedium] }>
         { (match) => (
@@ -25,7 +39,7 @@ export default class ProjectsTable extends Component {
                   key={ code }
                   row={ match(widthMedium) ? y : null }>
                 <Appear
-                    delay={ routeTransitionTime + (ELEMENT_TRANSITION_STEP * index) }>
+                    delay={ delay ? delay + (ELEMENT_TRANSITION_STEP * index) : (25 * index) }>
                   <Link
                       href={ disabled ? null : href }
                       to={ disabled ? null : to }

@@ -15,11 +15,24 @@ import ProjectsTable, { projectTableTransitionTime } from '../ProjectsTable/Proj
 
 export default class Landing extends Component {
   static propTypes = {
-    history: PropTypes.object.isRequired,
+    onLand: PropTypes.func.isRequired,
+    visited: PropTypes.bool.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      delay: !props.visited,
+    };
+  }
+
+  componentDidMount() {
+    this.props.onLand();
+  }
+
+
   render() {
-    const { history } = this.props;
+    const { delay } = this.state;
 
     return (
       <Flex
@@ -41,7 +54,7 @@ export default class Landing extends Component {
 
               <Appear
                   Component={ Text }
-                  delay={ transitionTimeFast * 1 }
+                  delay={ delay ? transitionTimeFast * 1 : 0 }
                   margin="x2"
                   size="title"
                   strong>
@@ -50,7 +63,7 @@ export default class Landing extends Component {
 
               <Appear
                   Component={ Text }
-                  delay={ transitionTimeFast * 2 }
+                  delay={ delay ? transitionTimeFast * 2 : 0 }
                   margin="x4"
                   size="heading">
                 Here's a collection of my professional experience and personal
@@ -60,10 +73,10 @@ export default class Landing extends Component {
           </Flex>
 
           <Base margin="x16">
-            <ProjectsTable history={ history } />
+            <ProjectsTable delay={ delay ? transitionTimeFast * 3 : 0 } />
           </Base>
 
-          <Appear delay={ projectTableTransitionTime } margin="x16">
+          <Appear delay={ delay ? (transitionTimeFast * 3) + projectTableTransitionTime : 0 } margin="x16">
             <Flex direction="horizontal">
               <Flex grow initial="none">
                 <Text margin="x3" size="heading" strong>About Me</Text>
