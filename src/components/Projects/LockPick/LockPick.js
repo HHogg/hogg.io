@@ -3,6 +3,7 @@ import { Appear, Bounds, Buttons, Button, Flex, Responsive, Text } from 'preshap
 import { widthSmall, widthMedium } from '../../Root';
 import LockPickControls from './LockPickControls';
 import LockPickVisual from './LockPickVisual';
+import Project from '../../Project/Project';
 
 export default class LockPick extends Component {
   constructor(props) {
@@ -55,78 +56,77 @@ export default class LockPick extends Component {
     const {
       bobbyPins,
       debug,
-      height,
       level,
-      width,
     } = this.state;
 
     return (
-      <Responsive queries={ [widthSmall] }>
-        { (match) => (
-          <Flex
-              direction={ match(widthSmall) ? 'horizontal' : 'vertical' }
-              grow
-              gutter="x8"
-              maxWidth={ widthMedium }>
+      <Project { ...this.props } maxWidth={ widthMedium }>
+        <Responsive queries={ [widthSmall] }>
+          { (match) => (
             <Flex
-                backgroundColor="shade-1"
-                color
-                container
+                direction={ match(widthSmall) ? 'horizontal' : 'vertical' }
                 grow
-                initial={ match(widthSmall) ? 'none' : null }
-                minHeight="35rem"
-                padding="x4"
-                theme="night">
+                gutter="x8">
+              <Flex
+                  backgroundColor="shade-1"
+                  color
+                  container
+                  grow
+                  initial={ match(widthSmall) ? 'none' : null }
+                  minHeight="35rem"
+                  padding="x4"
+                  theme="night">
 
-              { bobbyPins ? (
-                <Appear
-                    Component={ Bounds }
-                    absolute="fullscreen"
-                    animation="Fade"
-                    borderColor="shade-3"
-                    borderSize="x1">
-                  { ({ width, height }) => (
-                    width && height && (
-                      <LockPickVisual
-                          bobbyPins={ bobbyPins }
-                          debug={ debug }
-                          height={ height }
-                          level={ level }
-                          onFailedPick={ () => this.handleFailedPick() }
-                          onSuccessfulPick={ () => this.handleSuccessfulPick() }
-                          width={ width } />
-                    )
-                  ) }
-                </Appear>
-              ) : (
-                <Appear
-                    Component={ Flex }
-                    absolute="fullscreen"
-                    alignChildren="middle"
-                    animation="Fade"
-                    direction="horizontal">
-                  <Text>
-                    <Text size="heading">Game Over</Text>
-                    <Text>You're out of Bobby Pins.</Text>
-                    <Buttons margin="x4">
-                      <Button onClick={ () => this.resetGame() }>
-                        Start again
-                      </Button>
-                    </Buttons>
-                  </Text>
-                </Appear>
-              ) }
-            </Flex>
+                { bobbyPins ? (
+                  <Appear
+                      Component={ Bounds }
+                      absolute="fullscreen"
+                      animation="Fade"
+                      borderColor="shade-3"
+                      borderSize="x1">
+                    { ({ width, height }) => (
+                      width && height && (
+                        <LockPickVisual
+                            bobbyPins={ bobbyPins }
+                            debug={ debug }
+                            height={ height }
+                            level={ level }
+                            onFailedPick={ () => this.handleFailedPick() }
+                            onSuccessfulPick={ () => this.handleSuccessfulPick() }
+                            width={ width } />
+                      )
+                    ) }
+                  </Appear>
+                ) : (
+                  <Appear
+                      Component={ Flex }
+                      absolute="fullscreen"
+                      alignChildren="middle"
+                      animation="Fade"
+                      direction="horizontal">
+                    <Text>
+                      <Text size="heading">Game Over</Text>
+                      <Text>You're out of Bobby Pins.</Text>
+                      <Buttons margin="x4">
+                        <Button onClick={ () => this.resetGame() }>
+                          Start again
+                        </Button>
+                      </Buttons>
+                    </Text>
+                  </Appear>
+                ) }
+              </Flex>
 
-            <Flex>
-              <LockPickControls
-                  config={ this.state }
-                  onConfigChange={ (config) => this.setState(config) }
-                  stats={ [['Level', level], ['Bobby Pins', bobbyPins]] } />
+              <Flex>
+                <LockPickControls
+                    config={ this.state }
+                    onConfigChange={ (config) => this.setState(config) }
+                    stats={ [['Level', level], ['Bobby Pins', bobbyPins]] } />
+              </Flex>
             </Flex>
-          </Flex>
-        ) }
-      </Responsive>
+          ) }
+        </Responsive>
+      </Project>
     );
   }
 }

@@ -8,7 +8,6 @@ import {
 } from 'preshape';
 import { widthSmall } from '../Root';
 import projectsList from '../Projects/projectsList';
-import BackToProjects from '../Project/BackToProjects';
 import Element from '../Element/Element';
 import ProjectDescription from '../Project/ProjectDescription';
 import Timeline from './Timeline';
@@ -51,8 +50,6 @@ export default class ProjectsTimeline extends Component {
             </Timeline>
           ) }
         </Responsive>
-
-        <BackToProjects />
       </Base>
     );
   }

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Base,
   Bounds,
   Flex,
   Icon,
@@ -13,6 +12,7 @@ import { widthSmall, widthMedium } from '../../Root';
 import BirthdayParadoxControls from './BirthdayParadoxControls';
 import BirthdayParadoxTable from './BirthdayParadoxTable';
 import BirthdayParadoxVisual from './BirthdayParadoxVisual';
+import Project from '../../Project/Project';
 
 export default class BirthdayParadox extends Component {
   constructor(props) {
@@ -86,7 +86,7 @@ export default class BirthdayParadox extends Component {
     } = this.state;
 
     return (
-      <Base maxWidth={ widthMedium }>
+      <Project { ...this.props } maxWidth={ widthMedium }>
         <Responsive queries={ [widthSmall] }>
           { (match) => (
             <Flex
@@ -157,7 +157,7 @@ export default class BirthdayParadox extends Component {
               data={ data }
               simulations={ lastSimulations } />
         ) }
-      </Base>
+      </Project>
     );
   }
 }

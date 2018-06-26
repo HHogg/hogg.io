@@ -27,12 +27,14 @@ export default class ProjectDescription extends Component {
           <Markdown>{ `${description} ${ github ? `[[${github}](${github})]` : ''}` }</Markdown>
         </Text>
 
-        <Labels margin="x2">
-          { labels && labels.map((label) => typeof label === 'string'
-              ? <Label key={ label }>{ label }</Label>
-              : <Label key={ label.label } title={ label.title }>{ label.label }</Label>
-          ) }
-        </Labels>
+        { labels && (
+          <Labels margin="x2">
+            { labels.map((label) => typeof label === 'string'
+                ? <Label key={ label }>{ label }</Label>
+                : <Label key={ label.label } title={ label.title }>{ label.label }</Label>
+            ) }
+          </Labels>
+        ) }
       </Fragment>
     );
   }

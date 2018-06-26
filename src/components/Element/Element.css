@@ -1,7 +1,3 @@
-:root {
-  --element-size: 6rem;
-}
-
 .Element:not(.Element--disabled):hover,
 .Element--active {
   background-color: var(--color-text--shade-1);

@@ -2,7 +2,6 @@ const BirthdayParadox = {
   code: 'Bi',
   name: 'Birthday Paradox',
   to: '/projects/birthday-paradox',
-  labels: ['javascript', 'web worker', 'recharts', 'data'],
   description: 'Experiment to visualise the [Birthday Paradox](https://en.wikipedia.org/wiki/Birthday_problem).',
   year: 2018,
 };
@@ -32,7 +31,6 @@ const LockPick = {
   code: 'Lp',
   name: 'Lock Pick',
   to: '/projects/lock-pick',
-  labels: ['javascript', 'two.js'],
   description: 'Experiment to create a Fallout style lock picking simulator.',
   year: 2018,
 };
@@ -41,7 +39,6 @@ const LightRay = {
   code: 'Lr',
   name: 'Light Ray',
   to: '/projects/light-ray',
-  labels: ['javascript', 'geometry'],
   description: 'Experiment to explore shape intersections to replicate light rays and shadow effects.',
   year: 2017,
 };
@@ -80,7 +77,6 @@ const RemarkableReact = {
   code: 'Rm',
   name: 'Remarkable React',
   to: '/projects/remarkable-react',
-  labels: ['react', 'javascript', 'library'],
   github: 'https://github.com/HHogg/remarkable-react',
   description: 'A React renderer for the [remarkable](https://jonschlinkert.github.io/remarkable/demo/) markdown parsing library.',
   year: 2016,
@@ -90,7 +86,6 @@ const SysPlot = {
   code: 'Sp',
   name: 'SysPlot',
   to: '/projects/sysplot',
-  labels: ['javascript', 'library'],
   github: 'https://github.com/HHogg/sysplot',
   description: 'A library that systematically generates a plane for plotting shapes, with a variety of algorithms to choose from.',
   year: 2018,

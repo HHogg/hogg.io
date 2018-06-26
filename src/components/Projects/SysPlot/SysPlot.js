@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import random from 'lodash.random';
 import zip from 'lodash.zip';
-import { Base, Bounds, Flex, Responsive, Text, ThemeContext } from 'preshape';
+import { Bounds, Flex, Responsive, Text, ThemeContext } from 'preshape';
 import SysPlot from 'sysplot';
 import sysPlotReadme from 'sysplot/README.md';
 import { widthSmall, widthMedium } from '../../Root';
+import Project from '../../Project/Project';
 import SysPlotControls, { algorithms } from './SysPlotControls';
 import SysPlotVisual from './SysPlotVisual';
 import ReadMe from '../../ReadMe/ReadMe';
@@ -101,7 +102,7 @@ export default class SysPlotProject extends Component {
     };
 
     return (
-      <Base maxWidth={ widthMedium }>
+      <Project { ...this.props } maxWidth={ widthMedium }>
         <Responsive queries={ [widthSmall] }>
           { (match) => (
             <Flex
@@ -161,7 +162,7 @@ export default class SysPlotProject extends Component {
         <ReadMe margin="x16">
           { sysPlotReadme }
         </ReadMe>
-      </Base>
+      </Project>
     );
   }
 }

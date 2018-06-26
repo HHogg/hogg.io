@@ -15,8 +15,9 @@ import {
   TextArea,
 } from 'preshape';
 import { widthMedium, widthSmall } from '../../Root';
-import ReadMe from '../../ReadMe/ReadMe';
 import renderReactJsonString from './renderReactJsonString';
+import Project from '../../Project/Project';
+import ReadMe from '../../ReadMe/ReadMe';
 
 const remarkable = new Remarkable();
 const renderer = new RemarkableReactRenderer();
@@ -84,82 +85,84 @@ export default class Lorem extends Component {
     const { active, markdown } = this.state;
 
     return (
-      <Base maxWidth={ widthMedium }>
-        <Responsive queries={ [widthSmall, widthMedium] }>
-          { (match) => (
-            <Flex
-                direction="vertical"
-                grow
-                gutter="x6"
-                margin="x16">
+      <Project { ...this.props } maxWidth={ widthMedium }>
+        <Base>
+          <Responsive queries={ [widthSmall, widthMedium] }>
+            { (match) => (
               <Flex
-                  direction={ match(widthSmall) ? 'horizontal' : 'vertical' }
+                  direction="vertical"
                   grow
-                  gutter="x6">
+                  gutter="x6"
+                  margin="x16">
                 <Flex
-                    direction="horizontal"
+                    direction={ match(widthSmall) ? 'horizontal' : 'vertical' }
                     grow
-                    initial={ match(widthSmall) ? 'none' : null }>
-                  <TextArea
-                      backgroundColor
-                      borderSize="x2"
-                      color
-                      label="Editor"
-                      onChange={ (event) => this.handleChange(event) }
-                      paddingHorizontal="x6"
-                      paddingVertical="x3"
-                      rows="30"
-                      value={ markdown } />
-                </Flex>
-
-                <Flex
-                    direction="vertical"
-                    grow
-                    initial={ match(widthSmall) ? 'none' : null }>
-                  <Tabs>
-                    <Tab
-                        active={ active === 'html' }
-                        onClick={ () => this.setState({ active: 'html' }) }>
-                      HTML Output
-                    </Tab>
-
-                    <Tab
-                        active={ active === 'react' }
-                        onClick={ () => this.setState({ active: 'react' }) }>
-                      React Output
-                    </Tab>
-                  </Tabs>
-
-                  <TabContent
+                    gutter="x6">
+                  <Flex
+                      direction="horizontal"
                       grow
-                      height="40rem"
-                      paddingHorizontal="x6"
-                      paddingVertical="x3"
-                      scrollable>
-                    { active === 'html' && (
-                      <Text Component="div" size="small">
-                        <Markdown>
-                          { markdown }
-                        </Markdown>
-                      </Text>
-                    ) }
+                      initial={ match(widthSmall) ? 'none' : null }>
+                    <TextArea
+                        backgroundColor
+                        borderSize="x2"
+                        color
+                        label="Editor"
+                        onChange={ (event) => this.handleChange(event) }
+                        paddingHorizontal="x6"
+                        paddingVertical="x3"
+                        rows="30"
+                        value={ markdown } />
+                  </Flex>
 
-                    { active === 'react' && (
-                      <CodeBlock language="json" size="small" wrap>
-                        { renderReactJsonString(renderMarkdown(markdown)) }
-                      </CodeBlock>
-                    ) }
-                  </TabContent>
+                  <Flex
+                      direction="vertical"
+                      grow
+                      initial={ match(widthSmall) ? 'none' : null }>
+                    <Tabs>
+                      <Tab
+                          active={ active === 'html' }
+                          onClick={ () => this.setState({ active: 'html' }) }>
+                        HTML Output
+                      </Tab>
+
+                      <Tab
+                          active={ active === 'react' }
+                          onClick={ () => this.setState({ active: 'react' }) }>
+                        React Output
+                      </Tab>
+                    </Tabs>
+
+                    <TabContent
+                        grow
+                        height="40rem"
+                        paddingHorizontal="x6"
+                        paddingVertical="x3"
+                        scrollable>
+                      { active === 'html' && (
+                        <Text Component="div" size="small">
+                          <Markdown>
+                            { markdown }
+                          </Markdown>
+                        </Text>
+                      ) }
+
+                      { active === 'react' && (
+                        <CodeBlock language="json" size="small" wrap>
+                          { renderReactJsonString(renderMarkdown(markdown)) }
+                        </CodeBlock>
+                      ) }
+                    </TabContent>
+                  </Flex>
                 </Flex>
               </Flex>
-            </Flex>
-          ) }
-        </Responsive>
+            ) }
+          </Responsive>
 
-        <ReadMe margin="x16">
-          { remarkableReactReadme }
-        </ReadMe>
-      </Base>
+          <ReadMe margin="x16">
+            { remarkableReactReadme }
+          </ReadMe>
+        </Base>
+      </Project>
     );
   }
 }

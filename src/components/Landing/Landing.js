@@ -38,7 +38,8 @@ export default class Landing extends Component {
       <Flex
           alignChildrenHorizontal="middle"
           direction="horizontal"
-          grow>
+          grow
+          paddingVertical="x12">
         <Flex
             initial="none"
             paddingHorizontal="x4"
