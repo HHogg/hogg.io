@@ -10,7 +10,7 @@ export default class Element extends Component {
     active: PropTypes.bool,
     code: PropTypes.string.isRequired,
     disabled: PropTypes.bool,
-    name: PropTypes.string.isRequired,
+    name: PropTypes.string,
     number: PropTypes.number,
     onClick: PropTypes.func,
     size: PropTypes.string.isRequired,
@@ -51,7 +51,7 @@ export default class Element extends Component {
           width={ size }>
         <Flex grow><Text align="end" size="small">{ number }</Text></Flex>
         <Flex><Text size="title" strong>{ code }</Text></Flex>
-        <Flex><Text size="small">{ name }</Text></Flex>
+        { name && <Flex><Text size="small">{ name }</Text></Flex> }
       </Flex>
     );
   }

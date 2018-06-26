@@ -7,14 +7,13 @@ import {
   ApplicationThemeControls,
   ApplicationTitle,
   Flex,
-  Menu,
-  MenuItem,
+  Link,
   SwitchTransition,
+  ThemeContext,
 } from 'preshape';
 import projectsDetails from './Projects/projectsDetails';
 import projectsList from './Projects/projectsList';
 import Landing from './Landing/Landing';
-import Project from './Project/Project';
 import ProjectsTimeline from './ProjectsTimeline/ProjectsTimeline';
 
 export const widthSmall = '48rem';
@@ -37,48 +36,50 @@ export default class Root extends Component {
       <Application
           onChangeTheme={ (theme) => this.setState({ theme }) }
           theme={ theme }>
-        <ApplicationTitle maxWidth={ widthLarge } padding="x4">
-          <Flex
-              alignChildrenHorizontal="between"
-              alignChildrenVertical="start"
-              direction="horizontal">
-            <Flex>
-              <Route path="/:anything" render={ () => (
-                <Menu>
-                  <MenuItem exact to="/">Hogg.io</MenuItem>
-                </Menu>
-              ) } />
+        <Route path="/:anthing" render={ () => (
+          <ApplicationTitle padding="x4">
+            <Flex
+                alignChildrenHorizontal="between"
+                alignChildrenVertical="start"
+                direction="horizontal">
+              <Flex>
+                <Link size="small" to="/">Hogg.io</Link>
+              </Flex>
+
+              <Flex>
+                <ApplicationThemeControls
+                    alignChildrenHorizontal="end" />
+              </Flex>
             </Flex>
 
-            <Flex>
-              <ApplicationThemeControls
-                  alignChildrenHorizontal="end" />
-            </Flex>
-          </Flex>
+          </ApplicationTitle>
+        ) } />
 
-        </ApplicationTitle>
+        <ThemeContext.Consumer>
+          { ({ onChangeTheme }) => (
+            <SwitchTransition
+                Component={ Flex }
+                direction="vertical"
+                grow>
 
-        <SwitchTransition
-            Component={ Flex }
-            direction="vertical"
-            grow>
-          <Route exact path="/" render={ () =>
-            <Landing
-                onLand={ () => this.setState({ visited: true }) }
-                visited={ visited } />
-          } />
-          <Route component={ ProjectsTimeline } exact path="/timeline" />
-
-          { projectsList
-            .filter(({ code }) => projectsDetails[code])
-            .map(({ code, to }) => (
-              <Route key={ code } path={ to } render={ () =>
-                <Project code={ code }>
-                  { React.createElement(projectsDetails[code], { code }) }
-                </Project>
+              <Route exact path="/" render={ () =>
+                <Landing
+                    onLand={ () => this.setState({ visited: true }) }
+                    visited={ visited } />
               } />
-            )) }
-        </SwitchTransition>
+
+              <Route component={ ProjectsTimeline } exact path="/timeline" />
+
+              { projectsList
+                .filter(({ code }) => projectsDetails[code])
+                .map(({ code, to }) => (
+                  <Route key={ code } path={ to } render={ () =>
+                    React.createElement(projectsDetails[code], { code, onChangeTheme })
+                  } />
+                )) }
+            </SwitchTransition>
+          ) }
+        </ThemeContext.Consumer>
 
         <ApplicationFooter padding="x4">
           <ApplicationDetails

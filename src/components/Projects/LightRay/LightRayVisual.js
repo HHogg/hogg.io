@@ -207,7 +207,7 @@ export default class LightRayVisual extends Component {
           onTouchStart={ (e) => this.handleMouseMove(moveEvent(e)) }
           ref={ (container) => this.container = findDOMNode(container) }
           theme="night"
-          time="slow" />
+          time="base" />
     );
   }
 }
