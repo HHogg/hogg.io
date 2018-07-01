@@ -1,0 +1,9 @@
+{
+  "name": "Neptune",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 24764,
+  "semiMajorAxis": 4495060000,
+  "period": 59800,
+  "eccentricity": 0.011
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Jupiter",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 71492,
+  "semiMajorAxis": 778570000,
+  "period": 4331,
+  "eccentricity": 0.049
+}

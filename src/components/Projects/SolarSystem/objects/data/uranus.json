@@ -1,0 +1,9 @@
+{
+  "name": "Uranus",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 25559,
+  "semiMajorAxis": 2875040000,
+  "period": 30589,
+  "eccentricity": 0.046
+}

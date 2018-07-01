@@ -1,0 +1,9 @@
+{
+  "name": "Mars",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 3396,
+  "semiMajorAxis": 227939200,
+  "period": 687.0,
+  "eccentricity": 0.094
+}

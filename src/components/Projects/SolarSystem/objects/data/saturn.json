@@ -1,0 +1,9 @@
+{
+  "name": "Saturn",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 60268,
+  "semiMajorAxis": 1433530000,
+  "period": 10747,
+  "eccentricity": 0.057
+}

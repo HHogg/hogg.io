@@ -1,0 +1,9 @@
+{
+  "name": "Pluto",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 1185,
+  "semiMajorAxis": 5906380000,
+  "period": 90560,
+  "eccentricity": 0.244
+}

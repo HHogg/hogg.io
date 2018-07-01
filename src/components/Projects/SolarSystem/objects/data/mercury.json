@@ -1,0 +1,9 @@
+{
+  "name": "Mercury",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 2440,
+  "semiMajorAxis": 57909050,
+  "period": 88,
+  "eccentricity": 0.205
+}

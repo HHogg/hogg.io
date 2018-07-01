@@ -28,6 +28,8 @@
     "clean-webpack-plugin": "^0.1.19",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.7",
+    "d3-scale": "^2.1.0",
+    "date-fns": "^1.29.0",
     "ejs-loader": "^0.3.1",
     "eslint": "^4.19.1",
     "eslint-config-preshape": "^1.0.0",

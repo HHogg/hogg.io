@@ -1,0 +1,9 @@
+{
+  "name": "Venus",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 6052,
+  "semiMajorAxis": 108208000,
+  "period": 224.7,
+  "eccentricity": 0.007
+}

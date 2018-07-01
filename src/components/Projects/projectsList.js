@@ -18,15 +18,6 @@ const Brandwatch = {
   year: 2015,
 };
 
-const Erebus = {
-  code: 'Er',
-  name: 'Erebus',
-  to: '',
-  labels: [],
-  description: '',
-  disabled: true,
-};
-
 const LockPick = {
   code: 'Lp',
   name: 'Lock Pick',
@@ -82,6 +73,14 @@ const RemarkableReact = {
   year: 2016,
 };
 
+const SolarSystem = {
+  code: 'Ss',
+  name: 'Planet and Moon explorer',
+  to: '/projects/solar-system',
+  description: 'A 2D orbital map of the solar system. Presenting planets and their known moons.',
+  year: 2018,
+};
+
 const SysPlot = {
   code: 'Sp',
   name: 'SysPlot',
@@ -96,7 +95,6 @@ const SnakeHeuristics = {
   name: 'Snake Heuristics',
   href: 'https://snake.hogg.io',
 };
-
 
 export default [{
   ...Pure360, x: 1, y: 1,
@@ -113,11 +111,11 @@ export default [{
 }, {
   ...SnakeHeuristics, x: 4, y: 2,
 }, {
-  ...Erebus, x: 4, y: 3,
+  ...BirthdayParadox, x: 4, y: 3,
 }, {
   ...LightRay, x: 5, y: 1,
 }, {
-  ...BirthdayParadox, x: 5, y: 2,
+  ...SolarSystem, x: 5, y: 2,
 }, {
   ...LockPick, x: 5, y: 3,
 }]

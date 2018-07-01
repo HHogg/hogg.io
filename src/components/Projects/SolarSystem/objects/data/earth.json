@@ -1,0 +1,9 @@
+{
+  "name": "Earth",
+  "orbits": "Sun",
+  "type": "planet",
+  "radius": 6378,
+  "semiMajorAxis": 149598023,
+  "period": 365.2,
+  "eccentricity": 0.017
+}
