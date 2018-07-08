@@ -27,7 +27,7 @@ export default class ProjectDescription extends Component {
           <Markdown>{ `${description} ${ github ? `[[${github}](${github})]` : ''}` }</Markdown>
         </Text>
 
-        { labels && (
+        { labels && !!labels.length && (
           <Labels margin="x2">
             { labels.map((label) => typeof label === 'string'
                 ? <Label key={ label }>{ label }</Label>

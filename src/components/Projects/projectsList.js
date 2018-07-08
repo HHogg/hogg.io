@@ -18,15 +18,6 @@ const Brandwatch = {
   year: 2015,
 };
 
-const Erebus = {
-  code: 'Er',
-  name: 'Erebus',
-  to: '',
-  labels: [],
-  description: '',
-  disabled: true,
-};
-
 const LockPick = {
   code: 'Lp',
   name: 'Lock Pick',
@@ -97,6 +88,15 @@ const SnakeHeuristics = {
   href: 'https://snake.hogg.io',
 };
 
+const CoSine = {
+  code: 'Cs',
+  name: 'CoSine',
+  to: '/projects/cosine',
+  labels: [],
+  description: 'A simple and *unoriginal* visualisation to show the relationship between sine and cosine.',
+  year: 2018,
+};
+
 
 export default [{
   ...Pure360, x: 1, y: 1,
@@ -113,11 +113,11 @@ export default [{
 }, {
   ...SnakeHeuristics, x: 4, y: 2,
 }, {
-  ...Erebus, x: 4, y: 3,
+  ...BirthdayParadox, x: 4, y: 3,
 }, {
   ...LightRay, x: 5, y: 1,
 }, {
-  ...BirthdayParadox, x: 5, y: 2,
+  ...CoSine, x: 5, y: 2,
 }, {
   ...LockPick, x: 5, y: 3,
 }]
