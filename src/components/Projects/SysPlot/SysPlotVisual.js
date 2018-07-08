@@ -10,6 +10,7 @@ import {
   themes,
   Base,
 } from 'preshape';
+import { createCircle } from '../../../utils/Two';
 
 const ease = new BezierEasing(...transitionTimingFunction);
 
@@ -91,11 +92,15 @@ export default class SysPlotVisual extends Component {
           })
           .start();
       } else {
-        shape = store[i] = new Two.Circle(x, y, radius);
-        shape.opacity = 0;
-        shape.fill = color;
-        shape.noStroke();
-        shape.tween = new Tween.Tween({ opacity: 0 })
+        shape = store[i] = createCircle({
+          fill: color,
+          opacity: 0,
+          radius,
+          x,
+          y,
+        });
+
+        shape.tween = new Tween.Tween(shape)
           .to({ opacity: 1 }, transitionTimeBase)
           .delay(transitionTimeBase)
           .easing(ease)

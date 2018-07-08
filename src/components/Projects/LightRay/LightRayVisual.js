@@ -4,6 +4,7 @@ import { findDOMNode } from 'react-dom';
 import Two from 'two.js';
 import getVisibleArea from 'vishull2d';
 import { themes, Appear } from 'preshape';
+import { createCircle, createPolygon, createTriangle } from '../../../utils/Two';
 
 const toLines = ({ vertices }) =>
   vertices.map((vertex, index) => [
@@ -93,8 +94,8 @@ export default class LightRayVisual extends Component {
     this.isMouseDown = false;
   }
 
-  handleMouseMove({ clientX, clientY, target }) {
-    if (this.isMouseDown && this.props.moveLightSource) {
+  handleMouseMove({ clientX, clientY, target }, skip) {
+    if ((skip || this.isMouseDown) && this.props.moveLightSource) {
       const { left, top } = target.getBoundingClientRect();
 
       this.lightX = clientX - left;
@@ -125,27 +126,22 @@ export default class LightRayVisual extends Component {
       this.lightGroup.remove();
     }
 
-    this.lightGroup = this.two.makeGroup();
-
-    const light = new Two.Path(
-      getVisibleArea(this.lines, [this.lightX, this.lightY])
-        .map(([x, y]) => new Two.Vector(x, y), true)
-    );
-
-    light.fill = themes.night.colorTextShade3;
-    light.noStroke();
-
-    const circle = new Two.Circle(this.lightX, this.lightY, 10);
-
-    circle.noFill();
-    circle.stroke = themes[theme].colorAccentShade2;
-    circle.linewidth = 4;
-
-    this.lightGroup.add(light);
-    this.lightGroup.add(circle);
-
     this.lightXPrev = this.lightX;
     this.lightYPrev = this.lightY;
+
+    this.lightGroup = this.two
+      .makeGroup()
+      .add(createPolygon({
+        fill: themes.night.colorTextShade3,
+        vertices: getVisibleArea(this.lines, [this.lightX, this.lightY]),
+      }))
+      .add(createCircle({
+        radius: 10,
+        stroke: themes[theme].colorAccentShade2,
+        strokeWidth: 4,
+        x: this.lightX,
+        y: this.lightY,
+      }));
   }
 
   drawShapes() {
@@ -178,18 +174,14 @@ export default class LightRayVisual extends Component {
     ];
 
     for (let i = 0; i < shapeCount; i++) {
-      const r = Math.floor(i / nCols);
-      const c = i % nCols;
-      const x = (cx + (c * (shapeSize + cPadding))) + oX;
-      const y = (cy + (r * (shapeSize + rPadding))) + oY;
-      const triangle = new Two.Path([
-        new Two.Vector(x, y - shapeRadius),
-        new Two.Vector(x + shapeRadius, y + shapeRadius),
-        new Two.Vector(x - shapeRadius, y + shapeRadius),
-      ], true);
+      const triangle = createTriangle({
+        fill: themes.night.colorBackgroundShade1,
+        height: shapeRadius * 2,
+        width: shapeRadius * 2,
+        x: (cx + ((i % nCols) * (shapeSize + cPadding))) + oX,
+        y: (cy + ((Math.floor(i / nCols)) * (shapeSize + rPadding))) + oY,
+      });
 
-      triangle.fill = themes.night.colorBackgroundShade1;
-      triangle.noStroke();
       this.shapeGroup.add(triangle);
       this.lines.push(...toLines(triangle));
     }
@@ -201,10 +193,10 @@ export default class LightRayVisual extends Component {
           absolute="fullscreen"
           animation="Fade"
           backgroundColor="shade-3"
-          onMouseDown={ (e) => this.handleMouseMove(moveEvent(e)) }
+          onMouseDown={ (e) => this.handleMouseMove(moveEvent(e), true) }
           onMouseMove={ (e) => this.handleMouseMove(moveEvent(e)) }
           onTouchMove={ (e) => this.handleMouseMove(moveEvent(e)) }
-          onTouchStart={ (e) => this.handleMouseMove(moveEvent(e)) }
+          onTouchStart={ (e) => this.handleMouseMove(moveEvent(e), true) }
           ref={ (container) => this.container = findDOMNode(container) }
           theme="night"
           time="base" />
