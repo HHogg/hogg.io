@@ -32,6 +32,7 @@ export default class SysPlotVisual extends Component {
   componentDidMount() {
     const { height, positions, vectors, width } = this.props;
 
+    this.update = this.update.bind(this);
     this.two = new Two({
       autostart: true,
       height,
@@ -42,9 +43,7 @@ export default class SysPlotVisual extends Component {
     this.vectorGroup = this.two.makeGroup();
     this.shapeGroup = this.two.makeGroup();
 
-    this.two.bind('update', () => {
-      Tween.update();
-    });
+    this.two.on('update', this.update);
 
     this.updateVectorLayer(vectors);
     this.updateShapeLayer(positions);
@@ -66,6 +65,14 @@ export default class SysPlotVisual extends Component {
     if (theme !== prevProps.theme || positions !== prevProps.positions) {
       this.updateShapeLayer(positions);
     }
+  }
+
+  componentWillUnmount() {
+    this.two.off('update', this.update);
+  }
+
+  update() {
+    Tween.update();
   }
 
   updateLayer(store, layer, items, attributeGetter) {

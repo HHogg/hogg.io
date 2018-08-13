@@ -37,6 +37,7 @@ export default class LightRayVisual extends Component {
   componentDidMount() {
     const { height, width } = this.props;
 
+    this.drawLight = this.drawLight.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleTouchMove = this.handleTouchMove.bind(this);
@@ -60,12 +61,11 @@ export default class LightRayVisual extends Component {
     this.setCanvasSize(width, height);
     this.drawShapes();
 
-    this.two.bind('update', () => {
-      this.drawLight();
-    });
+    this.two.on('update', this.drawLight);
   }
 
   componentWillUnmount() {
+    this.two.off('update', this.drawLight);
     document.removeEventListener('mousedown', this.handleMouseDown);
     document.removeEventListener('mouseup', this.handleMouseUp);
     document.removeEventListener('touchend', this.handleMouseUp);

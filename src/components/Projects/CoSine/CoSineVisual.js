@@ -7,7 +7,6 @@ import {
   borderSizeX2Px,
   themes,
   Appear,
-  Base,
 } from 'preshape';
 import {
   addClassName,
@@ -41,6 +40,7 @@ export default class CoSineVisual extends Component {
   componentDidMount() {
     const { height, width } = this.props;
 
+    this.update = this.update.bind(this);
     this.two = new Two({
       autostart: true,
       height,
@@ -50,13 +50,15 @@ export default class CoSineVisual extends Component {
 
     this.init();
 
-    this.two.bind('update', () => {
-      this.update();
-    });
+    this.two.on('update', this.update);
   }
 
   componentDidUpdate() {
     this.init();
+  }
+
+  componentWillUnmount() {
+    this.two.off('update', this.update);
   }
 
   init() {
