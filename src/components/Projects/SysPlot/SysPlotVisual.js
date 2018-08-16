@@ -35,9 +35,9 @@ export default class SysPlotVisual extends Component {
     this.update = this.update.bind(this);
     this.two = new Two({
       autostart: true,
-      height,
+      height: height,
       type: 'CanvasRenderer',
-      width,
+      width: width,
     }).appendTo(this.container);
 
     this.vectorGroup = this.two.makeGroup();
@@ -102,9 +102,9 @@ export default class SysPlotVisual extends Component {
         shape = store[i] = createCircle({
           fill: color,
           opacity: 0,
-          radius,
-          x,
-          y,
+          radius: radius,
+          x: x,
+          y: y,
         });
 
         shape.tween = new Tween.Tween(shape)
@@ -128,7 +128,12 @@ export default class SysPlotVisual extends Component {
       this.vectors,
       this.vectorGroup,
       vectors,
-      ([x, y]) => ({ x, y, radius: 1, color: themes.night.colorTextShade3 }));
+      ([x, y]) => ({
+        color: themes.night.colorTextShade3,
+        radius: 1,
+        x: x,
+        y: y,
+      }));
   }
 
   updateShapeLayer(shapes) {
@@ -138,7 +143,12 @@ export default class SysPlotVisual extends Component {
       this.shapes,
       this.shapeGroup,
       shapes,
-      ([{ radius }, [ x, y ]]) => ({ x, y, radius, color: themes[theme].colorAccentShade2 }));
+      ([{ radius }, [ x, y ]]) => ({
+        color: themes[theme].colorAccentShade2,
+        radius: radius,
+        x: x,
+        y: y,
+      }));
   }
 
   render() {

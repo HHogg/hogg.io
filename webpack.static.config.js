@@ -33,6 +33,9 @@ module.exports = {
     }, {
       test: /\.md$/,
       use: ['raw-loader'],
+    }, {
+      test: /.svg$/,
+      loader: 'svg-inline-loader',
     }],
   },
   plugins: [

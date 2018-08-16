@@ -43,9 +43,9 @@ export default class CoSineVisual extends Component {
     this.update = this.update.bind(this);
     this.two = new Two({
       autostart: true,
-      height,
+      height: height,
       type: 'SVGRenderer',
-      width,
+      width: width,
     }).appendTo(this.container);
 
     this.init();
@@ -125,8 +125,8 @@ export default class CoSineVisual extends Component {
       createCircle({
         fill: themes[theme].colorTextShade1,
         radius: Math.max(2, this.r / 20),
-        x,
-        y,
+        x: x,
+        y: y,
       }));
   }
 
@@ -310,7 +310,7 @@ export default class CoSineVisual extends Component {
       createLine({
         stroke: themes[theme].colorTextShade1,
         strokeWidth: borderSizeX2Px,
-        vertices,
+        vertices: vertices,
       })
     );
   }

@@ -9,7 +9,6 @@ import {
   Flex,
   Link,
   SwitchTransition,
-  ThemeContext,
 } from 'preshape';
 import projectsDetails from './Projects/projectsDetails';
 import projectsList from './Projects/projectsList';
@@ -55,31 +54,27 @@ export default class Root extends Component {
           </ApplicationTitle>
         ) } />
 
-        <ThemeContext.Consumer>
-          { ({ onChangeTheme }) => (
-            <SwitchTransition
-                Component={ Flex }
-                direction="vertical"
-                grow>
+        <SwitchTransition
+            Component={ Flex }
+            direction="vertical"
+            grow>
 
-              <Route exact path="/" render={ () =>
-                <Landing
-                    onLand={ () => this.setState({ visited: true }) }
-                    visited={ visited } />
+          <Route exact path="/" render={ () =>
+            <Landing
+                onLand={ () => this.setState({ visited: true }) }
+                visited={ visited } />
+          } />
+
+          <Route component={ ProjectsTimeline } exact path="/timeline" />
+
+          { projectsList
+            .filter(({ code }) => projectsDetails[code])
+            .map(({ code, to }) => (
+              <Route key={ code } path={ to } render={ () =>
+                React.createElement(projectsDetails[code], { code })
               } />
-
-              <Route component={ ProjectsTimeline } exact path="/timeline" />
-
-              { projectsList
-                .filter(({ code }) => projectsDetails[code])
-                .map(({ code, to }) => (
-                  <Route key={ code } path={ to } render={ () =>
-                    React.createElement(projectsDetails[code], { code, onChangeTheme })
-                  } />
-                )) }
-            </SwitchTransition>
-          ) }
-        </ThemeContext.Consumer>
+            )) }
+        </SwitchTransition>
 
         <ApplicationFooter padding="x4">
           <ApplicationDetails

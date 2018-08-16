@@ -11,17 +11,7 @@ export default class Project extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     code: PropTypes.string.isRequired,
-    onChangeTheme: PropTypes.func.isRequired,
-    theme: PropTypes.string,
   };
-
-  componentDidMount() {
-    const { onChangeTheme, theme } = this.props;
-
-    if (theme) {
-      onChangeTheme(theme);
-    }
-  }
 
   render() {
     const { children, code, ...rest } = this.props;

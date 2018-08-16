@@ -26,6 +26,9 @@ module.exports = {
     }, {
       test: /\.md$/,
       use: ['raw-loader'],
+    }, {
+      test: /.svg$/,
+      loader: 'svg-inline-loader',
     }],
   },
   plugins: [
@@ -34,6 +37,12 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.ejs',
     }),
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'development',
+    }),
+    new webpack.DefinePlugin({
+      __REACT_DEVTOOLS_GLOBAL_HOOK__: '({ isDisabled: true })',
+    }),
   ],
   devtool: 'source-map',
   devServer: {
@@ -41,6 +50,6 @@ module.exports = {
     historyApiFallback: true,
     host: 'localhost',
     hot: true,
-    port,
+    port: port,
   },
 };

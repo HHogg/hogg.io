@@ -18,11 +18,20 @@ const Brandwatch = {
   year: 2015,
 };
 
-const LockPick = {
-  code: 'Lp',
-  name: 'Lock Pick',
-  to: '/projects/lock-pick',
-  description: 'Experiment to create a Fallout style lock picking simulator.',
+const CircleArt = {
+  code: 'Ca',
+  name: 'Circle Art',
+  to: '/projects/circle-art',
+  description: 'A tool for creating artwork by only drawing circles and filling in the intersecting regions. Inspired by a [Reddit post](https://www.reddit.com/r/Damnthatsinteresting/comments/963j4n/magic_of_circles) and [13 Animals Made From 13 Circles](http://dorotapankowska.com/13-animals-13-circles.html) by Dorota Pankowska.',
+  year: 2018,
+};
+
+const CoSine = {
+  code: 'Cs',
+  name: 'CoSine',
+  to: '/projects/cosine',
+  labels: [],
+  description: 'A simple and *unoriginal* visualisation to show the relationship between sine and cosine.',
   year: 2018,
 };
 
@@ -88,15 +97,6 @@ const SnakeHeuristics = {
   href: 'https://snake.hogg.io',
 };
 
-const CoSine = {
-  code: 'Cs',
-  name: 'CoSine',
-  to: '/projects/cosine',
-  labels: [],
-  description: 'A simple and *unoriginal* visualisation to show the relationship between sine and cosine.',
-  year: 2018,
-};
-
 
 export default [{
   ...Pure360, x: 1, y: 1,
@@ -119,7 +119,7 @@ export default [{
 }, {
   ...CoSine, x: 5, y: 2,
 }, {
-  ...LockPick, x: 5, y: 3,
+  ...CircleArt, x: 5, y: 3,
 }]
 
 .sort((a, b) => a.y - b.y || a.x - b.x)

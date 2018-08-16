@@ -4,7 +4,14 @@ import { findDOMNode } from 'react-dom';
 import Two from 'two.js';
 import getVisibleArea from 'vishull2d';
 import { themes, Appear } from 'preshape';
-import { createCircle, createPolygon, createTriangle } from '../../../utils/Two';
+import moveEvent from '../../../utils/moveEvent';
+import {
+  createCircle,
+  createPolygon,
+  createTriangle,
+  onMouseDownGlobal,
+  onMouseUpGlobal,
+} from '../../../utils/Two';
 
 const toLines = ({ vertices }) =>
   vertices.map((vertex, index) => [
@@ -13,16 +20,6 @@ const toLines = ({ vertices }) =>
       ? [vertices[index + 1].x, vertices[index + 1].y]
       : [vertices[0].x, vertices[0].y],
   ]);
-
-const moveEvent = (event) => event.touches ? ({
-  clientX: event.touches[0].clientX,
-  clientY: event.touches[0].clientY,
-  target: event.target,
-}) : ({
-  clientX: event.clientX,
-  clientY: event.clientY,
-  target: event.target,
-});
 
 export default class LightRayVisual extends Component {
   static propTypes = {
@@ -54,8 +51,8 @@ export default class LightRayVisual extends Component {
     this.two = new Two({
       autostart: true,
       type: 'CanvasRenderer',
-      height,
-      width,
+      height: height,
+      width: width,
     }).appendTo(this.container);
 
     this.setCanvasSize(width, height);
@@ -66,6 +63,7 @@ export default class LightRayVisual extends Component {
 
   componentWillUnmount() {
     this.two.off('update', this.drawLight);
+
     document.removeEventListener('mousedown', this.handleMouseDown);
     document.removeEventListener('mouseup', this.handleMouseUp);
     document.removeEventListener('touchend', this.handleMouseUp);
@@ -88,10 +86,12 @@ export default class LightRayVisual extends Component {
 
   handleMouseDown() {
     this.isMouseDown = true;
+    onMouseDownGlobal();
   }
 
   handleMouseUp() {
     this.isMouseDown = false;
+    onMouseUpGlobal();
   }
 
   handleMouseMove({ clientX, clientY, target }, skip) {
