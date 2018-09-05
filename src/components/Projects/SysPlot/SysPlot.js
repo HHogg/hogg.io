@@ -16,15 +16,16 @@ export default class SysPlotProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      algorithm: algorithms[0][1],
-      algorithmName: algorithms[0][0],
-      cover: false,
+      algorithm: algorithms[4][1],
+      algorithmName: algorithms[4][0],
+      aspectRatio: 1,
+      cover: true,
       padding: 5,
       positions: null,
       proportional: false,
       shapes: true,
-      shapeCount: 60,
-      spread: 0.25,
+      shapeCount: 100,
+      spread: 0.15,
       vectors: true,
     };
 
@@ -36,6 +37,7 @@ export default class SysPlotProject extends Component {
   setConfig() {
     this.sysPlot.setConfig({
       algorithm: this.state.algorithm,
+      aspectRatio: this.state.aspectRatio,
       cover: this.state.cover,
       padding: this.state.padding,
       proportional: this.state.proportional,
@@ -84,6 +86,7 @@ export default class SysPlotProject extends Component {
     const {
       algorithm,
       algorithmName,
+      aspectRatio,
       cover,
       padding,
       positions,
@@ -96,6 +99,7 @@ export default class SysPlotProject extends Component {
 
     const controlsConfig = {
       algorithm,
+      aspectRatio,
       cover,
       padding,
       proportional,
@@ -144,6 +148,7 @@ export default class SysPlotProject extends Component {
 
                 <Flex container>
                   <Text size="small"><Text inline strong>Algorithm:</Text> { algorithmName }</Text>
+                  <Text size="small"><Text inline strong>Aspect Ratio:</Text> { aspectRatio }</Text>
                   <Text size="small"><Text inline strong>Cover:</Text> { cover.toString() }</Text>
                   <Text size="small"><Text inline strong>Padding:</Text> { padding }</Text>
                   <Text size="small"><Text inline strong>Proportional:</Text> { proportional.toString() }</Text>

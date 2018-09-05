@@ -21,6 +21,7 @@ export default class SysPlotControls extends Component {
   static propTypes = {
     config: PropTypes.shape({
       algorithm: PropTypes.func.isRequired,
+      aspectRatio: PropTypes.number.isRequired,
       proportional: PropTypes.bool.isRequired,
       padding: PropTypes.number.isRequired,
       shapes: PropTypes.bool.isRequired,
@@ -33,6 +34,7 @@ export default class SysPlotControls extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      aspectRatio: props.config.aspectRatio,
       padding: props.config.padding,
       spread: props.config.spread,
       shapeCount: props.config.shapeCount,
@@ -52,7 +54,7 @@ export default class SysPlotControls extends Component {
 
   render() {
     const { config, onConfigChange } = this.props;
-    const { padding, shapeCount, spread } = this.state;
+    const { aspectRatio, padding, shapeCount, spread } = this.state;
 
     return (
       <Fragment>
@@ -71,6 +73,16 @@ export default class SysPlotControls extends Component {
 
         <Base margin="x8">
           <Text margin="x4" strong>Library Configuration</Text>
+
+          <Input
+              label="Aspect Ratio"
+              margin="x2"
+              onChange={ (e) => this.handleNumberChange(e, 'aspectRatio', 0) }
+              placholder="Aspect ratio..."
+              step="0.05"
+              type="number"
+              value={ aspectRatio } />
+
           <CheckBox
               checked={ config.cover }
               label="Cover"

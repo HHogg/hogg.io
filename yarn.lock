@@ -6956,9 +6956,9 @@ svgo@^0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
-sysplot@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/sysplot/-/sysplot-2.0.0.tgz#b7b1a40e56e81442ea720f06442c4ba900ac669f"
+sysplot@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/sysplot/-/sysplot-2.1.0.tgz#79eb8b5576d60f4f95f1773528532bea9a075c91"
   dependencies:
     sat "^0.7.0"
 
