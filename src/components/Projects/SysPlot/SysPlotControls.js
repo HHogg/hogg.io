@@ -72,6 +72,12 @@ export default class SysPlotControls extends Component {
         <Base margin="x8">
           <Text margin="x4" strong>Library Configuration</Text>
           <CheckBox
+              checked={ config.cover }
+              label="Cover"
+              margin="x2"
+              onChange={ () => onConfigChange({ cover: !config.cover }) } />
+
+          <CheckBox
               checked={ config.proportional }
               label="Preserve Aspect Ratio"
               margin="x2"
@@ -113,7 +119,7 @@ export default class SysPlotControls extends Component {
           <Input
               label="Shape Count"
               margin="x2"
-              onChange={ (e) => this.handleNumberChange(e, 'shapeCount', 0, 100) }
+              onChange={ (e) => this.handleNumberChange(e, 'shapeCount', 0, 200) }
               placholder="Shape count..."
               type="number"
               value={ shapeCount } />
