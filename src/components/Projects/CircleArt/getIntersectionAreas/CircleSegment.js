@@ -22,8 +22,6 @@ export default class CircleSegment {
   set n(n) {
     this._n = n;
     this.bitset = new BitSet();
-    this.bitset.set(this.start.n);
-    this.bitset.set(this.end.n);
     this.bitset.set(n);
   }
 

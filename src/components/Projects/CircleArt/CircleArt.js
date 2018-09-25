@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
 import { themesOpposite, Base, Bounds, Flex, Link, Responsive, Text, ThemeContext } from 'preshape';
 import FileSaver from 'file-saver';
+import fscreen from 'fscreen';
 import { widthSmall, widthMedium } from '../../Root';
 import Project from '../../Project/Project';
 import CircleArtVisual from './CircleArtVisual';
@@ -10,15 +12,10 @@ import configurations from './configurations';
 import Fox from './configurations/Fox';
 import './CircleArt.css';
 
-const canSave = typeof window !== 'undefined' && window.Blob !== undefined;
-
 export default class CircleArt extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      data: Fox,
-      canSave: canSave,
-    };
+    this.state = { data: Fox };
   }
 
   handleLoadConfig(data) {
@@ -34,6 +31,14 @@ export default class CircleArt extends Component {
     });
   }
 
+  handleOnFullscreen() {
+    if (fscreen.fullscreenElement) {
+      fscreen.exitFullscreen();
+    } else {
+      fscreen.requestFullscreen(this.fullscreenContainer);
+    }
+  }
+
   handleOnSave(data) {
     this.setState({ data }, () => {
       FileSaver.saveAs(
@@ -43,7 +48,7 @@ export default class CircleArt extends Component {
   }
 
   render() {
-    const { canSave, data } = this.state;
+    const { data } = this.state;
 
     return (
       <Responsive queries={ [widthSmall, widthMedium] }>
@@ -58,14 +63,16 @@ export default class CircleArt extends Component {
                   direction="vertical"
                   grow
                   minHeight="37.5rem">
-                <Bounds absolute="fullscreen">
+                <Bounds
+                    absolute="fullscreen"
+                    ref={ (el) => this.fullscreenContainer = findDOMNode(el) }>
                   { ({ width, height }) => (
                     width && height && (
                       <CircleArtVisual
-                          canSave={ canSave }
                           data={ data }
                           height={ height }
                           onClear={ () => this.handleOnClear() }
+                          onFullscreen={ () => this.handleOnFullscreen() }
                           onSave={ (data) => this.handleOnSave(data) }
                           width={ width } />
                     )

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import { findDOMNode } from 'react-dom';
 import classnames from 'classnames';
+import fscreen from 'fscreen';
 import Two from 'two.js';
 import {
   Base,
@@ -52,6 +53,9 @@ const CURSOR_RESIZE_BL_TR = 'nesw-resize';
 const CURSOR_RESIZE_L_R = 'ew-resize';
 const CURSOR_RESIZE_BR_TL = 'nwse-resize';
 
+const canFullscreen = fscreen.fullscreenEnabled;
+const canSave = typeof window !== 'undefined' && window.Blob !== undefined;
+
 const getCursor = (px, py, cx, cy) => {
   const a = atan2(px, py, cx, cy) * 180 / Math.PI;
 
@@ -80,7 +84,6 @@ const getShapeClassName = () => 'CircleArt__shape';
 
 export default class CircleArtVisual extends Component {
   static propTypes = {
-    canSave: PropTypes.bool.isRequired,
     data: PropTypes.shape({
       intersections: PropTypes.array.isRequired,
       ratio: PropTypes.number,
@@ -88,6 +91,7 @@ export default class CircleArtVisual extends Component {
     }).isRequired,
     height: PropTypes.number.isRequired,
     onClear: PropTypes.func.isRequired,
+    onFullscreen: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
     width: PropTypes.number.isRequired,
   };
@@ -125,7 +129,7 @@ export default class CircleArtVisual extends Component {
       width: width,
     }).appendTo(this.container);
 
-    this.initCanvas(data);
+    this.initCanvas(data.ratio);
     this.initData(data);
     this.initMode(mode);
   }
@@ -137,10 +141,11 @@ export default class CircleArtVisual extends Component {
     const mode = getMode(data);
 
     if (hasDimensionsChanged) {
-      this.initCanvas(data);
+      this.initCanvas(data.ratio);
     }
 
-    if (hasDataChanged) {
+    if (hasDataChanged || hasDimensionsChanged) {
+      this.hideToolbar();
       this.setState({ mode });
       this.initData(data);
       this.initMode(mode);
@@ -154,9 +159,8 @@ export default class CircleArtVisual extends Component {
     document.body.removeEventListener('touchmove', this.handleTouchMove);
   }
 
-  initCanvas(data) {
+  initCanvas(ratio) {
     const { height, width } = this.props;
-    const { ratio = width / height } = data;
 
     this.cx = width / 2;
     this.cy = height / 2;
@@ -475,8 +479,8 @@ export default class CircleArtVisual extends Component {
       toolbarTargetBox: {
         height: radius * 2,
         width: radius * 2,
-        x: (x + offsetX) - radius,
-        y: (y + offsetY) - radius,
+        x: x - radius,
+        y: y - radius,
       },
     });
   }
@@ -526,12 +530,15 @@ export default class CircleArtVisual extends Component {
 
   render() {
     const { debug, mode, toolbarTargetBox } = this.state;
-    const { canSave, onClear } = this.props;
+    const { onClear, onFullscreen } = this.props;
     const classes = classnames('CircleArt__visual', `CircleArt__visual--mode-${mode}`);
 
     return (
       <Fragment>
-        <Toolbar targetBox={ toolbarTargetBox } visible={ !!toolbarTargetBox }>
+        <Toolbar
+            container={ this.container }
+            targetBox={ toolbarTargetBox }
+            visible={ !!toolbarTargetBox }>
           <ToolbarActionGroup>
             <ToolbarAction onClick={ () => this.copyShape() }>
               <Icon name="Copy" size="1rem" />
@@ -552,7 +559,6 @@ export default class CircleArtVisual extends Component {
             backgroundColor="shade-2"
             className={ classes }
             onMouseDown={ (e) => this.handleMouseDown(moveEvent(e)) }
-            // onMouseMove={ (e) => this.handleMouseMove(moveEvent(e)) }
             onTouchMove={ (e) => this.handleMouseMove(moveEvent(e)) }
             onTouchStart={ (e) => this.handleMouseDown(moveEvent(e)) }
             ref={ (container) => this.container = findDOMNode(container) } />
@@ -583,6 +589,20 @@ export default class CircleArtVisual extends Component {
                       gutter="x1">
                     <Flex><Icon name="Save" size="1rem" /></Flex>
                     <Flex>Save</Flex>
+                  </Flex>
+                </Button>
+              </Flex>
+
+              <Flex>
+                <Button
+                    disabled={ !canFullscreen }
+                    onClick={ () => onFullscreen() }>
+                  <Flex
+                      alignChildrenVertical="middle"
+                      direction="horizontal"
+                      gutter="x1">
+                    <Flex><Icon name="Fullscreen" size="1rem" /></Flex>
+                    <Flex>Fullscreen</Flex>
                   </Flex>
                 </Button>
               </Flex>
