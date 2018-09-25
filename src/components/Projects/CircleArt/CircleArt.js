@@ -15,7 +15,10 @@ import './CircleArt.css';
 export default class CircleArt extends Component {
   constructor(props) {
     super(props);
-    this.state = { data: Fox };
+    this.state = {
+      data: Fox,
+      isInFullscreen: false,
+    };
   }
 
   handleLoadConfig(data) {
@@ -34,8 +37,10 @@ export default class CircleArt extends Component {
   handleOnFullscreen() {
     if (fscreen.fullscreenElement) {
       fscreen.exitFullscreen();
+      this.setState({ isInFullscreen: false });
     } else {
       fscreen.requestFullscreen(this.fullscreenContainer);
+      this.setState({ isInFullscreen: true });
     }
   }
 
@@ -48,7 +53,7 @@ export default class CircleArt extends Component {
   }
 
   render() {
-    const { data } = this.state;
+    const { data, isInFullscreen } = this.state;
 
     return (
       <Responsive queries={ [widthSmall, widthMedium] }>
@@ -71,6 +76,7 @@ export default class CircleArt extends Component {
                       <CircleArtVisual
                           data={ data }
                           height={ height }
+                          isInFullscreen={ isInFullscreen }
                           onClear={ () => this.handleOnClear() }
                           onFullscreen={ () => this.handleOnFullscreen() }
                           onSave={ (data) => this.handleOnSave(data) }

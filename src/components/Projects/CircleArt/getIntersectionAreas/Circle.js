@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import floor from 'lodash.floor';
 import getCircleArea from '../utilsMath/getCircleArea';
 import isPointWithinCircle from '../utilsMath/isPointWithinCircle';
@@ -44,6 +45,7 @@ export default class Circle {
   toObject() {
     return {
       area: this.area,
+      id: v4(),
       n: this.n,
       radius: this.radius,
       segments: this.segments.map((segment) => segment.toObject()),

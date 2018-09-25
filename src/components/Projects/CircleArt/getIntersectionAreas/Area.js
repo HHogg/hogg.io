@@ -1,3 +1,4 @@
+import { v4 } from 'uuid';
 import mean from 'lodash.mean';
 
 export default class Area {
@@ -29,6 +30,7 @@ export default class Area {
       area: this.area,
       cx: this.cx,
       cy: this.cy,
+      id: v4(),
     };
   }
 }

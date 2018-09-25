@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 export const toAbsoluteFromRelativeIntersection = (mx, my, width, height, { arcs, cx, cy, filled, radius, x, y }) => arcs ? ({
   arcs: arcs.map(({ a1, a2, convex, cx, cy, direction, radius }) => ({
     a1: a1,
@@ -11,9 +13,11 @@ export const toAbsoluteFromRelativeIntersection = (mx, my, width, height, { arcs
   cx: mx + (cx * width),
   cy: my + (cy * height),
   filled: filled,
+  id: v4(),
 }) : toAbsoluteFromRelativeShape(mx, my, width, height, { x, y, radius });
 
 export const toAbsoluteFromRelativeShape = (mx, my, width, height, { radius, x, y }) => ({
+  id: v4(),
   radius: radius * width,
   x: mx + (x * width),
   y: my + (y * height),
