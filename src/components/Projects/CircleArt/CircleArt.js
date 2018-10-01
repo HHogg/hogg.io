@@ -52,6 +52,10 @@ export default class CircleArt extends Component {
     });
   }
 
+  handleOnChange(data) {
+    this.setState({ data });
+  }
+
   render() {
     const { data, isInFullscreen } = this.state;
 
@@ -63,28 +67,27 @@ export default class CircleArt extends Component {
                 grow
                 gutter="x8"
                 margin="x6">
-              <Flex
-                  container
+              <Bounds
+                  Component={ Flex }
                   direction="vertical"
                   grow
-                  minHeight="37.5rem">
-                <Bounds
-                    absolute="fullscreen"
-                    ref={ (el) => this.fullscreenContainer = findDOMNode(el) }>
-                  { ({ width, height }) => (
-                    width && height && (
-                      <CircleArtVisual
-                          data={ data }
-                          height={ height }
-                          isInFullscreen={ isInFullscreen }
-                          onClear={ () => this.handleOnClear() }
-                          onFullscreen={ () => this.handleOnFullscreen() }
-                          onSave={ (data) => this.handleOnSave(data) }
-                          width={ width } />
-                    )
-                  ) }
-                </Bounds>
-              </Flex>
+                  id="CircleArtBoundary"
+                  minHeight="37.5rem"
+                  ref={ (el) => this.fullscreenContainer = findDOMNode(el) }>
+                { ({ width, height }) => (
+                  width && height && (
+                    <CircleArtVisual
+                        data={ data }
+                        height={ height }
+                        isInFullscreen={ isInFullscreen }
+                        onChange={ (data) => this.handleOnChange(data) }
+                        onClear={ () => this.handleOnClear() }
+                        onFullscreen={ () => this.handleOnFullscreen() }
+                        onSave={ (data) => this.handleOnSave(data) }
+                        width={ width } />
+                  )
+                ) }
+              </Bounds>
             </Flex>
 
             <Base margin="x6">

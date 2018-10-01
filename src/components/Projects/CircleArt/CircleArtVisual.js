@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component, Fragment } from 'react';
 import { findDOMNode } from 'react-dom';
+import debounce from 'lodash.debounce';
 import classnames from 'classnames';
 import fscreen from 'fscreen';
 import Two from 'two.js';
@@ -12,10 +13,8 @@ import {
   CheckBox,
   Flex,
   Icon,
-  Toolbar,
-  ToolbarAction,
-  ToolbarActionGroup,
 } from 'preshape';
+import CircleArtToolbar from './CircleArtToolbar';
 import History from './History';
 import atan2 from './utilsMath/atan2';
 import debugAreas from './utilsDebug/debugAreas';
@@ -93,6 +92,7 @@ export default class CircleArtVisual extends Component {
     }).isRequired,
     height: PropTypes.number.isRequired,
     isInFullscreen: PropTypes.bool.isRequired,
+    onChange: PropTypes.func.isRequired,
     onClear: PropTypes.func.isRequired,
     onFullscreen: PropTypes.func.isRequired,
     onSave: PropTypes.func.isRequired,
@@ -102,6 +102,7 @@ export default class CircleArtVisual extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      canRedo: false,
       canUndo: false,
       debug: false,
       mode: getMode(props.data),
@@ -114,21 +115,27 @@ export default class CircleArtVisual extends Component {
 
   componentDidMount() {
     const { mode } = this.state;
-    const { data, height, width } = this.props;
+    const { height, width } = this.props;
 
     this.history = new History({
-      onChange: (history) => this.setState({ canUndo: history.length }),
+      onChange: ({ history, future }) =>
+        this.setState({
+          canRedo: future.length,
+          canUndo: history.length,
+        }),
     });
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseUp = this.handleMouseUp.bind(this);
     this.handleTouchMove = this.handleTouchMove.bind(this);
+    this.handleWindowResize = debounce(this.handleWindowResize.bind(this));
 
     document.addEventListener('mouseup', this.handleMouseUp);
     document.addEventListener('mousemove', this.handleMouseMove);
     document.addEventListener('touchend', this.handleMouseUp);
     document.body.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+    window.addEventListener('resize', this.handleWindowResize);
 
     this.two = new Two({
       autostart: true,
@@ -137,25 +144,25 @@ export default class CircleArtVisual extends Component {
       width: width,
     }).appendTo(this.container);
 
-    this.initCanvas(data.ratio);
-    this.initData(data);
+    this.initCanvas();
+    this.initData();
     this.initMode(mode);
   }
 
   componentDidUpdate(prevProps) {
-    const { data, height, width } = this.props;
+    const { data, height, onChange, width } = this.props;
     const hasDataChanged = data !== prevProps.data;
     const hasDimensionsChanged = width !== prevProps.width || height !== prevProps.height;
     const mode = getMode(data);
 
-    if (hasDimensionsChanged) {
-      this.initCanvas(data.ratio);
+    if (hasDimensionsChanged && !hasDataChanged) {
+      onChange(this.getRelativeData(prevProps));
     }
 
-    if (hasDataChanged || hasDimensionsChanged) {
+    if (hasDataChanged) {
+      this.initCanvas();
+      this.initData();
       this.hideToolbar();
-      this.setState({ mode });
-      this.initData(data);
       this.initMode(mode);
     }
   }
@@ -165,10 +172,12 @@ export default class CircleArtVisual extends Component {
     document.removeEventListener('mousemove', this.handleMouseMove);
     document.removeEventListener('touchend', this.handleMouseUp);
     document.body.removeEventListener('touchmove', this.handleTouchMove);
+    window.removeEventListener('resize', this.handleWindowResize);
   }
 
-  initCanvas(ratio) {
-    const { height, width } = this.props;
+  initCanvas() {
+    const { data, height, width } = this.props;
+    const { ratio } = data;
 
     this.cx = width / 2;
     this.cy = height / 2;
@@ -182,13 +191,29 @@ export default class CircleArtVisual extends Component {
     this.two.clear();
   }
 
-  initData({ intersections, shapes }) {
-    this.intersections = intersections.map((intersection) => toAbsoluteFromRelativeIntersection(this.cx, this.cy, this.scaledWidth, this.scaledHeight, intersection));
-    this.shapes = shapes.map((shape) => toAbsoluteFromRelativeShape(this.cx, this.cy, this.scaledWidth, this.scaledHeight, shape));
+  initData() {
+    const { intersections, shapes } = this.props.data;
+
+    this.intersections = intersections.map((intersection) =>
+      toAbsoluteFromRelativeIntersection(
+        this.cx, this.cy,
+        this.scaledWidth, this.scaledHeight,
+        intersection,
+      )
+    );
+
+    this.shapes = shapes.map((shape) =>
+      toAbsoluteFromRelativeShape(
+        this.cx, this.cy,
+        this.scaledWidth, this.scaledHeight,
+        shape,
+      )
+    );
   }
 
   initMode(mode) {
     this.history.commit();
+    this.setState({ mode });
 
     switch (mode) {
       case MODE_DRAW: return this.initModeDraw();
@@ -357,8 +382,7 @@ export default class CircleArtVisual extends Component {
     this.container.style.cursor = cursor;
   }
 
-  addShape({ radius, x, y }) {
-    const id = v4();
+  addShape({ id = v4(), radius, x, y }) {
     const path = createCircle({ radius, x, y });
     const shape = { id, path, radius, x, y };
 
@@ -514,23 +538,43 @@ export default class CircleArtVisual extends Component {
     }
   }
 
+  handleWindowResize() {
+    if (this.activeShape) {
+      const { containerX, containerY } = this.getRelativeCoordinates();
+      this.showToolbar(containerX, containerY);
+    }
+  }
+
   handlePushHistory() {
     if (this.isAdding) {
-      return this.history.push('addShape', {
-        id: this.activeShape.id,
-        radius: this.activeShape.radius,
-        x: this.activeShape.x,
-        y: this.activeShape.y,
-      });
+      return this.history.push([
+        'addShape', [{
+          id: this.activeShape.id,
+          radius: this.activeShape.radius,
+          x: this.activeShape.x,
+          y: this.activeShape.y,
+        }],
+        'removeShape', [{
+          id: this.activeShape.id,
+        }],
+      ]);
     }
 
     if (this.isMoving || this.isResizing) {
-      return this.history.push('setShapeProps', {
-        id: this.activeShape.id,
-        radius: this.activeShapeProps.radius,
-        x: this.activeShapeProps.x,
-        y: this.activeShapeProps.y,
-      });
+      return this.history.push([
+        'setShapeProps', [{
+          id: this.activeShape.id,
+          radius: this.activeShape.radius,
+          x: this.activeShape.x,
+          y: this.activeShape.y,
+        }],
+        'setShapeProps', [{
+          id: this.activeShape.id,
+          radius: this.activeShapeProps.radius,
+          x: this.activeShapeProps.x,
+          y: this.activeShapeProps.y,
+        }],
+      ]);
     }
   }
 
@@ -539,9 +583,9 @@ export default class CircleArtVisual extends Component {
   }
 
   handleSetMode(mode) {
-    this.setState({ mode });
-    this.initMode(mode);
-    this.hideToolbar();
+    if (this.state.mode !== mode) {
+      this.initMode(mode);
+    }
   }
 
   handleSelectShape(shape) {
@@ -549,8 +593,11 @@ export default class CircleArtVisual extends Component {
   }
 
   handleSelectIntersection({ id, filled }) {
-    this.history.push('setIntersectionProps', { id, filled });
     this.setIntersectionProps({ id: id, filled: !filled });
+    this.history.push([
+      'setIntersectionProps', [{ id: id, filled: !filled }],
+      'setIntersectionProps', [{ id, filled }],
+    ]);
   }
 
   handleAddShape(x, y, radius = TOLERANCE_CREATE_SHAPE) {
@@ -579,10 +626,14 @@ export default class CircleArtVisual extends Component {
   handleRemoveActiveShape() {
     const { id, radius, x, y } = this.activeShape;
 
-    this.history.push('removeShape', { id, radius, x, y });
     this.removeShape({ id });
     this.activeShape = null;
     this.hideToolbar();
+
+    this.history.push([
+      'removeShape', [{ id }],
+      'addShape', [{ id, radius, x, y }],
+    ]);
   }
 
   handleResizeActiveShape(x, y) {
@@ -602,64 +653,75 @@ export default class CircleArtVisual extends Component {
     this[action](...args);
   }
 
-  showToolbar() {
+  handleRedo() {
+    const [action, args] = this.history.replay();
+    this[action](...args);
+  }
+
+  showToolbar(offsetX, offsetY) {
     const { radius, x, y } = this.activeShape;
 
     this.setState({
-      toolbarTargetBox: {
+      targetRect: {
         height: radius * 2,
         width: radius * 2,
-        x: x - radius,
-        y: y - radius,
+        x: offsetX + (x - radius),
+        y: offsetY + (y - radius),
       },
     });
   }
 
   hideToolbar() {
     this.setState({
-      toolbarTargetBox: null,
+      targetRect: null,
     });
   }
 
   render() {
-    const { canUndo, debug, mode, toolbarTargetBox } = this.state;
+    const { canRedo, canUndo, debug, mode, targetRect } = this.state;
     const { isInFullscreen, onClear, onFullscreen } = this.props;
     const classes = classnames('CircleArt__visual', `CircleArt__visual--mode-${mode}`);
 
     return (
       <Fragment>
-        <Toolbar
-            container={ this.container }
-            targetBox={ toolbarTargetBox }
-            visible={ !!toolbarTargetBox }>
-          <ToolbarActionGroup>
-            <ToolbarAction onClick={ () => this.handleCopyActiveShape() }>
-              <Icon name="Copy" size="1rem" />
-            </ToolbarAction>
-          </ToolbarActionGroup>
+        <Flex container grow>
+          <Base
+              absolute="fullscreen"
+              backgroundColor="shade-2"
+              className={ classes }
+              onMouseDown={ (e) => this.handleMouseDown(moveEvent(e)) }
+              onTouchMove={ (e) => this.handleMouseMove(moveEvent(e)) }
+              onTouchStart={ (e) => this.handleMouseDown(moveEvent(e)) }
+              ref={ (container) => this.container = findDOMNode(container) } />
 
-          <ToolbarActionGroup>
-            <ToolbarAction
-                color="negative"
-                onClick={ () => this.handleRemoveActiveShape() }>
-              <Icon name="Delete" size="1rem" />
-            </ToolbarAction>
-          </ToolbarActionGroup>
-        </Toolbar>
+          <Base absolute="top-right" padding="x4">
+            <Button
+                disabled={ !canFullscreen }
+                onClick={ () => onFullscreen() }>
+              <Flex
+                  alignChildrenVertical="middle"
+                  direction="horizontal"
+                  gutter="x1">
+                <Flex>
+                  <Icon
+                      name={ isInFullscreen ? 'Minimize' : 'Maximize' }
+                      size="1rem" />
+                </Flex>
 
-        <Base
-            absolute="fullscreen"
-            backgroundColor="shade-2"
-            className={ classes }
-            onMouseDown={ (e) => this.handleMouseDown(moveEvent(e)) }
-            onTouchMove={ (e) => this.handleMouseMove(moveEvent(e)) }
-            onTouchStart={ (e) => this.handleMouseDown(moveEvent(e)) }
-            ref={ (container) => this.container = findDOMNode(container) } />
+                <Flex>
+                  { isInFullscreen ? 'Exit' : 'Fullscreen' }
+                </Flex>
+              </Flex>
+            </Button>
+          </Base>
 
-        <Base absolute="bottom" padding="x4">
-          <Flex alignChildrenHorizontal="between" direction="horizontal">
-            <Flex direction="horizontal" gutter="x2">
-              <Flex>
+          <Flex
+              absolute="bottom-left"
+              direction="horizontal"
+              gutter="x2"
+              padding="x4">
+            <Flex>
+              <Buttons>
                 <Button
                     color="positive"
                     disabled={ !canSave }
@@ -672,11 +734,22 @@ export default class CircleArtVisual extends Component {
                     <Flex>Save</Flex>
                   </Flex>
                 </Button>
-              </Flex>
 
-              <Flex>
+                <Button color="negative" onClick={ () => onClear() }>
+                  <Flex
+                      alignChildrenVertical="middle"
+                      direction="horizontal"
+                      gutter="x1">
+                    <Flex><Icon name="File" size="1rem" /></Flex>
+                    <Flex>Clear</Flex>
+                  </Flex>
+                </Button>
+              </Buttons>
+            </Flex>
+
+            <Flex>
+              <Buttons joined>
                 <Button
-                    color="negative"
                     disabled={ !canUndo }
                     onClick={ () => this.handleUndo() }>
                   <Flex
@@ -687,93 +760,79 @@ export default class CircleArtVisual extends Component {
                     <Flex>Undo</Flex>
                   </Flex>
                 </Button>
-              </Flex>
 
-              <Flex>
-                <Button color="negative" onClick={ () => onClear() }>
-                  <Flex
-                      alignChildrenVertical="middle"
-                      direction="horizontal"
-                      gutter="x1">
-                    <Flex><Icon name="File" size="1rem" /></Flex>
-                    <Flex>Clear</Flex>
-                  </Flex>
-                </Button>
-              </Flex>
-
-              { process.env.NODE_ENV === 'development' && (
-                <Flex>
-                  <CheckBox
-                      checked={ debug }
-                      label="Debug"
-                      margin="x2"
-                      onChange={ () => this.setState({ debug: !debug }) } />
-                </Flex>
-              ) }
-            </Flex>
-
-            <Flex direction="horizontal" gutter="x2">
-              <Flex>
-                <Buttons>
-                  <Button
-                      active={ mode === MODE_DRAW }
-                      onClick={ () => this.handleSetMode(MODE_DRAW) }>
-                    <Flex
-                        alignChildrenVertical="middle"
-                        direction="horizontal"
-                        gutter="x1">
-                      <Flex><Icon name="Pencil" size="1rem" /></Flex>
-                      <Flex>Draw</Flex>
-                    </Flex>
-                  </Button>
-                  <Button
-                      active={ mode === MODE_FILL }
-                      onClick={ () => this.handleSetMode(MODE_FILL) }>
-                    <Flex
-                        alignChildrenVertical="middle"
-                        direction="horizontal"
-                        gutter="x1">
-                      <Flex><Icon name="Water" size="1rem" /></Flex>
-                      <Flex>Fill</Flex>
-                    </Flex>
-                  </Button>
-                  <Button
-                      active={ mode === MODE_VIEW }
-                      onClick={ () => this.handleSetMode(MODE_VIEW) }>
-                    <Flex
-                        alignChildrenVertical="middle"
-                        direction="horizontal"
-                        gutter="x1">
-                      <Flex><Icon name="Eye" size="1rem" /></Flex>
-                      <Flex>View</Flex>
-                    </Flex>
-                  </Button>
-                </Buttons>
-              </Flex>
-
-              <Flex>
                 <Button
-                    disabled={ !canFullscreen }
-                    onClick={ () => onFullscreen() }>
+                    disabled={ !canRedo }
+                    onClick={ () => this.handleRedo() }>
                   <Flex
                       alignChildrenVertical="middle"
                       direction="horizontal"
                       gutter="x1">
-                    <Flex>
-                      <Icon
-                          name={ isInFullscreen ? 'Minimize' : 'Maximize' }
-                          size="1rem" />
-                    </Flex>
-
-                    <Flex>
-                      { isInFullscreen ? 'Exit' : 'Fullscreen' }
-                    </Flex>
+                    <Flex><Icon name="Redo" size="1rem" /></Flex>
+                    <Flex>Redo</Flex>
                   </Flex>
                 </Button>
-              </Flex>
+              </Buttons>
             </Flex>
+
+            { process.env.NODE_ENV === 'development' && (
+              <Flex>
+                <CheckBox
+                    checked={ debug }
+                    label="Debug"
+                    margin="x2"
+                    onChange={ () => this.setState({ debug: !debug }) } />
+              </Flex>
+            ) }
           </Flex>
-        </Base>
+
+          <Flex
+              absolute="bottom-right"
+              direction="horizontal"
+              gutter="x2"
+              padding="x4">
+            <Buttons joined>
+              <Button
+                  active={ mode === MODE_DRAW }
+                  onClick={ () => this.handleSetMode(MODE_DRAW) }>
+                <Flex
+                    alignChildrenVertical="middle"
+                    direction="horizontal"
+                    gutter="x1">
+                  <Flex><Icon name="Pencil" size="1rem" /></Flex>
+                  <Flex>Draw</Flex>
+                </Flex>
+              </Button>
+              <Button
+                  active={ mode === MODE_FILL }
+                  onClick={ () => this.handleSetMode(MODE_FILL) }>
+                <Flex
+                    alignChildrenVertical="middle"
+                    direction="horizontal"
+                    gutter="x1">
+                  <Flex><Icon name="Water" size="1rem" /></Flex>
+                  <Flex>Fill</Flex>
+                </Flex>
+              </Button>
+              <Button
+                  active={ mode === MODE_VIEW }
+                  onClick={ () => this.handleSetMode(MODE_VIEW) }>
+                <Flex
+                    alignChildrenVertical="middle"
+                    direction="horizontal"
+                    gutter="x1">
+                  <Flex><Icon name="Eye" size="1rem" /></Flex>
+                  <Flex>View</Flex>
+                </Flex>
+              </Button>
+            </Buttons>
+          </Flex>
+        </Flex>
+
+        <CircleArtToolbar
+            onCopy={ () => this.handleCopyActiveShape() }
+            onDelete={ () => this.handleRemoveActiveShape() }
+            targetRect={ targetRect } />
       </Fragment>
     );
   }
