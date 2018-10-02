@@ -71,11 +71,13 @@ export default class CircleArt extends Component {
                   Component={ Flex }
                   direction="vertical"
                   grow
+                  height="100%"
                   id="CircleArtBoundary"
                   minHeight="37.5rem"
-                  ref={ (el) => this.fullscreenContainer = findDOMNode(el) }>
+                  ref={ (el) => this.fullscreenContainer = findDOMNode(el) }
+                  width="100%">
                 { ({ width, height }) => (
-                  width && height && (
+                  width !== undefined && height !== undefined && (
                     <CircleArtVisual
                         data={ data }
                         height={ height }
