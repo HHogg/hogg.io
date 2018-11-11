@@ -9,14 +9,14 @@ import CircleArtVisual from './CircleArtVisual';
 import Showcase from './Showcase';
 import ShowcaseItem from './ShowcaseItem';
 import configurations from './configurations';
-import Fox from './configurations/Fox';
+import Island from './configurations/Island';
 import './CircleArt.css';
 
 export default class CircleArt extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: Fox,
+      data: Island,
       isInFullscreen: false,
     };
   }

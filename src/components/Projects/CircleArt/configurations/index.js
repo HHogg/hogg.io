@@ -1,9 +1,8 @@
 export default [{
-  author: 'Unknown',
-  authorUrl: 'https://www.reddit.com/r/Damnthatsinteresting/comments/963j4n/magic_of_circles/',
-  config: require('./Profile.json'),
-  name: 'Profile',
-  svg: require('./Profile.svg'),
+  author: 'Harrison Hogg',
+  config: require('./Island.json'),
+  name: 'Island',
+  svg: require('./Island.svg'),
 }, {
   author: 'Dorota Pankoska',
   authorUrl: 'http://dorotapankowska.com/13-animals-13-circles.html',
@@ -22,6 +21,12 @@ export default [{
   config: require('./Whale.json'),
   name: 'Whale',
   svg: require('./Whale.svg'),
+}, {
+  author: 'Unknown',
+  authorUrl: 'https://www.reddit.com/r/Damnthatsinteresting/comments/963j4n/magic_of_circles/',
+  config: require('./Profile.json'),
+  name: 'Profile',
+  svg: require('./Profile.svg'),
 }, {
   name: 'Complexity Test',
   config: require('./ComplexityTestContent.json'),
