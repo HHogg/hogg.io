@@ -14,9 +14,10 @@ export const toAbsoluteFromRelativeIntersection = (mx, my, width, height, { arcs
   cy: my + (cy * height),
   filled: filled,
   id: id || v4(),
-}) : toAbsoluteFromRelativeShape(mx, my, width, height, { x, y, radius });
+}) : toAbsoluteFromRelativeShape(mx, my, width, height, { filled, x, y, radius });
 
-export const toAbsoluteFromRelativeShape = (mx, my, width, height, { id, radius, x, y }) => ({
+export const toAbsoluteFromRelativeShape = (mx, my, width, height, { filled, id, radius, x, y }) => ({
+  filled: filled,
   id: id || v4(),
   radius: radius * width,
   x: mx + (x * width),
