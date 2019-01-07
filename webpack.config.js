@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const port = process.env.PORT || 4001;
 
 module.exports = {
+  mode: 'development',
   entry: [
     'react-hot-loader/patch',
     `webpack-dev-server/client?http://localhost:${port}`,
@@ -13,6 +14,7 @@ module.exports = {
   ],
   output:  {
     filename: 'bundle.js',
+    globalObject: 'this',
     publicPath: '/',
   },
   module: {
@@ -29,6 +31,9 @@ module.exports = {
     }, {
       test: /.svg$/,
       loader: 'svg-inline-loader',
+    }, {
+      test: /\.worker\.js$/,
+      use: ['worker-loader'],
     }],
   },
   plugins: [
@@ -47,9 +52,16 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     contentBase: resolve(__dirname, 'src'),
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true,
+    },
     host: 'localhost',
     hot: true,
     port: port,
+  },
+  resolve: {
+    alias: {
+      preshape: resolve(__dirname, '../preshape/src'),
+    },
   },
 };

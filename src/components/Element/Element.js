@@ -49,9 +49,9 @@ export default class Element extends Component {
           onClick={ disabled ? null : onClick }
           padding="x2"
           width={ size }>
-        <Flex grow><Text align="end" size="small">{ number }</Text></Flex>
-        <Flex><Text size="title" strong>{ code }</Text></Flex>
-        { name && <Flex><Text size="small">{ name }</Text></Flex> }
+        <Flex grow><Text align="end" size="x1">{ number }</Text></Flex>
+        <Flex><Text size="x5" strong>{ code }</Text></Flex>
+        { name && <Flex><Text size="x1">{ name }</Text></Flex> }
       </Flex>
     );
   }

@@ -139,7 +139,7 @@ export default class Lorem extends Component {
                         paddingVertical="x3"
                         scrollable>
                       { active === 'html' && (
-                        <Text Component="div" size="small">
+                        <Text Component="div" size="x1">
                           <Markdown>
                             { markdown }
                           </Markdown>
@@ -147,7 +147,7 @@ export default class Lorem extends Component {
                       ) }
 
                       { active === 'react' && (
-                        <CodeBlock language="json" size="small" wrap>
+                        <CodeBlock language="json" size="x1" wrap>
                           { renderReactJsonString(renderMarkdown(markdown)) }
                         </CodeBlock>
                       ) }

@@ -19,8 +19,8 @@ export default class ProjectDescription extends Component {
 
     return (
       <Fragment>
-        <Text margin="x1" size="title">
-          { name } <Text inline size="small" superscript>({ year })</Text>
+        <Text margin="x1" size="x5">
+          { name } <Text inline size="x1" superscript>({ year })</Text>
         </Text>
 
         <Text color="shade-3">

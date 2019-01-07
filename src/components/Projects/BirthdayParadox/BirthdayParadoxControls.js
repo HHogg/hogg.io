@@ -72,7 +72,7 @@ export default class BirthdayVisualControls extends Component {
                 margin="x2"
                 paddingHorizontal="x3"
                 paddingVertical="x2"
-                size="small">
+                size="x1">
               <Text inline strong>{ stat }:</Text> { value }
             </Text>
           ) ) }

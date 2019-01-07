@@ -56,6 +56,12 @@ export const setAttribute = (shape, attribute, value) => {
 export const setClassName = (shape, className) =>
   setAttribute(shape, 'class', className);
 
+export const createArc = (props) => {
+  return createShape(
+    new Two.Path(arcsToAnchors([props]), false, false, true),
+  props);
+};
+
 export const createCircle = (props) => {
   return createShape(
     new Two.Circle(props.x, props.y, props.radius),
@@ -68,9 +74,13 @@ export const createEllipse = (props) => {
   props);
 };
 
-export const createGroup = (props) => {
+export const createGroup = (props = {}) => {
   const group = new Two.Group();
-  group.translation.set(props.x, props.y);
+
+  if (props.x !== undefined && props.y !== undefined) {
+    group.translation.set(props.x, props.y);
+  }
+
   return group;
 };
 
@@ -96,7 +106,7 @@ export const createPolygon = (props) => {
 
 export const createPolygonArc = (props) => {
   return createShape(
-    new Two.Path(arcsToAnchors(props.arcs), true, false, true),
+    new Two.Path(arcsToAnchors(props.arcs, true), true, false, true),
   props);
 };
 
@@ -116,7 +126,7 @@ export const createTriangle = (props) => {
   props);
 };
 
-const arcsToAnchors = (arcs) => {
+const arcsToAnchors = (arcs, closed) => {
   const R = Two.Resolution * 3;
   const anchors = Array
     .from({ length: (R * arcs.length) })
@@ -160,8 +170,10 @@ const arcsToAnchors = (arcs) => {
     }
   }
 
-  anchors[anchors.length - 1].x = anchors[0].x;
-  anchors[anchors.length - 1].y = anchors[0].y;
+  if (closed) {
+    anchors[anchors.length - 1].x = anchors[0].x;
+    anchors[anchors.length - 1].y = anchors[0].y;
+  }
 
   return anchors;
 };

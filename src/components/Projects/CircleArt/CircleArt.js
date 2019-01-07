@@ -93,7 +93,7 @@ export default class CircleArt extends Component {
             </Flex>
 
             <Base margin="x6">
-              <Text margin="x2" size="heading">Showcase</Text>
+              <Text margin="x2" size="x3">Showcase</Text>
               <Text color="shade-3" margin="x2">
                 Built something nice? Send up
                 a <Link href="https://github.com/HHogg/hogg.io">pull request</Link> with
@@ -105,9 +105,9 @@ export default class CircleArt extends Component {
               { ({ theme }) => (
                 <Showcase
                     columnCount={ match({
-                      [widthMedium]: 4,
-                      [widthSmall]: 3,
-                    }) || 2 }>
+                      [widthMedium]: '4',
+                      [widthSmall]: '3',
+                    }) || '2' }>
                   { configurations.map(({ author, authorUrl, config, name, svg }) =>
                     <ShowcaseItem
                         author={ author }

@@ -50,7 +50,7 @@ export default class BirthdayParadoxTable extends Component {
 
     return (
       <Base margin="x16">
-        <Text margin="x4" size="heading" strong>Results after { simulations } Simulations</Text>
+        <Text margin="x4" size="x3" strong>Results after { simulations } Simulations</Text>
         <Table>
           <TableHeader>
             <TableRow>

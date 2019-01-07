@@ -40,11 +40,11 @@ export default class BirthdayParadox extends Component {
         data: probabilities,
         isRunning: false,
         lastSimulations: simulations,
-        maxCollision,
-        p50,
-        p99,
-        p100,
-        tableN,
+        maxCollision: maxCollision,
+        p50: p50,
+        p99: p99,
+        p100: p100,
+        tableN: tableN,
       }, () => {
         window.setTimeout(() => {
           this.setState({ showTable: true });

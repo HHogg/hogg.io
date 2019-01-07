@@ -1,10 +1,10 @@
-const BirthdayParadox = {
-  code: 'Bi',
-  name: 'Birthday Paradox',
-  to: '/projects/birthday-paradox',
-  description: 'Experiment to visualise the [Birthday Paradox](https://en.wikipedia.org/wiki/Birthday_problem).',
-  year: 2018,
-};
+// const BirthdayParadox = {
+//   code: 'Bi',
+//   name: 'Birthday Paradox',
+//   to: '/projects/birthday-paradox',
+//   description: 'Experiment to visualise the [Birthday Paradox](https://en.wikipedia.org/wiki/Birthday_problem).',
+//   year: 2018,
+// };
 
 const Brandwatch = {
   code: 'Br',
@@ -14,7 +14,7 @@ const Brandwatch = {
   description: '**Senior Developer** - Brandwatch audience insights and targeted marketing',
   timeline: `[Brandwatch](https://brandwatch.com) is a social media monitoring platform. They provide tools to monitor, analyse and engage with conversations across the internet.
 
-  My time at Brandwatch is spent building the frontend to the [Audiences](https://brandwatch.com/audiences) product, leading the development of [Axiom](https://axiom.brandwatch.com) (the company's Pattern Library and Design System) and helping out with various development projects.`,
+  My time at Brandwatch was spent building the frontend to the [Audiences](https://brandwatch.com/audiences) product, leading the development of [Axiom](https://axiom.brandwatch.com) (the company's Pattern Library and Design System) and helping out with various development projects.`,
   year: 2015,
 };
 
@@ -30,8 +30,15 @@ const CoSine = {
   code: 'Cs',
   name: 'CoSine',
   to: '/projects/cosine',
-  labels: [],
   description: 'A simple and *unoriginal* visualisation to show the relationship between sine and cosine.',
+  year: 2018,
+};
+
+const EuclideanTiling = {
+  code: 'Et',
+  name: 'Euclidean Tiling',
+  to: '/projects/euclidean-tiling',
+  description: 'Systematic generation of regular polygon tessellations using an expressive notation.',
   year: 2018,
 };
 
@@ -59,6 +66,18 @@ const Pure360 = {
 
   My time at Pure360 as a UI Developer was primarily focused on building the UI to their Drag and Drop email creation tool and helped build the platform for campaign management and tracking.`,
   year: 2014,
+};
+
+const Outlyer = {
+  code: 'Ou',
+  name: 'Outlyer',
+  to: '/timeline/#Ou',
+  labels: ['javascript', 'nodejs', 'css', 'react', 'redux', 'webgl', 'd3'],
+  description: '**Senior Developer** - Infrastructure Monitoring',
+  timeline: `[Outlyer](https://www.outlyer.com/) is a self-service monitoring plaform for teams, giving them deep visibility into infrastructure and custom metrics at scale.
+
+  At Outlyer my focus is building the frontend, which using yarn workspaces, has been separated into focused and connectable applications. Some of these include a bespoke visualisation built with WebGL to view the status of hosts, containers and devices. Another is a custom design system and React component library to accelerate development and provide UI consistency.`,
+  year: 2018,
 };
 
 const Reedsy = {
@@ -97,7 +116,6 @@ const SnakeHeuristics = {
   href: 'https://snake.hogg.io',
 };
 
-
 export default [{
   ...Pure360, x: 1, y: 1,
 }, {
@@ -105,21 +123,23 @@ export default [{
 }, {
   ...Brandwatch, x: 1, y: 3,
 }, {
-  ...SysPlot, x: 2, y: 2,
+  ...Outlyer, x: 1, y: 4,
 }, {
-  ...RemarkableReact, x: 2, y: 3,
+  ...SysPlot, x: 2, y: 3,
 }, {
-  ...Preshape, x: 3, y: 3,
+  ...RemarkableReact, x: 2, y: 4,
 }, {
-  ...SnakeHeuristics, x: 4, y: 2,
+  ...Preshape, x: 3, y: 4,
 }, {
-  ...BirthdayParadox, x: 4, y: 3,
+  ...LightRay, x: 4, y: 4,
 }, {
-  ...LightRay, x: 5, y: 1,
+  ...CoSine, x: 4, y: 3,
 }, {
-  ...CoSine, x: 5, y: 2,
+  ...SnakeHeuristics, x: 5, y: 2,
 }, {
   ...CircleArt, x: 5, y: 3,
+}, {
+  ...EuclideanTiling, x: 5, y: 4,
 }]
 
 .sort((a, b) => a.y - b.y || a.x - b.x)

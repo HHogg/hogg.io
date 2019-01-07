@@ -350,7 +350,7 @@ export default class CircleArtVisual extends Component {
   }
 
   getIntersectionByDOMElement(element) {
-    return this.intersections.find((intersection) => intersection.path.domElement === element)
+    return this.intersections.find((intersection) => intersection.path.domElement === element);
   }
 
   setActiveShape(shape) {

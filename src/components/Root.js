@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
+import { hot } from 'react-hot-loader/root';
 import {
   Application,
   ApplicationDetails,
@@ -19,7 +20,7 @@ export const widthSmall = '48rem';
 export const widthMedium = '64rem';
 export const widthLarge = '72rem';
 
-export default class Root extends Component {
+class Root extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,7 +43,7 @@ export default class Root extends Component {
                 alignChildrenVertical="start"
                 direction="horizontal">
               <Flex>
-                <Link size="small" to="/">Hogg.io</Link>
+                <Link size="x1" strong to="/">Hogg.io</Link>
               </Flex>
 
               <Flex>
@@ -75,13 +76,9 @@ export default class Root extends Component {
               } />
             )) }
         </SwitchTransition>
-
-        <ApplicationFooter padding="x4">
-          <ApplicationDetails
-              alignChildrenHorizontal="middle"
-              github="https://github.com/HHogg/hogg.io" />
-        </ApplicationFooter>
       </Application>
     );
   }
 }
+
+export default hot(Root);

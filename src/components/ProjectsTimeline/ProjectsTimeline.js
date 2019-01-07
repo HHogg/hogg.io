@@ -40,9 +40,11 @@ export default class ProjectsTimeline extends Component {
                     <TimelineItemDescription>
                       <ProjectDescription code={ code } />
 
-                      <Text margin="x3">
-                        <Markdown>{ timeline }</Markdown>
-                      </Text>
+                      { typeof timeline === 'string' && (
+                        <Text margin="x3">
+                          <Markdown>{ timeline }</Markdown>
+                        </Text>
+                      ) }
                     </TimelineItemDescription>
                   </TimelineItem>
                 )

@@ -30,8 +30,8 @@ export default class ProjectsTable extends Component {
       <Responsive queries={ [widthSmall, widthMedium] }>
         { (match) => (
           <Grid
-              columnCount={ match({ [widthSmall]: 3, [widthMedium]: null }) || 2 }
-              gutter="x2"
+              columnCount={ match({ [widthSmall]: '3', [widthMedium]: null }) || '2' }
+              gap="x2"
               margin="x6">
             { projectsList.map(({ code, disabled, href, to, x, y, ...rest }, index) => (
               <GridItem

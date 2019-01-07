@@ -48,20 +48,20 @@ export default class ShowcaseItem extends Component {
             padding="x2"
             theme={ theme }>
           <Flex grow>
-            <Text size="small" strong>{ name }</Text>
-            { author && <Text emphasis size="small">by { author }</Text> }
+            <Text size="x1" strong>{ name }</Text>
+            { author && <Text emphasis size="x1">by { author }</Text> }
           </Flex>
 
           <Flex>
             <List>
               <ListItem separator="|">
-                <Link onClick={ onClick }><Text size="small">Open</Text></Link>
+                <Link onClick={ onClick }><Text size="x1">Open</Text></Link>
               </ListItem>
 
               { authorUrl && (
                 <ListItem separator="|">
                   <Link href={ authorUrl } target="CircleArtOriginal">
-                    <Text size="small">Original</Text>
+                    <Text size="x1">Original</Text>
                   </Link>
                 </ListItem>
               ) }

@@ -1,0 +1,36 @@
+.TilingEditor__input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  color: inherit;
+  text-overflow: ellipsis;
+  appearance: none;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.TilingEditor__update {
+  border-left: var(--border-size--x1) solid var(--color-text--shade-1);
+}
+
+.TilingEditor__side-panel {
+  border-top: var(--border-size--x1) solid var(--color-text--shade-1);
+  border-bottom: var(--border-size--x1) solid var(--color-text--shade-1);
+  overflow: hidden;
+}
+
+.TilingEditor__side-panel-content {
+  width: 0;
+  transition-property: width;
+  transition-duration: var(--transition-time--base);
+  transition-timing-function: var(--transition-function);
+}
+
+.TilingEditor__side-panel--open .TilingEditor__side-panel-content {
+  width: 16rem;
+}

@@ -147,16 +147,16 @@ export default class SysPlotProject extends Component {
                 </Bounds>
 
                 <Flex container>
-                  <Text size="small"><Text inline strong>Algorithm:</Text> { algorithmName }</Text>
-                  <Text size="small"><Text inline strong>Aspect Ratio:</Text> { aspectRatio }</Text>
-                  <Text size="small"><Text inline strong>Cover:</Text> { cover.toString() }</Text>
-                  <Text size="small"><Text inline strong>Padding:</Text> { padding }</Text>
-                  <Text size="small"><Text inline strong>Proportional:</Text> { proportional.toString() }</Text>
-                  <Text size="small"><Text inline strong>Spread:</Text> { spread }</Text>
+                  <Text size="x1"><Text inline strong>Algorithm:</Text> { algorithmName }</Text>
+                  <Text size="x1"><Text inline strong>Aspect Ratio:</Text> { aspectRatio }</Text>
+                  <Text size="x1"><Text inline strong>Cover:</Text> { cover.toString() }</Text>
+                  <Text size="x1"><Text inline strong>Padding:</Text> { padding }</Text>
+                  <Text size="x1"><Text inline strong>Proportional:</Text> { proportional.toString() }</Text>
+                  <Text size="x1"><Text inline strong>Spread:</Text> { spread }</Text>
                 </Flex>
 
                 <Flex container>
-                  <Text size="small"><Text inline strong>Vectors:</Text> { this.sysPlot.vectors ? this.sysPlot.vectors.length : '-' }</Text>
+                  <Text size="x1"><Text inline strong>Vectors:</Text> { this.sysPlot.vectors ? this.sysPlot.vectors.length : '-' }</Text>
                 </Flex>
               </Flex>
 

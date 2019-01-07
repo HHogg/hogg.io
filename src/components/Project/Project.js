@@ -6,25 +6,29 @@ import projectsMap from '../Projects/projectsMap';
 import { widthSmall } from '../Root';
 import Element from '../Element/Element';
 import ProjectDescription from './ProjectDescription';
+import './Project.css';
 
 export default class Project extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     code: PropTypes.string.isRequired,
+    gutter: PropTypes.string,
   };
 
   render() {
-    const { children, code, ...rest } = this.props;
+    const { children, code, gutter, ...rest } = this.props;
     const { number } = projectsMap[code];
 
     return (
       <Responsive queries={ [widthSmall] }>
         { (match) => (
           <Flex { ...omit(rest, ['onChangeTheme', 'theme']) }
+              className="Project"
               direction="vertical"
               grow
-              gutter="x6"
-              paddingHorizontal="x4">
+              gutter="x10"
+              paddingHorizontal="x4"
+              paddingVertical="x6">
             <Flex
                 alignChildrenHorizontal={ match(widthSmall) ? 'start' : 'middle' }
                 alignChildrenVertical="end"
@@ -50,7 +54,7 @@ export default class Project extends Component {
               </Flex>
             ) }
 
-            <Flex direction="vertical" grow>
+            <Flex direction="vertical" grow gutter={ gutter }>
               { children }
             </Flex>
           </Flex>

@@ -2,11 +2,12 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StaticSiteGeneratorPlugin = require('static-site-generator-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
+  mode: 'production',
   entry: [
     'babel-polyfill',
     './src/static.js',
@@ -24,7 +25,7 @@ module.exports = {
       include: [/src/],
     }, {
       test: /\.css$/,
-      use: ExtractTextPlugin.extract({
+      use: MiniCssExtractPlugin.extract({
         use: ['css-loader', 'postcss-loader'],
       }),
     }, {
@@ -36,22 +37,25 @@ module.exports = {
     }, {
       test: /.svg$/,
       loader: 'svg-inline-loader',
+    }, {
+      test: /\.worker\.js$/,
+      use: ['worker-loader'],
     }],
+  },
+  optimization: {
+    minimizer: [new TerserPlugin({
+      parallel: true,
+      sourceMap: true,
+    })],
   },
   plugins: [
     new CleanWebpackPlugin(['public']),
-    new ExtractTextPlugin({
-      allChunks: true,
+    new MiniCssExtractPlugin({
       filename: 'assets/hogg.io.[hash].min.css',
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
       debug: false,
-    }),
-    new UglifyJSPlugin({
-      uglifyOptions: {
-        ecma: 6,
-      },
     }),
     new StaticSiteGeneratorPlugin({
       paths: ['/'],
@@ -62,6 +66,7 @@ module.exports = {
       to: './assets',
     }]),
     new webpack.EnvironmentPlugin({
+      BABEL_ENV: 'production',
       NODE_ENV: 'production',
     }),
   ],
