@@ -14,6 +14,7 @@ module.exports = {
   ],
   output: {
     filename: 'assets/hogg.io.[hash].min.js',
+    globalObject: 'this',
     path: resolve(__dirname, 'public'),
     publicPath: '/',
     libraryTarget: 'umd',
@@ -25,9 +26,7 @@ module.exports = {
       include: [/src/],
     }, {
       test: /\.css$/,
-      use: MiniCssExtractPlugin.extract({
-        use: ['css-loader', 'postcss-loader'],
-      }),
+      use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
     }, {
       test: /\.ejs$/,
       use: ['ejs-loader'],

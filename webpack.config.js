@@ -63,9 +63,4 @@ module.exports = {
     hot: true,
     port: port,
   },
-  resolve: {
-    alias: {
-      preshape: resolve(__dirname, '../preshape/src'),
-    },
-  },
 };
