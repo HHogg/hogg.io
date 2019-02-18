@@ -7883,10 +7883,10 @@ preserve@^0.2.0:
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
   integrity sha1-gV7R9uvGWSb4ZbMQwHE7yzMVzks=
 
-preshape@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/preshape/-/preshape-2.0.0.tgz#9fd1038c9a8db1935fe7f2a2f3046d5eace4907a"
-  integrity sha512-CYngm/eq2GjDnvceeX3Y4eo90DMMIC/pV/JkSrtQG86kzhMoBCnp1TcaxSYM5XP0r4vU0wa/PYwnXBv5dfIdag==
+preshape@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/preshape/-/preshape-3.0.0.tgz#2ec229f3ba1f4b0ccf4b0bcfdc5b265db587380a"
+  integrity sha512-rcWMDa6IZGOLvI8I3O1+gLY4pe3EkMB7YsNwmT/MrUhuEk8MoMsgj4YCwCHRJiITcNhb236xbl3Noy9kOYdjcA==
   dependencies:
     classnames "^2.2.5"
     lodash.debounce "^4.0.8"
