@@ -23,45 +23,46 @@ export default class SysPlotProject extends Component {
       padding: 5,
       positions: null,
       proportional: false,
-      shapes: true,
       shapeCount: 100,
-      spread: 0.15,
-      vectors: true,
+      showShapes: true,
+      showVectors: true,
+      spread: 0.1,
     };
 
     this.sysPlot = new SysPlot();
-    this.setConfig();
-    this.regenerateShapes();
-  }
-
-  setConfig() {
-    this.sysPlot.setConfig({
-      algorithm: this.state.algorithm,
-      aspectRatio: this.state.aspectRatio,
-      cover: this.state.cover,
-      padding: this.state.padding,
-      proportional: this.state.proportional,
-      spread: this.state.spread,
-    });
+    this.regenerateShapes(this.state);
   }
 
   setBounds({ width, height }) {
     this.sysPlot.setBounds(width, height);
-    this.getPositions();
+    this.getPositions(this.state);
   }
 
-  getPositions() {
-    this.setState({
-      positions: zip(
+  getPositions(config) {
+    this.sysPlot.setConfig({
+      algorithm: config.algorithm,
+      aspectRatio: config.aspectRatio,
+      cover: config.cover,
+      padding: config.padding,
+      proportional: config.proportional,
+      spread: config.spread,
+    });
+
+    const positions = zip(
         this.sysPlot.shapes,
         this.sysPlot.getPositions(),
-      ).filter(([, p]) => p),
+      ).filter(([, p]) => p);
+
+    this.setState({
+      ...config,
+      positions: config.showShapes ? positions : [],
+      vectors: config.showVectors ? this.sysPlot.vectors : [],
     });
   }
 
-  regenerateShapes() {
-    const shapeCount = parseInt(this.state.shapeCount);
-    const shapes = isNaN(shapeCount) || this.state.shapes === false ? [] :
+  regenerateShapes(config) {
+    const shapeCount = parseInt(config.shapeCount);
+    const shapes = isNaN(shapeCount) || config.showShapes === false ? [] :
       Array.from({ length: shapeCount }).map(() => ({
         radius: random(5, 30),
       })).sort((a, b) => area(b) - area(a));
@@ -70,16 +71,17 @@ export default class SysPlotProject extends Component {
   }
 
 
-  handleConfigChange(config) {
-    this.setState(config, () => {
-      this.setConfig();
+  handleConfigChange(configUpdate) {
+    const config = {
+      ...this.state,
+      ...configUpdate,
+    };
 
-      if ('shapeCount' in config || 'shapes' in config) {
-        this.regenerateShapes();
-      }
+    if ('shapeCount' in config) {
+      this.regenerateShapes(config);
+    }
 
-      this.getPositions();
-    });
+    this.getPositions(config);
   }
 
   render() {
@@ -91,8 +93,9 @@ export default class SysPlotProject extends Component {
       padding,
       positions,
       proportional,
-      shapes,
       shapeCount,
+      showShapes,
+      showVectors,
       spread,
       vectors,
     } = this.state;
@@ -103,10 +106,10 @@ export default class SysPlotProject extends Component {
       cover,
       padding,
       proportional,
-      shapes,
       shapeCount,
+      showShapes,
+      showVectors,
       spread,
-      vectors,
     };
 
     return (
@@ -138,7 +141,7 @@ export default class SysPlotProject extends Component {
                               height={ height }
                               positions={ positions }
                               theme={ theme }
-                              vectors={ vectors ? this.sysPlot.vectors : [] }
+                              vectors={ vectors }
                               width={ width } />
                         ) }
                       </ThemeContext.Consumer>

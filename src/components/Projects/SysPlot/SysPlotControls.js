@@ -24,8 +24,9 @@ export default class SysPlotControls extends Component {
       aspectRatio: PropTypes.number.isRequired,
       proportional: PropTypes.bool.isRequired,
       padding: PropTypes.number.isRequired,
-      shapes: PropTypes.bool.isRequired,
       shapeCount: PropTypes.number.isRequired,
+      showShapes: PropTypes.bool.isRequired,
+      showVectors: PropTypes.bool.isRequired,
       spread: PropTypes.number.isRequired,
     }).isRequired,
     onConfigChange: PropTypes.func.isRequired,
@@ -117,16 +118,16 @@ export default class SysPlotControls extends Component {
           <Text margin="x4" strong>Demo Configuration</Text>
 
           <CheckBox
-              checked={ config.vectors }
+              checked={ config.showVectors }
               label="Show Vectors"
               margin="x2"
-              onChange={ () => onConfigChange({ vectors: !config.vectors }) } />
+              onChange={ () => onConfigChange({ showVectors: !config.showVectors }) } />
 
           <CheckBox
-              checked={ config.shapes }
+              checked={ config.showShapes }
               label="Show Shapes"
               margin="x2"
-              onChange={ () => onConfigChange({ shapes: !config.shapes }) } />
+              onChange={ () => onConfigChange({ showShapes: !config.showShapes }) } />
 
           <Input
               label="Shape Count"
