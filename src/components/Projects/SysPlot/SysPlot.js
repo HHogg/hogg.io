@@ -118,16 +118,16 @@ export default class SysPlotProject extends Component {
           { (match) => (
             <Flex
                 direction={ match(widthSmall) ? 'horizontal' : 'vertical' }
-                grow
-                gutter="x8">
+                gap="x8"
+                grow>
               <Flex
                   alignChildrenVertical="end"
                   backgroundColor="shade-2"
                   color
                   container
                   direction="vertical"
+                  gap="x4"
                   grow
-                  gutter="x4"
                   initial={ match(widthSmall) ? 'none' : null }
                   minHeight="35rem"
                   padding="x4"

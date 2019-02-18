@@ -91,13 +91,13 @@ export default class Lorem extends Component {
             { (match) => (
               <Flex
                   direction="vertical"
+                  gap="x6"
                   grow
-                  gutter="x6"
                   margin="x16">
                 <Flex
                     direction={ match(widthSmall) ? 'horizontal' : 'vertical' }
-                    grow
-                    gutter="x6">
+                    gap="x6"
+                    grow>
                   <Flex
                       direction="horizontal"
                       grow

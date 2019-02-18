@@ -91,8 +91,8 @@ export default class BirthdayParadox extends Component {
           { (match) => (
             <Flex
                 direction={ match(widthSmall) ? 'horizontal' : 'vertical' }
-                grow
-                gutter="x8">
+                gap="x8"
+                grow>
               <Flex
                   direction="horizontal"
                   grow

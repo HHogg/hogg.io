@@ -12,11 +12,11 @@ export default class Project extends Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     code: PropTypes.string.isRequired,
-    gutter: PropTypes.string,
+    gap: PropTypes.string,
   };
 
   render() {
-    const { children, code, gutter, ...rest } = this.props;
+    const { children, code, gap, ...rest } = this.props;
     const { number } = projectsMap[code];
 
     return (
@@ -25,15 +25,15 @@ export default class Project extends Component {
           <Flex { ...omit(rest, ['onChangeTheme', 'theme']) }
               className="Project"
               direction="vertical"
+              gap="x10"
               grow
-              gutter="x10"
               paddingHorizontal="x4"
               paddingVertical="x6">
             <Flex
                 alignChildrenHorizontal={ match(widthSmall) ? 'start' : 'middle' }
                 alignChildrenVertical="end"
                 direction="horizontal"
-                gutter="x6"
+                gap="x6"
                 shrink>
               <Flex>
                 <Element active code={ code } number={ number } size="5rem" />
@@ -54,7 +54,7 @@ export default class Project extends Component {
               </Flex>
             ) }
 
-            <Flex direction="vertical" grow gutter={ gutter }>
+            <Flex direction="vertical" gap={ gap } grow>
               { children }
             </Flex>
           </Flex>

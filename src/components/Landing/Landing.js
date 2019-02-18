@@ -98,7 +98,7 @@ export default class Landing extends Component {
                 <Text margin="x3">When I'm not stringing characters together, I'm
                   a less than stable climbing frame for my two daughters.</Text>
 
-                <List alignChildren="middle" gutter="x3" margin="x12">
+                <List alignChildren="middle" gap="x3" margin="x12">
                   <ListItem separator="~">
                     <Link href="mailto:harry@hogg.io">
                       <Icon name="Letter" size="1.5rem" />

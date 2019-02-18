@@ -687,7 +687,7 @@ export default class CircleArtVisual extends Component {
               <Flex
                   alignChildrenVertical="middle"
                   direction="horizontal"
-                  gutter="x1">
+                  gap="x1">
                 <Flex>
                   <Icon
                       name={ isInFullscreen ? 'Minimize' : 'Maximize' }
@@ -704,7 +704,7 @@ export default class CircleArtVisual extends Component {
           <Flex
               absolute="bottom-left"
               direction="horizontal"
-              gutter="x2"
+              gap="x2"
               padding="x4">
             <Flex>
               <Buttons>
@@ -715,7 +715,7 @@ export default class CircleArtVisual extends Component {
                   <Flex
                       alignChildrenVertical="middle"
                       direction="horizontal"
-                      gutter="x1">
+                      gap="x1">
                     <Flex><Icon name="Save" size="1rem" /></Flex>
                     <Flex>Save</Flex>
                   </Flex>
@@ -725,7 +725,7 @@ export default class CircleArtVisual extends Component {
                   <Flex
                       alignChildrenVertical="middle"
                       direction="horizontal"
-                      gutter="x1">
+                      gap="x1">
                     <Flex><Icon name="File" size="1rem" /></Flex>
                     <Flex>Clear</Flex>
                   </Flex>
@@ -741,7 +741,7 @@ export default class CircleArtVisual extends Component {
                   <Flex
                       alignChildrenVertical="middle"
                       direction="horizontal"
-                      gutter="x1">
+                      gap="x1">
                     <Flex><Icon name="Undo" size="1rem" /></Flex>
                     <Flex>Undo</Flex>
                   </Flex>
@@ -753,7 +753,7 @@ export default class CircleArtVisual extends Component {
                   <Flex
                       alignChildrenVertical="middle"
                       direction="horizontal"
-                      gutter="x1">
+                      gap="x1">
                     <Flex><Icon name="Redo" size="1rem" /></Flex>
                     <Flex>Redo</Flex>
                   </Flex>
@@ -775,7 +775,7 @@ export default class CircleArtVisual extends Component {
           <Flex
               absolute="bottom-right"
               direction="horizontal"
-              gutter="x2"
+              gap="x2"
               padding="x4">
             <Buttons joined>
               <Button
@@ -784,7 +784,7 @@ export default class CircleArtVisual extends Component {
                 <Flex
                     alignChildrenVertical="middle"
                     direction="horizontal"
-                    gutter="x1">
+                    gap="x1">
                   <Flex><Icon name="Pencil" size="1rem" /></Flex>
                   <Flex>Draw</Flex>
                 </Flex>
@@ -795,7 +795,7 @@ export default class CircleArtVisual extends Component {
                 <Flex
                     alignChildrenVertical="middle"
                     direction="horizontal"
-                    gutter="x1">
+                    gap="x1">
                   <Flex><Icon name="Water" size="1rem" /></Flex>
                   <Flex>Fill</Flex>
                 </Flex>
@@ -806,7 +806,7 @@ export default class CircleArtVisual extends Component {
                 <Flex
                     alignChildrenVertical="middle"
                     direction="horizontal"
-                    gutter="x1">
+                    gap="x1">
                   <Flex><Icon name="Eye" size="1rem" /></Flex>
                   <Flex>View</Flex>
                 </Flex>

@@ -64,8 +64,8 @@ export default class CircleArt extends Component {
         { (match) => (
           <Project { ...this.props } maxWidth={ widthMedium }>
             <Flex
+                gap="x8"
                 grow
-                gutter="x8"
                 margin="x6">
               <Bounds
                   Component={ Flex }

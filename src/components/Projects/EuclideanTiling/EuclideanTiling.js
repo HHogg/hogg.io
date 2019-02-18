@@ -27,7 +27,7 @@ const exampleConfig = '(3⁶)²; 3⁴.6';
 export default class EuclideanTiling extends Component {
   render() {
     return (
-      <Project { ...this.props } gutter="x10" maxWidth={ widthMedium }>
+      <Project { ...this.props } gap="x10" maxWidth={ widthMedium }>
         <Flex>
           <TilingEditor configuration={ findByA('[3⁶; 3⁴.6]²') } />
         </Flex>

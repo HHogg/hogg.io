@@ -13,7 +13,7 @@ export default class Showcase extends Component {
     return (
       <Grid { ...rest }
           columnWidth="1fr"
-          gutter="x4">
+          gap="x4">
         { children }
       </Grid>
     );

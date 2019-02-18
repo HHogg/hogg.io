@@ -43,8 +43,8 @@ export default class ShowcaseItem extends Component {
             backgroundColor
             color
             direction="vertical"
+            gap="x2"
             grow
-            gutter="x2"
             padding="x2"
             theme={ theme }>
           <Flex grow>

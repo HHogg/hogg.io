@@ -37,12 +37,12 @@ export default class TilingEditorSidePanel extends Component {
             scrollable>
           <Flex
               direction="vertical"
-              gutter="x4"
+              gap="x4"
               padding="x4">
             <Flex
                 alignChildrenVertical="middle"
                 direction="horizontal"
-                gutter="x2">
+                gap="x2">
               <Flex grow>
                 <Text ellipsis size="x1" strong>{ title }</Text>
               </Flex>

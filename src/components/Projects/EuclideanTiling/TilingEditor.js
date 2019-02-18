@@ -113,7 +113,7 @@ export default class TilingEditor extends Component {
           <Flex
               alignChildrenVertical="middle"
               direction="horizontal"
-              gutter="x4"
+              gap="x4"
               paddingHorizontal="x4"
               paddingVertical="x2">
             <Flex grow>
@@ -179,7 +179,7 @@ export default class TilingEditor extends Component {
             </Flex>
           </Flex>
 
-          <Flex direction="horizontal" gutter="x4">
+          <Flex direction="horizontal" gap="x4">
             <Flex grow>
               <Form onSubmit={ this.handleSubmit }>
                 <Text Component="input"
