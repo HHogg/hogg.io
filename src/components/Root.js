@@ -3,8 +3,6 @@ import { Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import {
   Application,
-  ApplicationDetails,
-  ApplicationFooter,
   ApplicationThemeControls,
   ApplicationTitle,
   Flex,
