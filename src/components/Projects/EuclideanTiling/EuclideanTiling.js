@@ -41,17 +41,17 @@ export default class EuclideanTiling extends Component {
 
           <BulletPoints>
             <BulletPoint>
-              <Link href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons#Regular_tilings">Regular tilings</Link> consist
-              of a single polygon type, with each vertex surrounded by the same kinds of polygons (<Link href="https://en.wikipedia.org/wiki/Isogonal_figure">vertex-transitive</Link>).
+              <Link href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons#Regular_tilings" underline>Regular tilings</Link> consist
+              of a single polygon type, with each vertex surrounded by the same kinds of polygons (<Link href="https://en.wikipedia.org/wiki/Isogonal_figure" underline>vertex-transitive</Link>).
             </BulletPoint>
 
             <BulletPoint>
-              <Link href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons#Archimedean,_uniform_or_semiregular_tilings">Semiregular tilings (uniform)</Link> are
+              <Link href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons#Archimedean,_uniform_or_semiregular_tilings" underline>Semiregular tilings (uniform)</Link> are
               polymorphic and like regular tilings are vertex-transitive.
             </BulletPoint>
 
             <BulletPoint>
-              <Link href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons#k-uniform_tilings">Demiregular tilings (k-uniform)</Link> like
+              <Link href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons#k-uniform_tilings" underline>Demiregular tilings (k-uniform)</Link> like
               semiregular tilings are polymorphic but are not vertex-transitive.
             </BulletPoint>
           </BulletPoints>

@@ -39,7 +39,7 @@ const EuclideanTiling = {
   name: 'Euclidean Tiling',
   to: '/projects/euclidean-tiling',
   description: 'Systematic generation of regular polygon tessellations using an expressive notation.',
-  year: 2018,
+  year: 2019,
 };
 
 const LightRay = {
