@@ -3,7 +3,6 @@ import { Bounds, Flex, Responsive, ThemeContext } from 'preshape';
 import { widthSmall, widthMedium } from '../../Root';
 import Project from '../../Project/Project';
 import CoSineVisual from './CoSineVisual';
-import './CoSine.css';
 
 export default class CoSine extends Component {
   render() {
@@ -15,7 +14,7 @@ export default class CoSine extends Component {
               <Flex
                   container
                   grow
-                  minHeight="20rem">
+                  minHeight="10rem">
                 <Bounds absolute="fullscreen">
                   { ({ width, height }) => (
                     width && height && (

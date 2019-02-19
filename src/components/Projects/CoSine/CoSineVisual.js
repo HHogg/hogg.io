@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { findDOMNode } from 'react-dom';
 import Two from 'two.js';
 import {
   borderSizeX1Px,
@@ -9,7 +8,6 @@ import {
   Appear,
 } from 'preshape';
 import {
-  addClassName,
   createCircle,
   createLine,
   createText,
@@ -33,6 +31,7 @@ export default class CoSineVisual extends Component {
 
   constructor(props) {
     super(props);
+    this.setRef = this.setRef.bind(this);
     this.shapes = {};
     this.angle = 0;
   }
@@ -44,7 +43,7 @@ export default class CoSineVisual extends Component {
     this.two = new Two({
       autostart: true,
       height: height,
-      type: 'SVGRenderer',
+      type: 'CanvasRenderer',
       width: width,
     }).appendTo(this.container);
 
@@ -59,6 +58,10 @@ export default class CoSineVisual extends Component {
 
   componentWillUnmount() {
     this.two.off('update', this.update);
+  }
+
+  setRef(el) {
+    this.container = el;
   }
 
   init() {
@@ -252,8 +255,6 @@ export default class CoSineVisual extends Component {
     );
 
     this.two.update();
-
-    addClassName(this.shapes[`curveTrack${equation}`], 'CoSine__track');
   }
 
   drawCurve(direction, equation) {
@@ -304,6 +305,7 @@ export default class CoSineVisual extends Component {
 
     if (this.shapes[`curve${direction}`]) {
       this.shapes[`curve${direction}`].remove();
+      delete this.shapes[`curve${direction}`];
     }
 
     this.two.add(this.shapes[`curve${direction}`] =
@@ -342,7 +344,7 @@ export default class CoSineVisual extends Component {
       <Appear
           absolute="fullscreen"
           animation="Fade"
-          ref={ (container) => this.container = findDOMNode(container) }
+          innerRef={ this.setRef }
           time="base" />
     );
   }
