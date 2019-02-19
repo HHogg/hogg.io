@@ -11,9 +11,7 @@ export default class Showcase extends Component {
     const { children, ...rest } = this.props;
 
     return (
-      <Grid { ...rest }
-          columnWidth="1fr"
-          gap="x4">
+      <Grid { ...rest } columnWidth="1fr" gap="x4">
         { children }
       </Grid>
     );
