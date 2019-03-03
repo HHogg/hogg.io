@@ -34,9 +34,10 @@ export default class EuclideanTiling extends Component {
 
         <Flex>
           <Text margin="x4">
-            Let's start with the basics of what a Euclidean tiling is. It's a covering of a
-            plane where the repetition of polygons make up tiles, which through symmetry operations
-            can be extended indefinitely without any overlapping. There are three types of tilings:
+            Euclidean tiling are a covering of a plane where the repetition of
+            polygons make up tiles, which through symmetry operations can be
+            extended indefinitely without any overlapping.
+            There are three types of tilings:
           </Text>
 
           <BulletPoints>
@@ -339,10 +340,10 @@ export default class EuclideanTiling extends Component {
             The notation for shifting the origin to a shape's edge is done by specifying at
             what angle the point of origin is from the y axis and how many intersecting
             edges from the center point of the plane it is. For example, take the
-            transform function <Code>r90(2e,30)</Code>. Imagine a line drawn starting
+            transform function <Code>r30(2e)</Code>. Imagine a line drawn starting
             from the center of the plane with an endpoint at 30°. The second edge
             intersecting that line would become the transform's new point of origin. In
-            which the shapes are then rotated by 90°. However this 90° is now relative
+            which the shapes are then rotated by 180°. However this 180° is now relative
             to the intersecting line, and the center point of the plane becomes 0°.
           </Text>
         </Flex>
@@ -387,7 +388,7 @@ export default class EuclideanTiling extends Component {
             Similar to shifting the point of origin to the edge of a shape, the
             origin can also be shifted to the center point of a shape. However
             there are a couple of differences. The format of the notation is
-            very similar, for example <Code>r(2c,30)</Code>, except this origin type
+            very similar, for example <Code>r30(2c)</Code>, except this origin type
             is represented by a `<Code>c</Code>`. Instead of specifying the number
             of intersecting edges, it's simply the number of intersecting shapes (excluding
             the seed shape). This also allows for some flexibility in the angle
@@ -421,7 +422,7 @@ export default class EuclideanTiling extends Component {
 
           <Text margin="x4" maxWidth="36rem">
             Using the <Code>[3³.4²; 3².4.3.4]¹</Code> configuration as an example.
-            The second transformation function is <Code>m(2c,60)</Code> (reflect over
+            The second transformation function is <Code>m60(2c)</Code> (reflect over
             a line 180° relative to the intersection angle, at the center of the
             second intersecting shape at 60°).
           </Text>
@@ -456,7 +457,7 @@ export default class EuclideanTiling extends Component {
 
           <Text margin="x4" maxWidth="36rem">
             Using the <Code>{ exampleConfig }</Code> configuration as an example.
-            Both transformation functions <Code>r60</Code> and <Code>r(2e,30)</Code>
+            Both transformation functions <Code>r60</Code> and <Code>r30(2e)</Code>
             are continuously repeated, each time taken the shapes that are currently
             on the plane.
           </Text>

@@ -45,8 +45,8 @@ export default class TilingRenderer extends Component {
     devmode: PropTypes.bool,
     disableColoring: PropTypes.bool,
     disableRepeating: PropTypes.bool,
+    fadeConnectedShapes: PropTypes.bool,
     height: PropTypes.number.isRequired,
-    planeRotation: PropTypes.number.isRequired,
     showAxis: PropTypes.bool,
     showConfiguration: PropTypes.bool,
     showTransforms: PropTypes.bool,
@@ -94,6 +94,7 @@ export default class TilingRenderer extends Component {
       configuration,
       disableColoring,
       disableRepeating,
+      fadeConnectedShapes,
       height,
       showAxis,
       showTransforms,
@@ -106,13 +107,14 @@ export default class TilingRenderer extends Component {
     const hasDisableColoringChanged = disableColoring !== prevProps.disableColoring;
     const hasDisableRepeatingChanged = disableRepeating !== prevProps.disableRepeating;
     const hasDimensionsChanged = height !== prevProps.height || width !== prevProps.width;
+    const fadeConnectedShapesChanged = fadeConnectedShapes !== prevProps.fadeConnectedShapes;
     const hasShowAxisChanged = showAxis !== prevProps.showAxis;
     const hasShowTransformsChanged = showTransforms !== prevProps.showTransforms;
     const hasSizeChanged = size !== prevProps.size;
 
     if (hasConfigChanged || hasDimensionsChanged || hasDisableRepeatingChanged || hasSizeChanged) {
       this.init();
-    } else if (hasAnimateChange || hasDisableColoringChanged) {
+    } else if (hasAnimateChange || hasDisableColoringChanged || fadeConnectedShapesChanged) {
       this.draw();
     }
 
@@ -185,7 +187,7 @@ export default class TilingRenderer extends Component {
   }
 
   drawShapes(toStage = null) {
-    const { colorScale, disableColoring, height, width } = this.props;
+    const { colorScale, disableColoring, fadeConnectedShapes, height, width } = this.props;
     const { shapes, stages } = this.state;
 
     if (this.groupShapes) {
@@ -203,6 +205,7 @@ export default class TilingRenderer extends Component {
           fill: disableColoring
             ? 'transparent'
             : colorScale(1 - (shape.stage / stages)),
+          opacity: (!fadeConnectedShapes || shape.disconnected) ? 1 : 0.1,
           stroke: themes.day.colorTextShade1,
           strokeWidth: borderSizeX1Px,
           vertices: shape.vectors,
@@ -267,34 +270,33 @@ export default class TilingRenderer extends Component {
     }
   }
 
-  drawTransformMirrorPoint({ actionAngle, point, pointAngle, pointType }) {
+  drawTransformMirrorPoint({ actionAngle, point, pointType }) {
     if (!point) return;
 
     const { height, width } = this.props;
     const hypot = Math.hypot(height, width);
     let px, py, lx1, ly1, lx2, ly2;
 
-    if (pointType === POINT_CENTROID) {
+    if (pointType === POINT_CENTROID && point.centroid) {
       const [ x, y ] = point.centroid;
 
       px = x;
       py = y;
-      lx1 = (Math.cos(pointAngle + actionAngle - DEG_90) * hypot) + x;
-      ly1 = (Math.sin(pointAngle + actionAngle - DEG_90) * hypot) + y;
-      lx2 = (Math.cos(pointAngle + actionAngle + DEG_90) * hypot) + x;
-      ly2 = (Math.sin(pointAngle + actionAngle + DEG_90) * hypot) + y;
+      lx1 = (Math.cos(actionAngle - DEG_180) * hypot) + x;
+      ly1 = (Math.sin(actionAngle - DEG_180) * hypot) + y;
+      lx2 = (Math.cos(actionAngle) * hypot) + x;
+      ly2 = (Math.sin(actionAngle) * hypot) + y;
     }
 
-    if (pointType === POINT_EDGE) {
-      const { centroid: [ x, y ], v1, v2 } = point.line;
-      const theta = v1.angleTo(v2);
+    if (pointType === POINT_EDGE && point.line) {
+      const { centroid: [ x, y ], v1, v2, v1AngleToV2 } = point.line;
 
       px = x;
       py = y;
-      lx1 = (Math.cos(theta - DEG_180) * hypot) + v1[0];
-      ly1 = (Math.sin(theta - DEG_180) * hypot) + v1[1];
-      lx2 = (Math.cos(theta) * hypot) + v2[0];
-      ly2 = (Math.sin(theta) * hypot) + v2[1];
+      lx1 = (Math.cos(v1AngleToV2 - DEG_180) * hypot) + v1[0];
+      ly1 = (Math.sin(v1AngleToV2 - DEG_180) * hypot) + v1[1];
+      lx2 = (Math.cos(v1AngleToV2) * hypot) + v2[0];
+      ly2 = (Math.sin(v1AngleToV2) * hypot) + v2[1];
     }
 
     this.groupTransforms.add(createLine({
@@ -315,6 +317,10 @@ export default class TilingRenderer extends Component {
     const { height, width } = this.props;
     const hypot = Math.hypot(height, width);
 
+    if (!actionAngle) {
+      return;
+    }
+
     while (actionAngle <= DEG_360) {
       this.groupTransforms.add(createLine({
         stroke: TRANSFORM_MIRROR_CENTER_COLOR,
@@ -329,10 +335,10 @@ export default class TilingRenderer extends Component {
     }
   }
 
-  drawTransformRotationPoint({ point, pointAngle, pointType }) {
+  drawTransformRotationPoint({ point, pointType }) {
     if (!point) return;
 
-    const [ x, y ] = pointType === POINT_EDGE ? point.edge : point.centroid;
+    const [ x, y, pointAngle ] = pointType === POINT_EDGE ? point.edge : point.centroid;
 
     this.groupTransforms.add(createCircle({
       fill: TRANSFORM_ROTATION_POINT_COLOR,
@@ -348,7 +354,7 @@ export default class TilingRenderer extends Component {
     }));
 
     this.drawArrowArc(TRANSFORM_ROTATION_POINT_COLOR,
-      pointAngle + DEG_180 + DEG_90, pointAngle + DEG_360 + DEG_90,
+      pointAngle + DEG_180, pointAngle + DEG_360,
       x, y, Math.hypot(x, y));
   }
 
@@ -357,6 +363,10 @@ export default class TilingRenderer extends Component {
     const hypot = Math.hypot(height, width);
     const radius = Math.min(height, width) / 2;
     let angle = actionAngle;
+
+    if (!actionAngle) {
+      return;
+    }
 
     while (angle <= DEG_360) {
       this.groupTransforms.add(createLine({
@@ -416,13 +426,9 @@ export default class TilingRenderer extends Component {
   }
 
   render() {
-    const { configuration, devmode, planeRotation, showConfiguration } = this.props;
+    const { configuration, devmode, showConfiguration } = this.props;
     const { error } = this.state;
     const { a, b } = configuration;
-
-    const style = {
-      transform: `rotate(${planeRotation}deg)`,
-    };
 
     return (
       <Appear Component={ Flex }
@@ -436,8 +442,7 @@ export default class TilingRenderer extends Component {
           time="base">
         <Base
             absolute="fullscreen"
-            ref={ (container) => this.container = findDOMNode(container) }
-            style={ style } />
+            ref={ (container) => this.container = findDOMNode(container) } />
 
         { showConfiguration && (
           <Flex container grow initial="none">

@@ -9,19 +9,12 @@ export default class TilingEditorOptions extends PureComponent {
       animate: PropTypes.bool.isRequired,
       disableColoring: PropTypes.bool.isRequired,
       disableRepeating: PropTypes.bool.isRequired,
-      planeRotation: PropTypes.number.isRequired,
+      fadeConnectedShapes: PropTypes.bool.isRequired,
       showAxis: PropTypes.bool.isRequired,
       showTransforms: PropTypes.bool.isRequired,
     }).isRequired,
     onConfigChange: PropTypes.func.isRequired,
   };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      planeRotation: props.config.planeRotation,
-    };
-  }
 
   handleNumberChange(event, prop, min = -Infinity, max = Infinity) {
     const { value } = event.target;
@@ -56,6 +49,12 @@ export default class TilingEditorOptions extends PureComponent {
             label="Disable Repeating"
             margin="x2"
             onChange={ () => onConfigChange({ disableRepeating: !config.disableRepeating }) } />
+
+        <CheckBox
+            checked={ config.fadeConnectedShapes }
+            label="Fade Connected Shapes"
+            margin="x2"
+            onChange={ () => onConfigChange({ fadeConnectedShapes: !config.fadeConnectedShapes })} />
 
         <CheckBox
             checked={ config.showAxis }

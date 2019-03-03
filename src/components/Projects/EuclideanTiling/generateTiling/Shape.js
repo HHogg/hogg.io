@@ -142,6 +142,7 @@ export default class Shape {
   toJs() {
     return {
       stage: this.stage,
+      disconnected: this.lineSegments.some(({ isConnected }) => !isConnected),
       vectors: this.vectors.map(extractJs),
     };
   }

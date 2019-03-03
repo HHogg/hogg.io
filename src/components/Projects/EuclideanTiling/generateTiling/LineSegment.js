@@ -13,6 +13,14 @@ export default class LineSegment {
     this.yMin = this.v1.y > this.v2.y ? this.v2.y : this.v1.y;
   }
 
+  get angle() {
+    if (this._angle === undefined) {
+      this._angle = this.v1.angleTo(this.v2);
+    }
+
+    return this._angle;
+  }
+
   get centroid() {
     if (this._centroid === undefined) {
       this._centroid = this.v1.divide(this.v2);

@@ -103,6 +103,10 @@ export default class Vector {
   }
 
   toJs() {
-    return [this.x, this.y];
+    return [
+      this.x,
+      this.y,
+      this.angle,
+    ];
   }
 }

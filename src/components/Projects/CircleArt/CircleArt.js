@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { findDOMNode } from 'react-dom';
 import { Base, Bounds, Code, Flex, Link, Responsive, Text } from 'preshape';
 import FileSaver from 'file-saver';
 import fscreen from 'fscreen';
@@ -16,6 +15,7 @@ import './CircleArt.css';
 export default class CircleArt extends Component {
   constructor(props) {
     super(props);
+    this.setFullscreenRef = this.setFullscreenRef.bind(this);
     this.state = {
       data: Fox,
       isInFullscreen: false,
@@ -57,12 +57,16 @@ export default class CircleArt extends Component {
     this.setState({ data });
   }
 
+  setFullscreenRef(el) {
+    this.fullscreenContainer = el;
+  }
+
   render() {
     const { data, isInFullscreen } = this.state;
 
     return (
       <Project { ...this.props } gap="x10" maxWidth={ widthMedium }>
-        <Flex gap="x8" grow>
+        <Flex gap="x8" grow innerRef={ this.setFullscreenRef }>
           <Bounds
               Component={ Flex }
               direction="vertical"
@@ -70,7 +74,6 @@ export default class CircleArt extends Component {
               height="100%"
               id="CircleArtBoundary"
               minHeight="37.5rem"
-              ref={ (el) => this.fullscreenContainer = findDOMNode(el) }
               theme="day"
               width="100%">
             { ({ width, height }) => (

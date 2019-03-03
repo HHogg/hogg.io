@@ -12,10 +12,10 @@ export default class Tiling extends Component {
     devmode: PropTypes.bool,
     disableColoring: PropTypes.bool,
     disableRepeating: PropTypes.bool,
+    fadeConnectedShapes: PropTypes.bool,
     height: PropTypes.string.isRequired,
     onError: PropTypes.func,
     onRender: PropTypes.func,
-    planeRotation: PropTypes.number,
     showAxis: PropTypes.bool,
     showConfiguration: PropTypes.bool,
     showTransforms: PropTypes.bool,
@@ -30,10 +30,10 @@ export default class Tiling extends Component {
       devmode,
       disableColoring,
       disableRepeating,
+      fadeConnectedShapes,
       height,
       onError,
       onRender,
-      planeRotation,
       showAxis,
       showConfiguration,
       showTransforms,
@@ -47,6 +47,7 @@ export default class Tiling extends Component {
           <Flex borderColor borderSize="x1" { ...rest }
               backgroundColor="shade-1"
               container
+              grow
               height={ height }
               innerRef={ ref }>
             <Bounds Component={ Flex }
@@ -62,10 +63,10 @@ export default class Tiling extends Component {
                       devmode={ devmode }
                       disableColoring={ disableColoring }
                       disableRepeating={ disableRepeating }
+                      fadeConnectedShapes={ fadeConnectedShapes }
                       height={ height }
                       onError={ onError }
                       onRender={ onRender }
-                      planeRotation={ planeRotation }
                       showAxis={ showAxis }
                       showConfiguration={ showConfiguration }
                       showTransforms={ showTransforms }

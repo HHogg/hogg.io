@@ -17,16 +17,16 @@ export default class TilingLibrary extends Component {
 
     return TilingConfigurations.map(({ name, configurations }) => (
       <Base key={ name } margin="x6">
-        <Text ellipsis margin="x1" size="x1">{ name }</Text>
+        <Text ellipsis margin="x1" size="x1" strong>{ name }</Text>
         { configurations.map((config) => (
           <Link
               active={ selected === config }
               display="block"
               ellipsis
-              key={ config.a || config.b }
+              key={ config.b }
               onClick={ () => onSelect(config) }
               size="x1">
-            { config.a || config.b }
+            { config.b }
           </Link>
         )) }
       </Base>

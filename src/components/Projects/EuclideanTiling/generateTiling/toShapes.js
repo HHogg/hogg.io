@@ -15,6 +15,12 @@ const ErrorSeed = () => ({
   message: 'The seed shape must be one of 3, 4, 6, 8 or 12, directly followed by a `-` to indicate the start of the next shape group.',
 });
 
+const ErrorInvalidShape = () => ({
+  code: 'ErrorShape',
+  type: 'Invalid Shape',
+  message: 'Shapes must only be one of 3, 4, 6, 8, or 12.',
+});
+
 const ErrorTransformAngleZero = (transform) => ({
   code: 'ErrorTransformAngle',
   type: 'Transform Angle',
@@ -34,6 +40,7 @@ const ErrorTranformNoIntersectionPoint = (transform) => ({
 });
 
 const DEG_90 = Math.PI / 2;
+const DEG_180 = Math.PI;
 const DEG_360 = Math.PI * 2;
 
 // Visual adjustments to normalise the shape sizes
@@ -42,6 +49,14 @@ const VA_4 = 0.95;
 const VA_6 = 1;
 const VA_8 = 1;
 const VA_12 = 1.15;
+
+const validShapes = {
+  3: true,
+  4: true,
+  6: true,
+  8: true,
+  12: true,
+};
 
 const getSeedShape = (n, r) => {
   switch (n) {
@@ -65,18 +80,14 @@ const getSeedShape = (n, r) => {
   }
 };
 
-const getIntersectingPoint = (root, transform) => {
-  const { pointAngle, pointNumber } = transform;
-  const ips = root.getIntersectingPoints(new LineSegment(
+const getIntersectingPoint = (root, { actionAngle, pointNumber }) =>
+  root.getIntersectingPoints(new LineSegment(
     new Vector(0, 0),
     new Vector(
-      Math.cos(pointAngle) * root.disconnectedVectorDistanceMax,
-      Math.sin(pointAngle) * root.disconnectedVectorDistanceMax,
+      Math.cos(actionAngle - DEG_90) * root.disconnectedVectorDistanceMax,
+      Math.sin(actionAngle - DEG_90) * root.disconnectedVectorDistanceMax,
     ),
-  ));
-
-  return ips[pointNumber];
-};
+  ))[pointNumber - 1];
 
 const transform = (root, stage, transform) => {
   switch (transform.action) {
@@ -91,19 +102,19 @@ const transform = (root, stage, transform) => {
   }
 };
 
-const transformMirrorPoint = (root, stage, { actionAngle, point, pointAngle, pointType }) => {
+const transformMirrorPoint = (root, stage, { actionAngle, point, pointType }) => {
   if (pointType === POINT_CENTROID) {
     root.add(root
       .clone()
       .setStage(stage.value++)
       .reflect(new LineSegment(
         new Vector(
-          Math.cos(pointAngle + actionAngle - DEG_90),
-          Math.sin(pointAngle + actionAngle - DEG_90),
+          Math.cos(actionAngle - DEG_180),
+          Math.sin(actionAngle - DEG_180),
         ).add(point.centroid),
         new Vector(
-          Math.cos(pointAngle + actionAngle + DEG_90),
-          Math.sin(pointAngle + actionAngle + DEG_90),
+          Math.cos(actionAngle),
+          Math.sin(actionAngle),
         ).add(point.centroid),
       ))
     );
@@ -140,15 +151,13 @@ const transformMirrorCenter = (root, stage, { actionAngle }) => {
   }
 };
 
-const transformRotationPoint = (root, stage, { actionAngle, point, pointType }) => {
-  if (!actionAngle) {
-    throw ErrorTransformAngleZero(transform.transform);
-  }
-
+const transformRotationPoint = (root, stage, { point, pointType }) => {
   root.add(root
     .clone()
     .setStage(stage.value++)
-    .rotate(actionAngle, pointType === POINT_EDGE ? point.edge : point.centroid)
+    .rotate(DEG_180, pointType === POINT_EDGE
+      ? point.edge
+      : point.centroid)
   );
 };
 
@@ -177,6 +186,7 @@ const transformToJs = ({ point, ...rest }) => ({
       centroid: point.line.centroid.toJs(),
       v1: point.line.v1.toJs(),
       v2: point.line.v2.toJs(),
+      v1AngleToV2: point.line.v1.angleTo(point.line.v2),
     },
   },
 });
@@ -185,7 +195,6 @@ export default ({ config, disableRepeating, height, size, width }) => {
   const [
     seed,
     shapes,
-    repeat,
     ...transforms
   ] = toEntities(config);
 
@@ -210,6 +219,10 @@ export default ({ config, disableRepeating, height, size, width }) => {
 
       for (let j = 0, skip = 0; j < shapes[i].length; j++) {
         if (shapes[i][j]) {
+          if (!validShapes[shapes[i][j]]) {
+            throw ErrorInvalidShape();
+          }
+
           for (let k = 0, s = skip; k < lss.length; k++) {
             if (!lss[k].isConnected) {
               if (s) {
@@ -238,36 +251,41 @@ export default ({ config, disableRepeating, height, size, width }) => {
     root.flatten();
 
     /** Stage 3 */
-    for (let i = 0; i < transforms.length; i++) {
-      if (transforms[i].pointType) {
-        transforms[i].point = getIntersectingPoint(root, transforms[i]);
+    for (const tn of transforms) {
+      if (tn.pointType) {
+        tn.point = getIntersectingPoint(root, tn);
 
-        if (!transforms[i].point) {
-          throw ErrorTranformNoIntersectionPoint(transforms[i].transform);
+        if (!tn.point) {
+          throw ErrorTranformNoIntersectionPoint(tn.transform);
         }
       }
 
-      transform(root, stage, transforms[i]);
+      transform(root, stage, tn);
       root.connectLineSegments();
     }
 
     /** Stage 4 */
-    if (!disableRepeating && repeat.start < repeat.end) {
-      const max = Math.hypot(height, width) / 2;
-      let disconnectedVectorDistanceMin = 0;
+    if (!disableRepeating && transforms.length > 1) {
+      const hypot = Math.hypot(height, width) / 2;
+      let max = 0;
+      let min = 0;
 
-      while (root.disconnectedVectorDistanceMin !== disconnectedVectorDistanceMin &&
-              root.disconnectedVectorDistanceMin < max) {
-        for (let i = repeat.start - 1; i < repeat.end; i++) {
-          transform(root, stage, transforms[i]);
+      while (root.disconnectedVectorDistanceMin < hypot) {
+        for (const tn of transforms) {
+          transform(root, stage, tn);
         }
 
-        disconnectedVectorDistanceMin = root.disconnectedVectorDistanceMin;
-        root.connectLineSegments();
-      }
+        max = root.disconnectedVectorDistanceMax;
+        min = root.disconnectedVectorDistanceMin;
 
-      if (root.disconnectedVectorDistanceMin === disconnectedVectorDistanceMin) {
-        throw ErrorTransformNoChange();
+        root.connectLineSegments();
+
+        const hasMaxChanged = root.disconnectedVectorDistanceMax !== max;
+        const hasMinChanged = root.disconnectedVectorDistanceMin !== min;
+
+        if ((max > hypot && !hasMinChanged) || (!hasMaxChanged && !hasMinChanged)) {
+          throw ErrorTransformNoChange();
+        }
       }
     }
   } catch (e) {
@@ -275,7 +293,7 @@ export default ({ config, disableRepeating, height, size, width }) => {
       error: e,
       shapes: root.toJs(),
       stages: stage.value,
-      transforms: transforms,
+      transforms: transforms.map(transformToJs),
     };
   }
 

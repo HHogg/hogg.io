@@ -1,12 +1,15 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Flex, Form, Icon, Link, List, ListItem, Text } from 'preshape';
+import fscreen from 'fscreen';
 import { interpolateRdPu } from 'd3-scale-chromatic';
 import Tiling from './Tiling';
 import TilingEdtorOptions from './TilingEdtorOptions';
 import TilingEditorSidePanel from './TilingEditorSidePanel';
 import TilingLibrary from './TilingLibrary';
 import './TilingEditor.css';
+
+const canFullscreen = fscreen.fullscreenEnabled;
 
 export default class TilingEditor extends Component {
   static propTypes = {
@@ -20,14 +23,16 @@ export default class TilingEditor extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleUpdateConfiguration = this.handleUpdateConfiguration.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.setFullscreenRef = this.setFullscreenRef.bind(this);
     this.state = {
       animate: false,
       configuration: props.configuration,
       disableColoring: false,
       disableRepeating: false,
+      fadeConnectedShapes: false,
+      isInFullscreen: false,
       isLibraryOpen: true,
       isOptionsOpen: false,
-      planeRotation: 0,
       showAxis: false,
       showTransforms: false,
       value: props.configuration.b,
@@ -70,6 +75,16 @@ export default class TilingEditor extends Component {
     this.handleUpdateConfiguration();
   }
 
+  handleToggleFullscreen() {
+    if (fscreen.fullscreenElement) {
+      fscreen.exitFullscreen();
+      this.setState({ isInFullscreen: false });
+    } else {
+      fscreen.requestFullscreen(this.fullscreenContainer);
+      this.setState({ isInFullscreen: true });
+    }
+  }
+
   handleToggleLibrary() {
     this.setState(({ isLibraryOpen }) => ({
       isLibraryOpen: !isLibraryOpen,
@@ -84,15 +99,20 @@ export default class TilingEditor extends Component {
     }));
   }
 
+  setFullscreenRef(el) {
+    this.fullscreenContainer = el;
+  }
+
   render() {
     const {
       animate,
       configuration,
       disableColoring,
       disableRepeating,
+      fadeConnectedShapes,
+      isInFullscreen,
       isLibraryOpen,
       isOptionsOpen,
-      planeRotation,
       showAxis,
       showTransforms,
       value,
@@ -102,14 +122,20 @@ export default class TilingEditor extends Component {
       animate,
       disableColoring,
       disableRepeating,
-      planeRotation,
+      fadeConnectedShapes,
       showAxis,
       showTransforms,
     };
 
     return (
-      <Flex borderColor borderSize="x1">
-        <Flex backgroundColor color theme="night">
+      <Flex
+          borderColor
+          borderSize="x1"
+          direction="vertical"
+          height="100%"
+          innerRef={ (el) => this.fullscreenContainer = el }
+          width="100%">
+        <Flex backgroundColor color direction="vertical" grow theme="night">
           <Flex
               alignChildrenVertical="middle"
               direction="horizontal"
@@ -123,13 +149,27 @@ export default class TilingEditor extends Component {
             <Flex>
               <List>
                 <ListItem separator="|">
-                  <Link onClick={ () => this.handleToggleLibrary() }>
+                  <Link
+                      onClick={ () => this.handleToggleLibrary() }
+                      title="Tiling Library">
                     <Icon name="Book" size="1.25rem" />
                   </Link>
                 </ListItem>
 
+                { canFullscreen && (
+                  <ListItem separator="|">
+                    <Link
+                        onClick={ () => this.handleToggleFullscreen() }
+                        title={ isInFullscreen ? 'Exit Fullscreen Mode' : 'Enter Fullscreen Mode' }>
+                      <Icon name={ isInFullscreen ? 'Minimize' : 'Maximize' } size="1.25rem" />
+                    </Link>
+                  </ListItem>
+                ) }
+
                 <ListItem separator="|">
-                  <Link onClick={ () => this.handleToggleOptions() }>
+                  <Link
+                      onClick={ () => this.handleToggleOptions() }
+                      title="Settings">
                     <Icon name="Cog" size="1.25rem" />
                   </Link>
                 </ListItem>
@@ -137,8 +177,8 @@ export default class TilingEditor extends Component {
             </Flex>
           </Flex>
 
-          <Flex direction="horizontal">
-            <Flex grow initial="none">
+          <Flex direction="horizontal" grow>
+            <Flex direction="vertical" grow initial="none">
               <Tiling
                   animate={ animate }
                   borderSize={ null }
@@ -147,8 +187,8 @@ export default class TilingEditor extends Component {
                   devmode
                   disableColoring={ disableColoring }
                   disableRepeating={ disableRepeating }
+                  fadeConnectedShapes={ fadeConnectedShapes }
                   height="32rem"
-                  planeRotation={ planeRotation }
                   showAxis={ showAxis }
                   showConfiguration
                   showTransforms={ showTransforms }

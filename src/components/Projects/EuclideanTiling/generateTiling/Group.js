@@ -6,11 +6,17 @@ const extractJs = (item) => item.toJs();
 const filterZeroZeroVectors = ({ edge }) =>
   !edge.equals(new Vector(0, 0));
 
-const sortVectors = ({ edge: v1a }, { edge: v2a }) => v1a.distanceDifference(v2a);
+const sortVectors = ({ point: v1a }, { point: v2a }) => v1a.distanceDifference(v2a);
 const sortLineSegments = (ls1, ls2) =>
   ls1.v1.equalsX(0) && ls1.v2.equalsX(0) && 1 ||
   ls2.v1.equalsX(0) && ls2.v2.equalsX(0) && -1 ||
   ls1.centroid.angleDifference(ls2.centroid);
+
+const getNearestSnapPoint = (point, line) => [
+  line.v1,
+  line.centroid,
+  line.v2,
+].sort((a, b) => a.distanceTo(point) - b.distanceTo(point))[0];
 
 export default class Group {
   constructor(items = []) {
@@ -18,7 +24,6 @@ export default class Group {
     this.addShape = this.addShape.bind(this);
     this.items = Array.isArray(items) ? items : [items];
     this.lineSegments = [];
-    this.lineSegmentsDisconnected = [];
   }
 
   get lineSegmentsSorted() {
@@ -131,10 +136,11 @@ export default class Group {
       const ip1 = ls.intersects(lss[i]);
 
       if (ip1) {
+        const ip1Snap = getNearestSnapPoint(ip1, lss[i]);
         let ip2;
 
         for (let j = 0; j < ips.length && !ip2; j++) {
-          if (ips[j].edge.equals(ip1)) {
+          if (ips[j].point.equals(ip1)) {
             ip2 = ips[j];
           }
         }
@@ -142,13 +148,15 @@ export default class Group {
         if (ip2) {
           if (lss[i].shape.centroid.distanceDifference(ip2.centroid) > 0) {
             ip2.centroid = lss[i].shape.centroid;
-            ip2.edge = ip1;
+            ip2.edge = ip1Snap;
+            ip2.point = ip1;
             ip2.line = lss[i];
           }
         } else {
           ips.push({
             centroid: lss[i].shape.centroid,
-            edge: ip1,
+            edge: ip1Snap,
+            point: ip1,
             line: lss[i],
           });
         }
