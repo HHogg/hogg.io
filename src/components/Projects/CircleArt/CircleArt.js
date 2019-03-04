@@ -128,10 +128,9 @@ export default class CircleArt extends Component {
 
           <Text margin="x4">
             Calculating these regions can be solved completely geometrically,
-            by iterating through all of theme circles, and calculating
-            the results of combinations by intersecting and subtracting from
-            one another. However, this can be done iteratively with little geometry
-            and a simple algorithm.
+            by iterating through all of the circle intersections, and reducing
+            the results into intersected and subtracted areas. However,
+            this can be done iteratively with only a little geometry and a simple algorithm.
           </Text>
         </Flex>
 
@@ -148,7 +147,7 @@ export default class CircleArt extends Component {
 
           <Text margin="x4">
             For each of these arcs we should then <Link href="http://mathworld.wolfram.com/Mid-ArcPoints.html" underline>calculate the midpoint</Link> and
-            assign it an identifier, for example and incrementing numerical value.
+            assign it an identifier, as an incrementing numerical value.
           </Text>
         </Flex>
 
