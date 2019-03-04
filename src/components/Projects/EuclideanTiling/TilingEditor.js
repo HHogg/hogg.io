@@ -9,7 +9,7 @@ import TilingEditorSidePanel from './TilingEditorSidePanel';
 import TilingLibrary from './TilingLibrary';
 import './TilingEditor.css';
 
-const canFullscreen = fscreen.fullscreenEnabled;
+const canFullscreen = typeof window === 'undefined' || fscreen.fullscreenEnabled;
 
 export default class TilingEditor extends Component {
   static propTypes = {
