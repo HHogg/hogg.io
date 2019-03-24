@@ -47,6 +47,7 @@ export default class TilingRenderer extends Component {
     disableRepeating: PropTypes.bool,
     fadeConnectedShapes: PropTypes.bool,
     height: PropTypes.number.isRequired,
+    maxRepeat: PropTypes.number,
     showAxis: PropTypes.bool,
     showConfiguration: PropTypes.bool,
     showTransforms: PropTypes.bool,
@@ -96,6 +97,7 @@ export default class TilingRenderer extends Component {
       disableRepeating,
       fadeConnectedShapes,
       height,
+      maxRepeat,
       showAxis,
       showTransforms,
       size,
@@ -107,14 +109,15 @@ export default class TilingRenderer extends Component {
     const hasDisableColoringChanged = disableColoring !== prevProps.disableColoring;
     const hasDisableRepeatingChanged = disableRepeating !== prevProps.disableRepeating;
     const hasDimensionsChanged = height !== prevProps.height || width !== prevProps.width;
-    const fadeConnectedShapesChanged = fadeConnectedShapes !== prevProps.fadeConnectedShapes;
+    const hasFadeConnectedShapesChanged = fadeConnectedShapes !== prevProps.fadeConnectedShapes;
+    const hasMaxRepeatChanged = maxRepeat !== prevProps.maxRepeat;
     const hasShowAxisChanged = showAxis !== prevProps.showAxis;
     const hasShowTransformsChanged = showTransforms !== prevProps.showTransforms;
     const hasSizeChanged = size !== prevProps.size;
 
-    if (hasConfigChanged || hasDimensionsChanged || hasDisableRepeatingChanged || hasSizeChanged) {
+    if (hasConfigChanged || hasDimensionsChanged || hasDisableRepeatingChanged || hasMaxRepeatChanged || hasSizeChanged) {
       this.init();
-    } else if (hasAnimateChange || hasDisableColoringChanged || fadeConnectedShapesChanged) {
+    } else if (hasAnimateChange || hasDisableColoringChanged || hasFadeConnectedShapesChanged) {
       this.draw();
     }
 
@@ -150,13 +153,14 @@ export default class TilingRenderer extends Component {
   }
 
   getShapes() {
-    const { configuration, disableRepeating, height, size, width } = this.props;
+    const { configuration, disableRepeating, height, maxRepeat, size, width } = this.props;
     const { b } = configuration;
 
     this.worker.postMessage({
       config: b,
       disableRepeating: disableRepeating,
       height: height,
+      maxRepeat: maxRepeat,
       size: size,
       width: width,
     });

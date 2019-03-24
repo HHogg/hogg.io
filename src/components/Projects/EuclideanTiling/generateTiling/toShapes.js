@@ -191,7 +191,7 @@ const transformToJs = ({ point, ...rest }) => ({
   },
 });
 
-export default ({ config, disableRepeating, height, size, width }) => {
+export default ({ config, disableRepeating, height, maxRepeat, size, width }) => {
   const [
     seed,
     shapes,
@@ -265,6 +265,8 @@ export default ({ config, disableRepeating, height, size, width }) => {
     }
 
     /** Stage 4 */
+    let repeat = maxRepeat;
+
     if (!disableRepeating && transforms.length > 1) {
       const hypot = Math.hypot(height, width) / 2;
       let max = 0;
@@ -283,8 +285,12 @@ export default ({ config, disableRepeating, height, size, width }) => {
         const hasMaxChanged = root.disconnectedVectorDistanceMax !== max;
         const hasMinChanged = root.disconnectedVectorDistanceMin !== min;
 
-        if ((max > hypot && !hasMinChanged) || (!hasMaxChanged && !hasMinChanged)) {
+        if (!hasMaxChanged && !hasMinChanged) {
           throw ErrorTransformNoChange();
+        }
+
+        if (maxRepeat && maxRepeat > 0 && --repeat === 0) {
+          break;
         }
       }
     }

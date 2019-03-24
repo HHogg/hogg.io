@@ -33,7 +33,9 @@ export default class TilingEditor extends Component {
       isInFullscreen: false,
       isLibraryOpen: true,
       isOptionsOpen: false,
+      maxRepeat: 12,
       showAxis: false,
+      shapeSize: 96,
       showTransforms: false,
       value: props.configuration.b,
     };
@@ -113,7 +115,9 @@ export default class TilingEditor extends Component {
       isInFullscreen,
       isLibraryOpen,
       isOptionsOpen,
+      maxRepeat,
       showAxis,
+      shapeSize,
       showTransforms,
       value,
     } = this.state;
@@ -123,7 +127,9 @@ export default class TilingEditor extends Component {
       disableColoring,
       disableRepeating,
       fadeConnectedShapes,
+      maxRepeat,
       showAxis,
+      shapeSize,
       showTransforms,
     };
 
@@ -189,10 +195,11 @@ export default class TilingEditor extends Component {
                   disableRepeating={ disableRepeating }
                   fadeConnectedShapes={ fadeConnectedShapes }
                   height="32rem"
+                  maxRepeat={ maxRepeat }
                   showAxis={ showAxis }
                   showConfiguration
                   showTransforms={ showTransforms }
-                  size={ 96 }
+                  size={ shapeSize }
                   theme="day" />
             </Flex>
 

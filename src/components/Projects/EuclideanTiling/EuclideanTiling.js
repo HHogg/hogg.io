@@ -114,7 +114,7 @@ export default class EuclideanTiling extends Component {
           <Text margin="x4">
             However, this notation has a problem. When it comes to k-uniform tilings,
             the notation does not explain the relationships between the vertices. This
-            makes it impossible to infinitely generate a plane given the notation alone.
+            makes it impossible to generate a covered plane given the notation alone.
             Taking the above <Code>{ exampleConfig }</Code> notation as an example. If a single
             vertex was placed, surrounded by 4, 3 sided polygons and a 6 sided polygon,
             there would be 3 other vertices with 2, 3 sided polygons. From here either
@@ -436,7 +436,7 @@ export default class EuclideanTiling extends Component {
             repeating over the transformation functions as many times as are
             needed. Providing the configuration is correct, this should not
             result in any shape overlaps (apart from those excluded from the
-            transformation functions), and it should continuously and infinitely grow.
+            transformation functions), and it should continuously and indefinitely grow.
           </Text>
         </Flex>
 

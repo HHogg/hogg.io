@@ -14,6 +14,7 @@ export default class Tiling extends Component {
     disableRepeating: PropTypes.bool,
     fadeConnectedShapes: PropTypes.bool,
     height: PropTypes.string.isRequired,
+    maxRepeat: PropTypes.number,
     onError: PropTypes.func,
     onRender: PropTypes.func,
     showAxis: PropTypes.bool,
@@ -32,6 +33,7 @@ export default class Tiling extends Component {
       disableRepeating,
       fadeConnectedShapes,
       height,
+      maxRepeat,
       onError,
       onRender,
       showAxis,
@@ -65,6 +67,7 @@ export default class Tiling extends Component {
                       disableRepeating={ disableRepeating }
                       fadeConnectedShapes={ fadeConnectedShapes }
                       height={ height }
+                      maxRepeat={ maxRepeat }
                       onError={ onError }
                       onRender={ onRender }
                       showAxis={ showAxis }

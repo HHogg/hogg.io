@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Fragment, PureComponent } from 'react';
-import { CheckBox } from 'preshape';
+import { CheckBox, Input } from 'preshape';
 
 export default class TilingEditorOptions extends PureComponent {
 
@@ -10,11 +10,21 @@ export default class TilingEditorOptions extends PureComponent {
       disableColoring: PropTypes.bool.isRequired,
       disableRepeating: PropTypes.bool.isRequired,
       fadeConnectedShapes: PropTypes.bool.isRequired,
+      maxRepeat: PropTypes.number.isRequired,
       showAxis: PropTypes.bool.isRequired,
+      shapeSize: PropTypes.number.isRequired,
       showTransforms: PropTypes.bool.isRequired,
     }).isRequired,
     onConfigChange: PropTypes.func.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      maxRepeat: props.config.maxRepeat,
+      shapeSize: props.config.shapeSize,
+    };
+  }
 
   handleNumberChange(event, prop, min = -Infinity, max = Infinity) {
     const { value } = event.target;
@@ -29,6 +39,7 @@ export default class TilingEditorOptions extends PureComponent {
 
   render() {
     const { config, onConfigChange } = this.props;
+    const { maxRepeat, shapeSize } = this.state;
 
     return (
       <Fragment>
@@ -67,6 +78,22 @@ export default class TilingEditorOptions extends PureComponent {
             label="Show Transformations"
             margin="x2"
             onChange={ () => onConfigChange({ showTransforms: !config.showTransforms }) } />
+
+        <Input
+            label="Maximum Transform Repeats"
+            margin="x2"
+            onChange={ (e) => this.handleNumberChange(e, 'maxRepeat', 1) }
+            placholder="Maximum transform repeats..."
+            type="number"
+            value={ maxRepeat } />
+
+        <Input
+            label="Shape Size"
+            margin="x2"
+            onChange={ (e) => this.handleNumberChange(e, 'shapeSize', 60, 100) }
+            placholder="Shape size..."
+            type="number"
+            value={ shapeSize } />
       </Fragment>
     );
   }
