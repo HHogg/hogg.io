@@ -30,6 +30,7 @@ export default class ProjectsTable extends Component {
       <Responsive queries={ [widthSmall, widthMedium] }>
         { (match) => (
           <Grid
+              alignChildren="middle"
               columnCount={ match({ [widthSmall]: '3', [widthMedium]: null }) || '2' }
               gap="x2"
               margin="x6">

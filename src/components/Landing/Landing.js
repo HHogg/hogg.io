@@ -42,6 +42,7 @@ export default class Landing extends Component {
           paddingVertical="x12">
         <Flex
             initial="none"
+            maxWidth="34rem"
             paddingHorizontal="x4"
             paddingVertical="x8"
             width="auto">

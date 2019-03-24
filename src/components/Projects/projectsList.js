@@ -6,10 +6,20 @@
 //   year: 2018,
 // };
 
-const Brandwatch = {
+const Bitrise = {
   code: 'Br',
-  name: 'Brandwatch',
+  name: 'Bitrise',
   to: '/timeline/#Br',
+  labels: ['javascript', 'css', 'react', 'redux'],
+  description: '**Senior Developer** - CI/CD for mobile apps **([Outlyer acquisition](https://blog.bitrise.io/bitrise-acquires-outlyer))**',
+  timeline: true,
+  year: 2019,
+};
+
+const Brandwatch = {
+  code: 'Bw',
+  name: 'Brandwatch',
+  to: '/timeline/#Bw',
   labels: ['javascript', 'nodejs', 'css', 'react', 'redux'],
   description: '**Senior Developer** - Brandwatch audience insights and targeted marketing',
   timeline: `[Brandwatch](https://brandwatch.com) is a social media monitoring platform. They provide tools to monitor, analyse and engage with conversations across the internet.
@@ -116,31 +126,21 @@ const SnakeHeuristics = {
   href: 'https://snake.hogg.io',
 };
 
-export default [{
-  ...Pure360, x: 1, y: 1,
-}, {
-  ...Reedsy, x: 1, y: 2,
-}, {
-  ...Brandwatch, x: 1, y: 3,
-}, {
-  ...Outlyer, x: 1, y: 4,
-}, {
-  ...SysPlot, x: 2, y: 3,
-}, {
-  ...RemarkableReact, x: 2, y: 4,
-}, {
-  ...Preshape, x: 3, y: 4,
-}, {
-  ...LightRay, x: 4, y: 4,
-}, {
-  ...CoSine, x: 4, y: 3,
-}, {
-  ...SnakeHeuristics, x: 5, y: 2,
-}, {
-  ...CircleArt, x: 5, y: 3,
-}, {
-  ...EuclideanTiling, x: 5, y: 4,
-}]
+export default [
+  { ...Pure360, x: 1, y: 1 },
+  { ...Reedsy, x: 1, y: 2 },
+  { ...Outlyer, x: 1, y: 3 },
+  { ...Bitrise, x: 1, y: 4 },
+  { ...Brandwatch, x: 2, y: 2 },
+  { ...SysPlot, x: 2, y: 3 },
+  { ...RemarkableReact, x: 2, y: 4 },
+  { ...Preshape, x: 3, y: 4 },
+  { ...CoSine, x: 4, y: 3 },
+  { ...LightRay, x: 4, y: 4 },
+  { ...SnakeHeuristics, x: 5, y: 2 },
+  { ...CircleArt, x: 5, y: 3 },
+  { ...EuclideanTiling, x: 5, y: 4 },
+]
 
 .sort((a, b) => a.y - b.y || a.x - b.x)
 .map((_, number) => ({ ..._, number: number + 1 }));
