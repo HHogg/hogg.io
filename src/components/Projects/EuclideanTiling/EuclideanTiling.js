@@ -307,15 +307,15 @@ export default class EuclideanTiling extends Component {
 
           <Text margin="x4" maxWidth="36rem">
             Using the <Code>{ exampleConfig }</Code> configuration as an example.
-            The first transformation operation is <Code>r60</Code> (rotate at the
+            The first transformation operation is <Code>m60</Code> (reflect at the
             center of the plane by 60°). So all of the transformational
             operations performed would be:
           </Text>
 
           <BulletPoints maxWidth="36rem" numbered>
-            <BulletPoint>Rotate 60°</BulletPoint>
-            <BulletPoint>Rotate 120° (60° x2)</BulletPoint>
-            <BulletPoint>Rotate 240° (120° x2). This is the last rotation as 240° x2 is 480° and is above the 360° limit.</BulletPoint>
+            <BulletPoint>Reflect 60°</BulletPoint>
+            <BulletPoint>Reflect 120° (60° x2)</BulletPoint>
+            <BulletPoint>Reflect 240° (120° x2). This is the last reflection as 240° x2 is 480° and is above the 360° limit.</BulletPoint>
           </BulletPoints>
         </Flex>
 
@@ -368,7 +368,7 @@ export default class EuclideanTiling extends Component {
 
           <Text margin="x4" maxWidth="36rem">
             Using the <Code>{ exampleConfig }</Code> configuration as an example.
-            The second transformation function is <Code>r(2e,30)</Code> (rotate 180° at the
+            The second transformation function is <Code>r30(2e)</Code> (rotate 180° at the
             edge of the second intersecting shape at 30°).
           </Text>
 
@@ -457,7 +457,7 @@ export default class EuclideanTiling extends Component {
 
           <Text margin="x4" maxWidth="36rem">
             Using the <Code>{ exampleConfig }</Code> configuration as an example.
-            Both transformation functions <Code>r60</Code> and <Code>r30(2e)</Code>
+            Both transformation functions <Code>m60</Code> and <Code>r30(2e)</Code>
             are continuously repeated, each time taken the shapes that are currently
             on the plane.
           </Text>
