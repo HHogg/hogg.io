@@ -1,5 +1,10 @@
 export default [{
   author: 'Harrison Hogg',
+  config: require('./Mushroom.json'),
+  name: 'Mushroom',
+  svg: require('./Mushroom.svg'),
+}, {
+  author: 'Harrison Hogg',
   config: require('./Island.json'),
   name: 'Island',
   svg: require('./Island.svg'),

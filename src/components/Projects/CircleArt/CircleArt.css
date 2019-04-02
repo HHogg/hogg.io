@@ -57,6 +57,7 @@
     animation-duration: var(--transition-time--slow);
     animation-fill-mode: forwards;
     animation-timing-function: var(--transition-function);
+    stroke-opacity: 0.5;
   }
 
   & .CircleArt__intersection--filled {
