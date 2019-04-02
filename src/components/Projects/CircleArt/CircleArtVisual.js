@@ -22,6 +22,7 @@ import debugCircles from './utilsDebug/debugCircles';
 import debugVectors from './utilsDebug/debugVectors';
 import getIntersectionAreas from './getIntersectionAreas/getIntersectionAreas';
 import isPointOverCircleEdge from './utilsMath/isPointOverCircleEdge';
+import isPointWithinCircle from './utilsMath/isPointWithinCircle';
 import sortCirclesByAreaDescending from './utilsMath/sortCirclesByAreaDescending';
 import { toAbsoluteFromRelativeIntersection, toAbsoluteFromRelativeShape } from './utilsMath/toAbsoluteFromRelative';
 import { toRelativeFromAbsoluteIntersection, toRelativeFromAbsoluteShape } from './utilsMath/toRelativeFromAbsolute';
@@ -337,6 +338,18 @@ export default class CircleArtVisual extends Component {
     };
   }
 
+  getShapeAtCoordinates(x, y, padding) {
+    for (let i = this.shapes.length - 1; i >= 0; i--) {
+      const { x: cx, y: cy, radius } = this.shapes[i];
+
+      if (isPointWithinCircle(x, y, cx, cy, radius, padding)) {
+        return this.shapes[i];
+      }
+    }
+
+    return null;
+  }
+
   getShapeByID(id) {
     return this.shapes.find((shape) => shape.id === id);
   }
@@ -468,7 +481,7 @@ export default class CircleArtVisual extends Component {
     const { x, y } = this.getRelativeCoordinates(clientX, clientY);
 
     if (mode === MODE_DRAW) {
-      const shape = this.preActiveShape = this.getShapeByDOMElement(event.target, TOLERANCE_SELECT_SHAPE);
+      const shape = this.preActiveShape = this.getShapeAtCoordinates(x, y, TOLERANCE_SELECT_SHAPE);
 
       if (shape) {
         if (isPointOverCircleEdge(x, y, shape.x, shape.y, shape.radius, TOLERANCE_SELECT_SHAPE)) {
