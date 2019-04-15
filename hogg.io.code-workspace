@@ -1,0 +1,15 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.tabSize": 2,
+		"eslint.validate": [
+			"javascript",
+			"javascriptreact"
+		],
+		"css.validate": false
+	}
+}

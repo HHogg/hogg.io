@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Base, Link, Text } from 'preshape';
-import TilingConfigurations from './TilingConfigurations';
+import configurations from './configurations.json';
 
 export default class TilingLibrary extends Component {
   static propTypes = {
@@ -15,7 +15,7 @@ export default class TilingLibrary extends Component {
       selected,
     } = this.props;
 
-    return TilingConfigurations.map(({ name, configurations }) => (
+    return configurations.map(({ name, configurations }) => (
       <Base key={ name } margin="x6">
         <Text ellipsis margin="x1" size="x1" strong>{ name }</Text>
         { configurations.map((config) => (

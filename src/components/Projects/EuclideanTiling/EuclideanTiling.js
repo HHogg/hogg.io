@@ -19,7 +19,7 @@ import {
 import { widthSmall, widthMedium } from '../../Root';
 import Project from '../../Project/Project';
 import Tiling from './Tiling';
-import { findByA } from './TilingConfigurations';
+import { findByA } from './findConfigurations';
 import TilingEditor from './TilingEditor';
 
 const exampleConfig = '(3⁶)²; 3⁴.6';
