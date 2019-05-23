@@ -101,20 +101,8 @@ export default class Landing extends Component {
 
                 <List alignChildren="middle" gap="x3" margin="x12">
                   <ListItem separator="~">
-                    <Link href="mailto:harry@hogg.io">
-                      <Icon name="Letter" size="1.5rem" />
-                    </Link>
-                  </ListItem>
-
-                  <ListItem separator="~">
                     <Link href="https://github.com/HHogg">
                       <Icon name="Github" size="1.5rem" />
-                    </Link>
-                  </ListItem>
-
-                  <ListItem separator="~">
-                    <Link href="https://twitter.com/hogg_io">
-                      <Icon name="Twitter" size="1.5rem" />
                     </Link>
                   </ListItem>
                 </List>
