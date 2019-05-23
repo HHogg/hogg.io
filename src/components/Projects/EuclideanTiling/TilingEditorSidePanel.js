@@ -29,7 +29,8 @@ export default class TilingEditorSidePanel extends Component {
           className={ classes }
           container
           direction="vertical"
-          grow>
+          grow
+          initial="none">
         <Flex
             className="TilingEditor__side-panel-content"
             grow
