@@ -1,6 +1,0 @@
-.ShowcaseItem:hover {
-  border-color: var(--color-accent--shade-2);
-  transition-property: border-color;
-  transition-duration: var(--transition-time--fast);
-  transition-timing-function: var(--transition-function);
-}
