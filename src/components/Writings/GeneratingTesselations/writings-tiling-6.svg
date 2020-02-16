@@ -55,8 +55,7 @@
                     <g id="two-53420" transform="translate(710.250000, 507.750000)">
                         <polygon id="two-53421" stroke="#212529" stroke-width="1.5" fill="#AE3EC9" fill-rule="nonzero" points="77.97 112.4985 39 135 0.0285 112.5 0.0285 67.5 38.9985 44.9985 77.97 67.4985"></polygon>
                         <polygon id="two-53422" stroke="#212529" stroke-width="1.5" fill="#C77CD9" fill-rule="nonzero" points="77.97 67.4985 38.9985 44.9985 77.97 22.4985"></polygon>
-                        <polygon id="two-53423" stroke="#212529" stroke-width="1.5" fill="#DFBBEA" fill-rule="nonzero" points="77.97 22.4985 38.9985 44.9985 38.9985 0"></polygon>
-                        <polygon id="two-53424" stroke="#212529" stroke-width="1.5" fill="#DFBBEA" fill-rule="nonzero" points="77.97 67.4985 77.97 22.4985 116.9415 44.9985"></polygon>
+                        <polygon id="two-53423" stroke="#212529" stroke-width="1.5" fill="#DFBBEA" fill-rule="nonzero" points="77.97 22.4985 38.9985 44.9985 38.9985 7.46069873e-14"></polygon>
                     </g>
                     <g id="two-53425">
                         <path d="M750,0 L750,1195.5" id="two-53426" stroke="#5C7CFA" stroke-width="1.5" fill="#000000" fill-rule="nonzero"></path>
