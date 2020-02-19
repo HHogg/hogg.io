@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Flex, Image, Link, Text } from 'preshape';
+import data from '../../../data';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
@@ -7,12 +8,7 @@ import WritingSection from '../../WritingPage/WritingSection';
 
 const CircleIntersections = () => {
   return (
-    <WritingPage
-        date={ 1534460400000 }
-        description="An experiment into calculating all of the regions of intersecting circles
-          using a computational geometric algorithm."
-        image={ require('../../../assets/circles.png') }
-        title="Identifying the areas of intersecting circles with computational geometry">
+    <WritingPage { ...data.writings.CircleIntersections }>
       <WritingSection>
         <WritingParagraph>
           Calculating these regions can be solved completely geometrically, by iterating
@@ -42,8 +38,8 @@ const CircleIntersections = () => {
       <WritingSection figure>
         <Flex
             alignChildren="middle"
-            direction="vertical"
             backgroundColor="light-shade-1"
+            direction="vertical"
             padding="x6">
           <Image src={ require('./Image1.svg') } />
         </Flex>
@@ -82,8 +78,8 @@ const CircleIntersections = () => {
       <WritingSection figure>
         <Flex
             alignChildren="middle"
-            direction="vertical"
             backgroundColor="light-shade-1"
+            direction="vertical"
             padding="x6">
           <Image src={ require('./Image2.svg') } />
         </Flex>
@@ -116,8 +112,8 @@ const CircleIntersections = () => {
       <WritingSection figure>
         <Flex
             alignChildren="middle"
-            direction="vertical"
             backgroundColor="light-shade-1"
+            direction="vertical"
             padding="x6">
           <Image src={ require('./Image3.svg') } />
         </Flex>
@@ -162,8 +158,8 @@ const CircleIntersections = () => {
       <WritingSection figure>
         <Flex
             alignChildren="middle"
-            direction="vertical"
             backgroundColor="light-shade-1"
+            direction="vertical"
             padding="x6">
           <Image src={ require('./Image4.svg') } />
         </Flex>

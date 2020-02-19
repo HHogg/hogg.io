@@ -14,6 +14,7 @@ import {
   TableRow,
   Text,
 } from 'preshape';
+import data from '../../../data';
 import configurations from './configurations-sample.json';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
@@ -24,13 +25,7 @@ const configurationsGrouped = groupBy(configurations, 'vertices');
 
 const GeneratingTesselations = () => {
   return (
-    <WritingPage
-        date={ 1580428800000 }
-        description="An explanation of the GomJau-Hogg’s notation for generating all of
-          the regular, semiregular (uniform) and demigular (k-uniform, up to at least k=3) in a consistent,
-          unique and unequivocal manner."
-        image={ require('../../../assets/antwerp.png') }
-        title="GomJau-Hogg’s notation for automatic generation of k-uniform tessellations">
+    <WritingPage { ...data.writings.GeneratingTessellations }>
       <WritingSection>
         <WritingParagraph>
           <Link href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons" target="GTInfo" underline>Euclidean tilings</Link> are
@@ -214,7 +209,7 @@ const GeneratingTesselations = () => {
           placement stages consist of:
         </WritingParagraph>
 
-        <BulletPoints numbered margin="x4">
+        <BulletPoints margin="x4" numbered>
           <BulletPoint>
             A seed polygon with 6 sides (a hexagon)
           </BulletPoint>
@@ -270,7 +265,7 @@ const GeneratingTesselations = () => {
           polygon over the same shape, which would be automatically merged).
         </WritingParagraph>
 
-        <BulletPoints numbered margin="x4">
+        <BulletPoints margin="x4" numbered>
           <BulletPoint>
             Reflect 30° the elements of the previous phase (Fig. 6, right)
           </BulletPoint>
@@ -425,29 +420,29 @@ const GeneratingTesselations = () => {
           </TableHeader>
 
           <TableBody>
-          { Object
-            .entries(configurationsGrouped)
-            .map(([groupKey, configurations]) => (
-              <React.Fragment key={ groupKey }>
-                <TableRow>
-                  <TableCell colSpan={ 2 }>
-                    <Text strong uppercase>{ groupKey }</Text>
-                  </TableCell>
-                </TableRow>
-
-                { configurations.map(({ cundyRollett, gomJauHogg }, index) => (
-                  <TableRow key={ index }>
-                    <TableCell>
-                      { cundyRollett }
-                    </TableCell>
-
-                    <TableCell>
-                      { gomJauHogg }
+            { Object
+              .entries(configurationsGrouped)
+              .map(([groupKey, configurations]) => (
+                <React.Fragment key={ groupKey }>
+                  <TableRow>
+                    <TableCell colSpan={ 2 }>
+                      <Text strong uppercase>{ groupKey }</Text>
                     </TableCell>
                   </TableRow>
-                )) }
-              </React.Fragment>
-            )) }
+
+                  { configurations.map(({ cundyRollett, gomJauHogg }, index) => (
+                    <TableRow key={ index }>
+                      <TableCell>
+                        { cundyRollett }
+                      </TableCell>
+
+                      <TableCell>
+                        { gomJauHogg }
+                      </TableCell>
+                    </TableRow>
+                  )) }
+                </React.Fragment>
+              )) }
           </TableBody>
         </Table>
       </WritingSection>
@@ -470,7 +465,7 @@ const GeneratingTesselations = () => {
           References
         </WritingHeading>
 
-        <BulletPoints numbered margin="x4">
+        <BulletPoints margin="x4" numbered>
           <BulletPoint>
             Otero, C. (1990). Diseño geométrico de cúpulas no esféricas aproximadas
             por mallas triangulares con un número mínimo de longitudes de barra.

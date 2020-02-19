@@ -1,5 +1,6 @@
 import * as React from 'react';
 import random from 'lodash.random';
+import data from '../../../data';
 import { Flex, Text, useMatchMedia, useResizeObserver } from 'preshape';
 import { Box, Circle, Vector, testPolygonCircle, testCircleCircle } from 'sat';
 import { Algorithm } from './Algorithms';
@@ -119,11 +120,7 @@ const Spirals = () => {
   ]);
 
   return (
-    <ProjectPage
-        description="An experiment for rendering and animating a variety of
-          spirals and radial patterns using WebGL."
-        image={ require('../../../assets/spiral.png') }
-        title="Spirals">
+    <ProjectPage { ...data.projects.Spirals }>
       <Flex
           direction={ match('600px') ? 'horizontal' : 'vertical' }
           gap="x8"

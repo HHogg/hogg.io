@@ -7,26 +7,26 @@ import Metas from '../Metas/Metas';
 interface Props {
   date: number;
   description: string;
-  image: string;
+  imageOG: string;
   title: string;
 }
 
 const WritingPage: React.FC<Props> = (props) => {
-  const { children, date, description, image, title } = props;
+  const { children, date, description, imageOG, title } = props;
 
   return (
     <React.Fragment>
       <Metas
           description={ description }
-          image={ image }
+          image={ imageOG }
           title={ title } />
 
       <Flex direction="vertical" gap="x6">
         <Flex
             backgroundColor="background-shade-1"
-            padding="x6"
             direction="vertical"
             gap="x6"
+            padding="x6"
             textColor="text-shade-1"
             theme="night">
           <Flex>

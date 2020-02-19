@@ -1,26 +1,25 @@
 import * as React from 'react';
-import { Appear, Flex, Image, Link, LinkProps, Text } from 'preshape';
+import { Appear, Flex, Image, Link, Text } from 'preshape';
+import { Project } from '../../Types';
 
-interface Props extends LinkProps {
-  description: string;
-  href?: string;
-  image: string;
-  title: string;
-  to?: string;
-}
+interface Props extends Project {}
 
-const Project = (props: Props & React.HTMLProps<HTMLAnchorElement>) => {
-  const { description, image, title, ...rest } = props;
+const ProjectComponent = (props: Props & React.HTMLProps<HTMLAnchorElement>) => {
+  const { description, href, image, title, to } = props;
   const [isOver, setIsOver] = React.useState(false);
 
   return (
-    <Link { ...rest } display="block">
+    <Link
+        display="block"
+        href={ href }
+        target={ href ? title : undefined }
+        to={ to }>
       <Flex
           borderColor="text-shade-1"
           borderSize="x2"
           container
-          onPointerOver={ () => setIsOver(true) }
-          onPointerLeave={ () => setIsOver(false) }>
+          onPointerLeave={ () => setIsOver(false) }
+          onPointerOver={ () => setIsOver(true) }>
         <Flex container height="180px" overflow="hidden">
           <Image
               absolute="center"
@@ -37,14 +36,16 @@ const Project = (props: Props & React.HTMLProps<HTMLAnchorElement>) => {
             backgroundColor="accent-shade-2"
             direction="vertical"
             padding="x6"
-            textColor="light-shade-1"
+            textColor="white"
             visible={ isOver }>
-          <Text margin="x2" strong>{ title }</Text>
-          <Text size="x1">{ description }</Text>
+          <Flex>
+            <Text margin="x2" strong>{ title }</Text>
+            <Text size="x1">{ description }</Text>
+          </Flex>
         </Appear>
       </Flex>
     </Link>
   );
 };
 
-export default Project;
+export default ProjectComponent;

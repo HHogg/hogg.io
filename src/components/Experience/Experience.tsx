@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { Flex, Text } from 'preshape';
+import { Flex, Label, Labels, Text } from 'preshape';
 import { DateTime } from 'luxon';
+import { Experience } from '../../Types';
 
-interface Props {
-  company: string;
-  date: number;
-  description: string;
-  labels: string[];
-  present?: boolean;
-  role: string;
+interface Props extends Experience {
+  current?: boolean;
 }
 
-const Experience = (props: Props) => {
-  const { company, date, description, present, role } = props;
+const ExperienceComponent = (props: Props) => {
+  const { current, company, date, description, tags, role } = props;
 
   return (
     <Flex
@@ -22,18 +18,20 @@ const Experience = (props: Props) => {
       <Flex
           direction="vertical"
           gap="x2">
-        <Flex>
-          <Text
-              backgroundColor="accent-shade-2"
-              borderRadius="x1"
-              paddingHorizontal="x2"
-              paddingVertical="x1"
-              size="x1"
-              strong
-              textColor="light-shade-1">
-            { DateTime.fromMillis(date).toFormat('yyyy') }
-          </Text>
-        </Flex>
+        { current && (
+          <Flex>
+            <Text
+                backgroundColor="accent-shade-2"
+                borderRadius="x1"
+                paddingHorizontal="x2"
+                paddingVertical="x1"
+                size="x1"
+                strong
+                textColor="light-shade-1">
+              Now
+            </Text>
+          </Flex>
+        ) }
 
         <Flex
             alignChildrenHorizontal="middle"
@@ -46,28 +44,38 @@ const Experience = (props: Props) => {
                 backgroundColor="accent-shade-2"
                 grow
                 width="2px" />
-
-            { present && (
-              <Flex
-                  backgroundColor="accent-shade-2"
-                  borderRadius="full"
-                  height="12px"
-                  width="12px" />
-            ) }
           </Flex>
         </Flex>
 
         <Flex>
+          <Text
+              backgroundColor="accent-shade-2"
+              borderRadius="x1"
+              paddingHorizontal="x2"
+              paddingVertical="x1"
+              size="x1"
+              strong
+              textColor="light-shade-1">
+            { DateTime.fromMillis(date).toFormat('yyyy') }
+          </Text>
         </Flex>
       </Flex>
 
-      <Flex basis="none" grow paddingVertical="x2">
+      <Flex backgroundColor="background-shade-2" basis="none" grow padding="x6">
         <Text strong>{ company }</Text>
         <Text size="x1" strong>{ role }</Text>
-        <Text paddingVertical="x2" size="x1">{ description }</Text>
+        <Text margin="x2" size="x1">{ description }</Text>
+        <Labels margin="x3">
+          { tags.map((tag) =>
+            <Label
+                backgroundColor="background-shade-2"
+                key={ tag }
+                size="x1">{ tag } </Label>
+          ) }
+        </Labels>
       </Flex>
     </Flex>
   );
 };
 
-export default Experience;
+export default ExperienceComponent;

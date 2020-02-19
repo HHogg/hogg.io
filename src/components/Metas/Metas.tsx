@@ -12,7 +12,7 @@ const Metas = (props: Props) => {
   const { description, image, title } = props;
   const location = useLocation();
 
-  const urlContent = `https://hogg.io/${location.pathname}`;
+  const urlContent = `https://hogg.io${location.pathname}`;
   const imageContent = `https://hogg.io${image}`;
 
   return (

@@ -5,7 +5,7 @@ import Metas from '../Metas/Metas';
 
 interface Props {
   description: string;
-  image: string;
+  imageOG: string;
   title: string;
 }
 
@@ -13,7 +13,7 @@ const ProjectPage: React.FC<Props> = (props) => {
   const {
     children,
     description,
-    image,
+    imageOG,
     title,
   } = props;
 
@@ -21,7 +21,7 @@ const ProjectPage: React.FC<Props> = (props) => {
     <React.Fragment>
       <Metas
           description={ description }
-          image={ image }
+          image={ imageOG }
           title={ title } />
 
       <Flex direction="vertical" gap="x6" padding="x6">
