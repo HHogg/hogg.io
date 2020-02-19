@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "hogg.io",
     "public": "public",
     "cleanUrls": true,
     "headers": [{
