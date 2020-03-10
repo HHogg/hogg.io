@@ -22,7 +22,7 @@ const CircleIntersections = () => {
         <WritingHeading>The points of intersection and arcs</WritingHeading>
 
         <WritingParagraph>
-          One of the few geomtric steps of this algorithm is to calculate
+          One of the few geometric steps of this algorithm is to calculate
           the point of intersection of every pair of intersecting circles. This
           is already a <Link href="http://mathworld.wolfram.com/Circle-CircleIntersection.html" underline>well solved problem</Link>.
           With the intersection points calculated and reference to the intersecting

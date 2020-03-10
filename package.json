@@ -6,6 +6,7 @@
   "private": true,
   "scripts": {
     "build": "rm -rf public && parcel build src/index.html -d public && react-snap",
+    "deploy": "firebase deploy",
     "lint:css": "stylelint src/**/*.css",
     "lint:js": "eslint src/**/*.ts src/**/*.tsx",
     "lint": "yarn lint:js && yarn lint:css",
@@ -13,12 +14,12 @@
     "start": "rm -rf dist && parcel src/index.dev.html --port 4000 -d dist --no-cache --no-autoinstall"
   },
   "dependencies": {
-    "@hot-loader/react-dom": "^16.11.0",
     "autoprefixer": "^9.7.4",
     "babel-eslint": "^8.2.3",
     "bezier-easing": "^2.0.3",
     "caniuse-lite": "^1.0.30000697",
     "classnames": "^2.2.5",
+    "firebase-tools": "^7.14.0",
     "framer": "^1.1.7",
     "framer-motion": "^1.8.4",
     "gl-matrix": "^3.0.0",
@@ -29,11 +30,10 @@
     "luxon": "^1.22.0",
     "parcel-bundler": "^1.12.4",
     "postcss-preset-env": "^6.7.0",
-    "preshape": "^4.1.1",
-    "react": "^16.8.2",
-    "react-dom": "^16.8.2",
+    "preshape": "^4.2.2",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
     "react-helmet": "6.0.0-beta.2 ",
-    "react-hot-loader": "^4.12.19",
     "react-router-dom": "^5.1.2",
     "react-snap": "^1.23.0",
     "regl": "^1.3.11",
@@ -62,9 +62,6 @@
     "stylelint": "^13.2.0",
     "stylelint-config-preshape": "^2.0.0",
     "superstatic": "^6.0.4"
-  },
-  "alias": {
-    "react-dom": "@hot-loader/react-dom"
   },
   "reactSnap": {
     "source": "public",

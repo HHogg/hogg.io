@@ -1,18 +1,21 @@
-import React from 'react';
+import * as React from 'react';
 import { hydrate, render } from 'react-dom';
-import Root from './components/HotLoad';
+import { BrowserRouter } from 'react-router-dom';
+import Root from './components/Root';
 import './index.css';
 
 const rootElement = document.getElementById('Root');
 
 if (rootElement) {
   if (rootElement.hasChildNodes()) {
-    hydrate(<Root />, rootElement);
+    hydrate(
+      <BrowserRouter>
+        <Root />
+      </BrowserRouter>, rootElement);
   } else {
-    render(<Root />, rootElement);
+    render(
+      <BrowserRouter>
+        <Root />
+      </BrowserRouter>, rootElement);
   }
-}
-
-if (module.hot) {
-  module.hot.accept();
 }

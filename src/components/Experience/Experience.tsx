@@ -67,10 +67,7 @@ const ExperienceComponent = (props: Props) => {
         <Text margin="x2" size="x1">{ description }</Text>
         <Labels margin="x3">
           { tags.map((tag) =>
-            <Label
-                backgroundColor="background-shade-2"
-                key={ tag }
-                size="x1">{ tag } </Label>
+            <Label key={ tag } size="x1">{ tag } </Label>
           ) }
         </Labels>
       </Flex>

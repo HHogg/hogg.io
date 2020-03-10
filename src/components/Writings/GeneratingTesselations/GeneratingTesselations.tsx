@@ -341,7 +341,7 @@ const GeneratingTesselations = () => {
         <WritingParagraph strong>Origin 3. Center of a polygon (c)</WritingParagraph>
 
         <WritingParagraph>
-          Similar to shifting the transfom’s center to the edge of a shape, it can
+          Similar to shifting the transform’s center to the edge of a shape, it can
           also be shifted to the center (c) point of a polygon. However, there are
           a couple of differences. The format of the notation is very similar,
           except this origin type is represented by a ‘c’ (for center) instead
