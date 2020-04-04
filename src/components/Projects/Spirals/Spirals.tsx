@@ -85,7 +85,7 @@ const defaultConfig: Config = {
   shapeCount: 100,
   showShapes: true,
   showVectors: true,
-  spread: 0.1,
+  spread: 0.05,
 };
 
 const Spirals = () => {

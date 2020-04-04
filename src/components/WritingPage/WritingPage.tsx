@@ -21,7 +21,7 @@ const WritingPage: React.FC<Props> = (props) => {
           image={ imageOG }
           title={ title } />
 
-      <Flex direction="vertical" gap="x6">
+      <Flex direction="vertical" gap="x6" grow>
         <Flex
             backgroundColor="background-shade-1"
             direction="vertical"
@@ -42,7 +42,7 @@ const WritingPage: React.FC<Props> = (props) => {
           </Flex>
         </Flex>
 
-        <Flex padding="x6">
+        <Flex backgroundColor="background-shade-1" grow padding="x6">
           <Flex>
             { children }
           </Flex>

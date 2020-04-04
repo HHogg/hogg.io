@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { motion } from 'framer';
-import { Flex, Grid, Link, Text } from 'preshape';
+import { Flex, Grid, Link, Text, Icon } from 'preshape';
 import data from '../../data';
 import Experience from '../Experience/Experience';
 import Project from '../Project/Project';
@@ -9,7 +9,7 @@ import Header from '../Header/Header';
 
 export default () => {
   return (
-    <Flex padding="x6">
+    <Flex backgroundColor="background-shade-1" padding="x6">
       <Header />
 
       <Flex
@@ -56,6 +56,7 @@ export default () => {
         <Flex maxWidth="930px">
           <Flex maxWidth="600px">
             <Text size="x4" strong>Personal Projects</Text>
+            <Text margin="x3">A collection of my personal side projects that I actually finished.</Text>
           </Flex>
 
           <Grid
@@ -69,7 +70,13 @@ export default () => {
         </Flex>
 
         <Flex maxWidth="600px">
-          <Text margin="x6" size="x4" strong>Writings</Text>
+          <Flex margin="x6">
+            <Text margin="x3" size="x4" strong>Writings</Text>
+            <Text margin="x3">
+              Usually when doing one of my side projects, I find something to write about and then
+              add them to this list. It's like an infrequent blog with no consistent theme.
+            </Text>
+          </Flex>
 
           { Object
               .values(data.writings)
@@ -80,7 +87,10 @@ export default () => {
         </Flex>
 
         <Flex maxWidth="600px">
-          <Text margin="x6" size="x4" strong>Experience</Text>
+          <Flex margin="x6">
+            <Text margin="x3" size="x4" strong>Experience</Text>
+            <Text margin="x3">A timeline of where and what I've worked on over the years.</Text>
+          </Flex>
 
           { Object
               .values(data.experience)
@@ -90,6 +100,31 @@ export default () => {
                     current={ index === 0 }
                     key={ exp.date } />
               )) }
+        </Flex>
+
+        <Flex
+            alignChildrenHorizontal="middle"
+            direction="horizontal"
+            gap="x8"
+            maxWidth="600px"
+            paddingVertical="x16">
+          <Flex>
+            <Link href="mailto:harry@hogg.io">
+              <Icon name="Letter" size="2rem" />
+            </Link>
+          </Flex>
+
+          <Flex>
+            <Link href="https://github.com/HHogg" target="Github">
+              <Icon name="Github" size="2rem" />
+            </Link>
+          </Flex>
+
+          <Flex>
+            <Link href="https://linkedin.com/in/harrison-hogg" target="LinkedIn">
+              <Icon name="LinkedIn" size="2rem" />
+            </Link>
+          </Flex>
         </Flex>
       </Flex>
     </Flex>

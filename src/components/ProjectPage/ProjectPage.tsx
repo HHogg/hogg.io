@@ -24,9 +24,14 @@ const ProjectPage: React.FC<Props> = (props) => {
           image={ imageOG }
           title={ title } />
 
-      <Flex direction="vertical" gap="x6" padding="x6">
+      <Flex
+          backgroundColor="background-shade-1"
+          direction="vertical"
+          gap="x6"
+          grow
+          padding="x6">
         <Flex>
-          <Header />
+          <Header title={ title } />
         </Flex>
 
         <Flex>

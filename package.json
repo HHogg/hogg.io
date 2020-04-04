@@ -30,7 +30,7 @@
     "luxon": "^1.22.0",
     "parcel-bundler": "^1.12.4",
     "postcss-preset-env": "^6.7.0",
-    "preshape": "^4.2.2",
+    "preshape": "^4.5.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-helmet": "6.0.0-beta.2 ",

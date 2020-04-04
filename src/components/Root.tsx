@@ -5,7 +5,7 @@ import Landing from './Landing/Landing';
 import Metas from './Metas/Metas';
 import Spirals from './Projects/Spirals/Spirals';
 import CircleIntersections from './Writings/CircleIntersections/CircleIntersections';
-import GeneratingTesselations from './Writings/GeneratingTesselations/GeneratingTesselations';
+import GeneratingTessellations from './Writings/GeneratingTessellations/GeneratingTessellations';
 
 export const RootContext = React.createContext<{
   onChangeTheme: (theme: TypeTheme) => void;
@@ -37,7 +37,7 @@ const Site = () => {
         <Route component={ Landing } exact path="/" />
         <Route component={ Spirals } path="/projects/spirals" />
         <Route component={ CircleIntersections } path="/writings/circle-intersections" />
-        <Route component={ GeneratingTesselations } path="/writings/generating-tessellations" />
+        <Route component={ GeneratingTessellations } path="/writings/generating-tessellations" />
       </Switch>
     </RootContext.Provider>
   );
