@@ -66,7 +66,7 @@ const data: Data = {
       'image': require('./assets/spiral.png'),
       'imageOG': require('./assets/spiral.png'),
       'tags': ['typescript', 'react', 'webgl'],
-      'title': 'Sprials',
+      'title': 'Spirals',
       'to': '/projects/spirals',
     },
   },
