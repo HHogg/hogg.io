@@ -46,6 +46,8 @@ const WritingPage: React.FC<Props> = (props) => {
           <Flex>
             { children }
           </Flex>
+
+          <Flex paddingVertical="x16" />
         </Flex>
       </Flex>
     </React.Fragment>

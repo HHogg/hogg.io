@@ -13,10 +13,11 @@ const Header = (props: Props) => {
 
   return (
     <Flex { ...rest }
+        alignChildrenHorizontal="between"
         direction="horizontal"
         gap="x3"
         margin="x6">
-      <Flex grow={ !title }>
+      <Flex>
         <Route path="/:nested">
           <Link to="/">
             <Flex direction="horizontal">

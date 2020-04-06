@@ -3,8 +3,6 @@ import groupBy from 'lodash.groupby';
 import {
   BulletPoint,
   BulletPoints,
-  Flex,
-  Image,
   Link,
   Table,
   TableBody,
@@ -16,6 +14,7 @@ import {
 } from 'preshape';
 import data from '../../../data';
 import configurations from './configurations-sample.json';
+import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
@@ -76,26 +75,21 @@ const GeneratingTesselations = () => {
         </BulletPoints>
       </WritingSection>
 
-      <WritingSection figure maxWidth="900px">
-        <Flex
-            direction="horizontal"
-            gap="x6">
-          <Flex shrink>
-            <Image margin="x2" src={ require('./writings-tiling-1.svg') } />
-            <Text><Text inline strong>Fig 1.</Text> Semiregular tiling 3².4.3.4</Text>
-          </Flex>
-
-          <Flex shrink>
-            <Image margin="x2" src={ require('./writings-tiling-2.svg') } />
-            <Text><Text inline strong>Fig 2.</Text> 2-Uniform tiling 3.4.6.4; 3.4².6</Text>
-          </Flex>
-
-          <Flex shrink>
-            <Image margin="x2" src={ require('./writings-tiling-3.svg') } />
-            <Text><Text inline strong>Fig 3.</Text> Semiregular tiling 4.6.12</Text>
-          </Flex>
-        </Flex>
-      </WritingSection>
+      <WritingFigs
+          figs={[{
+            number: 1,
+            image: require('./writings-tiling-1.svg'),
+            description: 'Semiregular tiling 3².4.3.4',
+          }, {
+            number: 2,
+            image: require('./writings-tiling-2.svg'),
+            description: '2-Uniform tiling 3.4.6.4; 3.4².6',
+          }, {
+            number: 3,
+            image: require('./writings-tiling-3.svg'),
+            description: 'Semiregular tiling 4.6.12',
+          }] }
+          maxWidth="900px" />
 
       <WritingSection>
         <WritingParagraph>
@@ -129,21 +123,16 @@ const GeneratingTesselations = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingSection figure>
-        <Flex
-            direction="horizontal"
-            gap="x6">
-          <Flex shrink>
-            <Image margin="x2" src={ require('./writings-tiling-4.svg') } />
-            <Text><Text inline strong>Fig 4.</Text> 3-Uniform tiling (3⁶)²; 3⁴.6</Text>
-          </Flex>
-
-          <Flex shrink>
-            <Image margin="x2" src={ require('./writings-tiling-5.svg') } />
-            <Text><Text inline strong>Fig 5.</Text> 3-Uniform tiling (3⁶)²; 3⁴.6</Text>
-          </Flex>
-        </Flex>
-      </WritingSection>
+      <WritingFigs
+          figs={[{
+            number: 4,
+            image: require('./writings-tiling-4.svg'),
+            description: '3-Uniform tiling (3⁶)²; 3⁴.6',
+          }, {
+            number: 5,
+            image: require('./writings-tiling-5.svg'),
+            description: '3-Uniform tiling (3⁶)²; 3⁴.6',
+          }] } />
 
       <WritingSection>
         <WritingHeading>2 GomJau-Hogg’s notation: a new notation</WritingHeading>
@@ -224,10 +213,12 @@ const GeneratingTesselations = () => {
         </BulletPoints>
       </WritingSection>
 
-      <WritingSection figure>
-        <Image margin="x2" src={ require('./writings-tiling-6.svg') } />
-        <Text><Text inline strong>Fig 6.</Text> Equation formatting: 6-...(left); 6-3...(center); 6-3-3...(right)</Text>
-      </WritingSection>
+      <WritingFigs
+          figs={[{
+            number: 6,
+            image: require('./writings-tiling-6.svg'),
+            description: 'Equation formatting: 6-...(left); 6-3...(center); 6-3-3...(right)',
+          }] } />
 
       <WritingSection>
         <WritingParagraph strong>Stage 2: Transformation functions</WritingParagraph>
@@ -283,10 +274,13 @@ const GeneratingTesselations = () => {
         </BulletPoints>
       </WritingSection>
 
-      <WritingSection figure maxWidth="900px">
-        <Image margin="x2" src={ require('./writings-tiling-7.svg') } />
-        <Text><Text inline strong>Fig 7.</Text> Repeating the transformation m30 (or Mirror 30°)</Text>
-      </WritingSection>
+      <WritingFigs
+          figs={[{
+            number: 7,
+            image: require('./writings-tiling-7.svg'),
+            description: 'Repeating the transformation m30 (or Mirror 30°)',
+          }] }
+          maxWidth="900px" />
 
       <WritingSection>
         <WritingParagraph strong>Origin 2. Edge of a polygon (e)</WritingParagraph>
@@ -329,13 +323,12 @@ const GeneratingTesselations = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingSection figure>
-        <Flex alignChildrenHorizontal="middle" direction="horizontal" margin="x2">
-          <Image src={ require('./writings-tiling-8.svg') } />
-        </Flex>
-
-        <Text><Text inline strong>Fig 8.</Text> Transformation function r30(2e)</Text>
-      </WritingSection>
+      <WritingFigs
+          figs={ [{
+            number: 8,
+            image: require('./writings-tiling-8.svg'),
+            description: 'Transformation function r30(2e)',
+          }] } />
 
       <WritingSection>
         <WritingParagraph strong>Origin 3. Center of a polygon (c)</WritingParagraph>
@@ -363,13 +356,12 @@ const GeneratingTesselations = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingSection figure>
-        <Flex alignChildrenHorizontal="middle" direction="horizontal" margin="x2">
-          <Image src={ require('./writings-tiling-9.svg') } />
-        </Flex>
-
-        <Text><Text inline strong>Fig 9.</Text> Transformation function m60(2c)</Text>
-      </WritingSection>
+      <WritingFigs
+          figs={[{
+            number: 9,
+            image: require('./writings-tiling-9.svg'),
+            description: 'Transformation function m60(2c)',
+          }] } />
 
       <WritingSection>
         <WritingParagraph strong>Origin 4. Halfway of an edge (h)</WritingParagraph>
@@ -400,7 +392,10 @@ const GeneratingTesselations = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingSection figure>
+      <WritingSection
+          backgroundColor="background-shade-2"
+          padding="x6"
+          size="x1">
         <WritingParagraph>
           <Text inline strong>Table 1.</Text> Transformation
           of Cundy & Rollett’s notation to GomJau-Hogg’s notation, up to k=2.

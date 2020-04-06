@@ -16,7 +16,7 @@ export default () => {
           alignChildrenHorizontal="middle"
           direction="vertical"
           gap="x16">
-        <Flex maxWidth="600px">
+        <Flex maxWidth="600px" paddingVertical="x3">
           <Flex margin="x6">
             <Text margin="x2" size="x5" strong>
               Hi. <motion.span
@@ -41,9 +41,9 @@ export default () => {
               Pattern Libraries but I've spent a lot of time working on both
               the frontend and backend.</Text>
 
-            <Text margin="x3">I'm interested in your standard nerdy topics
-              like astronomy, maths, science, quirky history, anything futurology
-              but I frequently dip into my creative side with some design.</Text>
+            <Text margin="x3">I'm interested in your standard array of nerdy topics
+              like astronomy, maths, science and history but I frequently dip into
+              my creative side with some design.</Text>
 
             <Text margin="x3">I studied at <Link href="https://www.open.ac.uk/" underline>The Open University</Link> where
               I received my BSc Computing and Design Honours degree.</Text>
@@ -53,10 +53,10 @@ export default () => {
           </Flex>
         </Flex>
 
-        <Flex maxWidth="930px">
+        <Flex maxWidth="930px" paddingVertical="x3">
           <Flex maxWidth="600px">
             <Text size="x4" strong>Personal Projects</Text>
-            <Text margin="x3">A collection of my personal side projects that I actually finished.</Text>
+            <Text margin="x3">Some of my favourite and finished personal side projects.</Text>
           </Flex>
 
           <Grid
@@ -69,7 +69,7 @@ export default () => {
           </Grid>
         </Flex>
 
-        <Flex maxWidth="600px">
+        <Flex maxWidth="600px" paddingVertical="x3">
           <Flex margin="x6">
             <Text margin="x3" size="x4" strong>Writings</Text>
             <Text margin="x3">
@@ -86,7 +86,7 @@ export default () => {
               )) }
         </Flex>
 
-        <Flex maxWidth="600px">
+        <Flex maxWidth="600px" paddingVertical="x3">
           <Flex margin="x6">
             <Text margin="x3" size="x4" strong>Experience</Text>
             <Text margin="x3">A timeline of where and what I've worked on over the years.</Text>
@@ -107,7 +107,7 @@ export default () => {
             direction="horizontal"
             gap="x8"
             maxWidth="600px"
-            paddingVertical="x16">
+            paddingVertical="x8">
           <Flex>
             <Link href="mailto:harry@hogg.io">
               <Icon name="Letter" size="2rem" />

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Flex, Image, Link, Text } from 'preshape';
 import data from '../../../data';
+import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
@@ -30,66 +31,58 @@ const CircleIntersections = () => {
         </WritingParagraph>
 
         <WritingParagraph>
-          For each of these segments we should then <Link href="http://mathworld.wolfram.com/Mid-ArcPoints.html" underline>calculate the midpoint</Link>
-          of the arc and assign it an identifier, as an incrementing numerical value.
+          For each of these segments we should then <Link href="http://mathworld.wolfram.com/Mid-ArcPoints.html" underline>calculate the midpoint</Link> of
+          the arc and assign it an identifier, as an incrementing numerical value.
         </WritingParagraph>
       </WritingSection>
 
-      <WritingSection figure>
-        <Flex
-            alignChildren="middle"
-            backgroundColor="light-shade-1"
-            direction="vertical"
-            padding="x6">
-          <Image src={ require('./Image1.svg') } />
-        </Flex>
-        <Text margin="x2">
-          Arrangement of three intersecting circles.
-          Circles labelled cⁿ, the points of intersection labelled vⁿ and arcs
-          labelled aⁿ.
-        </Text>
-      </WritingSection>
+      <WritingFigs
+          figs={ [{
+            description: 'Arrangement of three intersecting circles. Circles labelled cⁿ, the points of intersection labelled vⁿ and arcs labelled aⁿ.',
+            image: require('./writings-circles-1.svg'),
+            number: 1,
+          }] } />
 
       <WritingSection>
         <WritingParagraph>
-          The above data set, provides us with a way to navigate from point to point and
-          start to create a path, of arcs, that define the intersecting regions. We can
-          then use a set of three conditions that will all us to form only the valid regions
+          With all of the intersecting vectors calculated, it provides us with a way to navigate from
+          vector to vector and start to create a path of arcs, that define the intersecting regions. We can
+          then use a set of three conditions that will allow us to form only the valid regions
           and also ensure that the algorithm is as efficient as possible by not unnecessarily
-          traversing* arcs that will lead to an invalid region.
+          traversing arcs that will lead to an invalid region.
         </WritingParagraph>
       </WritingSection>
 
       <WritingSection>
         <WritingHeading>The conditions for a valid region</WritingHeading>
+      </WritingSection>
 
+      <WritingSection>
         <WritingParagraph strong>
           1. An arc cannot be a continuation of the previously traversed arc
         </WritingParagraph>
+      </WritingSection>
 
+      <WritingFigs
+          figs={ [{
+            description: 'Showing the next possible traversals after a traversal of v1 to v4 (a2).',
+            image: require('./writings-circles-2.svg'),
+            number: 2,
+          }] } />
+
+      <WritingSection>
         <WritingParagraph>
           A continuation of arcs means traversing around the same circle twice.
           This implies either traversing back to the previous vector or
           traversing across the intersection of another region, and thus
           forming an invalid region.
         </WritingParagraph>
-      </WritingSection>
 
-      <WritingSection figure>
-        <Flex
-            alignChildren="middle"
-            backgroundColor="light-shade-1"
-            direction="vertical"
-            padding="x6">
-          <Image src={ require('./Image2.svg') } />
-        </Flex>
-
-        <Text margin="x2">
-          For example, using the same arrangement of
-          circles displayed above, taking the arc a2 (traversing from v1 to v4) the
-          connecting arcs are a2, a3, a10 and a11. This condition allows us to exclude
-          arcs a2 and a3.
-        </Text>
+        <WritingParagraph>
+          For example, as shown in Fig 2 above, taking the arc a2 (traversing from v1 to v4) the
+          connecting arcs are a2, a3, a10 and a11. This condition allows us to exclude a2 and a3 as
+          next possible traversals.
+        </WritingParagraph>
       </WritingSection>
 
       <WritingSection>
@@ -100,7 +93,7 @@ const CircleIntersections = () => {
         <WritingParagraph>
           Intersecting regions consist of 2 or more arcs, and each intersecting
           region can be identified as unique from as few as 2 of it’s arcs,
-          in other words no 2 arcs can be traversed, in any direction, twice.
+          in other words no 2 arcs can be traversed, in any direction twice.
           Each arc can be identified by the assigned numerical value (from the
           initialisation phase), and can be represented in binary form as a
           Bitset. Each valid traversal of an intersecting region can then be
@@ -109,25 +102,28 @@ const CircleIntersections = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingSection figure>
-        <Flex
-            alignChildren="middle"
-            backgroundColor="light-shade-1"
-            direction="vertical"
-            padding="x6">
-          <Image src={ require('./Image3.svg') } />
-        </Flex>
+      <WritingFigs
+          figs={ [{
+            description: 'A valid region with the traversal path of v1 to v4 (a2), v4 to v5 (a10) and v5 to v1 (a5).',
+            image: require('./writings-circles-3.svg'),
+            number: 3,
+          }, {
+            description: 'Showing the next possible traversals after a traversal of v5 to v4 (a1).',
+            image: require('./writings-circles-4.svg'),
+            number: 4,
+          }] }
+          maxWidth="900px" />
 
-        <Text margin="x2">
-          For example, taking a traversal from v1 to v4 to v5 across segments a2
-          and a10, would give us a Bitset of ‘10000000100` which is the bitwise
-          OR of ‘100` (4) and ‘10000000000` (10). With this Bitset stored, in a
-          later traversal, starting from v5 to v4, across segment a10. The next
-          connecting segments are again a2, a3, a10 and a11. This condition allows
-          us to exclude the segment a2, because even though the traversal of v5
-          to v4 to v1 is different to the original traversal of v1 to v4 to v5,
-          the Bitsets remain the same.
-        </Text>
+      <WritingSection>
+        <WritingParagraph>
+          For example, taking a traversal of v1 to v4 (a2) and v4 to v5 (a10) from the complete valid
+          region show in Fig 3, this would give us a Bitset of ‘10000000100` which is the bitwise
+          OR of ‘100` (4) and ‘10000000000` (10). In a later traversal, shown in Fig 4, of v5 to v4 (a10),
+          the next connecting arcs are again a2, a3, a10 and a11. This condition allows us to exclude the
+          arc a2, because even though the traversal of v5 to v4 to v1 is different to the original
+          traversal of v1 to v4 to v5,the Bitsets remain the same and it would lead to the identical region
+          shown in Fig 3.
+        </WritingParagraph>
       </WritingSection>
 
       <WritingSection>
@@ -155,39 +151,23 @@ const CircleIntersections = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingSection figure>
-        <Flex
-            alignChildren="middle"
-            backgroundColor="light-shade-1"
-            direction="vertical"
-            padding="x6">
-          <Image src={ require('./Image4.svg') } />
-        </Flex>
-
-        <Text margin="x2">
-          For example, again using the arrangement of circles from above.
-          A traversal of v1 to v4 along a2, we can say that the midpoint of a2
-          exists within the circles of c2 and outside the circle c3. From v4,
-          the connecting arcs are a2, a3, a10 and a11. The first condition
-          rules out a3 and a2, from there we can choose either a10 or a11.
-          Both of the midpoints for these arcs validate this condition,
-          because they are both inside the circle of c2 and are outside or
-          traversing the circumference of c3. For this example let us use a11
-          which is traversal to v6. From v6 the next connecting arcs are a6, a7,
-          a11 and a12. The first condition again rules out a11 and a12. Using
-          this condition, we can rule out a7 because the midpoint exists
-          outside the circle of c3. Leaving us with only a6 as a valid
-          traversal, and for this specific example this happens to connect
-          us back to v1 our starting vector, and thus completing a valid region.
-        </Text>
-      </WritingSection>
+      <WritingFigs
+          figs={ [{
+            description: 'Showing the next possible traversals after a traversal of v1 to v4 (a2) and v4 to v6 (a11).',
+            image: require('./writings-circles-5.svg'),
+            number: 5,
+          }] } />
 
       <WritingSection>
-        <WritingParagraph emphasis textColor="text-shade-3">
-          * A ‘traversal’ is defined starting from a single intersecting point,
-          vⁿ, navigating to another connecting point along an arc.
-          The traversal ends when it reaches the traversals starting point
-          forming a valid region.
+        <WritingParagraph>
+          Using the same arrangement of circles and, as shown in Fig 5, starting with
+          a traversal of v1 to v4 (a2), we can say that the midpoint of a2 exists within the
+          circles of c2 and outside of the circle c3. The previous two rules allow us to have
+          the traversal v4 to v6 (a11) as a following valid traversal. Using this condition,
+          we can rule out a7 because the midpoint exists inside the circle c3, which the first
+          arc (a2) midpoint does not. Leaving us with only a6 as a valid traversal, and for
+          this specific example connect us back to our starting vector (v1), thus completing
+          a valid region.
         </WritingParagraph>
       </WritingSection>
     </WritingPage>
