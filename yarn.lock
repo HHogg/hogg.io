@@ -934,10 +934,10 @@
     lodash.camelcase "^4.3.0"
     protobufjs "^6.8.6"
 
-"@hhogg/snake@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@hhogg/snake/-/snake-0.0.2.tgz#abe15704849d90b3b67e058f6a81ed949f0ea7d6"
-  integrity sha512-Efo9TSVNE92aKUTUUJoRenMc+iFAnfeMi7nxCFJLPQbyOAW1kWgLxavT70I9ilDqimBqvwW9MiKVDabIEdyHOQ==
+"@hhogg/snake@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@hhogg/snake/-/snake-0.0.3.tgz#b3bf75c412fbbf9258abdf0362be2782caec4eba"
+  integrity sha512-p2peP1kCSQhIWw3HPgmiV3OvLQyvM3FNe6uh290XiX7r8AMyjlqzCkU3g2PoaXGQhMHKtXIR2xj8ZLZV0NR1+Q==
   dependencies:
     preshape "^4.5.1"
 

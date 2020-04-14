@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@bitrise/bitviz": "^0.0.9",
-    "@hhogg/snake": "^0.0.2",
+    "@hhogg/snake": "^0.0.3",
     "autoprefixer": "^9.7.4",
     "babel-eslint": "^8.2.3",
     "bezier-easing": "^2.0.3",
