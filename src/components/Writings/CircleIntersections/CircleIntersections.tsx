@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Flex, Image, Link, Text } from 'preshape';
+import { Image, Link } from 'preshape';
 import data from '../../../data';
+import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
@@ -25,23 +26,22 @@ const CircleIntersections = () => {
         <WritingParagraph>
           One of the few geometric steps of this algorithm is to calculate
           the point of intersection of every pair of intersecting circles. This
-          is already a <Link href="http://mathworld.wolfram.com/Circle-CircleIntersection.html" underline>well solved problem</Link>.
+          is already a <Link href="http://mathworld.wolfram.com/Circle-CircleIntersection.html" target="CircleIntersections" underline>well solved problem</Link>.
           With the intersection points calculated and reference to the intersecting
           circles, we are able to divide the circles into segments.
         </WritingParagraph>
 
         <WritingParagraph>
-          For each of these segments we should then <Link href="http://mathworld.wolfram.com/Mid-ArcPoints.html" underline>calculate the midpoint</Link> of
+          For each of these segments we should then <Link href="http://mathworld.wolfram.com/Mid-ArcPoints.html" target="CircleIntersections" underline>calculate the midpoint</Link> of
           the arc and assign it an identifier, as an incrementing numerical value.
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs
-          figs={ [{
-            description: 'Arrangement of three intersecting circles. Circles labelled cⁿ, the points of intersection labelled vⁿ and arcs labelled aⁿ.',
-            image: require('./writings-circles-1.svg'),
-            number: 1,
-          }] } />
+      <WritingFigs>
+        <WritingFig description="Arrangement of three intersecting circles. Circles labelled cⁿ, the points of intersection labelled vⁿ and arcs labelled aⁿ." number={ 1 }>
+          <Image src={ require('./writings-circles-1.svg') } />
+        </WritingFig>
+      </WritingFigs>
 
       <WritingSection>
         <WritingParagraph>
@@ -63,12 +63,11 @@ const CircleIntersections = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs
-          figs={ [{
-            description: 'Showing the next possible traversals after a traversal of v1 to v4 (a2).',
-            image: require('./writings-circles-2.svg'),
-            number: 2,
-          }] } />
+      <WritingFigs>
+        <WritingFig description="Showing the next possible traversals after a traversal of v1 to v4 (a2)." number={ 2 }>
+          <Image src={ require('./writings-circles-2.svg') } />
+        </WritingFig>
+      </WritingFigs>
 
       <WritingSection>
         <WritingParagraph>
@@ -102,17 +101,15 @@ const CircleIntersections = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs
-          figs={ [{
-            description: 'A valid region with the traversal path of v1 to v4 (a2), v4 to v5 (a10) and v5 to v1 (a5).',
-            image: require('./writings-circles-3.svg'),
-            number: 3,
-          }, {
-            description: 'Showing the next possible traversals after a traversal of v5 to v4 (a1).',
-            image: require('./writings-circles-4.svg'),
-            number: 4,
-          }] }
-          maxWidth="900px" />
+      <WritingFigs maxWidth="900px">
+        <WritingFig description="A valid region with the traversal path of v1 to v4 (a2), v4 to v5 (a10) and v5 to v1 (a5)." number={ 3 }>
+          <Image src={ require('./writings-circles-3.svg') } />
+        </WritingFig>
+
+        <WritingFig description="Showing the next possible traversals after a traversal of v5 to v4 (a1)." number={ 4 }>
+          <Image src={ require('./writings-circles-4.svg') } />
+        </WritingFig>
+      </WritingFigs>
 
       <WritingSection>
         <WritingParagraph>
@@ -151,12 +148,11 @@ const CircleIntersections = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs
-          figs={ [{
-            description: 'Showing the next possible traversals after a traversal of v1 to v4 (a2) and v4 to v6 (a11).',
-            image: require('./writings-circles-5.svg'),
-            number: 5,
-          }] } />
+      <WritingFigs>
+        <WritingFig description="Showing the next possible traversals after a traversal of v1 to v4 (a2) and v4 to v6 (a11)." number={ 5 }>
+          <Image src={ require('./writings-circles-5.svg') } />
+        </WritingFig>
+      </WritingFigs>
 
       <WritingSection>
         <WritingParagraph>
@@ -168,6 +164,17 @@ const CircleIntersections = () => {
           arc (a2) midpoint does not. Leaving us with only a6 as a valid traversal, and for
           this specific example connect us back to our starting vector (v1), thus completing
           a valid region.
+        </WritingParagraph>
+      </WritingSection>
+
+      <WritingSection>
+        <WritingHeading>Summary</WritingHeading>
+
+        <WritingParagraph>
+          If we iterate through all of the intersecting vectors using the method described above
+          we can build up a complete set of the intersecting and subtracted areas. To test out
+          this theory, I built an online application for creating artwork by filling in the
+          intersecting regions of circles, which can be found <Link href="https://circles.hogg.io" target="CircleIntersections" underline>here</Link>.
         </WritingParagraph>
       </WritingSection>
     </WritingPage>

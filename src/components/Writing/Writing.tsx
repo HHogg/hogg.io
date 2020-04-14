@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link, Text } from 'preshape';
-import { DateTime } from 'luxon';
 import { Writing } from '../../Types';
+import { fromISO } from '../../utils/date';
 
 interface Props extends Writing {}
 
@@ -17,7 +17,7 @@ const WritingComponent = (props: Props) => {
         to={ to }>
       <Text margin="x1" strong>{ title }</Text>
       <Text margin="x1" size="x1">{ description }</Text>
-      <Text margin="x2" size="x1" strong>{ DateTime.fromMillis(date).toFormat('dd MMM yyyy') }</Text>
+      <Text margin="x2" size="x1" strong>{ fromISO(date) }</Text>
     </Link>
   );
 };

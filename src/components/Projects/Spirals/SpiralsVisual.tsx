@@ -128,6 +128,6 @@ const SpiralsVisual = (props: Props) => {
         tag="canvas"
         width={ width } />
   );
-}
+};
 
 export default SpiralsVisual;

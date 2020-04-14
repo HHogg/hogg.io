@@ -80,7 +80,7 @@ export default () => {
 
           { Object
               .values(data.writings)
-              .sort((a, b) => b.date - a.date)
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .map((writing) => (
                 <Writing { ...writing } key={ writing.title } />
               )) }
@@ -94,7 +94,7 @@ export default () => {
 
           { Object
               .values(data.experience)
-              .sort((a, b) => b.date - a.date)
+              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .map((exp, index) => (
                 <Experience { ...exp }
                     current={ index === 0 }

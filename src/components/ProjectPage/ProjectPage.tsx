@@ -5,7 +5,7 @@ import Metas from '../Metas/Metas';
 
 interface Props {
   description: string;
-  imageOG: string;
+  imageOG?: string;
   title: string;
 }
 

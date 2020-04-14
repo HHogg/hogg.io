@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Flex, Text } from 'preshape';
-import { DateTime } from 'luxon';
+import { fromISO } from '../../utils/date';
 import Header from '../Header/Header';
 import Metas from '../Metas/Metas';
 
 interface Props {
-  date: number;
+  date: string;
   description: string;
   imageOG: string;
   title: string;
@@ -37,7 +37,7 @@ const WritingPage: React.FC<Props> = (props) => {
             <Flex maxWidth="600px" paddingVertical="x6">
               <Text heading margin="x2" size="x4" strong>{ title }</Text>
               <Text heading margin="x2" size="x2">{ description }</Text>
-              <Text heading margin="x2" size="x1" strong>{ DateTime.fromMillis(date).toFormat('dd MMM yyyy') }</Text>
+              <Text heading margin="x2" size="x1" strong>{ fromISO(date) }</Text>
             </Flex>
           </Flex>
         </Flex>

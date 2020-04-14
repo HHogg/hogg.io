@@ -56,7 +56,7 @@ const ExperienceComponent = (props: Props) => {
               size="x1"
               strong
               textColor="light-shade-1">
-            { DateTime.fromMillis(date).toFormat('yyyy') }
+            { DateTime.fromISO(date).toFormat('yyyy') }
           </Text>
         </Flex>
       </Flex>

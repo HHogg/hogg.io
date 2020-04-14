@@ -1,6 +1,6 @@
 export interface Experience {
   company: string;
-  date: number;
+  date: string;
   description: string;
   tags: string[];
   role: string;
@@ -17,7 +17,7 @@ export interface Project {
 }
 
 export interface Writing {
-  date: number;
+  date: string;
   description: string;
   imageOG: string;
   title: string;

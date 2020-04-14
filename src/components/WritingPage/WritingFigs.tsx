@@ -1,38 +1,32 @@
 import * as React from 'react';
-import { Flex, Image, Text } from 'preshape';
+import { useMatchMedia, Flex } from 'preshape';
 import WritingSection, { Props as WritingSectionProps } from './WritingSection';
 
 interface Props extends WritingSectionProps {
-  figs: {
-    description?: string;
-    image?: string;
-    number: number;
-  }[];
+  maxWidth?: string;
 }
 
 export default (props: React.PropsWithChildren<Props>) => {
-  const { figs, ...rest } = props;
+  const {
+    backgroundColor = 'light-shade-1',
+    children,
+    maxWidth = '600px',
+    textColor = 'dark-shade-1',
+    ...rest
+  } = props;
+  const match = useMatchMedia([maxWidth]);
 
   return (
     <WritingSection { ...rest }
-        backgroundColor="light-shade-1"
+        backgroundColor={ backgroundColor }
+        maxWidth={ maxWidth }
         padding="x6"
         size="x1"
-        textColor="dark-shade-1">
+        textColor={ textColor }>
       <Flex
-          direction="horizontal"
+          direction={ match(maxWidth) ? 'horizontal' : 'vertical' }
           gap="x6">
-        { figs.map(({ description, image, number }) => (
-          <Flex grow key={ number } shrink>
-            { image && (
-              <Flex alignChildrenHorizontal="middle" direction="horizontal" margin="x2">
-                <Image src={ image } />
-              </Flex>
-            ) }
-
-            <Text margin="x2"><Text inline strong>Fig { number }.</Text> { description }</Text>
-          </Flex>
-        )) }
+        { children }
       </Flex>
     </WritingSection>
   );

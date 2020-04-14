@@ -102,11 +102,11 @@ const Spirals = () => {
 
   React.useEffect(() => {
     const vectors = getVectors(config, size);
-    const poisitions = getPositions(size, vectors, radii, config.padding)
+    const positions = getPositions(size, vectors, radii, config.padding)
       .map((p, i) => p ? [radii[i], ...p] : p)
       .filter((p): p is [number, number, number] => !!p);
 
-    setPositions(poisitions);
+    setPositions(positions);
     setVectors(vectors);
   }, [
     radii,
