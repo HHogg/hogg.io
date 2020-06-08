@@ -21,6 +21,7 @@
     "bezier-easing": "^2.0.3",
     "caniuse-lite": "^1.0.30000697",
     "classnames": "^2.2.5",
+    "firebase": "^7.14.0",
     "firebase-tools": "^7.14.0",
     "framer": "^1.1.7",
     "framer-motion": "^1.8.4",
@@ -34,8 +35,9 @@
     "numbro": "^2.2.0",
     "open-color": "^1.7.0",
     "parcel-bundler": "^1.12.4",
+    "parcel-plugin-html-externals": "^0.2.0",
     "postcss-preset-env": "^6.7.0",
-    "preshape": "^4.5.2",
+    "preshape": "^5.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
     "react-helmet": "6.0.0-beta.2 ",
@@ -47,7 +49,7 @@
     "vishull2d": "^0.1.0"
   },
   "devDependencies": {
-    "@types/bezier-easing": "*",
+    "@types/bezier-easing": "^2.1.2",
     "@types/classnames": "*",
     "@types/gl-matrix": "*",
     "@types/lodash.flatten": "*",
@@ -59,17 +61,17 @@
     "@types/react-helmet": "*",
     "@types/react-router-dom": "*",
     "@types/sat": "*",
-    "@typescript-eslint/eslint-plugin": "^2.19.0",
-    "@typescript-eslint/parser": "^2.19.0",
-    "eslint": "^6.8.0",
-    "eslint-config-preshape": "^1.1.0",
-    "eslint-plugin-react": "^7.18.3",
-    "eslint-plugin-react-hooks": "^2.3.0",
+    "eslint": "^7.0.0",
+    "eslint-config-preshape": "^2.0.0",
     "stylelint": "^13.2.0",
     "stylelint-config-preshape": "^2.0.0",
     "superstatic": "^6.0.4"
   },
+  "externals": {
+    "/__/**/*": false
+  },
   "reactSnap": {
+    "crawl": true,
     "source": "public",
     "minifyHtml": {
       "collapseWhitespace": false,
