@@ -79,13 +79,13 @@ const data: Data = {
       'title': 'Identifying the areas of intersecting circles with computational geometry',
       'to': '/writings/circle-intersections',
     },
-    'GeneratingTessellations': {
-      'date': '2020-01-31',
-      'description': 'An explanation of the GomJau-Hogg’s notation for generating all of the regular, semiregular (uniform) and demigular (k-uniform, up to at least k=3) in a consistent, unique and unequivocal manner.',
-      'imageOG': require('./assets/antwerp.png'),
-      'title': 'GomJau-Hogg’s notation for automatic generation of k-uniform tessellations',
-      'to': '/writings/generating-tessellations',
-    },
+    // 'GeneratingTessellations': {
+    //   'date': '2020-01-31',
+    //   'description': 'An explanation of the GomJau-Hogg’s notation for generating all of the regular, semiregular (uniform) and demigular (k-uniform, up to at least k=3) in a consistent, unique and unequivocal manner.',
+    //   'imageOG': require('./assets/antwerp.png'),
+    //   'title': 'GomJau-Hogg’s notation for automatic generation of k-uniform tessellations',
+    //   'to': '/writings/generating-tessellations',
+    // },
     'SnakeSolution': {
       'date': '2020-04-13',
       'description': 'An exploration into finding the most optimal programmatic solution for completing the classic game of snake.',
