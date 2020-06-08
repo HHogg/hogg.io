@@ -136,7 +136,7 @@ const Spirals = () => {
             minHeight="35rem"
             padding="x4"
             textColor="light-shade-1">
-          <Flex absolute="fullscreen" ref={ ref }>
+          <Flex absolute="edge-to-edge" ref={ ref }>
             { !!(size.height && size.width) && (
               <SpiralsVisual
                   height={ size.height }

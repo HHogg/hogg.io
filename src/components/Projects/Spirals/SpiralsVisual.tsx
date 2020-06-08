@@ -122,7 +122,7 @@ const SpiralsVisual = (props: Props) => {
 
   return (
     <Base
-        absolute="fullscreen"
+        absolute="edge-to-edge"
         height={ height }
         ref={ refCanvas }
         tag="canvas"

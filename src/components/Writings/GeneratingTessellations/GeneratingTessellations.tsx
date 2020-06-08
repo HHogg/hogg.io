@@ -83,11 +83,11 @@ const GeneratingTesselations = () => {
         </WritingFig>
 
         <WritingFig description="2-Uniform tiling 3.4.6.4; 3.4².6" number={ 2 } >
-          <Image src={ require('./writings-tiling-1.svg') } />
+          <Image src={ require('./writings-tiling-2.svg') } />
         </WritingFig>
 
         <WritingFig description="Semiregular tiling 4.6.12" number={ 3 } >
-          <Image src={ require('./writings-tiling-1.svg') } />
+          <Image src={ require('./writings-tiling-3.svg') } />
         </WritingFig>
       </WritingFigs>
 

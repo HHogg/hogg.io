@@ -16,7 +16,7 @@ export default (props: Props) => {
     <Flex direction="vertical" gap="x2" grow theme="night">
       <Flex container>
         <Appear
-            absolute="fullscreen"
+            absolute="edge-to-edge"
             animation="FadeSlideUp"
             scrollable
             style={ { pointerEvents: isCodeVisible ? undefined : 'none' } }

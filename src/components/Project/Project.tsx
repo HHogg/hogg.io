@@ -30,7 +30,7 @@ const ProjectComponent = (props: Props & React.HTMLProps<HTMLAnchorElement>) => 
         </Flex>
 
         <Appear
-            absolute="fullscreen"
+            absolute="edge-to-edge"
             alignChildrenVertical="end"
             animation="Fade"
             backgroundColor="accent-shade-2"

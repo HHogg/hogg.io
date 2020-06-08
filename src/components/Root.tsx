@@ -29,7 +29,7 @@ const Site = () => {
     if (history.action === 'PUSH') {
       window.scrollTo({ top: 0 });
     }
-  }, [location]);
+  }, [location, history.action]);
 
   return (
     <RootContext.Provider value={ { onChangeTheme, theme } }>

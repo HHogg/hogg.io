@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Base, CheckBox, Input, RadioButton, Text } from 'preshape';
+import { Base, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
 import {
   Algorithm,
   ArchimedesSpiral,
@@ -36,12 +36,12 @@ const SysPlotControls = (props: Props) => {
     const { value } = event.target as HTMLInputElement;
     const number = Math.max(min, Math.min(max, parseFloat(value)));
 
-    setState({  ...config, [prop]: value });
+    setState({ ...config, [prop]: value });
 
     if (!isNaN(number)) {
       onConfigChange({ [prop]: number });
     }
-  }
+  };
 
   return (
     <React.Fragment>
@@ -52,9 +52,10 @@ const SysPlotControls = (props: Props) => {
           <RadioButton
               checked={ config.algorithm === algorithm }
               key={ algorithmName }
-              label={ algorithmName }
               margin="x2"
-              onChange={ () => onConfigChange({ algorithmName, algorithm }) } />
+              onChange={ () => onConfigChange({ algorithmName, algorithm }) }>
+            { algorithmName }
+          </RadioButton>
         )) }
       </Base>
 
@@ -63,61 +64,65 @@ const SysPlotControls = (props: Props) => {
 
         <CheckBox
             checked={ config.cover }
-            label="Cover"
             margin="x2"
-            onChange={ () => onConfigChange({ cover: !config.cover }) } />
+            onChange={ () => onConfigChange({ cover: !config.cover }) }>
+          Cover
+        </CheckBox>
 
         <CheckBox
             checked={ config.proportional }
-            label="Preserve Aspect Ratio"
             margin="x2"
-            onChange={ () => onConfigChange({ proportional: !config.proportional }) } />
+            onChange={ () => onConfigChange({ proportional: !config.proportional }) }>
+          Preserve Aspect Ratio
+        </CheckBox>
 
         <CheckBox
             checked={ config.showVectors }
-            label="Show Vectors"
             margin="x2"
-            onChange={ () => onConfigChange({ showVectors: !config.showVectors }) } />
+            onChange={ () => onConfigChange({ showVectors: !config.showVectors }) }>
+          Show Vectors
+        </CheckBox>
 
         <CheckBox
             checked={ config.showShapes }
-            label="Show Shapes"
             margin="x2"
-            onChange={ () => onConfigChange({ showShapes: !config.showShapes }) } />
+            onChange={ () => onConfigChange({ showShapes: !config.showShapes }) }>
+          Show Shapes
+        </CheckBox>
 
-        <Input
-            label="Aspect Ratio"
-            margin="x2"
-            onChange={ (e) => handleNumberChange(e, 'aspectRatio', 0) }
-            placeholder="Aspect ratio..."
-            step="0.05"
-            type="number"
-            value={ aspectRatio } />
+        <InputLabel label="Aspect Ratio" margin="x2">
+          <Input
+              onChange={ (e) => handleNumberChange(e, 'aspectRatio', 0) }
+              placeholder="Aspect ratio..."
+              step="0.05"
+              type="number"
+              value={ aspectRatio } />
+        </InputLabel>
 
-        <Input
-            label="Padding"
-            margin="x2"
-            onChange={ (e) => handleNumberChange(e, 'padding') }
-            placeholder="Padding..."
-            type="number"
-            value={ padding } />
+        <InputLabel label="Padding" margin="x2">
+          <Input
+              onChange={ (e) => handleNumberChange(e, 'padding') }
+              placeholder="Padding..."
+              type="number"
+              value={ padding } />
+        </InputLabel>
 
-        <Input
-            label="Spread"
-            margin="x2"
-            onChange={ (e) => handleNumberChange(e, 'spread') }
-            placeholder="Spread..."
-            step="0.05"
-            type="number"
-            value={ spread } />
+        <InputLabel label="Spread" margin="x2">
+          <Input
+              onChange={ (e) => handleNumberChange(e, 'spread') }
+              placeholder="Spread..."
+              step="0.05"
+              type="number"
+              value={ spread } />
+        </InputLabel>
 
-        <Input
-            label="Shape Count"
-            margin="x2"
-            onChange={ (e) => handleNumberChange(e, 'shapeCount', 0, 200) }
-            placeholder="Shape count..."
-            type="number"
-            value={ shapeCount } />
+        <InputLabel label="Shape Count" margin="x2">
+          <Input
+              onChange={ (e) => handleNumberChange(e, 'shapeCount', 0, 200) }
+              placeholder="Shape count..."
+              type="number"
+              value={ shapeCount } />
+        </InputLabel>
       </Base>
     </React.Fragment>
   );
