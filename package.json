@@ -49,7 +49,7 @@
     "vishull2d": "^0.1.0"
   },
   "devDependencies": {
-    "@types/bezier-easing": "^2.1.2",
+    "@types/bezier-easing": "*",
     "@types/classnames": "*",
     "@types/gl-matrix": "*",
     "@types/lodash.flatten": "*",

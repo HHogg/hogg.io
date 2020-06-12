@@ -109,14 +109,9 @@ const Spirals = () => {
     setPositions(positions);
     setVectors(vectors);
   }, [
+    config,
     radii,
     size,
-    config.algorithm,
-    config.aspectRatio,
-    config.cover,
-    config.padding,
-    config.proportional,
-    config.spread,
   ]);
 
   return (

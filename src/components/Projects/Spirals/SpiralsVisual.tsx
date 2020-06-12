@@ -76,7 +76,7 @@ const SpiralsVisual = (props: Props) => {
 
         const e = time - refStartTime.current;
 
-        refTime.current = ease(e / (transitionTimeBase / 1000));
+        refTime.current = Math.min(ease(e / (transitionTimeBase / 1000)), 1);
 
         if (refRegl.current && refState.current) {
           refRegl.current.clear({ depth: 1 });
@@ -87,10 +87,12 @@ const SpiralsVisual = (props: Props) => {
             primitive: 'points',
             attributes: buffers,
             uniforms: {
+              /* eslint-disable @typescript-eslint/camelcase */
               u_projection: projection,
               u_t: refTime.current,
               u_translate_0: translate0,
               u_translate_1: translate1,
+              /* eslint-enable @typescript-eslint/camelcase */
             },
           })();
         }
@@ -107,11 +109,11 @@ const SpiralsVisual = (props: Props) => {
     }
   };
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (refCanvas.current && !refRegl.current) {
       refRegl.current = regl({ canvas: refCanvas.current });
     }
-  }, [refCanvas.current]);
+  }, []);
 
   React.useEffect(() => {
     refCanvas.current?.setAttribute('height', `${height * 2}`);
