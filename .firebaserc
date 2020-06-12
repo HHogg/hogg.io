@@ -5,8 +5,8 @@
   "targets": {
     "hoggio-2524a": {
       "hosting": {
-        "hogg.io": [
-          "hoggio-2524a"
+        "hoggio": [
+          "hoggio"
         ]
       }
     }
