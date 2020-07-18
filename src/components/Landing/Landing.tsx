@@ -36,19 +36,9 @@ export default () => {
           </Flex>
 
           <Flex margin="x6">
-            <Text margin="x3">I love every single part of software development.
-              Most of my time is spent looking at Design Systems and
-              Pattern Libraries but I've spent a lot of time working on both
-              the frontend and backend.</Text>
-
-            <Text margin="x3">I'm interested in your standard array of nerdy topics
-              like astronomy, maths, science and history but I frequently dip into
-              my creative side with some design.</Text>
-
-            <Text margin="x3">I studied at <Link href="https://www.open.ac.uk/" underline>The Open University</Link> where
-              I received my BSc Computing and Design Honours degree.</Text>
-
-            <Text margin="x3">When I'm not stringing characters together, I'm
+            <Text margin="x3">I love designing and building things which frquently
+              sends me down rabbit holes on side projects. I studied at <Link href="https://www.open.ac.uk/" underline>The Open University</Link> where
+              I received my BSc Computing and Design Honours degree. When I'm not stringing characters together, I'm
               a less than stable climbing frame for my two daughters 👧🏼👩🏼.</Text>
           </Flex>
         </Flex>

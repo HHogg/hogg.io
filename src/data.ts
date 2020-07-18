@@ -28,7 +28,7 @@ const data: Data = {
       'date': '2018-10-01',
       'description': 'Bitrise is a continuous integration and delivery platform built for mobile. Automating iOS and Android builds, testing and deployment. My time and Bitrise is focused on building the Trace add-on frontend and React Pattern Library.',
       'tags': ['typescript', 'css', 'react', 'redux'],
-      'role': 'Software Engineer',
+      'role': 'Senior Engineer',
     },
   },
 
