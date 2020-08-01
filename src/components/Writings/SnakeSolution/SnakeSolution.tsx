@@ -7,7 +7,6 @@ import {
   Image,
   Link,
   Text,
-  CodeBlock,
 } from 'preshape';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
@@ -252,7 +251,7 @@ const SnakeSolution = () => {
           itself.
         </WritingParagraph>
 
-        <WritingParagraph emphasis>
+        <WritingParagraph emphasis>
           Note: This is not a true Hamiltonian Path or Cycle because of the need to alternate
           the path and visiting some nodes for a second time before getting back to the start.
         </WritingParagraph>

@@ -1,13 +1,6 @@
 import * as React from 'react';
 import { Base, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
-import {
-  Algorithm,
-  ArchimedesSpiral,
-  ConcentricCircles,
-  FermatSpiral,
-  UlamSpiral,
-  VogelSpiral,
-} from './Algorithms';
+import { ArchimedesSpiral, FermatSpiral, UlamSpiral, VogelSpiral, ZeroSpiral, TypeAlgorithm } from './Algorithms';
 import { Config } from './Spirals';
 
 interface Props {
@@ -15,9 +8,9 @@ interface Props {
   onConfigChange: (config: Partial<Config>) => void;
 }
 
-export const algorithms: [string, Algorithm][] = [
+export const algorithms: [string, TypeAlgorithm][] = [
+  ['Zero', ZeroSpiral],
   ['Archimedes Spiral', ArchimedesSpiral],
-  ['Concentric Circles', ConcentricCircles],
   ['Fermat Spiral', FermatSpiral],
   ['Ulam Spiral', UlamSpiral],
   ['Vogel Spiral', VogelSpiral],
@@ -25,11 +18,10 @@ export const algorithms: [string, Algorithm][] = [
 
 const SysPlotControls = (props: Props) => {
   const { config, onConfigChange } = props;
-  const [{ aspectRatio, padding, shapeCount, spread }, setState] = React.useState({
-    aspectRatio: config.aspectRatio,
+  const [{ padding, shapeCount, vectorCount }, setState] = React.useState({
     padding: config.padding,
-    spread: config.spread,
     shapeCount: config.shapeCount,
+    vectorCount: config.vectorCount,
   });
 
   const handleNumberChange = (event: React.FormEvent<HTMLInputElement>, prop: string, min = -Infinity, max = Infinity) => {
@@ -53,7 +45,7 @@ const SysPlotControls = (props: Props) => {
               checked={ config.algorithm === algorithm }
               key={ algorithmName }
               margin="x2"
-              onChange={ () => onConfigChange({ algorithmName, algorithm }) }>
+              onChange={ () => onConfigChange({ algorithm }) }>
             { algorithmName }
           </RadioButton>
         )) }
@@ -61,20 +53,6 @@ const SysPlotControls = (props: Props) => {
 
       <Base margin="x8">
         <Text margin="x4" strong>Configuration</Text>
-
-        <CheckBox
-            checked={ config.cover }
-            margin="x2"
-            onChange={ () => onConfigChange({ cover: !config.cover }) }>
-          Cover
-        </CheckBox>
-
-        <CheckBox
-            checked={ config.proportional }
-            margin="x2"
-            onChange={ () => onConfigChange({ proportional: !config.proportional }) }>
-          Preserve Aspect Ratio
-        </CheckBox>
 
         <CheckBox
             checked={ config.showVectors }
@@ -90,15 +68,6 @@ const SysPlotControls = (props: Props) => {
           Show Shapes
         </CheckBox>
 
-        <InputLabel label="Aspect Ratio" margin="x2">
-          <Input
-              onChange={ (e) => handleNumberChange(e, 'aspectRatio', 0) }
-              placeholder="Aspect ratio..."
-              step="0.05"
-              type="number"
-              value={ aspectRatio } />
-        </InputLabel>
-
         <InputLabel label="Padding" margin="x2">
           <Input
               onChange={ (e) => handleNumberChange(e, 'padding') }
@@ -107,21 +76,22 @@ const SysPlotControls = (props: Props) => {
               value={ padding } />
         </InputLabel>
 
-        <InputLabel label="Spread" margin="x2">
-          <Input
-              onChange={ (e) => handleNumberChange(e, 'spread') }
-              placeholder="Spread..."
-              step="0.05"
-              type="number"
-              value={ spread } />
-        </InputLabel>
-
         <InputLabel label="Shape Count" margin="x2">
           <Input
+              disabled
               onChange={ (e) => handleNumberChange(e, 'shapeCount', 0, 200) }
               placeholder="Shape count..."
               type="number"
               value={ shapeCount } />
+        </InputLabel>
+
+        <InputLabel label="Vector Count" margin="x2">
+          <Input
+              disabled
+              onChange={ (e) => handleNumberChange(e, 'vectorCount', 0, 200) }
+              placeholder="Vector count..."
+              type="number"
+              value={ vectorCount } />
         </InputLabel>
       </Base>
     </React.Fragment>

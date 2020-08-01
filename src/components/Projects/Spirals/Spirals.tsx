@@ -1,118 +1,101 @@
 import * as React from 'react';
 import random from 'lodash.random';
 import data from '../../../data';
-import { Flex, Text, useMatchMedia, useResizeObserver } from 'preshape';
+import { Flex, useMatchMedia, useResizeObserver } from 'preshape';
 import { Box, Circle, Vector, testPolygonCircle, testCircleCircle } from 'sat';
-import { Algorithm } from './Algorithms';
 import ProjectPage from '../../ProjectPage/ProjectPage';
-import SpiralsControls, { algorithms } from './SpiralsControls';
+import { TypeVector, TypeAlgorithm, FermatSpiral, ZeroSpiral } from './Algorithms';
+import SpiralsControls from './SpiralsControls';
 import SpiralsVisual from './SpiralsVisual';
 
-const hasNoCollision = (shapes: (null | Circle)[], shapeA: Circle) => {
-  for (const shapeB of shapes) {
-    if (shapeB && testCircleCircle(shapeA, shapeB)) {
-      return false;
+const hasCollided = (shapes: Circle[], circleA: Circle) => {
+  for (const circleB of shapes) {
+    if (testCircleCircle(circleA, circleB)) {
+      return true;
     }
   }
 
-  return true;
+  return false;
 };
 
-const getPositions = (size: { height: number; width: number }, vectors: [number, number][], radii: number[], padding: number): ([number, number] | null)[] => {
-  const bounds = new Box(new Vector(0, 0), size.width, size.height).toPolygon();
-  const shapes = radii.reduce<(null | Circle)[]>((positions, radius) => {
-    for (const vector of vectors) {
-      const shape = new Circle(new Vector(...vector), radius + padding);
+const scale = (points: TypeVector[], r0: number): TypeVector[] => {
+  let r1 = 1;
 
-      if (testPolygonCircle(bounds, shape) && hasNoCollision(positions, shape)) {
-        positions.push(shape);
-        return positions;
-      }
+  for (const p of points) {
+    if (p[0] > r1) r1 = p[0];
+    if (p[1] > r1) r1 = p[1];
+  }
+
+  if (r1 < r0) {
+    for (const p of points) {
+      p[0] = p[0] * (r0 / r1);
+      p[1] = p[1] * (r0 / r1);
     }
+  }
 
-    positions.push(null);
-
-    return positions;
-  }, []);
-
-  return shapes.map((shape) => shape === null ? null : [shape.pos.x, shape.pos.y]);
+  return points;
 };
-
-const getRadii = (length: number) => Array
-  .from({ length })
-  .map(() => random(5, 30))
-  .sort((a, b) => (Math.PI * (b * b)) - (Math.PI * (a * a)));
 
 const getVectors = (config: Config, size: { height: number; width: number }) => {
-  const spread = Math.max(0.05, Math.min(1, config.spread)) / 10;
-  const h = size.height;
-  const w = size.width;
-  const [xDim, yDim] = config.proportional ? [w, h] : (w > h
-    ? [w, w * config.aspectRatio]
-    : [h, h * config.aspectRatio]);
+  const bounds = new Box(new Vector(size.width * -0.5, size.height * -0.5), size.width, size.height).toPolygon();
+  const radii = Array.from({ length: config.shapeCount }).map(() => random(10, 80)).sort((a, b) => b - a);
+  const points = config.algorithm(config.vectorCount);
+  const pointsScaled = scale(points, Math.min(size.height, size.width) / 2);
+  const vectors: TypeVector[] = [];
+  const circles: Circle[] = [];
 
-  return config.algorithm({
-    cover: config.cover,
-    height: h,
-    width: w,
-    xCenter: (w / 2),
-    xDistance: (xDim * (spread * (xDim / yDim))) * config.algorithm.NORMALISATION_FACTOR,
-    yCenter: (h / 2),
-    yDistance: (yDim * (spread * (yDim / xDim))) * config.algorithm.NORMALISATION_FACTOR,
-  });
+  if (config.showShapes) {
+    for (const radius of radii) {
+      for (const [x, y] of pointsScaled) {
+        const circle = new Circle(new Vector(x, y), (radius / 4) + config.padding);
+        const shouldPlace = testPolygonCircle(bounds, circle) && !hasCollided(circles, circle);
+
+        if (shouldPlace) {
+          circles.push(circle);
+          vectors.push([x, y, radius]);
+          break;
+        }
+      }
+    }
+  }
+
+  for (let i = 0; i < (pointsScaled.length - circles.length); i++) {
+    vectors.unshift(config.showVectors ? pointsScaled[i] : [0, 0, 0]);
+  }
+
+  return vectors;
 };
 
 export interface Config {
-  algorithm: Algorithm;
-  algorithmName: string;
-  aspectRatio: number;
-  cover: boolean;
+  algorithm: TypeAlgorithm;
   padding: number;
-  proportional: boolean;
   shapeCount: number;
   showShapes: boolean;
   showVectors: boolean;
-  spread: number;
+  vectorCount: number;
 }
 
 const defaultConfig: Config = {
-  algorithm: algorithms[4][1],
-  algorithmName: algorithms[4][0],
-  aspectRatio: 1,
-  cover: true,
+  algorithm: FermatSpiral,
   padding: 5,
-  proportional: false,
   shapeCount: 100,
   showShapes: true,
   showVectors: true,
-  spread: 0.05,
+  vectorCount: 5000,
 };
 
 const Spirals = () => {
   const match = useMatchMedia(['600px']);
   const [size, ref] = useResizeObserver();
-  const [radii, setRadii] = React.useState<number[]>(getRadii(defaultConfig.shapeCount));
-  const [vectors, setVectors] = React.useState<[number, number][]>([]);
-  const [positions, setPositions] = React.useState<[number, number, number][]>([]);
   const [config, setConfig] = React.useState<Config>(defaultConfig);
+  const [vectors, setState] = React.useState<TypeVector[]>(getVectors({
+    ...config,
+    algorithm: ZeroSpiral,
+  }, size));
 
   React.useEffect(() => {
-    setRadii(getRadii(config.showShapes ? config.shapeCount : 0));
-  }, [config.shapeCount, config.showShapes]);
-
-  React.useEffect(() => {
-    const vectors = getVectors(config, size);
-    const positions = getPositions(size, vectors, radii, config.padding)
-      .map((p, i) => p ? [radii[i], ...p] : p)
-      .filter((p): p is [number, number, number] => !!p);
-
-    setPositions(positions);
-    setVectors(vectors);
-  }, [
-    config,
-    radii,
-    size,
-  ]);
+    setState(getVectors(config, size));
+  }, [config, size]);
 
   return (
     <ProjectPage { ...data.projects.Spirals }>
@@ -124,43 +107,29 @@ const Spirals = () => {
             alignChildrenVertical="end"
             backgroundColor="dark-shade-2"
             basis={ match('600px') ? 'none' : undefined }
-            container
             direction="vertical"
             gap="x4"
             grow
             minHeight="35rem"
             padding="x4"
             textColor="light-shade-1">
-          <Flex absolute="edge-to-edge" ref={ ref }>
-            { !!(size.height && size.width) && (
-              <SpiralsVisual
-                  height={ size.height }
-                  positions={ positions }
-                  vectors={ config.showVectors ? vectors : [] }
-                  width={ size.width } />
-            ) }
-          </Flex>
-
-          <Flex container>
-            <Text size="x1"><Text inline strong>Algorithm:</Text> { config.algorithmName }</Text>
-            <Text size="x1"><Text inline strong>Aspect Ratio:</Text> { config.aspectRatio }</Text>
-            <Text size="x1"><Text inline strong>Cover:</Text> { config.cover.toString() }</Text>
-            <Text size="x1"><Text inline strong>Padding:</Text> { config.padding }</Text>
-            <Text size="x1"><Text inline strong>Proportional:</Text> { config.proportional.toString() }</Text>
-            <Text size="x1"><Text inline strong>Spread:</Text> { config.spread }</Text>
-          </Flex>
-
-          <Flex container>
-            <Text size="x1">
-              <Text inline strong>Vectors:</Text> { vectors.length || '-' }
-            </Text>
+          <Flex container grow>
+            <Flex absolute="edge-to-edge" ref={ ref }>
+              { !!(size.height && size.width) && (
+                <SpiralsVisual
+                    height={ size.height }
+                    vectors={ vectors }
+                    width={ size.width } />
+              ) }
+            </Flex>
           </Flex>
         </Flex>
 
         <Flex>
           <SpiralsControls
               config={ config }
-              onConfigChange={ (update: Partial<Config>) => setConfig({ ...config, ...update }) } />
+              onConfigChange={ (update: Partial<Config>) =>
+                setConfig({ ...config, ...update }) } />
         </Flex>
       </Flex>
     </ProjectPage>

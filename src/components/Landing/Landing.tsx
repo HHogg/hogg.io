@@ -36,7 +36,7 @@ export default () => {
           </Flex>
 
           <Flex margin="x6">
-            <Text margin="x3">I love designing and building things which frquently
+            <Text margin="x3">I love designing and building things, which frequently
               sends me down rabbit holes on side projects. I studied at <Link href="https://www.open.ac.uk/" underline>The Open University</Link> where
               I received my BSc Computing and Design Honours degree. When I'm not stringing characters together, I'm
               a less than stable climbing frame for my two daughters 👧🏼👩🏼.</Text>
