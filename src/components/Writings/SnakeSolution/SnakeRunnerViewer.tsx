@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Appear, Buttons, Button, CodeBlock, Flex, Icon, Link, List, ListItem, Text } from 'preshape';
+import { Appear, Buttons, Button, CodeBlock, Flex, Icon, Link, List, ListItem, Text, useIntersectionObserver } from 'preshape';
 import { getAverage, getScore, SnakeContext, SnakeViewer } from '@hhogg/snake';
 import 'brace/mode/javascript';
 
@@ -11,9 +11,17 @@ export default (props: Props) => {
   const { solution } = props;
   const { history, onPause, onPlay, onStart, onReset, xLength, yLength } = React.useContext(SnakeContext);
   const [isCodeVisible, setCodeVisible] = React.useState(false);
+  const [isInView, ref] = useIntersectionObserver();
+
+  React.useEffect(() => {
+    if (!isInView) {
+      onPause();
+      onReset();
+    }
+  }, [isInView]);
 
   return (
-    <Flex direction="vertical" gap="x2" grow theme="night">
+    <Flex direction="vertical" gap="x2" grow ref={ ref } theme="night">
       <Flex container>
         <Appear
             absolute="edge-to-edge"

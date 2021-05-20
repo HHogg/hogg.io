@@ -7,6 +7,8 @@ import Spirals from './Projects/Spirals/Spirals';
 import CircleIntersections from './Writings/CircleIntersections/CircleIntersections';
 import GeneratingTessellations from './Writings/GeneratingTessellations/GeneratingTessellations';
 import SnakeSolution from './Writings/SnakeSolution/SnakeSolution';
+import Planets from './Projects/Planets/Planets';
+// import Rorschach from './Projects/Rorschach/Rorschach';
 
 export const RootContext = React.createContext<{
   onChangeTheme: (theme: TypeTheme) => void;
@@ -36,6 +38,8 @@ const Site = () => {
       <Metas description="My personal projects and experience." />
       <Switch>
         <Route component={ Landing } exact path="/" />
+        {/* <Route component={ Planets } path="/projects/planets" /> */}
+        <Route component={ Planets } path="/projects/rorschach" />
         <Route component={ Spirals } path="/projects/spirals" />
         <Route component={ CircleIntersections } path="/writings/circle-intersections" />
         <Route component={ GeneratingTessellations } path="/writings/generating-tessellations" />

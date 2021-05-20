@@ -4,20 +4,22 @@ import { Flex, FlexProps, Icon, Link, Text, ThemeSwitcher } from 'preshape';
 import { RootContext } from '../Root';
 
 interface Props extends FlexProps {
+  description?: string;
+  themeable?: boolean;
   title?: string;
 }
 
 const Header = (props: Props) => {
-  const { title, ...rest } = props;
+  const { description, themeable = true, title, ...rest } = props;
   const { onChangeTheme, theme } = React.useContext(RootContext);
 
   return (
     <Flex { ...rest }
         alignChildrenHorizontal="between"
         direction="horizontal"
-        gap="x3"
+        gap="x4"
         margin="x6">
-      <Flex>
+      <Flex alignSelf="middle">
         <Route path="/:nested">
           <Link to="/">
             <Flex direction="horizontal">
@@ -34,19 +36,23 @@ const Header = (props: Props) => {
 
       { title && (
         <React.Fragment>
-          <Flex>
-            <Text strong>|</Text>
-          </Flex>
+          <Flex borderSize="x1" />
 
           <Flex grow>
             <Text strong>{ title }</Text>
+
+            { description && (
+              <Text size="x1">{ description }</Text>
+            ) }
           </Flex>
         </React.Fragment>
       ) }
 
-      <Flex>
-        <ThemeSwitcher onChange={ onChangeTheme } theme={ theme } />
-      </Flex>
+      { themeable && (
+        <Flex>
+          <ThemeSwitcher onChange={ onChangeTheme } theme={ theme } />
+        </Flex>
+      ) }
     </Flex>
   );
 };
