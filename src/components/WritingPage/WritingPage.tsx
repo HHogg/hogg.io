@@ -21,7 +21,7 @@ const WritingPage: React.FC<Props> = (props) => {
           image={ imageOG }
           title={ title } />
 
-      <Flex direction="vertical" gap="x6" grow>
+      <Flex direction="vertical" gap="x6" grow tag="article">
         <Flex
             backgroundColor="background-shade-1"
             direction="vertical"
@@ -35,9 +35,9 @@ const WritingPage: React.FC<Props> = (props) => {
 
           <Flex>
             <Flex maxWidth="600px" paddingVertical="x6">
-              <Text heading margin="x2" size="x4" strong>{ title }</Text>
-              <Text heading margin="x2" size="x2">{ description }</Text>
-              <Text heading margin="x2" size="x1" strong>{ fromISO(date) }</Text>
+              <Text heading margin="x2" size="x4" strong tag="h1">{ title }</Text>
+              <Text heading margin="x2" size="x2" tag="h2">{ description }</Text>
+              <Text aria-label="article date" heading margin="x2" size="x1" strong>{ fromISO(date) }</Text>
             </Flex>
           </Flex>
         </Flex>

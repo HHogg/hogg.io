@@ -5,8 +5,8 @@ import BezierEasing from 'bezier-easing';
 import { transitionTimingFunction, Base } from 'preshape';
 import { TypeVector } from './Algorithms';
 import useStateTween from './useStateTween';
-import frag from './frag.glsl';
-import vert from './vert.glsl';
+import frag from './shader.frag';
+import vert from './shader.vert';
 
 interface Props {
   height: number;
@@ -14,7 +14,7 @@ interface Props {
   width: number;
 }
 
-const ease = new BezierEasing(...transitionTimingFunction);
+const ease = BezierEasing(...transitionTimingFunction as [number, number, number, number]);
 const duration = 2000;
 
 const SpiralsVisual = (props: Props) => {
