@@ -9,8 +9,7 @@ const WritingSection: React.FC<Props> = (props) => {
   return (
     <Text { ...rest }
         margin="x12"
-        maxWidth={ maxWidth }
-        tag="div" />
+        maxWidth={ maxWidth } />
   );
 };
 

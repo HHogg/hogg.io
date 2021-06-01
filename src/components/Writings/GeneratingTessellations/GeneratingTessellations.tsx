@@ -1,5 +1,6 @@
 import * as React from 'react';
 import groupBy from 'lodash.groupby';
+import { Antwerp } from '@hhogg/antwerp';
 import {
   BulletPoint,
   BulletPoints,
@@ -14,7 +15,8 @@ import {
   Text,
 } from 'preshape';
 import data from '../../../data';
-import configurations from './configurations-sample.json';
+import configurations from '@hhogg/antwerp/configurations.json';
+import AntwerpExample from './AntwerpExample';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
@@ -24,7 +26,7 @@ import WritingSection from '../../WritingPage/WritingSection';
 
 const configurationsGrouped = groupBy(configurations, 'vertices');
 
-const GeneratingTesselations = () => {
+const GeneratingTessellations = () => {
   return (
     <WritingPage { ...data.writings.GeneratingTessellations }>
       <WritingSection>
@@ -79,15 +81,21 @@ const GeneratingTesselations = () => {
 
       <WritingFigs maxWidth="900px">
         <WritingFig description="Semiregular tiling 3².4.3.4" number={ 1 } >
-          <Image src={ require('./writings-tiling-1.svg') } />
+          <AntwerpExample
+              configuration="4-3-3,4/r90/r(4)"
+              shapeSize={ 50 } />
         </WritingFig>
 
         <WritingFig description="2-Uniform tiling 3.4.6.4; 3.4².6" number={ 2 } >
-          <Image src={ require('./writings-tiling-2.svg') } />
+          <AntwerpExample
+              configuration="6-4-3,4-6/m30/r(15)"
+              shapeSize={ 50 } />
         </WritingFig>
 
         <WritingFig description="Semiregular tiling 4.6.12" number={ 3 } >
-          <Image src={ require('./writings-tiling-3.svg') } />
+          <AntwerpExample
+              configuration="12-6,4/m30/r(10)"
+              shapeSize={ 50 } />
         </WritingFig>
       </WritingFigs>
 
@@ -117,19 +125,29 @@ const GeneratingTesselations = () => {
           vertex was placed, surrounded by 4 triangles and a hexagon, there would
           be 3 other vertices with 2 triangles. From here either the vertex type
           of (3⁶)² or 3⁴.6 is possible, and the notation gives no indication to
-          which is correct. Both tessellations, with the same nomenclature, are
-          represented in Fig. 1. Therefore, the second problem is that this
+          which is correct. All three tessellations, with the same nomenclature, are
+          represented in Fig. 4, 5 & 6. Therefore, the second problem is that this
           nomenclature is not unique for each tessellation [3].
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs>
-        <WritingFig description="3-Uniform tiling (3⁶)²; 3⁴.6" number={ 4 }>
-          <Image src={ require('./writings-tiling-4.svg') } />
+      <WritingFigs maxWidth="900px">
+        <WritingFig description="3-Uniform tiling [(3⁶)²; 3⁴.6]¹" number={ 4 }>
+          <AntwerpExample
+              configuration="6-3-3/m30/r(9)"
+              shapeSize={ 50 } />
         </WritingFig>
 
-        <WritingFig description="3-Uniform tiling (3⁶)²; 3⁴.6" number={ 5 }>
-          <Image src={ require('./writings-tiling-5.svg') } />
+        <WritingFig description="3-Uniform tiling [(3⁶)²; 3⁴.6]²" number={ 5 }>
+          <AntwerpExample
+              configuration="6-3-3-3-0,3/m30/r(3)"
+              shapeSize={ 50 } />
+        </WritingFig>
+
+        <WritingFig description="3-Uniform tiling [(3⁶)²; 3⁴.6]³" number={ 6 }>
+          <AntwerpExample
+              configuration="6-3-3,3-3-3-0,3/r60/r(14)"
+              shapeSize={ 50 } />
         </WritingFig>
       </WritingFigs>
 
@@ -148,7 +166,7 @@ const GeneratingTesselations = () => {
 
         <WritingParagraph>
           Several examples will be used in the following sections. The above mentioned
-          (3⁶)²; 3⁴.6 (one of the two variants) is translated to 6-3-3/m30/r30(2e).
+          (3⁶)²; 3⁴.6 (one of the three variants) is translated to 6-3-3/m30/r(9).
           The stages are represented as blocks separated by a forward-slash (/).
           When split up, the very first block is the "Shape placement" stage,
           which takes care of placing the first regular polygons on the plane.
@@ -175,13 +193,9 @@ const GeneratingTesselations = () => {
           The seed polygon is always (except for the 3 sided polygon, equilateral
           triangle) placed at the origin of the plane so that the two sides that
           intersect the horizontal axis "x", stay perpendicular to that axis"
-          (Fig. 6, left). For an equilateral triangle the left-hand edge will be
+          (Fig. 7). For an equilateral triangle the left-hand edge will be
           the one perpendicular to the x axis and will be aligned with the vertical
-          axis 'y' [3]. There are some variations, when letters B (Bottom), L (Left),
-          M (Middle) or a combination of them are added to the seed polygon. For
-          instance, 4BL means that the origin of the tessellation is at the
-          Bottom Left vertex of the square, and 3ML means that the origin of the
-          tessellation is at the Middle of the Left edge.
+          axis 'y' [3].
         </WritingParagraph>
 
         <WritingParagraph>
@@ -192,8 +206,8 @@ const GeneratingTesselations = () => {
 
         <WritingParagraph>
           Let’s use the above configuration example (3⁶)²; 3⁴.6, in its former
-          notation, which would become 6-3-3/m30/r30(2e) in GomJau-Hogg’s
-          notation (Fig. 6). With this new notation as shown above, the shape
+          notation, which would become 6-3-3/m30/r(9) in GomJau-Hogg’s
+          notation (Fig. 7). With this new notation as shown above, the shape
           placement stages consist of:
         </WritingParagraph>
 
@@ -213,8 +227,12 @@ const GeneratingTesselations = () => {
       </WritingSection>
 
       <WritingFigs>
-        <WritingFig description="Equation formatting: 6-...(left); 6-3...(center); 6-3-3...(right)" number={ 6 }>
-          <Image src={ require('./writings-tiling-6.svg') } />
+        <WritingFig description="Equation formatting: 6-3-3" number={ 7 }>
+          <AntwerpExample
+              animate
+              configuration="6-3-3"
+              shapeSize={ 100 }
+              showAxis90 />
         </WritingFig>
       </WritingFigs>
 
@@ -225,8 +243,8 @@ const GeneratingTesselations = () => {
           The stages following the first shape placement stage are a series of
           transformation functions that take all of the shapes currently placed on
           the plane and either rotate or reflect them by a specified angle
-          (when no angle is specified it defaults to 180°). The center of the
-          transformation can also be specified, which defaults to the origin of
+          (when no angle is specified it defaults to 180°). The origin of the
+          transformation can also be specified, which defaults to the center of
           the coordinate system.
         </WritingParagraph>
 
@@ -235,16 +253,16 @@ const GeneratingTesselations = () => {
           character. An 'm' (mirror) applies a reflection transformation and a 'r'
           applies a rotation transformation. When specifying the center of the
           transformation (between parentheses), it also slightly changes the
-          behaviour of the ensuing transformation result. There are 3 types of
+          behaviour of the ensuing transformation result. There are 2 types of
           transformation centers, explained in following lines.
         </WritingParagraph>
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>Origin 1. Origin of the coordinate system</WritingParagraph>
+        <WritingParagraph strong>Origin 1. Center of the coordinate system</WritingParagraph>
 
         <WritingParagraph>
-          This is the default center type and, when used, the transformation is
+          This is the default origin type and, when used, the transformation is
           applied continuously by incrementing the angle on each transformation
           by a factor of 2. This is done while the accumulated angle is less than
           a full rotation on the plane (e.g. 360°). This is the case for both
@@ -256,7 +274,7 @@ const GeneratingTesselations = () => {
 
         <BulletPoints margin="x4" numbered>
           <BulletPoint>
-            Reflect 30° the elements of the previous phase (Fig. 6, right)
+            Reflect 30° the elements of the previous phase (Fig. 7)
           </BulletPoint>
           <BulletPoint>
             Reflect 60° (30° x2) the result of the previous transformation
@@ -273,118 +291,139 @@ const GeneratingTesselations = () => {
       </WritingSection>
 
       <WritingFigs maxWidth="900px">
-        <WritingFig description="Repeating the transformation m30 (or Mirror 30°)" number={ 7 }>
-          <Image src={ require('./writings-tiling-7.svg') } />
+        <WritingFig description="Repeating the transformation m30 (or Mirror 30°) in 6-3-3/m30" number={ 8 }>
+          <AntwerpExample
+              animate
+              configuration="6-3-3/m30"
+              shapeSize={ 100 }
+              showTransforms />
+        </WritingFig>
+
+        <WritingFig description="Repeating the transformation r90 (or Rotate 90°) in 4-3-3,4/r90" number={ 9 }>
+          <AntwerpExample
+              animate
+              configuration="4-3-3,4/r90"
+              shapeSize={ 100 }
+              showTransforms />
         </WritingFig>
       </WritingFigs>
 
       <WritingSection>
-        <WritingParagraph strong>Origin 2. Edge of a polygon (e)</WritingParagraph>
+        <WritingParagraph strong>Origin 2. Vertices</WritingParagraph>
 
         <WritingParagraph>
           There will always be a need for two or more transforms to completely
           cover a plane. At least one of these transform functions will need to
-          shift the transform’s center from the origin of the coordinate
+          shift the transform’s origin from the center of the coordinate
           system in order to expand the collection of shapes out to increase
-          the area coverage. One option is doing it by shifting the transform’s
-          center to the edge (e) of another shape.
+          the area coverage. This is done by shifting the transform’s
+          origin to the vertex of either, a vertex of a shape, the centroid of
+          a shape or a midpoint of a line segment of a shape.
         </WritingParagraph>
 
         <WritingParagraph>
-          Unlike when the transform’s center is at the origin of the plane,
-          transforms with its center elsewhere are not continuous. In other
+          Unlike when the transform’s origin is at the center of the plane,
+          transforms with its origin elsewhere are not continuous. In other
           words, they are performed only once before moving onto the
           next transform.
         </WritingParagraph>
 
         <WritingParagraph>
-          The notation for shifting the transform’s center to a shape's edge is done
-          by specifying the angle between the center-origin line and the y axis and
-          then counting how many intersecting edges from the origin of the plane
-          it is. For example, let’s take the transform function r30(2e), ‘e’ meaning
-          edge, of the above mention example 6-3-3/m30/r30(2e) (Fig. 8).
-          Let’s imagine a line drawn starting from the origin of the plane with an
-          endpoint at 30°. The second edge intersecting that line would become the
-          transform's center, in which the shapes are then rotated by 180°. A
-          variation is using the particle 'v' for vertex.
+          The notation for shifting the transform’s origin is done
+          by specifying the vertex index. The vertices available for a transform
+          are systematically indexed prior to the transformation and are ordered by their
+          distance and angle, relative to the center of the coordinate system.
         </WritingParagraph>
 
         <WritingParagraph>
-          When shifting the transform’s center to the edge of a polygon for a
-          reflection transform (m), it will never be needed to provide a
-          transformation angle. This is because anything other than the angle
-          of the intersecting edge will result in an incorrect overlapping
-          and invalid tessellations. The only valid and correct angle can
-          easily be inferred from the angle of the intersecting edge.
+          Taking the configuration 3-6 (Fig 10), there are 16 vertices in total,
+          made up of 2 shape centroids, 6 shape vertices (the endpoints of the line
+          segments) and 8 line segment midpoints. Excluding the coordinate system center
+          vertex.
+        </WritingParagraph>
+
+        <WritingParagraph>
+          Starting at 0° of the coordinate system, there are 4 vertices that exist at this
+          angle, labelled 1, 2, 3 and 4 in order of the shortest distance to the origin. Followed
+          by vertex 5 which is next in turn by angle to the origin, and so on. As an example
+          it would then be possible to reflect over the 12th vertex by specifying m(12) in the
+          notation (Fig 11), and the vertices would be reindexed for the next transformation
+          function.
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs>
-        <WritingFig description="Transformation function r30(2e)" number={ 8 }>
-          <Image src={ require('./writings-tiling-8.svg') } />
+      <WritingFigs maxWidth="900px">
+        <WritingFig description="Equation formatting: 6-3-3" number={ 10 }>
+          <AntwerpExample
+              configuration="3-6"
+              shapeSize={ 100 }
+              showAxis90
+              showVertices />
+        </WritingFig>
+
+        <WritingFig description="Equation formatting: 6-3-3/m(12)" number={ 11 }>
+          <AntwerpExample
+              configuration="3-6/m(12)"
+              shapeSize={ 100 }
+              showAxis90
+              showTransforms
+              showVertices />
         </WritingFig>
       </WritingFigs>
 
       <WritingSection>
-        <WritingParagraph strong>Origin 3. Center of a polygon (c)</WritingParagraph>
-
         <WritingParagraph>
-          Similar to shifting the transform’s center to the edge of a shape, it can
-          also be shifted to the center (c) point of a polygon. However, there are
-          a couple of differences. The format of the notation is very similar,
-          except this origin type is represented by a ‘c’ (for center) instead
-          of an ‘e’ (for edge). Instead of specifying the number of intersecting
-          edges, it is simply the number of intersecting shapes (excluding the
-          seed polygon). This also allows for some flexibility in the angle of the
-          intersection line as it does not have to target the center point of the
-          shape exactly. The polygon simply needs to be intersected by that line.
-          Unlike the edge center type (e), when this is applied on a reflection
-          transform (m), the angle of the transform is always respected.
-        </WritingParagraph>
-
-        <WritingParagraph>
-          In the [3³.4²; 3².4.3.4]¹ configuration (Fig. 9), which becomes
-          the 4-3,3-4,3/r90/m60(2c) in GomJau-Hogg’s notation, the second
-          transformation function is m60(2c). This means that there is a
-          mirror reflection over a line perpendicular to the intersection
-          angle (60°), at the center of the second intersecting polygon.
+          When specifying the vertex of a shapes centroid (Fig 12) or vertex (Fig 13), the angle that
+          is used for the transformation is inferred from the angle of that vertex
+          relative to the center of the coordinate system. However, when using
+          the midpoint of line segment (the shapes edge, as shown in Fig 11), the angle for the transform
+          is inferred from the angle of that edge because any other angle would result in an
+          incorrect overlapping and an invalid tesselation.
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs>
-        <WritingFig description="Transformation function m60(2c)" number={ 9 }>
-          <Image src={ require('./writings-tiling-9.svg') } />
+      <WritingFigs maxWidth="900px">
+        <WritingFig description="Equation formatting: 3-6/m30/r(9)" number={ 12 }>
+          <AntwerpExample
+              configuration="3-6/m30/r(9)"
+              maxRepeat={ 0 }
+              shapeSize={ 50 }
+              showAxis90
+              showTransforms />
+        </WritingFig>
+
+        <WritingFig description="Equation formatting: 12-3,4-3,3/m30/r(3)" number={ 13 }>
+          <AntwerpExample
+              configuration="12-3,4-3,3/m30/r(3)"
+              maxRepeat={ 0 }
+              shapeSize={ 100 }
+              showAxis90
+              showTransforms />
         </WritingFig>
       </WritingFigs>
-
-      <WritingSection>
-        <WritingParagraph strong>Origin 4. Halfway of an edge (h)</WritingParagraph>
-
-        <WritingParagraph>
-          Another option for choosing the transform’s center is selecting the
-          halfway (h) or middle point of an edge. Sometimes, the line drawn
-          from the origin at a certain angle has the same direction as an
-          edge between two polygons; therefore, both are collinear. Then,
-          it can be useful to select the halfway point of that edge. Thus,
-          instead of selecting the letters ‘e’ or ‘c’, the particle ‘h’
-          will be added after the number of edges intersected by the line
-          starting at the origin.
-        </WritingParagraph>
-      </WritingSection>
 
       <WritingSection>
         <WritingParagraph strong>Stage 3: Repeating the transformations</WritingParagraph>
 
         <WritingParagraph>
           This is the final stage to completing the tiling, and it consists on repeating
-          over the transformation functions as many times as are needed. This
+          over the transformation functions as many times as are needed, each time taken
+          the shapes that are currently on the plane. This
           should not result in any incorrect shape overlaps (apart from those merged
           from the transformation functions), and it should continuously and
-          indefinitely grow. Using the above example, both transformation
-          functions m60 and r30(2e) are continuously repeated, each time
-          taken the shapes that are currently on the plane (Fig. 4).
+          indefinitely grow. As show in Fig 14.
         </WritingParagraph>
       </WritingSection>
+
+      <WritingFigs maxWidth="900px">
+        <WritingFig description="Equation formatting: 4-3-3-0,4/r90/r(5)" number={ 14 }>
+          <AntwerpExample
+              animate
+              configuration="4-3-3-0,4/r90/r(5)"
+              shapeSize={ 75 }
+              showTransforms />
+        </WritingFig>
+      </WritingFigs>
 
       <WritingSection
           backgroundColor="background-shade-2"
@@ -392,7 +431,8 @@ const GeneratingTesselations = () => {
           size="x1">
         <WritingParagraph>
           <Text inline strong>Table 1.</Text> Transformation
-          of Cundy & Rollett’s notation to GomJau-Hogg’s notation, up to k=2.
+          of Cundy & Rollett’s notation to GomJau-Hogg’s notation, up to { configurations[configurations.length - 1].vertices }
+          . All of these can be seen in the Tilings explorer application <Link href="https://antwerp.hogg.io/library" target="_Antwerp">https://antwerp.hogg.io/library</Link>
         </WritingParagraph>
 
         <Table size="x1" >
@@ -476,4 +516,4 @@ const GeneratingTesselations = () => {
   );
 };
 
-export default GeneratingTesselations;
+export default GeneratingTessellations;

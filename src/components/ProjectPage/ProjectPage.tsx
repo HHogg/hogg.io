@@ -6,6 +6,7 @@ import Metas from '../Metas/Metas';
 interface Props {
   description: string;
   imageOG?: string;
+  themeable?: boolean;
   title: string;
 }
 
@@ -14,6 +15,7 @@ const ProjectPage: React.FC<Props> = (props) => {
     children,
     description,
     imageOG,
+    themeable,
     title,
   } = props;
 
@@ -31,10 +33,13 @@ const ProjectPage: React.FC<Props> = (props) => {
           grow
           padding="x6">
         <Flex>
-          <Header title={ title } />
+          <Header
+              description={ description }
+              themeable={ themeable }
+              title={ title } />
         </Flex>
 
-        <Flex>
+        <Flex direction="vertical" grow>
           { children }
         </Flex>
       </Flex>
