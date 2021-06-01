@@ -7,7 +7,7 @@ import Project from '../Project/Project';
 import Writing from '../Writing/Writing';
 import Header from '../Header/Header';
 
-export default () => {
+export default function Landing() {
   return (
     <Flex backgroundColor="background-shade-1" padding="x6">
       <Header />

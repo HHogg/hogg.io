@@ -1,7 +1,7 @@
 import { vec3 } from 'gl-matrix';
-import { GeometryBase } from './getGeometry';
+import { Geometry } from './getGeometry';
 
-const getMaxPoint = (geometries: GeometryBase[]) => {
+const getMaxPoint = (geometries: Geometry[]) => {
   let max = 0;
 
   for (const geometry of geometries) {
@@ -19,10 +19,11 @@ const getMaxPoint = (geometries: GeometryBase[]) => {
   return max;
 };
 
-const getRescaledGeometries = (geometries: GeometryBase[]): GeometryBase[] => {
+const getRescaledGeometries = (geometries: Geometry[]): Geometry[] => {
   const scale = Math.abs(1 / getMaxPoint(geometries));
 
-  return geometries.map(({ elements, vertices }) => ({
+  return geometries.map(({ name, elements, vertices }) => ({
+    name: name,
     elements: elements,
     vertices: vertices.map((vector) => vec3.scale(vec3.create(), vector, scale)),
   }));

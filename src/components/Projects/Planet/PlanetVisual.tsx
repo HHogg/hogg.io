@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { Base } from 'preshape';
 import Renderer from './Renderer';
-import { ConfigDrawMode } from './Planets';
+import { GeometriesSettings } from './Planet';
+import { GeometryRaw } from './getGeometry/getGeometry';
 
 interface Props {
-  drawMode: ConfigDrawMode;
+  geometries: GeometryRaw[];
+  geometriesSettings: GeometriesSettings;
   height: number;
   width: number;
 }
 
-const PlanetsVisual = (props: Props) => {
-  const { drawMode, height, width } = props;
+const PlanetVisual = (props: Props) => {
+  const { geometries, geometriesSettings, height, width } = props;
   const refCanvas = React.useRef<HTMLCanvasElement>(null);
   const refRenderer = React.useRef<Renderer>();
 
@@ -31,8 +33,12 @@ const PlanetsVisual = (props: Props) => {
   }, [height, width]);
 
   React.useEffect(() => {
-    refRenderer.current?.setDrawMode(drawMode);
-  }, [drawMode]);
+    refRenderer.current?.setGeometries(geometries);
+  }, [geometries]);
+
+  React.useEffect(() => {
+    refRenderer.current?.setGeometriesSettings(geometriesSettings);
+  }, [geometriesSettings]);
 
   return (
     <Base
@@ -44,4 +50,4 @@ const PlanetsVisual = (props: Props) => {
   );
 };
 
-export default PlanetsVisual;
+export default PlanetVisual;

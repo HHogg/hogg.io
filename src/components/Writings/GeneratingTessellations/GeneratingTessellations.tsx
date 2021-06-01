@@ -1,6 +1,5 @@
 import * as React from 'react';
 import groupBy from 'lodash.groupby';
-import { Antwerp } from '@hhogg/antwerp';
 import {
   BulletPoint,
   BulletPoints,

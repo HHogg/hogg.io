@@ -1,5 +1,5 @@
 import { vec3 } from 'gl-matrix';
-import { GeometryBase } from './getGeometry';
+import { Geometry } from './getGeometry';
 
 const f = (1 + Math.sqrt(5)) / 2;
 
@@ -41,7 +41,7 @@ const baseElements: vec3[] = [
   vec3.fromValues(8, 6, 7),
 ];
 
-const subdivide = ({ elements, vertices }: GeometryBase) => {
+const subdivide = ({ elements, name, vertices }: Geometry): Geometry => {
   const nextElements: vec3[] = [];
   const nextVertices: vec3[] = vertices.slice();
   const midpoints: Record<string, number> = {};
@@ -56,39 +56,44 @@ const subdivide = ({ elements, vertices }: GeometryBase) => {
     return midpoints[`${a},${b}`] = midPointIndex;
   };
 
-  for (const [a, b, c] of elements) {
-    const aMid = getMidPoint(a, b);
-    const bMid = getMidPoint(b, c);
-    const cMid = getMidPoint(c, a);
+  if (elements) {
+    for (const [a, b, c] of elements) {
+      const aMid = getMidPoint(a, b);
+      const bMid = getMidPoint(b, c);
+      const cMid = getMidPoint(c, a);
 
-    nextElements.push(
-      vec3.fromValues(a, aMid, cMid),
-      vec3.fromValues(b, bMid, aMid),
-      vec3.fromValues(c, cMid, bMid),
-      vec3.fromValues(aMid, bMid, cMid),
-    );
+      nextElements.push(
+        vec3.fromValues(a, aMid, cMid),
+        vec3.fromValues(b, bMid, aMid),
+        vec3.fromValues(c, cMid, bMid),
+        vec3.fromValues(aMid, bMid, cMid),
+      );
+    }
   }
 
   return {
+    name: name,
     elements: nextElements,
     vertices: nextVertices,
   };
 };
 
-const getIcosphere = (subdivisions: number): GeometryBase => {
-  const { elements, vertices } = Array
+const getIcosphere = (subdivisions: number): Geometry => {
+  const { elements, name, vertices } = Array
     .from({ length: subdivisions })
     .reduce(subdivide, {
+      name: 'Icosphere',
       elements: baseElements,
       vertices: baseVertices,
     });
 
-  const verticesScaledAndJittered = vertices.map((vec) =>
+  const verticesScaled = vertices.map((vec) =>
     vec3.scale(vec3.create(), vec, 1 / Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2])));
 
   return {
+    name: name,
     elements: elements,
-    vertices: verticesScaledAndJittered,
+    vertices: verticesScaled,
   };
 };
 

@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Flex, useResizeObserver } from 'preshape';
-import data from '../../../data';
-import { RootContext } from '../../Root';
-import ProjectPage from '../../ProjectPage/ProjectPage';
+import data from '../../../../data';
+import { RootContext } from '../../../Root';
+import ProjectPage from '../../../ProjectPage/ProjectPage';
 import RorschachVisual from './RorschachVisual';
 
 const Rorschach = () => {

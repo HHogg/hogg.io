@@ -1,5 +1,5 @@
 import { vec3 } from 'gl-matrix';
-import { Geometry, GeometryBase } from './getGeometry';
+import { Geometry } from './getGeometry';
 
 export const getNormal = (a: vec3, b: vec3, c: vec3) => {
   return vec3.normalize(vec3.create(), vec3.cross(vec3.create(),
@@ -8,9 +8,9 @@ export const getNormal = (a: vec3, b: vec3, c: vec3) => {
   ));
 };
 
-const getFaceNormals = ({ elements, vertices }: GeometryBase): Geometry => {
+const getFaceNormals = ({ elements, name, vertices }: Geometry): Geometry => {
   if (!elements) {
-    return { elements, vertices };
+    return { name, elements, vertices };
   }
 
   const nextElements: vec3[] = [];
@@ -28,13 +28,14 @@ const getFaceNormals = ({ elements, vertices }: GeometryBase): Geometry => {
   }
 
   return {
+    name: name,
     elements: nextElements,
     normals: nextNormals,
     vertices: nextVertices,
   };
 };
 
-const getFaceNormalGeometries = (geometries: GeometryBase[]): Geometry[] =>
+const getFaceNormalGeometries = (geometries: Geometry[]): Geometry[] =>
   geometries.map(getFaceNormals);
 
 export default getFaceNormalGeometries;

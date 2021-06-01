@@ -2,14 +2,15 @@
 import regl, { Framebuffer } from 'regl';
 import { vec2, mat4, vec3 } from 'gl-matrix';
 import orbitCamera, { OrbitCamera } from 'orbit-camera';
-import getGeometry, { GeometryRaw } from './getGeometry/getGeometry';
+import { GeometryRaw } from './getGeometry/getGeometry';
+import getLinedGeometry from './getGeometry/getLinedGeometry';
 import depthFrag from './shaders/depth.frag';
 import depthVert from './shaders/depth.vert';
 import pointFrag from './shaders/point.frag';
 import pointVert from './shaders/point.vert';
 import normalFrag from './shaders/normal.frag';
 import normalVert from './shaders/normal.vert';
-import { ConfigDrawMode } from './Planets';
+import { GeometriesSettings } from './Planet';
 
 const SHADOW_MAP_RESOLUTION = 1024 * 4;
 
@@ -26,7 +27,6 @@ const uLightPosition = vec3.fromValues(-1, 1, -1);
 export default class Renderer {
   aspect: number;
   camera: OrbitCamera;
-  drawMode: ConfigDrawMode;
   regl: regl.Regl;
   frame?: regl.Cancellable;
   projection: mat4;
@@ -37,6 +37,7 @@ export default class Renderer {
   pointerPrevY: number;
 
   geometries: GeometryRaw[];
+  geometriesSettings: GeometriesSettings;
 
 
   constructor(canvas: HTMLCanvasElement) {
@@ -48,13 +49,13 @@ export default class Renderer {
       extensions: ['oes_texture_float'],
     });
 
-    this.drawMode = 'faces';
     this.keyDown = '';
     this.pointerIsDown = false;
     this.pointerPrevX = 0;
     this.pointerPrevY = 0;
 
-    this.geometries = getGeometry();
+    this.geometries = [];
+    this.geometriesSettings = {};
 
     this.camera = orbitCamera(uLightPosition);
 
@@ -155,8 +156,13 @@ export default class Renderer {
     this.draw();
   }
 
-  setDrawMode(drawMode: ConfigDrawMode) {
-    this.drawMode = drawMode;
+  setGeometries(geometries: GeometryRaw[]) {
+    this.geometries = geometries;
+    this.draw();
+  }
+
+  setGeometriesSettings(geometriesSettings: GeometriesSettings) {
+    this.geometriesSettings = geometriesSettings;
     this.draw();
   }
 
@@ -190,12 +196,16 @@ export default class Renderer {
         });
 
         for (const geometry of this.geometries) {
-          if (!geometry.elements || this.drawMode === 'points') {
-            drawPoints(geometry);
-          } else if (this.drawMode === 'lines') {
-            drawLines(geometry);
-          } else if (this.drawMode === 'faces') {
-            drawFaces(geometry);
+          const { mode, visible } = this.geometriesSettings[geometry.name];
+
+          if (visible) {
+            if (!geometry.elements || mode === 'points') {
+              drawPoints(geometry);
+            } else if (mode  === 'lines') {
+              drawLines(getLinedGeometry(geometry));
+            } else if (mode  === 'faces') {
+              drawFaces(geometry);
+            }
           }
         }
       };
@@ -260,10 +270,10 @@ export default class Renderer {
 
   drawLines() {
     return this.regl({
-      primitive: 'lines',
       elements: this.regl.prop<GeometryRaw, 'elements'>('elements'),
       uniforms: {
         uModel: ({ tick }) => mat4.fromRotation(mat4.create(), 0.01 * tick, [0.33, 0.66, 1]),
+        // uModel: () => mat4.create(),
       },
       attributes: {
         aPosition: this.regl.prop<GeometryRaw, 'vertices'>('vertices'),
@@ -276,9 +286,10 @@ export default class Renderer {
   drawPoints() {
     return this.regl({
       primitive: 'points',
-      elements: this.regl.prop<GeometryRaw, 'elements'>('elements'),
+      count: (_, { vertices }: GeometryRaw) => vertices.length,
       uniforms: {
         uModel: ({ tick }) => mat4.fromRotation(mat4.create(), 0.01 * tick, [0.33, 0.66, 1]),
+        // uModel: () => mat4.create(),
       },
       attributes: {
         aPosition: this.regl.prop<GeometryRaw, 'vertices'>('vertices'),

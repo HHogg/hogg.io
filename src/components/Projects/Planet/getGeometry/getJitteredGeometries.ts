@@ -1,6 +1,6 @@
 import { vec3 } from 'gl-matrix';
 import random from 'lodash.random';
-import { GeometryBase } from './getGeometry';
+import { Geometry } from './getGeometry';
 
 const JITTER = 0.05;
 
@@ -13,8 +13,9 @@ const getJitteredPoint = (vec: vec3) =>
     )
   );
 
-const getJitteredGeometries = (geometries: GeometryBase[]): GeometryBase[] =>
-  geometries.map(({ elements, vertices }) => ({
+const getJitteredGeometries = (geometries: Geometry[]): Geometry[] =>
+  geometries.map(({ name, elements, vertices }) => ({
+    name: name,
     elements: elements,
     vertices: vertices.map(getJitteredPoint),
   }));

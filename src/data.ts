@@ -33,13 +33,13 @@ const data: Data = {
   },
 
   projects: {
-    'Rorschach': {
+    'Planet': {
       'description': '',
       'image': require('./assets/rorschach.png'),
       'imageOG': require('./assets/rorschach.png'),
       'tags': ['typescript', 'react', 'regl'],
-      'title': 'Rorschach',
-      'to': '/projects/rorschach',
+      'title': 'Planet',
+      'to': '/projects/planet',
     },
     'Circles': {
       'description': 'A web application for creating artwork by filling in the intersection areas of overlapping circles. Using an experimental way of calculating intersections areas with computational geometry.',

@@ -1,8 +1,8 @@
 import { vec3 } from 'gl-matrix';
-import { GeometryBase } from './getGeometry';
+import { Geometry } from './getGeometry';
 import getNoiseIndices from './getNoiseIndices';
 
-const getExtrusion = (geometry: GeometryBase): GeometryBase => {
+const getExtrusion = (geometry: Geometry): Geometry => {
   const noises = getNoiseIndices(geometry);
   const elements: vec3[] = [];
   const vertices: vec3[] = [];
@@ -47,7 +47,11 @@ const getExtrusion = (geometry: GeometryBase): GeometryBase => {
     }
   }
 
-  return { elements, vertices };
+  return {
+    name: 'Extrusion',
+    elements: elements,
+    vertices: vertices,
+  };
 };
 
 export default getExtrusion;
