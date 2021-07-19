@@ -1,8 +1,8 @@
 import * as React from 'react';
 import random from 'lodash.random';
 import data from '../../../data';
-import { Flex, useMatchMedia, useResizeObserver } from 'preshape';
-import { Box, Circle, Vector, testPolygonCircle, testCircleCircle } from 'sat';
+import { Box, useMatchMedia, useResizeObserver } from 'preshape';
+import { Box as Rect, Circle, Vector, testPolygonCircle, testCircleCircle } from 'sat';
 import ProjectPage from '../../ProjectPage/ProjectPage';
 import { TypeVector, TypeAlgorithm, FermatSpiral, ZeroSpiral } from './Algorithms';
 import SpiralsControls from './SpiralsControls';
@@ -37,7 +37,7 @@ const scale = (points: TypeVector[], r0: number): TypeVector[] => {
 };
 
 const getVectors = (config: Config, size: { height: number; width: number }) => {
-  const bounds = new Box(new Vector(size.width * -0.5, size.height * -0.5), size.width, size.height).toPolygon();
+  const bounds = new Rect(new Vector(size.width * -0.5, size.height * -0.5), size.width, size.height).toPolygon();
   const radii = Array.from({ length: config.shapeCount }).map(() => random(10, 80)).sort((a, b) => b - a);
   const points = config.algorithm(config.vectorCount);
   const pointsScaled = scale(points, Math.min(size.height, size.width) / 2);
@@ -99,39 +99,39 @@ const Spirals = () => {
 
   return (
     <ProjectPage { ...data.projects.Spirals }>
-      <Flex
-          direction={ match('600px') ? 'horizontal' : 'vertical' }
+      <Box
+          flex={ match('600px') ? 'horizontal' : 'vertical' }
           gap="x8"
           grow>
-        <Flex
+        <Box
             alignChildrenVertical="end"
             backgroundColor="dark-shade-2"
-            basis={ match('600px') ? 'none' : undefined }
-            direction="vertical"
+            basis={ match('600px') ? '0' : undefined }
+            flex="vertical"
             gap="x4"
             grow
             minHeight="35rem"
             padding="x4"
             textColor="light-shade-1">
-          <Flex container grow>
-            <Flex absolute="edge-to-edge" ref={ ref }>
+          <Box container grow>
+            <Box absolute="edge-to-edge" ref={ ref }>
               { !!(size.height && size.width) && (
                 <SpiralsVisual
                     height={ size.height }
                     vectors={ vectors }
                     width={ size.width } />
               ) }
-            </Flex>
-          </Flex>
-        </Flex>
+            </Box>
+          </Box>
+        </Box>
 
-        <Flex>
+        <Box>
           <SpiralsControls
               config={ config }
               onConfigChange={ (update: Partial<Config>) =>
                 setConfig({ ...config, ...update }) } />
-        </Flex>
-      </Flex>
+        </Box>
+      </Box>
     </ProjectPage>
   );
 };

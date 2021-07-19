@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useMatchMedia, Flex } from 'preshape';
+import { useMatchMedia, Box } from 'preshape';
 import WritingSection, { Props as WritingSectionProps } from './WritingSection';
 
 interface Props extends WritingSectionProps {
@@ -23,11 +23,11 @@ export default (props: React.PropsWithChildren<Props>) => {
         padding="x6"
         size="x1"
         textColor={ textColor }>
-      <Flex
-          direction={ match(maxWidth) ? 'horizontal' : 'vertical' }
+      <Box
+          flex={ match(maxWidth) ? 'horizontal' : 'vertical' }
           gap="x6">
         { children }
-      </Flex>
+      </Box>
     </WritingSection>
   );
 };

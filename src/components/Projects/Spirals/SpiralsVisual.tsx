@@ -2,7 +2,7 @@ import * as React from 'react';
 import { mat3 } from 'gl-matrix';
 import regl from 'regl';
 import BezierEasing from 'bezier-easing';
-import { transitionTimingFunction, Base } from 'preshape';
+import { transitionTimingFunction, Box } from 'preshape';
 import { TypeVector } from './Algorithms';
 import useStateTween from './useStateTween';
 import frag from './shader.frag';
@@ -89,7 +89,7 @@ const SpiralsVisual = (props: Props) => {
   }, [state, height, width]);
 
   return (
-    <Base
+    <Box
         absolute="edge-to-edge"
         height={ height }
         ref={ refCanvas }

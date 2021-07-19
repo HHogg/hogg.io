@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Base, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
+import { Box, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
 import { ArchimedesSpiral, FermatSpiral, UlamSpiral, VogelSpiral, ZeroSpiral, TypeAlgorithm } from './Algorithms';
 import { Config } from './Spirals';
 
@@ -37,7 +37,7 @@ const SysPlotControls = (props: Props) => {
 
   return (
     <React.Fragment>
-      <Base margin="x8">
+      <Box margin="x8">
         <Text margin="x4" strong>Plotting Algorithms</Text>
 
         { algorithms.map(([algorithmName, algorithm]) => (
@@ -49,9 +49,9 @@ const SysPlotControls = (props: Props) => {
             { algorithmName }
           </RadioButton>
         )) }
-      </Base>
+      </Box>
 
-      <Base margin="x8">
+      <Box margin="x8">
         <Text margin="x4" strong>Configuration</Text>
 
         <CheckBox
@@ -93,7 +93,7 @@ const SysPlotControls = (props: Props) => {
               type="number"
               value={ vectorCount } />
         </InputLabel>
-      </Base>
+      </Box>
     </React.Fragment>
   );
 };

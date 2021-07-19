@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Flex } from 'preshape';
+import { Box } from 'preshape';
 import Header from '../Header/Header';
 import Metas from '../Metas/Metas';
 
@@ -26,23 +26,23 @@ const ProjectPage: React.FC<Props> = (props) => {
           image={ imageOG }
           title={ title } />
 
-      <Flex
+      <Box
           backgroundColor="background-shade-1"
-          direction="vertical"
+          flex="vertical"
           gap="x6"
           grow
           padding="x6">
-        <Flex>
+        <Box>
           <Header
               description={ description }
               themeable={ themeable }
               title={ title } />
-        </Flex>
+        </Box>
 
-        <Flex direction="vertical" grow>
+        <Box flex="vertical" grow>
           { children }
-        </Flex>
-      </Flex>
+        </Box>
+      </Box>
     </React.Fragment>
   );
 };

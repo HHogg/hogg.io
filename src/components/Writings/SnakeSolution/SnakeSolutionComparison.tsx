@@ -1,7 +1,7 @@
 import * as React from 'react';
 import openColor from 'open-color';
 import { SeriesPointXY, Viz, VizSVG, VizSVGAxisX, VizSVGAxisY, VizSVGCircles, VizSVGGridLinesAxisX, VizSVGGridLinesAxisY, VizSVGLine } from '@bitrise/bitviz';
-import { sizeX8Px, themes, Flex, List, ListItem, Text } from 'preshape';
+import { sizeX8Px, themes, Box, List, ListItem, Text } from 'preshape';
 import numbro from 'numbro';
 
 const format = (v: number) => numbro(v).format({
@@ -37,12 +37,12 @@ export default (props: Props) => {
   const { series, seriesPoints, title, xDomain, yDomain } = props;
 
   return (
-    <Flex basis="none" direction="vertical" gap="x3" grow>
-      <Flex>
+    <Box basis="0" flex="vertical" gap="x3" grow>
+      <Box>
         <Text align="middle" margin="x2" size="x1" strong>{ title }</Text>
 
-        <Flex direction="horizontal">
-          <Flex basis="none" grow>
+        <Box flex="horizontal">
+          <Box basis="0" grow>
             <Viz
                 height={ 300 }
                 paddingBottom={ sizeX8Px }
@@ -92,33 +92,33 @@ export default (props: Props) => {
                     strokeWidth="2" />
               </VizSVG>
             </Viz>
-          </Flex>
-        </Flex>
-      </Flex>
+          </Box>
+        </Box>
+      </Box>
 
-      <Flex direction="horizontal">
-        <List alignChildren="middle" basis="none" gap="x1" grow>
+      <Box flex="horizontal">
+        <List alignChildren="middle" basis="0" gap="x1" grow>
           { names.map((name, index) => (
             <ListItem key={ name } padding="x1" separator="">
-              <Flex alignChildren="middle" direction="horizontal" gap="x2">
-                <Flex>
-                  <Flex
+              <Box alignChildren="middle" flex="horizontal" gap="x2">
+                <Box>
+                  <Box
                       borderRadius="full"
                       height="12px"
                       style={ { backgroundColor: colors[index] } }
                       width="12px" />
-                </Flex>
+                </Box>
 
-                <Flex>
+                <Box>
                   <Text size="x1" strong>
                     { name }
                   </Text>
-                </Flex>
-              </Flex>
+                </Box>
+              </Box>
             </ListItem>
           )) }
         </List>
-      </Flex>
-    </Flex>
+      </Box>
+    </Box>
   );
 };

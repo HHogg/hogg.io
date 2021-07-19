@@ -1,49 +1,43 @@
 import * as React from 'react';
-import { Appear, Flex, Image, Link, Text } from 'preshape';
+import { Box, Image, Link, Text } from 'preshape';
 import { Project } from '../../Types';
 
 interface Props extends Project {}
 
 const ProjectComponent = (props: Props & React.HTMLProps<HTMLAnchorElement>) => {
   const { description, href, image, title, to } = props;
-  const [isOver, setIsOver] = React.useState(false);
 
   return (
     <Link
-        display="block"
+        flex="vertical"
+        grow
         href={ href }
         target={ href ? title : undefined }
         to={ to }>
-      <Flex
-          borderColor="text-shade-1"
+      <Box
+          borderColor="background-shade-2"
           borderSize="x2"
-          container
-          onPointerLeave={ () => setIsOver(false) }
-          onPointerOver={ () => setIsOver(true) }>
-        <Flex container height="180px" overflow="hidden">
+          flex="vertical"
+          grow>
+        <Box container height="180px" overflow="hidden">
           <Image
               absolute="center"
               height="180px"
               maxWidth="600px"
               src={ image }
               width="600px" />
-        </Flex>
+        </Box>
 
-        <Appear
-            absolute="edge-to-edge"
+        <Box
             alignChildrenVertical="end"
-            animation="Fade"
-            backgroundColor="accent-shade-2"
-            direction="vertical"
-            padding="x6"
-            textColor="white"
-            visible={ isOver }>
-          <Flex>
-            <Text margin="x2" strong>{ title }</Text>
-            <Text size="x1">{ description }</Text>
-          </Flex>
-        </Appear>
-      </Flex>
+            backgroundColor="background-shade-2"
+            grow
+            paddingHorizontal="x6"
+            paddingVertical="x4">
+          <Text size="x2" strong>{ title }</Text>
+          <Text size="x1">{ description }</Text>
+        </Box>
+      </Box>
     </Link>
   );
 };

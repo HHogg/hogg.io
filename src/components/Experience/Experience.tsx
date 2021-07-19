@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Flex, Label, Labels, Text } from 'preshape';
+import { Box, Label, Labels, Text } from 'preshape';
 import { DateTime } from 'luxon';
 import { Experience } from '../../Types';
 
@@ -11,15 +11,15 @@ const ExperienceComponent = (props: Props) => {
   const { current, company, date, description, tags, role } = props;
 
   return (
-    <Flex
-        direction="horizontal"
+    <Box
+        flex="horizontal"
         gap="x6"
         margin="x2">
-      <Flex
-          direction="vertical"
+      <Box
+          flex="vertical"
           gap="x2">
         { current && (
-          <Flex>
+          <Box>
             <Text
                 backgroundColor="accent-shade-2"
                 borderRadius="x1"
@@ -30,24 +30,24 @@ const ExperienceComponent = (props: Props) => {
                 textColor="light-shade-1">
               Now
             </Text>
-          </Flex>
+          </Box>
         ) }
 
-        <Flex
+        <Box
             alignChildrenHorizontal="middle"
-            direction="horizontal"
+            flex="horizontal"
             grow>
-          <Flex
+          <Box
               alignChildrenHorizontal="middle"
-              direction="vertical">
-            <Flex
+              flex="vertical">
+            <Box
                 backgroundColor="accent-shade-2"
                 grow
                 width="2px" />
-          </Flex>
-        </Flex>
+          </Box>
+        </Box>
 
-        <Flex>
+        <Box>
           <Text
               backgroundColor="accent-shade-2"
               borderRadius="x1"
@@ -58,20 +58,20 @@ const ExperienceComponent = (props: Props) => {
               textColor="light-shade-1">
             { DateTime.fromISO(date).toFormat('yyyy') }
           </Text>
-        </Flex>
-      </Flex>
+        </Box>
+      </Box>
 
-      <Flex backgroundColor="background-shade-2" basis="none" grow padding="x6">
-        <Text strong>{ company }</Text>
-        <Text size="x1" strong>{ role }</Text>
-        <Text margin="x2" size="x1">{ description }</Text>
+      <Box backgroundColor="background-shade-2" basis="0" grow padding="x6">
+        <Text size="x3" strong>{ company }</Text>
+        <Text strong>{ role }</Text>
+        <Text margin="x2">{ description }</Text>
         <Labels margin="x3">
           { tags.map((tag) =>
-            <Label key={ tag } size="x1">{ tag } </Label>
+            <Label key={ tag }>{ tag } </Label>
           ) }
         </Labels>
-      </Flex>
-    </Flex>
+      </Box>
+    </Box>
   );
 };
 

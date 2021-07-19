@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Appear, Buttons, Button, CodeBlock, Flex, Icon, Link, List, ListItem, Text, useIntersectionObserver } from 'preshape';
+import { Appear, Buttons, Button, CodeBlock, Box, Icon, Link, List, ListItem, Text, useIntersectionObserver } from 'preshape';
 import { getAverage, getScore, SnakeContext, SnakeViewer } from '@hhogg/snake';
 import 'brace/mode/javascript';
 
@@ -21,8 +21,8 @@ export default (props: Props) => {
   }, [isInView]);
 
   return (
-    <Flex direction="vertical" gap="x2" grow ref={ ref } theme="night">
-      <Flex container>
+    <Box flex="vertical" gap="x2" grow ref={ ref } theme="night">
+      <Box container>
         <Appear
             absolute="edge-to-edge"
             animation="FadeSlideUp"
@@ -38,19 +38,19 @@ export default (props: Props) => {
             animation="FadeSlideDown"
             style={ { pointerEvents: isCodeVisible ? 'none' : undefined } }
             visible={ !isCodeVisible }>
-          <Flex
-              direction="vertical"
+          <Box
+              flex="vertical"
               gap="x3"
               grow
               padding="x3">
-            <Flex
+            <Box
                 container
-                direction="vertical"
+                flex="vertical"
                 height="450px">
               <SnakeViewer theme="night" />
-            </Flex>
+            </Box>
 
-            <Flex>
+            <Box>
               <List alignChildrenHorizontal="middle">
                 <ListItem separator="~">
                   <Text inline strong>Points:</Text> { history.length - 1 }
@@ -64,9 +64,9 @@ export default (props: Props) => {
                   <Text inline strong>Score:</Text> { Math.floor(getScore(xLength, yLength, history.slice(0, -1))) }
                 </ListItem>
               </List>
-            </Flex>
+            </Box>
 
-            <Flex alignChildrenHorizontal="middle" direction="horizontal">
+            <Box alignChildrenHorizontal="middle" flex="horizontal">
               <Buttons>
                 <Button onClick={ () => {
                   onStart();
@@ -83,19 +83,19 @@ export default (props: Props) => {
                   <Icon name="Refresh" size="1rem" />
                 </Button>
               </Buttons>
-            </Flex>
-          </Flex>
+            </Box>
+          </Box>
         </Appear>
-      </Flex>
+      </Box>
 
-      <Flex alignChildren="middle" direction="horizontal">
+      <Box alignChildren="middle" flex="horizontal">
         <Link
             onClick={ () => setCodeVisible(!isCodeVisible) }
             strong
             underline>
           { isCodeVisible ? 'Back to Runner' : 'See solution code' }
         </Link>
-      </Flex>
-    </Flex>
+      </Box>
+    </Box>
   );
 };

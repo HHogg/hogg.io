@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Flex, Text } from 'preshape';
+import { Box, Text } from 'preshape';
 import { fromISO } from '../../utils/date';
 import Header from '../Header/Header';
 import Metas from '../Metas/Metas';
@@ -21,35 +21,35 @@ const WritingPage: React.FC<Props> = (props) => {
           image={ imageOG }
           title={ title } />
 
-      <Flex direction="vertical" gap="x6" grow tag="article">
-        <Flex
+      <Box flex="vertical" gap="x6" grow tag="article">
+        <Box
             backgroundColor="background-shade-1"
-            direction="vertical"
+            flex="vertical"
             gap="x6"
             padding="x6"
             textColor="text-shade-1"
             theme="night">
-          <Flex>
+          <Box>
             <Header />
-          </Flex>
+          </Box>
 
-          <Flex>
-            <Flex maxWidth="600px" paddingVertical="x6">
-              <Text heading margin="x2" size="x4" strong tag="h1">{ title }</Text>
-              <Text heading margin="x2" size="x2" tag="h2">{ description }</Text>
-              <Text aria-label="article date" heading margin="x2" size="x1" strong>{ fromISO(date) }</Text>
-            </Flex>
-          </Flex>
-        </Flex>
+          <Box>
+            <Box maxWidth="600px" paddingVertical="x6">
+              <Text heading margin="x2" size="x5" strong tag="h1">{ title }</Text>
+              <Text heading margin="x2" size="x3" tag="h2">{ description }</Text>
+              <Text aria-label="article date" heading margin="x2" size="x1">{ fromISO(date) }</Text>
+            </Box>
+          </Box>
+        </Box>
 
-        <Flex backgroundColor="background-shade-1" grow padding="x6">
-          <Flex>
+        <Box backgroundColor="background-shade-1" grow padding="x6">
+          <Box>
             { children }
-          </Flex>
+          </Box>
 
-          <Flex paddingVertical="x16" />
-        </Flex>
-      </Flex>
+          <Box paddingVertical="x16" />
+        </Box>
+      </Box>
     </React.Fragment>
   );
 };

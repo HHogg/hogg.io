@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Route } from 'react-router-dom';
-import { Flex, FlexProps, Icon, Link, Text, ThemeSwitcher } from 'preshape';
+import { Box, BoxProps, Icon, Link, Text, ThemeSwitcher } from 'preshape';
 import { RootContext } from '../Root';
 
-interface Props extends FlexProps {
+interface Props extends BoxProps {
   description?: string;
   themeable?: boolean;
   title?: string;
@@ -14,46 +14,46 @@ const Header = (props: Props) => {
   const { onChangeTheme, theme } = React.useContext(RootContext);
 
   return (
-    <Flex { ...rest }
+    <Box { ...rest }
         alignChildrenHorizontal="between"
-        direction="horizontal"
+        flex="horizontal"
         gap="x4"
         margin="x6">
-      <Flex alignSelf="middle">
+      <Box alignSelf="middle">
         <Route path="/:nested">
           <Link to="/">
-            <Flex direction="horizontal">
-              <Flex>
+            <Box flex="horizontal">
+              <Box>
                 <Icon name="ChevronLeft" size="24px" />
-              </Flex>
-              <Flex>
+              </Box>
+              <Box>
                 <Text strong>Back</Text>
-              </Flex>
-            </Flex>
+              </Box>
+            </Box>
           </Link>
         </Route>
-      </Flex>
+      </Box>
 
       { title && (
         <React.Fragment>
-          <Flex borderSize="x1" />
+          <Box borderSize="x1" />
 
-          <Flex grow>
-            <Text strong>{ title }</Text>
+          <Box grow>
+            <Text size="x3" strong>{ title }</Text>
 
             { description && (
-              <Text size="x1">{ description }</Text>
+              <Text>{ description }</Text>
             ) }
-          </Flex>
+          </Box>
         </React.Fragment>
       ) }
 
       { themeable && (
-        <Flex>
+        <Box>
           <ThemeSwitcher onChange={ onChangeTheme } theme={ theme } />
-        </Flex>
+        </Box>
       ) }
-    </Flex>
+    </Box>
   );
 };
 
