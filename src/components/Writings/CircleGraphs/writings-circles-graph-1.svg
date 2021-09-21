@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300px" height="260px" viewBox="0 0 300 260" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>writings-circles-graph-1</title>
+    <g id="writings-circles-graph-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M84,128 C109.537449,134 125.870783,123 133,95" id="Path-32" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M100,54 C68.3947894,43.9330667 46.7281227,52.9330667 35,81" id="Path-32" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M133,95 C111,93.1612823 100,79.1612823 100,53" id="Path-32-Copy" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M183,56 C161.145229,27.1236582 133.478562,26.1236582 100,53" id="Path-32-Copy" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M173,140 C176.333333,91.7185995 152,63.0519328 100,54" id="Path-32-Copy" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M173,140 C146.333333,155.99575 116.666667,151.99575 84,128" id="Path-32-Copy" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M100,54 C72.2240287,78 66.8906954,102.666667 84,128" id="Path-32-Copy" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M173,140 C186.09541,103.333333 210.762076,87 247,91" id="Path-33" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M247,91 C236.185712,56 214.852378,44.3333333 183,56" id="Path-34" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M173.301205,140 C178.969148,174.666667 162.20208,193.666667 123,197" id="Path-35" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M123,197 C55.3286321,187.895779 25.9952987,149.229112 35,81" id="Path-36" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M123,197 C158.111141,229.134353 185.111141,227.467687 204,192" id="Path-37" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <path d="M173,140 C231.827445,116.0292 265.494112,121.0292 274,155" id="Path-38" stroke="#1E1B18" stroke-width="2" stroke-dasharray="5,1"></path>
+        <circle id="Oval" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="183" cy="56" r="4"></circle>
+        <circle id="Oval-Copy" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="173" cy="140" r="4"></circle>
+        <circle id="Oval-Copy-6" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="123" cy="197" r="4"></circle>
+        <circle id="Oval-Copy-7" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="247" cy="91" r="4"></circle>
+        <circle id="Oval-Copy-8" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="204" cy="192" r="4"></circle>
+        <circle id="Oval-Copy-9" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="274" cy="155" r="4"></circle>
+        <circle id="Oval-Copy-2" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="100" cy="53" r="4"></circle>
+        <circle id="Oval-Copy-3" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="84" cy="128" r="4"></circle>
+        <circle id="Oval-Copy-4" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="35" cy="81" r="4"></circle>
+        <circle id="Oval-Copy-5" stroke="#1E1B18" stroke-width="2" fill="#5C7CFA" cx="133" cy="95" r="4"></circle>
+    </g>
+</svg>

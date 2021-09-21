@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Box, BoxProps, Text } from 'preshape';
+import * as React from 'react';
 
 interface Props extends BoxProps {
   description?: string;

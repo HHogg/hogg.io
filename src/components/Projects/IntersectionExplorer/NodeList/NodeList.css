@@ -1,0 +1,13 @@
+.NodeList__item {
+  width: 100%;
+  background-color: var(--color-text--shade-1);
+  color: var(--color-background--shade-1);
+  transition-property: transform, width;
+  transition-duration: var(--transition-time--base);
+  transition-timing-function: var(--transition-function);
+}
+
+.NodeList__item--next {
+  width: calc(100% - var(--size--x8));
+  transform: translateX(var(--size--x8));
+}

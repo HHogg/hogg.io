@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Box, Label, Labels, Text } from 'preshape';
 import { DateTime } from 'luxon';
+import { Box, Label, Labels, Text } from 'preshape';
+import * as React from 'react';
 import { Experience } from '../../Types';
 
 interface Props extends Experience {
@@ -25,7 +25,7 @@ const ExperienceComponent = (props: Props) => {
                 borderRadius="x1"
                 paddingHorizontal="x2"
                 paddingVertical="x1"
-                size="x1"
+                size="x2"
                 strong
                 textColor="light-shade-1">
               Now
@@ -53,7 +53,7 @@ const ExperienceComponent = (props: Props) => {
               borderRadius="x1"
               paddingHorizontal="x2"
               paddingVertical="x1"
-              size="x1"
+              size="x2"
               strong
               textColor="light-shade-1">
             { DateTime.fromISO(date).toFormat('yyyy') }
@@ -62,14 +62,20 @@ const ExperienceComponent = (props: Props) => {
       </Box>
 
       <Box backgroundColor="background-shade-2" basis="0" grow padding="x6">
-        <Text size="x3" strong>{ company }</Text>
+        <Text size="x4" strong>{ company }</Text>
         <Text strong>{ role }</Text>
-        <Text margin="x2">{ description }</Text>
-        <Labels margin="x3">
-          { tags.map((tag) =>
-            <Label key={ tag }>{ tag } </Label>
-          ) }
-        </Labels>
+
+        { description && (
+          <Text margin="x2">{ description }</Text>
+        ) }
+
+        { tags && (
+          <Labels margin="x3">
+            { tags.map((tag) =>
+              <Label key={ tag }>{ tag } </Label>
+            ) }
+          </Labels>
+        ) }
       </Box>
     </Box>
   );

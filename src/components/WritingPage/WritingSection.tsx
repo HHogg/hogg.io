@@ -1,16 +1,18 @@
-import * as React from 'react';
 import { Text, TextProps } from 'preshape';
+import React, { forwardRef, PropsWithChildren, RefForwardingComponent } from 'react';
 
 export interface Props extends TextProps {}
 
-const WritingSection: React.FC<Props> = (props) => {
+const WritingSection: RefForwardingComponent<HTMLElement, PropsWithChildren<Props>> = (props, ref) => {
   const { maxWidth = '600px', ...rest } = props;
 
   return (
     <Text { ...rest }
-        margin="x12"
-        maxWidth={ maxWidth } />
+        margin="x16"
+        maxWidth={ maxWidth }
+        ref={ ref }
+        tag="div" />
   );
 };
 
-export default WritingSection;
+export default forwardRef(WritingSection);

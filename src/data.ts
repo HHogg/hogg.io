@@ -30,11 +30,24 @@ const data: Data = {
       'tags': ['typescript', 'css', 'react'],
       'role': 'Tech Lead',
     },
+    'Spotify': {
+      'company': 'Spotify',
+      'date': '2021-08-30',
+      'role': 'Senior Engineer',
+    },
   },
 
   projects: {
+    'CircleGraph': {
+      'description': 'An application, for describing and visualising the algorithm that calculates circle intersections with graphs.',
+      'image': require('./assets/circle-graph.png'),
+      'imageOG': require('./assets/circle-graph.png'),
+      'tags': ['typescript', 'react', 'geometry', 'svg'],
+      'title': 'Circle Graph',
+      'to': '/projects/circle-graph',
+    },
     'Circles': {
-      'description': 'A web application for creating artwork by filling in the intersection areas of overlapping circles. Using an experimental way of calculating intersections areas with computational geometry.',
+      'description': 'A web application for creating artwork by filling in the intersection areas of overlapping circles. Using an experimental way of calculating intersections areas with graphs.',
       'href': 'https://circles.hogg.io',
       'image': require('./assets/circles.svg'),
       'tags': ['typescript', 'react', 'geometry'],
@@ -72,24 +85,40 @@ const data: Data = {
   },
 
   writings: {
+    'CircleGraphs': {
+      'id': 'CircleGraphs',
+      'date': '2021-08-19',
+      'description': 'An explanation in using graphs to find intersections of geometry by conditionally and dynamically creating connections that follow a set of rules.',
+      'imageOG': require('./assets/circles.png'),
+      'tags': ['svg', 'visualisation', 'geometry', 'data structures', 'graphs', 'bitset'],
+      'title': 'Finding circle intersections with graphs',
+      'to': '/writings/circle-graphs',
+    },
     'CircleIntersections': {
+      'id': 'CircleIntersections',
       'date': '2018-08-17',
       'description': 'An experiment into calculating all of the regions of intersecting circles using a computational geometric algorithm.',
       'imageOG': require('./assets/circles.png'),
+      'tags': ['svg', 'visualisation', 'geometry', 'data structures', 'graphs', 'bitset'],
       'title': 'Identifying the areas of intersecting circles with computational geometry',
       'to': '/writings/circle-intersections',
+      'unlisted': true,
     },
     'GeneratingTessellations': {
+      'id': 'GeneratingTessellations',
       'date': '2020-01-31',
       'description': 'An explanation of the GomJau-Hogg’s notation for generating all of the regular, semiregular (uniform) and demigular (k-uniform, up to at least k=3) in a consistent, unique and unequivocal manner.',
       'imageOG': require('./assets/antwerp.png'),
+      'tags': ['svg', 'visualisation', 'geometry', 'tessellations', 'nomenclature'],
       'title': 'GomJau-Hogg’s notation for automatic generation of k-uniform tessellations',
       'to': '/writings/generating-tessellations',
     },
     'SnakeSolution': {
+      'id': 'SnakeSolution',
       'date': '2020-04-13',
       'description': 'An exploration into finding the most optimal programmatic solution for completing the classic game of snake.',
       'imageOG': require('./assets/snake.png'),
+      'tags': ['svg', 'visualisation', 'data structures', 'pathfinding', 'heuristics', 'game'],
       'title': 'Finding the optimal solution for solving the classic game of Snake with pathfinding and heuristics',
       'to': '/writings/snake-solution',
     },

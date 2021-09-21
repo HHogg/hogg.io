@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { Appear, Buttons, Button, CodeBlock, Box, Icon, Link, List, ListItem, Text, useIntersectionObserver } from 'preshape';
 import { getAverage, getScore, SnakeContext, SnakeViewer } from '@hhogg/snake';
+import { Appear, Buttons, Button, CodeBlock, Box, Icon, Link, List, ListItem, Text, useIntersectionObserver } from 'preshape';
+import * as React from 'react';
 import 'brace/mode/javascript';
 
 interface Props {
@@ -18,6 +18,7 @@ export default (props: Props) => {
       onPause();
       onReset();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInView]);
 
   return (

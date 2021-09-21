@@ -1,10 +1,24 @@
 {
-  "extends": ["eslint-config-preshape"],
-  "env": {
-    "es6": true
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "eslint-config-preshape"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   "rules": {
-    "indent": "off",
-    "@typescript-eslint/indent": [2, "error"]
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/no-empty-interface": "off",
+    "react/display-name": [0],
+    "react/prop-types": [0]
   }
 }

@@ -1,7 +1,7 @@
-import * as React from 'react';
+import { Antwerp, AntwerpProps } from '@hhogg/antwerp';
 import { scaleLinear } from 'd3-scale';
 import { Appear, Box, colorLightShade1, useIntersectionObserver, themes } from 'preshape';
-import { Antwerp, AntwerpProps } from '@hhogg/antwerp';
+import * as React from 'react';
 import { RootContext } from '../../Root';
 
 export default ({ animate, ...rest }: AntwerpProps & { animate?: boolean }) => {

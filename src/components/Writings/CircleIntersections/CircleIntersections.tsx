@@ -1,5 +1,5 @@
+import { Alert, Image, Link, Text } from 'preshape';
 import * as React from 'react';
-import { Image, Link } from 'preshape';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
@@ -11,6 +11,15 @@ import WritingSection from '../../WritingPage/WritingSection';
 const CircleIntersections = () => {
   return (
     <WritingPage { ...data.writings.CircleIntersections }>
+      <WritingSection>
+        <Alert color="accent" padding="x3">
+          <Text strong>
+            Please <Link to="/writings/circle-graphs" underline>click here</Link> for
+            the rewritten and updated version of this article.
+          </Text>
+        </Alert>
+      </WritingSection>
+
       <WritingSection>
         <WritingParagraph>
           Calculating these regions can be solved completely geometrically, by iterating

@@ -1,10 +1,8 @@
-import * as React from 'react';
+import configurations from '@hhogg/antwerp/configurations.json';
 import groupBy from 'lodash.groupby';
-import { Antwerp } from '@hhogg/antwerp';
 import {
   BulletPoint,
   BulletPoints,
-  Image,
   Link,
   Table,
   TableBody,
@@ -14,15 +12,15 @@ import {
   TableRow,
   Text,
 } from 'preshape';
+import * as React from 'react';
 import data from '../../../data';
-import configurations from '@hhogg/antwerp/configurations.json';
-import AntwerpExample from './AntwerpExample';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
 import WritingSection from '../../WritingPage/WritingSection';
+import AntwerpExample from './AntwerpExample';
 
 const configurationsGrouped = groupBy(configurations, 'vertices');
 
@@ -428,14 +426,14 @@ const GeneratingTessellations = () => {
       <WritingSection
           backgroundColor="background-shade-2"
           padding="x6"
-          size="x1">
+          size="x2">
         <WritingParagraph>
           <Text inline strong>Table 1.</Text> Transformation
           of Cundy & Rollett’s notation to GomJau-Hogg’s notation, up to { configurations[configurations.length - 1].vertices }
           . All of these can be seen in the Tilings explorer application <Link href="https://antwerp.hogg.io/library" target="_Antwerp">https://antwerp.hogg.io/library</Link>
         </WritingParagraph>
 
-        <Table size="x1" >
+        <Table size="x2" >
           <TableHeader>
             <TableRow>
               <TableHeaderCell>

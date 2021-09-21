@@ -1,9 +1,11 @@
+import { useWindowScrollTo, useTheme, TypeTheme } from 'preshape';
 import * as React from 'react';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
-import { useWindowScrollTo, useTheme, TypeTheme } from 'preshape';
 import Landing from './Landing/Landing';
 import Metas from './Metas/Metas';
+import CircleGraph from './Projects/CircleGraph/CircleGraph';
 import Spirals from './Projects/Spirals/Spirals';
+import CircleGraphs from './Writings/CircleGraphs/CircleGraphs';
 import CircleIntersections from './Writings/CircleIntersections/CircleIntersections';
 import GeneratingTessellations from './Writings/GeneratingTessellations/GeneratingTessellations';
 import SnakeSolution from './Writings/SnakeSolution/SnakeSolution';
@@ -12,9 +14,9 @@ export const RootContext = React.createContext<{
   onChangeTheme: (theme: TypeTheme) => void;
   theme: TypeTheme;
 }>({
-  onChangeTheme: () => undefined,
-  theme: 'day',
-});
+      onChangeTheme: () => undefined,
+      theme: 'day',
+    });
 
 
 const Site = () => {
@@ -36,8 +38,10 @@ const Site = () => {
       <Metas description="My personal projects and experience." />
       <Switch>
         <Route component={ Landing } exact path="/" />
+        <Route component={ CircleGraph } path="/projects/circle-graph" />
         <Route component={ Spirals } path="/projects/spirals" />
         <Route component={ CircleIntersections } path="/writings/circle-intersections" />
+        <Route component={ CircleGraphs } path="/writings/circle-graphs" />
         <Route component={ GeneratingTessellations } path="/writings/generating-tessellations" />
         <Route component={ SnakeSolution } path="/writings/snake-solution" />
       </Switch>

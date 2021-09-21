@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Link, Text } from 'preshape';
+import * as React from 'react';
 import { Writing } from '../../Types';
 import { fromISO } from '../../utils/date';
 
@@ -17,7 +17,7 @@ const WritingComponent = (props: Props) => {
         to={ to }>
       <Text margin="x1" strong>{ title }</Text>
       <Text margin="x1">{ description }</Text>
-      <Text margin="x2" size="x1" strong>{ fromISO(date) }</Text>
+      <Text margin="x2" size="x2" strong>{ fromISO(date) }</Text>
     </Link>
   );
 };

@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { motion } from 'framer';
 import { Box, Grid, Link, Text, Icon } from 'preshape';
+import * as React from 'react';
 import data from '../../data';
 import Experience from '../Experience/Experience';
+import Header from '../Header/Header';
 import Project from '../Project/Project';
 import Writing from '../Writing/Writing';
-import Header from '../Header/Header';
 
 export default function Landing() {
   return (
@@ -18,7 +18,7 @@ export default function Landing() {
           gap="x16">
         <Box maxWidth="600px" paddingVertical="x3">
           <Box margin="x6">
-            <Text margin="x2" size="x6" strong>
+            <Text margin="x2" size="x7" strong>
               Hi. <motion.span
                   animate={ { rotate: ['0deg', '25deg', '0deg', '25deg', '0deg', '25deg', '0deg'] } }
                   initial={ { rotate: '0deg' } }
@@ -32,11 +32,11 @@ export default function Landing() {
                 👋
               </motion.span>
             </Text>
-            <Text margin="x2" size="x5" strong>I'm Harrison Hogg, a Software Engineer from Brighton, UK.</Text>
+            <Text margin="x2" size="x6" strong>I'm Harrison Hogg, a Software Engineer from Brighton, UK.</Text>
           </Box>
 
           <Box margin="x6">
-            <Text margin="x3" size="x3">I love designing and building things, which frequently
+            <Text margin="x3" size="x4">I love designing and building things, which frequently
               sends me down rabbit holes on side projects. I studied at <Link href="https://www.open.ac.uk/" underline>The Open University</Link> where
               I received my BSc Computing and Design Honours degree. When I'm not stringing characters together, I'm
               a less than stable climbing frame for my two daughters 👧🏼👩🏼.</Text>
@@ -45,7 +45,7 @@ export default function Landing() {
 
         <Box maxWidth="1240px" paddingVertical="x3">
           <Box maxWidth="600px">
-            <Text size="x4" strong>Personal Projects</Text>
+            <Text size="x5" strong>Personal Projects</Text>
             <Text margin="x2">Some of my favourite and finished personal side projects.</Text>
           </Box>
 
@@ -61,7 +61,7 @@ export default function Landing() {
 
         <Box maxWidth="600px" paddingVertical="x3">
           <Box margin="x6">
-            <Text margin="x2" size="x4" strong>Writings</Text>
+            <Text margin="x2" size="x5" strong>Writings</Text>
             <Text margin="x2">
               Usually when doing one of my side projects, I find something to write about and then
               add them to this list. It's like an infrequent blog with no consistent theme.
@@ -70,6 +70,7 @@ export default function Landing() {
 
           { Object
               .values(data.writings)
+              .filter((a) => !a.unlisted)
               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
               .map((writing) => (
                 <Writing { ...writing } key={ writing.title } />
@@ -78,7 +79,7 @@ export default function Landing() {
 
         <Box maxWidth="600px" paddingVertical="x3">
           <Box margin="x10">
-            <Text margin="x2" size="x4" strong>Experience</Text>
+            <Text margin="x2" size="x5" strong>Experience</Text>
             <Text margin="x2">A timeline of where and what I've worked on over the years.</Text>
           </Box>
 
@@ -119,4 +120,4 @@ export default function Landing() {
       </Box>
     </Box>
   );
-};
+}

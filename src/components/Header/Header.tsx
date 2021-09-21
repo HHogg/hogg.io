@@ -1,6 +1,6 @@
+import { Box, BoxProps, Icon, Link, Text, ThemeSwitcher } from 'preshape';
 import * as React from 'react';
 import { Route } from 'react-router-dom';
-import { Box, BoxProps, Icon, Link, Text, ThemeSwitcher } from 'preshape';
 import { RootContext } from '../Root';
 
 interface Props extends BoxProps {
@@ -38,8 +38,8 @@ const Header = (props: Props) => {
         <React.Fragment>
           <Box borderSize="x1" />
 
-          <Box grow>
-            <Text size="x3" strong>{ title }</Text>
+          <Box basis="0" grow>
+            <Text size="x4" strong>{ title }</Text>
 
             { description && (
               <Text>{ description }</Text>

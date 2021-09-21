@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Snake } from '@hhogg/snake';
+import * as React from 'react';
 import SnakeRunnerViewer from './SnakeRunnerViewer';
 
 interface Props {

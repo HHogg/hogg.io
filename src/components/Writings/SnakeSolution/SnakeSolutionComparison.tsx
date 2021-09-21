@@ -1,8 +1,8 @@
-import * as React from 'react';
-import openColor from 'open-color';
 import { SeriesPointXY, Viz, VizSVG, VizSVGAxisX, VizSVGAxisY, VizSVGCircles, VizSVGGridLinesAxisX, VizSVGGridLinesAxisY, VizSVGLine } from '@bitrise/bitviz';
-import { sizeX8Px, themes, Box, List, ListItem, Text } from 'preshape';
 import numbro from 'numbro';
+import openColor from 'open-color';
+import { sizeX8Px, themes, Box, List, ListItem, Text } from 'preshape';
+import * as React from 'react';
 
 const format = (v: number) => numbro(v).format({
   average: true,
@@ -39,7 +39,7 @@ export default (props: Props) => {
   return (
     <Box basis="0" flex="vertical" gap="x3" grow>
       <Box>
-        <Text align="middle" margin="x2" size="x1" strong>{ title }</Text>
+        <Text align="middle" margin="x2" size="x2" strong>{ title }</Text>
 
         <Box flex="horizontal">
           <Box basis="0" grow>
@@ -110,7 +110,7 @@ export default (props: Props) => {
                 </Box>
 
                 <Box>
-                  <Text size="x1" strong>
+                  <Text size="x2" strong>
                     { name }
                   </Text>
                 </Box>

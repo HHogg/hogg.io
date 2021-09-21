@@ -1,5 +1,4 @@
 import fs from 'fs';
-import * as React from 'react';
 import {
   BulletPoint,
   BulletPoints,
@@ -8,6 +7,7 @@ import {
   Link,
   Text,
 } from 'preshape';
+import * as React from 'react';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';

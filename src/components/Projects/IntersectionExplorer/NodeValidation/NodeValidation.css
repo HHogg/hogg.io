@@ -1,0 +1,18 @@
+.NodeValidation {
+  padding: var(--border-size--x1);
+  gap: var(--border-size--x1);
+}
+
+.NodeValidation__indicator {
+  transition-property: background-color;
+  transition-duration: var(--transition-time--base);
+  transition-timing-function: var(--transition-function);
+}
+
+.NodeValidation__badge {
+  display: inline-flex;
+  margin: 0.125rem 0.125rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--size--x2);
+  line-height: 1;
+}

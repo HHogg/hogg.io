@@ -1,6 +1,6 @@
-import * as React from 'react';
-import flatten from 'lodash.flatten';
 import { TypeHistory, getScore } from '@hhogg/snake';
+import flatten from 'lodash.flatten';
+import * as React from 'react';
 import runEuclideanDistance from './runEuclideanDistance.json';
 import runHamiltonianCycle from './runHamiltonianCycle.json';
 import runManhattanDistance from './runManhattanDistance.json';

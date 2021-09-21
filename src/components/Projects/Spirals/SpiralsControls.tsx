@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Box, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
+import * as React from 'react';
 import { ArchimedesSpiral, FermatSpiral, UlamSpiral, VogelSpiral, ZeroSpiral, TypeAlgorithm } from './Algorithms';
 import { Config } from './Spirals';
 

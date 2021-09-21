@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { mat3 } from 'gl-matrix';
-import regl from 'regl';
 import BezierEasing from 'bezier-easing';
+import { mat3 } from 'gl-matrix';
 import { transitionTimingFunction, Box } from 'preshape';
-import { TypeVector } from './Algorithms';
-import useStateTween from './useStateTween';
+import * as React from 'react';
+import regl from 'regl';
 import frag from './shader.frag';
 import vert from './shader.vert';
+import { TypeVectorWithSize } from './Spirals';
+import useStateTween from './useStateTween';
 
 interface Props {
   height: number;
-  vectors: TypeVector[];
+  vectors: TypeVectorWithSize[];
   width: number;
 }
 
@@ -68,10 +68,8 @@ const SpiralsVisual = (props: Props) => {
             primitive: 'points',
             attributes: buffers,
             uniforms: {
-              /* eslint-disable @typescript-eslint/camelcase */
               u_projection: mat3.projection(mat3.create(), width, height),
               u_t: refT.current,
-              /* eslint-enable @typescript-eslint/camelcase */
             },
           })();
 

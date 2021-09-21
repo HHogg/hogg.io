@@ -14,6 +14,6 @@ void main () {
 
   fragColor = vec4(1, 1, 1, 1);
 
-  gl_PointSize = vector[2];
+  gl_PointSize = vector[2] * 2.0;
   gl_Position = vec4(u_projection * position, 1);
 }

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import SnakeSolutionComparisonAverage from './SnakeSolutionComparisonAverage';
-import SnakeSolutionComparisonScore from './SnakeSolutionComparisonScore';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
+import SnakeSolutionComparisonAverage from './SnakeSolutionComparisonAverage';
+import SnakeSolutionComparisonScore from './SnakeSolutionComparisonScore';
 
 export default () => (
   <WritingFigs maxWidth="900px">

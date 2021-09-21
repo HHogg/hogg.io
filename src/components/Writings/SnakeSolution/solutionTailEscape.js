@@ -1,4 +1,4 @@
-const adjacentes = (a, xMax, yMax) => [[a[0], a[1] - 1], [a[0] + 1, a[1]], [a[0], a[1] + 1], [a[0] - 1, a[1]]].filter(b => b[0] >= 0 && b[1] >= 0 && b[0] <= xMax && b[1] <= yMax);
+const adjacentes = (a, xMax, yMax) => [[a[0], a[1] - 1], [a[0] + 1, a[1]], [a[0], a[1] + 1], [a[0] - 1, a[1]]].filter((b) => b[0] >= 0 && b[1] >= 0 && b[0] <= xMax && b[1] <= yMax);
 const equals = ([x1, y1], [x2, y2]) => x1 === x2 && y1 === y2;
 const includes = (a, b) => a.some((a) => equals(a, b));
 const difference = (a, b) => a.filter((a) => !includes(b, a));

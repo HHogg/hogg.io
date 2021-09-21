@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Box } from 'preshape';
+import * as React from 'react';
 import Header from '../Header/Header';
 import Metas from '../Metas/Metas';
 

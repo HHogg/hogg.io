@@ -1,12 +1,14 @@
-import * as React from 'react';
 import random from 'lodash.random';
-import data from '../../../data';
 import { Box, useMatchMedia, useResizeObserver } from 'preshape';
+import * as React from 'react';
 import { Box as Rect, Circle, Vector, testPolygonCircle, testCircleCircle } from 'sat';
+import data from '../../../data';
 import ProjectPage from '../../ProjectPage/ProjectPage';
-import { TypeVector, TypeAlgorithm, FermatSpiral, ZeroSpiral } from './Algorithms';
+import { TypeVector, TypeAlgorithm, FermatSpiral } from './Algorithms';
 import SpiralsControls from './SpiralsControls';
 import SpiralsVisual from './SpiralsVisual';
+
+export type TypeVectorWithSize = [number, number, number];
 
 const hasCollided = (shapes: Circle[], circleA: Circle) => {
   for (const circleB of shapes) {
@@ -19,40 +21,26 @@ const hasCollided = (shapes: Circle[], circleA: Circle) => {
 };
 
 const scale = (points: TypeVector[], r0: number): TypeVector[] => {
-  let r1 = 1;
-
-  for (const p of points) {
-    if (p[0] > r1) r1 = p[0];
-    if (p[1] > r1) r1 = p[1];
-  }
-
-  if (r1 < r0) {
-    for (const p of points) {
-      p[0] = p[0] * (r0 / r1);
-      p[1] = p[1] * (r0 / r1);
-    }
-  }
-
-  return points;
+  return points.map(([x, y]) => [x * r0 * 0.5, y * r0 * 0.5]);
 };
 
-const getVectors = (config: Config, size: { height: number; width: number }) => {
+const getVectors = (config: Config, size: { height: number; width: number }): TypeVectorWithSize[] => {
   const bounds = new Rect(new Vector(size.width * -0.5, size.height * -0.5), size.width, size.height).toPolygon();
-  const radii = Array.from({ length: config.shapeCount }).map(() => random(10, 80)).sort((a, b) => b - a);
+  const radii = Array.from({ length: config.shapeCount }).map(() => random(10, 60)).sort((a, b) => b - a);
   const points = config.algorithm(config.vectorCount);
-  const pointsScaled = scale(points, Math.min(size.height, size.width) / 2);
-  const vectors: TypeVector[] = [];
+  const pointsScaled = scale(points, Math.min(size.height, size.width));
+  const vectors: TypeVectorWithSize[] = [];
   const circles: Circle[] = [];
 
   if (config.showShapes) {
     for (const radius of radii) {
       for (const [x, y] of pointsScaled) {
-        const circle = new Circle(new Vector(x, y), (radius / 4) + config.padding);
+        const circle = new Circle(new Vector(x, y), (radius / 4) + config.padding); // Why "/ 4"?
         const shouldPlace = testPolygonCircle(bounds, circle) && !hasCollided(circles, circle);
 
         if (shouldPlace) {
           circles.push(circle);
-          vectors.push([x, y, radius]);
+          vectors.push([circle.pos.x, circle.pos.y, radius]);
           break;
         }
       }
@@ -60,7 +48,7 @@ const getVectors = (config: Config, size: { height: number; width: number }) => 
   }
 
   for (let i = 0; i < (pointsScaled.length - circles.length); i++) {
-    vectors.unshift(config.showVectors ? pointsScaled[i] : [0, 0, 0]);
+    vectors.push(config.showVectors ? [...pointsScaled[i], 2] : [0, 0, 0]);
   }
 
   return vectors;
@@ -77,7 +65,7 @@ export interface Config {
 
 const defaultConfig: Config = {
   algorithm: FermatSpiral,
-  padding: 5,
+  padding: 10,
   shapeCount: 100,
   showShapes: true,
   showVectors: true,
@@ -88,12 +76,9 @@ const Spirals = () => {
   const match = useMatchMedia(['600px']);
   const [size, ref] = useResizeObserver();
   const [config, setConfig] = React.useState<Config>(defaultConfig);
-  const [vectors, setState] = React.useState<TypeVector[]>(getVectors({
-    ...config,
-    algorithm: ZeroSpiral,
-  }, size));
+  const [vectors, setState] = React.useState<TypeVectorWithSize[]>([]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     setState(getVectors(config, size));
   }, [config, size]);
 

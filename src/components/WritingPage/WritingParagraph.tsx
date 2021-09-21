@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { Text, TextProps } from 'preshape';
+import * as React from 'react';
 
 const WritingParagraph: React.FC<TextProps> = (props) => {
   return (
