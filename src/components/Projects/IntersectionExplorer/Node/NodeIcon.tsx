@@ -1,4 +1,4 @@
-import { sizeX4Px, sizeX6Px, sizeX8Px } from 'preshape';
+import { sizeX6Px, sizeX8Px } from 'preshape';
 import React from 'react';
 import GraphVisualisationEdge from '../GraphVisualisation/GraphVisualisationEdge';
 import GraphVisualisationNode from '../GraphVisualisation/GraphVisualisationNode';
@@ -12,7 +12,7 @@ interface Props extends NodeState {
   n: number;
 }
 
-const SIZE = sizeX4Px;
+const SIZE = 6 * 2;
 
 const PATH_LEFT = `
   M ${SIZE / 2} ${SIZE / 2}
@@ -59,7 +59,6 @@ const NodeIcon = (props: Props) => {
           isFocused={ isFocused }
           n={ n }
           onClick={ onClick }
-          r={ SIZE / 2 }
           x={ SIZE / 2 }
           y={ SIZE / 2 } />
     </svg>

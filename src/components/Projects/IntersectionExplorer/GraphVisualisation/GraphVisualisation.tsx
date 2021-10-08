@@ -156,7 +156,6 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
                 n={ i }
                 onClick={ state.isSelectable ? handleNodeClick(index) : undefined }
                 onPointerOver={ handleNodeOver(index) }
-                r={ 6 }
                 x={ x }
                 y={ y } />
           )) }

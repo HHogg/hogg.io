@@ -5,7 +5,6 @@ import { NodeState } from '../useGraph';
 interface Props extends NodeState, React.SVGAttributes<SVGGElement> {
   isFocused?: boolean;
   n: number;
-  r: number;
   x: number;
   y: number;
 }
@@ -19,7 +18,6 @@ const GraphVisualisationNode = (props: Props) => {
     isValid: [isValid] = [],
     isVisible,
     isSelectable,
-    r,
     x,
     y,
     ...rest
@@ -38,8 +36,7 @@ const GraphVisualisationNode = (props: Props) => {
   return (
     <g { ...rest }
         className={ classes }
-        data-visible={ isVisible }
-        style={ { '--r': r } }>
+        data-visible={ isVisible }>
       <circle
           className="Graph__node-point"
           cx={ x }

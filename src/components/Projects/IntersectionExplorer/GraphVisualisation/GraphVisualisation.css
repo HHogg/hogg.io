@@ -1,5 +1,9 @@
 /* stylelint-disable no-descending-specificity,no-duplicate-selectors */
 
+:root {
+  --r: 6px;
+}
+
 /**
  * Label Styling
  */

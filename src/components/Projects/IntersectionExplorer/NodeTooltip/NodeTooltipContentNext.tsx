@@ -35,7 +35,9 @@ const NodeTooltipContentNext: FunctionComponent<Props> = (props) => {
                 'text-shade-3' }
               borderRadius="full"
               padding="x1">
-            <Icon name="Cross" size="1rem" />
+            <Icon
+                name={ validation.isValid === false ? 'Cross' : 'Check' }
+                size="1rem" />
           </Box>
 
           <Box shrink>
