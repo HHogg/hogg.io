@@ -56,8 +56,8 @@ const RuleBox = ({ asIcon, description, onClick, number, title }: Props) => {
                 paddingHorizontal="x6"
                 paddingVertical="x3"
                 size="x2">
-              <Box>
-                <Text size="x4" strong>{ number }</Text>
+              <Box grow={ asIcon }>
+                <Text align="middle" size="x4" strong>{ number }</Text>
               </Box>
 
               { !asIcon && (

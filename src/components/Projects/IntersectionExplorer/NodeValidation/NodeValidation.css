@@ -11,8 +11,11 @@
 
 .NodeValidation__badge {
   display: inline-flex;
-  margin: 0.125rem 0.125rem;
   padding: 0.125rem 0.5rem;
   border-radius: var(--size--x2);
   line-height: 1;
+
+  &:not(:only-child) {
+    margin: 0.125rem 0.125rem;
+  }
 }

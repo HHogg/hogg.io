@@ -68,8 +68,8 @@ const GraphVisualisationTraversal = (props: Props) => {
 
   return (
     <motion.g
-        className={ classes } /* 👀 ... you know what */
-        key={ length }
+        className={ classes }
+        key={ length } /* 👀 ... you know what */
         onPointerOver={ onPointerOver }
         strokeDasharray={ `${length} ${length}` }
         transition={ { ...transition, duration: transitionTimeFast / 1000 } }>

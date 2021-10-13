@@ -1,13 +1,15 @@
 import { motion } from 'framer';
-import { Box, Grid, Link, Text, Icon } from 'preshape';
+import { Box, Grid, Link, Text, Icon, useMatchMedia } from 'preshape';
 import * as React from 'react';
-import data from '../../data';
+import data, { experienceSorted, listedWritingsSorted } from '../../data';
 import Experience from '../Experience/Experience';
 import Header from '../Header/Header';
 import Project from '../Project/Project';
 import Writing from '../Writing/Writing';
 
 export default function Landing() {
+  const match = useMatchMedia(['1000px']);
+
   return (
     <Box backgroundColor="background-shade-1" padding="x6">
       <Header />
@@ -59,38 +61,37 @@ export default function Landing() {
           </Grid>
         </Box>
 
-        <Box maxWidth="600px" paddingVertical="x3">
-          <Box margin="x6">
-            <Text margin="x2" size="x5" strong>Writings</Text>
-            <Text margin="x2">
-              Usually when doing one of my side projects, I find something to write about and then
-              add them to this list. It's like an infrequent blog with no consistent theme.
-            </Text>
+        <Box
+            flex={ match('1000px') ? 'horizontal' : 'vertical' }
+            gap="x16"
+            maxWidth="1240px"
+            reverse={ !match('1000px') }>
+          <Box basis="0" grow paddingVertical="x3" shrink>
+            <Box margin="x10">
+              <Text margin="x2" size="x5" strong>Experience</Text>
+              <Text margin="x2">A timeline of where and what I've worked on over the years.</Text>
+            </Box>
+
+            { experienceSorted.map((exp, index) => (
+              <Experience { ...exp }
+                  current={ index === 0 }
+                  key={ exp.date } />
+            )) }
           </Box>
 
-          { Object
-              .values(data.writings)
-              .filter((a) => !a.unlisted)
-              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-              .map((writing) => (
-                <Writing { ...writing } key={ writing.title } />
-              )) }
-        </Box>
+          <Box basis="0" grow paddingVertical="x3" shrink>
+            <Box margin="x6">
+              <Text margin="x2" size="x5" strong>Writings</Text>
+              <Text margin="x2">
+                Usually when doing one of my side projects, I find something to write about and then
+                add them to this list. It's like an infrequent blog with no consistent theme.
+              </Text>
+            </Box>
 
-        <Box maxWidth="600px" paddingVertical="x3">
-          <Box margin="x10">
-            <Text margin="x2" size="x5" strong>Experience</Text>
-            <Text margin="x2">A timeline of where and what I've worked on over the years.</Text>
+            { listedWritingsSorted.map((writing) => (
+              <Writing { ...writing } key={ writing.title } />
+            )) }
           </Box>
-
-          { Object
-              .values(data.experience)
-              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-              .map((exp, index) => (
-                <Experience { ...exp }
-                    current={ index === 0 }
-                    key={ exp.date } />
-              )) }
         </Box>
 
         <Box

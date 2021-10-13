@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import { Box, useMatchMedia } from 'preshape';
 import React, { createContext, useEffect, useRef, useState } from 'react';
 import GraphVisualisation from './GraphVisualisation/GraphVisualisation';
@@ -5,7 +6,6 @@ import NodeList from './NodeList/NodeList';
 import TraversalList from './TraversalList/TraversalList';
 import { Circle, HookResult } from './useGraph';
 import './IntersectionExplorer.css';
-import classnames from 'classnames';
 
 interface Context extends HookResult {
   activeNodeIndex: number;
@@ -95,7 +95,6 @@ const IntersectionExplorer = ({ activeNodeIndex, ...rest }: HookResult & { activ
             grow
             onPointerLeave={ reset }
             onPointerOver={ reset }
-            padding="x10"
             ref={ refContainer }>
           <Box>
             <NodeList

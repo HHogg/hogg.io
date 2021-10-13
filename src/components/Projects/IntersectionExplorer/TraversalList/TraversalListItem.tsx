@@ -24,7 +24,7 @@ const TraversalListItem: React.FunctionComponent<Props> = ({ onPointerOver, trav
   };
 
   return (
-    <Appear animation="Pop" margin="x2">
+    <Appear animation="Pop">
       <motion.div
           animate={ {
             opacity: isFocused ? 1 : 0.25,

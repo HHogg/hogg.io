@@ -1,6 +1,10 @@
 import { Data } from './Types';
 
-const data: Data = {
+const data: Data<
+  'Pure360' | 'Reedsy' | 'Brandwatch' | 'Bitrise' | 'Spotify',
+  'CircleGraph' | 'Circles' | 'Antwerp' | 'Preshape' | 'Snake' | 'Spirals',
+  'CircleGraphs' | 'CircleIntersections' | 'GeneratingTessellations' | 'SnakeSolution',
+> = {
   experience: {
     'Pure360': {
       'company': 'Pure360',
@@ -13,21 +17,21 @@ const data: Data = {
       'company': 'Reedsy',
       'date': '2015-04-01',
       'description': 'Reedsy is a curated marketplace for self publishing authors. They provide a platform to handle connections, communication and payments between authors and professionals, and a suite of tools to write and publish books. My time at Reedsy was spent building the marketplace to connect book publishing professionals, the real-time collaborative book editing application (using Operational Transformation), and the Pattern Library to implement the design system across these two application.',
-      'tags': ['javascript', 'nodejs', 'ruby', 'angular', 'sass'],
+      'tags': ['javascript', 'nodejs', 'ruby', 'angular', 'sass', 'aws'],
       'role': 'Senior Developer',
     },
     'Brandwatch': {
       'company': 'Brandwatch',
       'date': '2015-11-01',
       'description': 'Brandwatch is a social media monitoring platform. They provide tools to monitor, analyse and engage with conversations across the internet. My time at Brandwatch was spent building the frontend to the Audiences (Twitter advertising) product, leading the development of Axiom (the company\'s Pattern Library and Design System) and helping out with various other development projects.',
-      'tags': ['javascript', 'nodejs', 'css', 'react', 'redux'],
+      'tags': ['javascript', 'nodejs', 'css', 'react', 'redux', 'gcp'],
       'role': 'Senior Developer',
     },
     'Bitrise': {
       'company': 'Bitrise & Outlyer (Acquisition)',
       'date': '2018-10-01',
-      'description': 'Bitrise is a continuous integration and delivery platform built for mobile. My time at Bitrise is focused on building and leading the Trace product which is a mobile application performance monitoring tool, that collects metrics, traces and crashes from user mobile devices and aggregates this data to help developers analyse and identify problems in their apps.',
-      'tags': ['typescript', 'css', 'react'],
+      'description': 'Bitrise is a continuous integration and delivery platform built for mobile. My time at Bitrise was focused on building and tech leading the Trace product which is a mobile application performance monitoring tool, that collects metrics, traces and crashes from user mobile devices and aggregates this data to help developers analyse and identify problems in their apps.',
+      'tags': ['typescript', 'css', 'react', 'gcp'],
       'role': 'Tech Lead',
     },
     'Spotify': {
@@ -39,7 +43,7 @@ const data: Data = {
 
   projects: {
     'CircleGraph': {
-      'description': 'An application, for describing and visualising the algorithm that calculates circle intersections with graphs.',
+      'description': 'An application, for describing and visualising an algorithm that calculates circle intersections with graphs.',
       'image': require('./assets/circle-graph.png'),
       'imageOG': require('./assets/circle-graph.png'),
       'tags': ['typescript', 'react', 'geometry', 'svg'],
@@ -124,5 +128,14 @@ const data: Data = {
     },
   },
 };
+
+export const listedWritingsSorted = Object
+  .values(data.writings)
+  .filter((a) => !a.unlisted)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+export const experienceSorted = Object
+  .values(data.experience)
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 export default data;

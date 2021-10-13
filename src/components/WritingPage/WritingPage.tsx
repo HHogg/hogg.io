@@ -1,6 +1,6 @@
 import { Box, Icon, Label, Labels, Link, Separator, Text, useMatchMedia } from 'preshape';
 import * as React from 'react';
-import data from '../../data';
+import { listedWritingsSorted } from '../../data';
 import { Writing } from '../../Types';
 import { fromISO } from '../../utils/date';
 import Header from '../Header/Header';
@@ -8,15 +8,11 @@ import Metas from '../Metas/Metas';
 
 interface Props extends Writing {}
 
-const listedWritings = Object
-  .keys(data.writings)
-  .filter((key) => !data.writings[key].unlisted);
-
 const WritingPage: React.FC<Props> = (props) => {
   const { children, date, description, id, imageOG, tags, title } = props;
-  const index = listedWritings.indexOf(id);
-  const previous = listedWritings[index - 1];
-  const next = listedWritings[index + 1];
+  const index = listedWritingsSorted.findIndex((writing) => writing.id === id);
+  const previous = listedWritingsSorted[index - 1];
+  const next = listedWritingsSorted[index + 1];
 
   const match = useMatchMedia(['600px']);
 
@@ -86,12 +82,12 @@ const WritingPage: React.FC<Props> = (props) => {
               gap="x3"
               maxWidth={ match('600px') ? '33%' : undefined }
               padding="x6"
-              to={ data.writings[previous].to }>
+              to={ previous.to }>
             <Icon name="ChevronLeft" size="2rem" />
 
             <Box shrink>
-              <Text margin="x2" size="x2" strong tag="h1">{ data.writings[previous].title }</Text>
-              <Text margin="x2" size="x1" tag="h2">{ data.writings[previous].description }</Text>
+              <Text margin="x2" size="x2" strong tag="h1">{ previous.title }</Text>
+              <Text margin="x2" size="x1" tag="h2">{ previous.description }</Text>
             </Box>
           </Link>
         ) : <Box /> }
@@ -103,10 +99,10 @@ const WritingPage: React.FC<Props> = (props) => {
               gap="x3"
               maxWidth={ match('600px') ? '33%' : undefined }
               padding="x6"
-              to={ data.writings[next].to }>
+              to={ next.to }>
             <Box shrink>
-              <Text margin="x2" size="x2" strong tag="h1">{ data.writings[next].title }</Text>
-              <Text margin="x2" size="x1" tag="h2">{ data.writings[next].description }</Text>
+              <Text margin="x2" size="x2" strong tag="h1">{ next.title }</Text>
+              <Text margin="x2" size="x1" tag="h2">{ next.description }</Text>
             </Box>
 
             <Icon name="ChevronRight" size="2rem" />

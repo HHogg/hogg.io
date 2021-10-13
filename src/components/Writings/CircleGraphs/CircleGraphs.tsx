@@ -1,5 +1,5 @@
 import Bitset from 'bitset';
-import { Box, BlockQuote, Code, Image, Link, Text } from 'preshape';
+import { Box, BlockQuote, Code, Image, Link, Text, useMatchMedia } from 'preshape';
 import React, { useRef, useState } from 'react';
 import data from '../../../data';
 import IntersectionExplorer, { sampleCircles } from '../../Projects/IntersectionExplorer/IntersectionExplorer';
@@ -44,6 +44,7 @@ const CircleGraphs = () => {
     traversals: [],
   });
 
+  const match = useMatchMedia(['600px']);
   const refVisualisation = useRef<HTMLElement>(null);
   const resultUseGraphHook = useGraph(sampleCircles, traversals);
 
@@ -269,23 +270,50 @@ const CircleGraphs = () => {
 
       <WritingSection
           flex="vertical"
+          gap="x8"
           maxWidth="1400px"
           padding="x6"
           ref={ refVisualisation }>
-        <IntersectionExplorer { ...resultUseGraphHook }
-            activeNodeIndex={ activeNodeIndex } />
+        <Box>
+          <IntersectionExplorer { ...resultUseGraphHook }
+              activeNodeIndex={ activeNodeIndex } />
+        </Box>
 
-        <Box alignChildren="middle" flex="horizontal" gap="x6">
-          { rules.map(({ description, number, state: [a, b], title }) => (
-            <Box key={ number }>
-              <RuleBox
-                  asIcon
-                  description={ description }
-                  number={ number }
-                  onClick={ () => handleSetTraversals(a as number, b as TraversalJSON[]) }
-                  title={ title } />
+        <Box
+            alignChildrenHorizontal={ match('600px') ? 'middle' : undefined }
+            flex="vertical">
+          <Box
+              alignChildrenVertical="end"
+              borderBottom
+              borderSize="x2"
+              flex="horizontal">
+            <Box borderSize="x1" height="16px" />
+            <Box
+                alignChildren={ match('600px') ? 'middle' : undefined }
+                flex={ match('600px') ? 'horizontal' : 'vertical' }
+                gap="x6"
+                grow
+                padding="x3">
+              { rules.map(({ description, number, state: [a, b], title }) => (
+                <Box key={ number }>
+                  <RuleBox
+                      asIcon
+                      description={ description }
+                      number={ number }
+                      onClick={ () => handleSetTraversals(a as number, b as TraversalJSON[]) }
+                      title={ title } />
+                </Box>
+              )) }
             </Box>
-          )) }
+            <Box borderSize="x1" height="16px" />
+          </Box>
+
+          <Text
+              align="middle"
+              margin="x2"
+              size="x1"
+              strong
+              uppercase>Rule Example Configurations</Text>
         </Box>
       </WritingSection>
 

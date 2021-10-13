@@ -13,7 +13,7 @@ const TraversalList: React.FunctionComponent<Props> = ({ onTraversalOver }) => {
   const completeTraversals = getCompleteTraversals(traversals);
 
   return (
-    <Labels margin="x6">
+    <Labels flex="horizontal" margin="x6" style={ { gap: 8 } } wrap>
       { completeTraversals.map((traversal) => (
         <TraversalListItem
             key={ traversal.bitset.toString() }

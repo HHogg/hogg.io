@@ -10574,10 +10574,10 @@ prepend-http@^1.0.1:
   resolved "https://registry.yarnpkg.com/prepend-http/-/prepend-http-1.0.4.tgz#d4f4562b0ce3696e41ac52d0e002e57a635dc6dc"
   integrity sha1-1PRWKwzjaW5BrFLQ4ALlemNdxtw=
 
-preshape@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/preshape/-/preshape-7.0.0.tgz#f17ccb2448c6f5f23b6ddeddddbaa1d90ce5207e"
-  integrity sha512-OjneDT+ijkwQHPIqZhiG8OCZgVkfEOPhQzV14RPPMgaSyJ5SzoWdLymVR/t2v3/I3sOmdtH6LZ8z+NUyCQBj7w==
+preshape@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/preshape/-/preshape-7.1.0.tgz#0c3cc9cc08d7997bccf242a904c282631d862698"
+  integrity sha512-wB5Ql0Xi2w6kVNMhx1mWFlLn6I8NAnQLmRjhfYd+cj6/Tk2P6+zG1qFD+3SYUgPPY2sVrzWfhB+lJOlxZXuMuQ==
   dependencies:
     brace "^0.11.1"
     classnames "^2.2.5"

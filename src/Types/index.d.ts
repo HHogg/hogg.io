@@ -27,8 +27,8 @@ export interface Writing {
   unlisted?: boolean;
 }
 
-export interface Data {
-  experience: { [key: string]: Experience };
-  projects: { [key: string]: Project };
-  writings: { [key: string]: Writing };
+export interface Data<E extends string, P extends string, W extends string> {
+  experience: Record<E, Experience>;
+  projects: Record<P, Project>;
+  writings: Record<W, Writing>;
 }

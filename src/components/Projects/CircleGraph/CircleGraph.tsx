@@ -10,7 +10,7 @@ const CircleGraph = () => {
 
   return (
     <ProjectPage { ...data.projects.CircleGraph }>
-      <Box alignChildrenVertical="middle" flex="vertical" grow maxWidth="1400px">
+      <Box alignChildrenVertical="middle" flex="vertical" grow maxWidth="1400px" paddingVertical="x4">
         <IntersectionExplorer { ...graphResult } />
       </Box>
 

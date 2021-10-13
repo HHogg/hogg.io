@@ -25,7 +25,6 @@ const NodeTooltipContentNext: FunctionComponent<Props> = (props) => {
             flex="horizontal"
             gap="x4"
             key={ validation.number }
-            margin="x4"
             paddingHorizontal="x4"
             paddingVertical="x2">
           <Box

@@ -45,7 +45,7 @@ const NodeListItem = ({ currentNode, isFocused, isTraversing, onClick, node }: P
           <Box
               alignChildrenVertical="middle"
               flex="horizontal"
-              gap="x4"
+              gap="x3"
               grow>
             <Box>
               <NodeIcon { ...node.state }
