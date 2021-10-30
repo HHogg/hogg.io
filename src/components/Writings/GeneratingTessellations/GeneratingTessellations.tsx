@@ -21,8 +21,11 @@ import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
 import WritingSection from '../../WritingPage/WritingSection';
 import AntwerpExample from './AntwerpExample';
+import TransformFunctionStats from './TransformFunctionStats';
 
 const configurationsGrouped = groupBy(configurations, 'vertices');
+
+const findByCundyRollett = (name: string) => configurations.find(({ cundyRollett }) => cundyRollett === name)?.gomJauHogg || '';
 
 const GeneratingTessellations = () => {
   return (
@@ -38,7 +41,7 @@ const GeneratingTessellations = () => {
           semiregular (uniform) and demiregular (k-uniform, up to at least k=3) in a
           consistent, unique and unequivocal manner. Moreover, it's implemented
           in the <Link href="https://antwerp.hogg.io" target="Antwerp" underline>Antwerp application</Link>, which
-          is publicly shared to prove that all the basics tilings can be obtained
+          is publicly shared to prove that all the basic tilings can be obtained
           directly from the GomJau-Hogg’s notation.
         </WritingParagraph>
       </WritingSection>
@@ -80,19 +83,19 @@ const GeneratingTessellations = () => {
       <WritingFigs maxWidth="900px">
         <WritingFig description="Semiregular tiling 3².4.3.4" number={ 1 } >
           <AntwerpExample
-              configuration="4-3-3,4/r90/r(4)"
+              configuration={ findByCundyRollett('3².4.3.4') }
               shapeSize={ 50 } />
         </WritingFig>
 
         <WritingFig description="2-Uniform tiling 3.4.6.4; 3.4².6" number={ 2 } >
           <AntwerpExample
-              configuration="6-4-3,4-6/m30/r(15)"
+              configuration={ findByCundyRollett('3.4.6.4; 3.4².6') }
               shapeSize={ 50 } />
         </WritingFig>
 
         <WritingFig description="Semiregular tiling 4.6.12" number={ 3 } >
           <AntwerpExample
-              configuration="12-6,4/m30/r(10)"
+              configuration={ findByCundyRollett('4.6.12') }
               shapeSize={ 50 } />
         </WritingFig>
       </WritingFigs>
@@ -132,19 +135,19 @@ const GeneratingTessellations = () => {
       <WritingFigs maxWidth="900px">
         <WritingFig description="3-Uniform tiling [(3⁶)²; 3⁴.6]¹" number={ 4 }>
           <AntwerpExample
-              configuration="6-3-3/m30/r(9)"
+              configuration={ findByCundyRollett('[(3⁶)²; 3⁴.6]¹') }
               shapeSize={ 50 } />
         </WritingFig>
 
         <WritingFig description="3-Uniform tiling [(3⁶)²; 3⁴.6]²" number={ 5 }>
           <AntwerpExample
-              configuration="6-3-3-3-0,3/m30/r(3)"
+              configuration={ findByCundyRollett('[(3⁶)²; 3⁴.6]²') }
               shapeSize={ 50 } />
         </WritingFig>
 
         <WritingFig description="3-Uniform tiling [(3⁶)²; 3⁴.6]³" number={ 6 }>
           <AntwerpExample
-              configuration="6-3-3,3-3-3-0,3/r60/r(14)"
+              configuration={ findByCundyRollett('[(3⁶)²; 3⁴.6]³') }
               shapeSize={ 50 } />
         </WritingFig>
       </WritingFigs>
@@ -164,7 +167,7 @@ const GeneratingTessellations = () => {
 
         <WritingParagraph>
           Several examples will be used in the following sections. The above mentioned
-          (3⁶)²; 3⁴.6 (one of the three variants) is translated to 6-3-3/m30/r(9).
+          (3⁶)²; 3⁴.6 (one of the three variants) is translated to { findByCundyRollett('(3⁶)²; 3⁴.6') }.
           The stages are represented as blocks separated by a forward-slash (/).
           When split up, the very first block is the "Shape placement" stage,
           which takes care of placing the first regular polygons on the plane.
@@ -204,7 +207,7 @@ const GeneratingTessellations = () => {
 
         <WritingParagraph>
           Let’s use the above configuration example (3⁶)²; 3⁴.6, in its former
-          notation, which would become 6-3-3/m30/r(9) in GomJau-Hogg’s
+          notation, which would become { findByCundyRollett('(3⁶)²; 3⁴.6') } in GomJau-Hogg’s
           notation (Fig. 7). With this new notation as shown above, the shape
           placement stages consist of:
         </WritingParagraph>
@@ -252,7 +255,7 @@ const GeneratingTessellations = () => {
           applies a rotation transformation. When specifying the center of the
           transformation (between parentheses), it also slightly changes the
           behaviour of the ensuing transformation result. There are 2 types of
-          transformation centers, explained in following lines.
+          transformation centers, explained in the following lines.
         </WritingParagraph>
       </WritingSection>
 
@@ -315,8 +318,8 @@ const GeneratingTessellations = () => {
           shift the transform’s origin from the center of the coordinate
           system in order to expand the collection of shapes out to increase
           the area coverage. This is done by shifting the transform’s
-          origin to the vertex of either, a vertex of a shape, the centroid of
-          a shape or a midpoint of a line segment of a shape.
+          origin to the vertex of either, the centroid of a shape, a midpoint of a line segment,
+          or the vertices of a shape.
         </WritingParagraph>
 
         <WritingParagraph>
@@ -329,21 +332,23 @@ const GeneratingTessellations = () => {
         <WritingParagraph>
           The notation for shifting the transform’s origin is done
           by specifying the vertex index. The vertices available for a transform
-          are systematically indexed prior to the transformation and are ordered by their
-          distance and angle, relative to the center of the coordinate system.
+          are systematically indexed prior to the transformation and are grouped by their
+          vertex type and ordered by their distance and angle, relative to the center of
+          the coordinate system. Shape centroids are prefixed with a 'c', vertices of a shape
+          are prefixed with a 'v' and line halfway points are prefixed with an 'h'.
         </WritingParagraph>
 
         <WritingParagraph>
           Taking the configuration 3-6 (Fig 10), there are 16 vertices in total,
           made up of 2 shape centroids, 6 shape vertices (the endpoints of the line
-          segments) and 8 line segment midpoints. Excluding the coordinate system center
+          segments) and 8 line segment halfway points. Excluding the coordinate system center
           vertex.
         </WritingParagraph>
 
         <WritingParagraph>
           Starting at 0° of the coordinate system, there are 4 vertices that exist at this
-          angle, labelled 1, 2, 3 and 4 in order of the shortest distance to the origin. Followed
-          by vertex 5 which is next in turn by angle to the origin, and so on. As an example
+          angle, labelled h1, v1, h2 and v2 in order of the shortest distance to the origin. Followed
+          by vertex h3 which is next in turn by angle to the origin, and so on. As an example
           it would then be possible to reflect over the 12th vertex by specifying m(12) in the
           notation (Fig 11), and the vertices would be reindexed for the next transformation
           function.
@@ -359,9 +364,9 @@ const GeneratingTessellations = () => {
               showVertices />
         </WritingFig>
 
-        <WritingFig description="Equation formatting: 6-3-3/m(12)" number={ 11 }>
+        <WritingFig description="Equation formatting: 6-3-3/m(h6)" number={ 11 }>
           <AntwerpExample
-              configuration="3-6/m(12)"
+              configuration="3-6/m(h6)"
               shapeSize={ 100 }
               showAxis90
               showTransforms
@@ -371,28 +376,71 @@ const GeneratingTessellations = () => {
 
       <WritingSection>
         <WritingParagraph>
-          When specifying the vertex of a shapes centroid (Fig 12) or vertex (Fig 13), the angle that
+          When specifying the vertex of a shape's centroid (Fig 12) or vertex (Fig 13), the angle that
           is used for the transformation is inferred from the angle of that vertex
           relative to the center of the coordinate system. However, when using
-          the midpoint of line segment (the shapes edge, as shown in Fig 11), the angle for the transform
+          the midpoint of a line segment (the shape's edge, as shown in Fig 11), the angle for the transform
           is inferred from the angle of that edge because any other angle would result in an
-          incorrect overlapping and an invalid tesselation.
+          incorrect overlapping and an invalid tessellation.
+        </WritingParagraph>
+      </WritingSection>
+
+      <WritingSection maxWidth="900px">
+        <WritingParagraph strong>Breakdown of the transforms behaviour</WritingParagraph>
+        <WritingParagraph>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHeaderCell>Transform Type / Origin</TableHeaderCell>
+                <TableHeaderCell>Plane center</TableHeaderCell>
+                <TableHeaderCell>Centroid (c)</TableHeaderCell>
+                <TableHeaderCell>Halfway (h)</TableHeaderCell>
+                <TableHeaderCell>Vertex (v)</TableHeaderCell>
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              <TableRow>
+                <TableHeaderCell borderBottom borderRight borderSize="x2">Mirror (m)</TableHeaderCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="Specified" continuous example="/m30" /></TableCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="From origin" example="/m(c2)" /></TableCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="From line segment" example="/m(h2)" /></TableCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="From origin" example="/m(v2)" /></TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableHeaderCell borderBottom borderRight borderSize="x2">Reflections (r)</TableHeaderCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="Specified" continuous example="/r30" /></TableCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="From origin" example="/r(c2)" /></TableCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="From line segment" example="/r(h2)" /></TableCell>
+                <TableCell size="x1">
+                  <TransformFunctionStats angle="From origin" example="/r30(v2)" /></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </WritingParagraph>
       </WritingSection>
 
       <WritingFigs maxWidth="900px">
-        <WritingFig description="Equation formatting: 3-6/m30/r(9)" number={ 12 }>
+        <WritingFig description="Equation formatting: 3-6/m30/r(c2)" number={ 12 }>
           <AntwerpExample
-              configuration="3-6/m30/r(9)"
+              configuration="3-6/m30/r(c2)"
               maxRepeat={ 0 }
               shapeSize={ 50 }
               showAxis90
               showTransforms />
         </WritingFig>
 
-        <WritingFig description="Equation formatting: 12-3,4-3,3/m30/r(3)" number={ 13 }>
+        <WritingFig description="Equation formatting: 12-3,4-3,3/m30/r(e1)" number={ 13 }>
           <AntwerpExample
-              configuration="12-3,4-3,3/m30/r(3)"
+              configuration="12-3,4-3,3/m30/r(e1)"
               maxRepeat={ 0 }
               shapeSize={ 100 }
               showAxis90
@@ -404,24 +452,47 @@ const GeneratingTessellations = () => {
         <WritingParagraph strong>Stage 3: Repeating the transformations</WritingParagraph>
 
         <WritingParagraph>
-          This is the final stage to completing the tiling, and it consists on repeating
-          over the transformation functions as many times as are needed, each time taken
+          This is the final stage to completing the tiling, and it consists of repeating
+          over the transformation functions as many times as are needed, each time taking
           the shapes that are currently on the plane. This
           should not result in any incorrect shape overlaps (apart from those merged
           from the transformation functions), and it should continuously and
-          indefinitely grow. As show in Fig 14.
+          indefinitely grow. As shown in Fig 14.
         </WritingParagraph>
       </WritingSection>
 
       <WritingFigs maxWidth="900px">
-        <WritingFig description="Equation formatting: 4-3-3-0,4/r90/r(5)" number={ 14 }>
+        <WritingFig description="Equation formatting: 4-3-3-0,4/r90/r(h3)" number={ 14 }>
           <AntwerpExample
               animate
-              configuration="4-3-3-0,4/r90/r(5)"
+              configuration="4-3-3-0,4/r90/r(h3)"
               shapeSize={ 75 }
               showTransforms />
         </WritingFig>
       </WritingFigs>
+
+      <WritingSection>
+        <WritingHeading>3 Conclusion and Further Research</WritingHeading>
+
+        <WritingParagraph>
+          As a conclusion, this work presents a method for generating all the regular, uniform
+          and k-uniform (up to at least k=3) in a consistent, unique and unequivocal manner.
+          Table 1 shows the translation from Cundy & Rollett’s notation to GomJau-Hogg’s
+          notation for the most basic tilings (up to k=3 for lack of space), obtained and
+          proved directly from the software Antwerp v3.0.0 [4]. We kindly invite the readers to
+          test this freely available online application.
+        </WritingParagraph>
+
+        <WritingParagraph>
+          Further communications will prove that it is possible to deduct automatically, from
+          our notation, to which group of wallpaper symmetry each tessellation belongs. In
+          addition, we plan to use computing resources to continuously iterate this generative notation
+          over different combinations, automatically testing for incorrect shape overlaps or
+          gaps, to discover new valid tessellations. All these findings can be applied to many
+          fields of engineering where tilings have a major importance in design configurations
+          (mechanical, civil, chemical, etc.).
+        </WritingParagraph>
+      </WritingSection>
 
       <WritingSection
           backgroundColor="background-shade-2"
@@ -507,6 +578,10 @@ const GeneratingTessellations = () => {
             Gomez-Jauregui, V., Otero, C., Arias, R., Manchado, C. (2012). Generation
             and Nomenclature of Tessellations and Double-Layer Grids. Journal of
             Structural Engineering. Pp. 138.843–852. 10.1061/(ASCE)ST.1943-541X.0000532.
+          </BulletPoint>
+
+          <BulletPoint>
+            Hogg, H., Gomez-Jauregui, V. (2019) Antwerp v3.0.0. https://antwerp.hogg.io. Last access: 17/19/2021.
           </BulletPoint>
         </BulletPoints>
       </WritingSection>

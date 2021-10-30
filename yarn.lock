@@ -1215,10 +1215,10 @@
     lodash.camelcase "^4.3.0"
     protobufjs "^6.8.6"
 
-"@hhogg/antwerp@^3.0.5":
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/@hhogg/antwerp/-/antwerp-3.0.5.tgz#7641bb6b1600e02a669533e252fdc068f435ce63"
-  integrity sha512-yyMUTTCJK2F9IYBq8kDeTY2TD2kjAuDjdMnjWhVhv5aMkZx3zCXiXUyqGIQTGHJHsfy5F+JhudPM+M31WhlGOA==
+"@hhogg/antwerp@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@hhogg/antwerp/-/antwerp-3.0.6.tgz#4a5912ef70e4dd8eca7e475ecce22b0b6f21ba65"
+  integrity sha512-QrCrlCGfuEBICLCUiRckyyFTenM33duexnML+1c0bAaSooCw5948rt3jhCpmsFNd+l1I52+p66wKgVt7skOHug==
   dependencies:
     open-color "^1.7.0"
     two.js "0.7.2"

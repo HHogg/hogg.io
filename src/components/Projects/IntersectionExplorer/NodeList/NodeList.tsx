@@ -40,23 +40,23 @@ const NodeList = ({ onNodeOver }: Props) => {
             { nodesSorted.map((node) => (
               <motion.div
                   animate={ {
-                  opacity: activeNodeIndex === -1 || activeNodeIndex === node.index ? 1 : 0.25,
-                  scale: activeNodeIndex === -1 || activeNodeIndex === node.index ? 1 : 0.95,
-                } }
+                    opacity: activeNodeIndex === -1 || activeNodeIndex === node.index ? 1 : 0.25,
+                    scale: activeNodeIndex === -1 || activeNodeIndex === node.index ? 1 : 0.95,
+                  } }
                   initial={ {
-                  opacity: 0,
-                  scale: 1,
-                } }
+                    opacity: 0,
+                    scale: 1,
+                  } }
                   key={ node.index }
                   layout
                   onPointerOver={ handlePointerOver(node.index) }
                   style={ {
-                  gridColumn: ((currentTraversal && node.state.isVisible) && 'span 6') || 'span 2',
-                  filter: activeNodeIndex === -1 || activeNodeIndex === node.index ? undefined : 'grayscale(1)',
-                } }
+                    gridColumn: ((currentTraversal && node.state.isVisible) && 'span 6') || 'span 2',
+                    filter: activeNodeIndex === -1 || activeNodeIndex === node.index ? undefined : 'grayscale(1)',
+                  } }
                   transition={ {
-                  delay: 10 / 1000,
-                } }>
+                    delay: 10 / 1000,
+                  } }>
                 <NodeListItem
                     currentNode={ currentTraversalNode }
                     isFocused={ activeNodeIndex === node.index }

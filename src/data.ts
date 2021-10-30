@@ -116,6 +116,7 @@ const data: Data<
       'tags': ['svg', 'visualisation', 'geometry', 'tessellations', 'nomenclature'],
       'title': 'GomJau-Hogg’s notation for automatic generation of k-uniform tessellations',
       'to': '/writings/generating-tessellations',
+      'unlisted': true,
     },
     'SnakeSolution': {
       'id': 'SnakeSolution',

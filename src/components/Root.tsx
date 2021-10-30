@@ -43,7 +43,7 @@ const Site = () => {
         <Route component={ Spirals } path={ data.projects.Spirals.to } />
         <Route component={ CircleIntersections } path={ data.writings.CircleIntersections.to } />
         <Route component={ CircleGraphs } path={ data.writings.CircleGraphs.to } />
-        <Route component={ GeneratingTessellations } path={ data.writings.GeneratingTessellations.to } />
+        {/* <Route component={ GeneratingTessellations } path={ data.writings.GeneratingTessellations.to } /> */}
         <Route component={ SnakeSolution } path={ data.writings.SnakeSolution.to } />
       </Switch>
     </RootContext.Provider>
