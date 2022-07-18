@@ -9,20 +9,21 @@ interface Props {
 }
 
 const NodeValidation = ({ node }: Props) => {
-  const { isValid: [, ...results] } = node.state;
+  const {
+    isValid: [, ...results],
+  } = node.state;
 
   return (
     <Box
-        borderColor="background-shade-1"
-        borderRadius="x1"
-        borderSize="x1"
-        className="NodeValidation"
-        flex="horizontal">
-      { results.map((validation, index) => (
-        <NodeValidationIndicator
-            key={ index }
-            validation={ validation } />
-      )) }
+      borderColor="background-shade-1"
+      borderRadius="x1"
+      borderSize="x1"
+      className="NodeValidation"
+      flex="horizontal"
+    >
+      {results.map((validation, index) => (
+        <NodeValidationIndicator key={index} validation={validation} />
+      ))}
     </Box>
   );
 };

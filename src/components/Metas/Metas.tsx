@@ -17,14 +17,14 @@ const Metas = (props: Props) => {
 
   return (
     <Helmet>
-      <title>{ title ? `${title} | ` : '' }Harrison Hogg</title>
+      <title>{title ? `${title} | ` : ''}Harrison Hogg</title>
       <meta content="Harrison Hogg" property="og:site_name" />
-      <meta content={ title } property="og:title" />
-      <meta content={ description } property="og:description" />
+      <meta content={title} property="og:title" />
+      <meta content={description} property="og:description" />
       <meta content="website" property="og:type" />
       <meta content="en_GB" property="og:locale" />
-      <meta content={ urlContent } property="og:url" />
-      { image && <meta content={ imageContent } property="og:image" /> }
+      <meta content={urlContent} property="og:url" />
+      {image && <meta content={imageContent} property="og:image" />}
     </Helmet>
   );
 };

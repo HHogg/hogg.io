@@ -29,7 +29,8 @@ function heuristic(cell, xLength, yLength, snake, point) {
 
   if (dirCurrent === DIR_R) {
     // Continuing sweep movement
-    if ((headX < xMax - 1 || headY === yMax) && dirCell === dirCurrent) return 0;
+    if ((headX < xMax - 1 || headY === yMax) && dirCell === dirCurrent)
+      return 0;
 
     // Moving onto the next row when approaching the edge
     if (headX >= xMax - 1 && dirCell === DIR_D) return 0;
@@ -45,13 +46,14 @@ function heuristic(cell, xLength, yLength, snake, point) {
 
   if (dirCurrent === DIR_R || dirCurrent === DIR_L) {
     // When at the bounds on the last line, head back up
-    if ((headX === 0 || headX === xMax) && headY === yMax && dirCell === DIR_U) return 0;
+    if ((headX === 0 || headX === xMax) && headY === yMax && dirCell === DIR_U)
+      return 0;
   }
 
   if (dirCurrent === DIR_D) {
     // After moving onto the next line, get the next direction
-    if ((headX < xLength / 2 && dirCell === DIR_R)) return 0;
-    if ((headX > xLength / 2 && dirCell === DIR_L)) return 0;
+    if (headX < xLength / 2 && dirCell === DIR_R) return 0;
+    if (headX > xLength / 2 && dirCell === DIR_L) return 0;
   }
 
   if (dirCurrent === DIR_U) {
@@ -59,7 +61,12 @@ function heuristic(cell, xLength, yLength, snake, point) {
     if (dirCell === DIR_U) return 0;
 
     // After returning to the top, set the direction to continue sweeping
-    if ((headY === 0 || headY === yMax) && headX === 0 && (dirCell === DIR_L || dirCell === DIR_R)) return 0;
+    if (
+      (headY === 0 || headY === yMax) &&
+      headX === 0 &&
+      (dirCell === DIR_L || dirCell === DIR_R)
+    )
+      return 0;
   }
 
   return 999;

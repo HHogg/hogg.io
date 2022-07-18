@@ -15,13 +15,15 @@ interface Props {
   node: Edge | Node;
 }
 
-const NodeListItem = ({ currentNode, isFocused, isTraversing, onClick, node }: Props) => {
+const NodeListItem = ({
+  currentNode,
+  isFocused,
+  isTraversing,
+  onClick,
+  node,
+}: Props) => {
   const { isNode } = node;
-  const {
-    isPrevious,
-    isNext,
-    isSelectable,
-  } = node.state;
+  const { isPrevious, isNext, isSelectable } = node.state;
 
   const classes = classNames('NodeList__item', {
     'NodeList__item--next': isTraversing && isNext && !isPrevious,
@@ -29,45 +31,46 @@ const NodeListItem = ({ currentNode, isFocused, isTraversing, onClick, node }: P
 
   return (
     <NodeTooltip
-        currentNode={ currentNode }
-        isTraversing={ isTraversing }
-        node={ node }
-        visible={ isFocused }>
-      { (props) => (
-        <Box { ...props }
-            alignChildrenVertical="middle"
-            borderRadius="x1"
-            className={ classes }
-            clickable={ isSelectable }
-            flex="horizontal"
-            onClick={ onClick }
-            padding="x3">
-          <Box
-              alignChildrenVertical="middle"
-              flex="horizontal"
-              gap="x3"
-              grow>
+      currentNode={currentNode}
+      isTraversing={isTraversing}
+      node={node}
+      visible={isFocused}
+    >
+      {(props) => (
+        <Box
+          {...props}
+          alignChildrenVertical="middle"
+          borderRadius="x1"
+          className={classes}
+          clickable={isSelectable}
+          flex="horizontal"
+          onClick={onClick}
+          padding="x3"
+        >
+          <Box alignChildrenVertical="middle" flex="horizontal" gap="x3" grow>
             <Box>
-              <NodeIcon { ...node.state }
-                  isFocused={ isFocused }
-                  isTraversing={ isTraversing }
-                  n={ node.index } />
+              <NodeIcon
+                {...node.state}
+                isFocused={isFocused}
+                isTraversing={isTraversing}
+                n={node.index}
+              />
             </Box>
 
             <Box>
               <NodeValidationBadge>
-                { isTraversing && (isNode ? 'Node' : 'Edge') } { node.index }
+                {isTraversing && (isNode ? 'Node' : 'Edge')} {node.index}
               </NodeValidationBadge>
             </Box>
           </Box>
 
-          { isTraversing && (
+          {isTraversing && (
             <Box>
-              <NodeValidation node={ node } />
+              <NodeValidation node={node} />
             </Box>
-          ) }
+          )}
         </Box>
-      ) }
+      )}
     </NodeTooltip>
   );
 };

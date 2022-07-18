@@ -17,16 +17,16 @@ export default (props: React.PropsWithChildren<Props>) => {
   const match = useMatchMedia([maxWidth]);
 
   return (
-    <WritingSection { ...rest }
-        backgroundColor={ backgroundColor }
-        maxWidth={ maxWidth }
-        padding="x6"
-        size="x2"
-        textColor={ textColor }>
-      <Box
-          flex={ match(maxWidth) ? 'horizontal' : 'vertical' }
-          gap="x6">
-        { children }
+    <WritingSection
+      {...rest}
+      backgroundColor={backgroundColor}
+      maxWidth={maxWidth}
+      padding="x6"
+      size="x2"
+      textColor={textColor}
+    >
+      <Box flex={match(maxWidth) ? 'horizontal' : 'vertical'} gap="x6">
+        {children}
       </Box>
     </WritingSection>
   );

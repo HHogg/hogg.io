@@ -14,7 +14,9 @@ interface Props {
   width: number;
 }
 
-const ease = BezierEasing(...transitionTimingFunction as [number, number, number, number]);
+const ease = BezierEasing(
+  ...(transitionTimingFunction as [number, number, number, number])
+);
 const duration = 2000;
 
 const SpiralsVisual = (props: Props) => {
@@ -47,8 +49,8 @@ const SpiralsVisual = (props: Props) => {
 
     if (refRegl.current) {
       const buffers: Record<string, regl.Buffer | undefined> = {
-        'a_vector_0': refRegl.current?.buffer(state[0]),
-        'a_vector_1': refRegl.current?.buffer(state[1]),
+        a_vector_0: refRegl.current?.buffer(state[0]),
+        a_vector_1: refRegl.current?.buffer(state[1]),
       };
 
       regFrameLoop.current = refRegl.current.frame(({ time }) => {
@@ -57,7 +59,10 @@ const SpiralsVisual = (props: Props) => {
             refStartTime.current = time;
           }
 
-          refT.current = Math.min(ease((time - refStartTime.current) / (duration / 1000)), 1);
+          refT.current = Math.min(
+            ease((time - refStartTime.current) / (duration / 1000)),
+            1
+          );
 
           refRegl.current.clear({ depth: 1 });
 
@@ -88,11 +93,12 @@ const SpiralsVisual = (props: Props) => {
 
   return (
     <Box
-        absolute="edge-to-edge"
-        height={ height }
-        ref={ refCanvas }
-        tag="canvas"
-        width={ width } />
+      absolute="edge-to-edge"
+      height={height}
+      ref={refCanvas}
+      tag="canvas"
+      width={width}
+    />
   );
 };
 

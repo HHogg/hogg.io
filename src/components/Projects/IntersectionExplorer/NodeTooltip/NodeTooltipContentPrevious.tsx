@@ -13,7 +13,11 @@ const NodeTooltipContentCurrent: FunctionComponent<Props> = (props) => {
 
   return (
     <Box alignChildren="middle" flex="vertical">
-      <Text margin="x2" size="x1" strong><NodeValidationBadge>Node { node.index }</NodeValidationBadge> is not connected to <NodeValidationBadge>Node { currentNode }</NodeValidationBadge></Text>
+      <Text margin="x2" size="x1" strong>
+        <NodeValidationBadge>Node {node.index}</NodeValidationBadge> is not
+        connected to{' '}
+        <NodeValidationBadge>Node {currentNode}</NodeValidationBadge>
+      </Text>
     </Box>
   );
 };

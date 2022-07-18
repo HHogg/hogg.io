@@ -16,8 +16,8 @@ interface Rect {
 interface XY {
   dx: number;
   dy: number;
-  x: number,
-  y: number,
+  x: number;
+  y: number;
 }
 
 const points = FermatSpiral(500).map(([x, y]) => [
@@ -31,12 +31,12 @@ const points = FermatSpiral(500).map(([x, y]) => [
 const rectToPoly = (
   { x, y, width, height }: Rect,
   { x: shiftX, y: shiftY }: XY = { dx: 0, dy: 0, x: 0, y: 0 },
-  padding = 0,
+  padding = 0
 ): SAT.Polygon => {
   return new SAT.Box(
     new SAT.Vector(x - padding + shiftX, y - padding + shiftY),
     width + padding * 2,
-    height + padding * 2,
+    height + padding * 2
   ).toPolygon();
 };
 
@@ -71,7 +71,7 @@ const hasCollidedRect = (
 const hasCollidedCircle = (
   aRect: Rect,
   shift: undefined | XY,
-  circles: Circle[],
+  circles: Circle[]
 ): boolean => {
   if (aRect) {
     const aPoly = rectToPoly(aRect, shift);
@@ -81,8 +81,15 @@ const hasCollidedCircle = (
 
       const innerResponse = new SAT.Response();
 
-      SAT.testPolygonCircle(aPoly, new SAT.Circle(new SAT.Vector(x, y), radius + PADDING), innerResponse);
-      const hasOuterCollided = SAT.testPolygonCircle(aPoly, new SAT.Circle(new SAT.Vector(x, y), radius - PADDING));
+      SAT.testPolygonCircle(
+        aPoly,
+        new SAT.Circle(new SAT.Vector(x, y), radius + PADDING),
+        innerResponse
+      );
+      const hasOuterCollided = SAT.testPolygonCircle(
+        aPoly,
+        new SAT.Circle(new SAT.Vector(x, y), radius - PADDING)
+      );
 
       if (!innerResponse.aInB && hasOuterCollided) {
         return true;
@@ -102,7 +109,7 @@ const getLabelShift = (
   labels: Rect[],
   obstacles: Rect[],
   shifts: XY[],
-  circles: Circle[],
+  circles: Circle[]
 ): XY => {
   if (rect) {
     const dx = rect.width * -0.5;
@@ -119,9 +126,9 @@ const getLabelShift = (
       };
 
       if (
-          !hasCollidedRect(rect, shift, labels, shifts) && // Collision with other labels
-          !hasCollidedRect(rect, shift, obstacles) && // Collision with nodes
-          !hasCollidedCircle(rect, shift, circles) // Collision with edges
+        !hasCollidedRect(rect, shift, labels, shifts) && // Collision with other labels
+        !hasCollidedRect(rect, shift, obstacles) && // Collision with nodes
+        !hasCollidedCircle(rect, shift, circles) // Collision with edges
       ) {
         return shift;
       }
@@ -142,7 +149,7 @@ const getLabelShift = (
 const useLabelPositionShifts = (
   graph: Graph,
   labelsElement: SVGGElement | null,
-  obstaclesElement: SVGGElement | null,
+  obstaclesElement: SVGGElement | null
 ): XY[] => {
   const { circles, edges, nodes } = graph;
   const [shifts, setShifts] = useState<XY[]>([]);
@@ -154,38 +161,43 @@ const useLabelPositionShifts = (
       const shifts: XY[] = [];
 
       if (labelsElement && obstaclesElement) {
-        const labelBounds = Array
-          .from(labelsElement.children)
-          .map((labelElement, index) => {
-            const boundingElement = labelElement.querySelector('[data-bounding-element]');
+        const labelBounds = Array.from(labelsElement.children).map(
+          (labelElement, index) => {
+            const boundingElement = labelElement.querySelector(
+              '[data-bounding-element]'
+            );
             const height = boundingElement?.clientHeight || 0;
             const width = boundingElement?.clientWidth || 0;
-            const { x, y } = nodes[index] || edges[index - nodes.length] || { x: 0, y: 0 };
+            const { x, y } = nodes[index] ||
+              edges[index - nodes.length] || { x: 0, y: 0 };
             return { x, y, width, height };
-          });
+          }
+        );
 
-        const obstacleBounds = Array
-          .from(obstaclesElement.children as unknown as SVGGElement[])
-          .map((obstacleElement) => {
-            const { height, width, x, y } = obstacleElement.getBBox();
-            return { x, y, width, height };
-          });
+        const obstacleBounds = Array.from(
+          obstaclesElement.children as unknown as SVGGElement[]
+        ).map((obstacleElement) => {
+          const { height, width, x, y } = obstacleElement.getBBox();
+          return { x, y, width, height };
+        });
 
         for (let i = 0; i < labelBounds.length; i++) {
-          shifts.push(getLabelShift(
-            labelBounds[i],
-            labelBounds,
-            obstacleBounds,
-            shifts,
-            circles,
-          ));
+          shifts.push(
+            getLabelShift(
+              labelBounds[i],
+              labelBounds,
+              obstacleBounds,
+              shifts,
+              circles
+            )
+          );
         }
       }
 
       setShifts(shifts);
     }, 1000);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [circles]);
 
   // console.log(shifts);

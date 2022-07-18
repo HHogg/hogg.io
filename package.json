@@ -7,14 +7,15 @@
   "scripts": {
     "build": "rm -rf public && parcel build src/index.html -d public && react-snap",
     "deploy": "firebase deploy",
+    "format": "prettier --write .",
     "lint:css": "stylelint src/**/*.css",
     "lint:js": "eslint src",
-    "lint": "yarn lint:js && yarn lint:css",
+    "lint": "yarn lint:css & yarn lint:js",
     "serve": "superstatic ./public --port 4000 -c superstatic.json",
     "start": "rm -rf dist && parcel src/index.dev.html --port 4000 -d dist --no-cache --no-autoinstall"
   },
   "dependencies": {
-    "@bitrise/bitviz": "^0.0.9",
+    "@bitrise/bitviz": "^0.0.21",
     "@hhogg/antwerp": "^3.0.6",
     "@hhogg/snake": "^0.0.4",
     "autoprefixer": "^9.7.4",
@@ -48,9 +49,8 @@
     "react-router-dom": "^5.3.0",
     "react-snap": "^1.23.0",
     "regl": "^2.0.1",
-    "sat": "^0.8.0",
-    "src": "^1.1.2",
-    "typescript": "^3.7.5"
+    "regression": "^2.0.1",
+    "sat": "^0.8.0"
   },
   "devDependencies": {
     "@types/bezier-easing": "*",
@@ -66,12 +66,21 @@
     "@types/react-dom": "*",
     "@types/react-helmet": "*",
     "@types/react-router-dom": "*",
+    "@types/regression": "^2.0.2",
     "@types/sat": "*",
-    "eslint": "^7.32.0",
-    "eslint-config-preshape": "^4.0.2",
-    "stylelint": "^13.2.0",
-    "stylelint-config-preshape": "^2.0.0",
-    "superstatic": "^6.0.4"
+    "@typescript-eslint/eslint-plugin": "^5.13.0",
+    "@typescript-eslint/parser": "^5.13.0",
+    "eslint": "^8.10.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-react": "^7.29.3",
+    "prettier": "^2.4.1",
+    "stylelint": "^13.13.1",
+    "stylelint-config-prettier": "^8.0.2",
+    "stylelint-config-recommended": "^5.0.0",
+    "stylelint-config-standard": "^22.0.0",
+    "superstatic": "^6.0.4",
+    "typescript": "~4.5.0"
   },
   "externals": {
     "/__/**/*": false

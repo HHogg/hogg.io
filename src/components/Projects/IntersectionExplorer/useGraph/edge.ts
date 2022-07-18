@@ -17,7 +17,7 @@ export type Edge = {
   state: NodeState;
   x: number;
   y: number;
-}
+};
 
 const blankEdgeState: NodeState = {
   isCurrent: false,
@@ -55,7 +55,7 @@ export const getEdges = (circles: Circle[], nodes: Node[]): Edge[] => {
       const angleStart = a[c] > b[c] ? a[c] - Math.PI * 2 : a[c];
       const angleEnd = b[c];
 
-      const m = angleStart + (0.5 * (angleEnd - angleStart));
+      const m = angleStart + 0.5 * (angleEnd - angleStart);
       const mx = x + radius * Math.cos(m);
       const my = y + radius * Math.sin(m);
 
@@ -86,7 +86,8 @@ export const getEdges = (circles: Circle[], nodes: Node[]): Edge[] => {
  */
 export const getEdgeState = (edge: Edge, context: GraphContext): NodeState => {
   const { traversalCurrent } = context;
-  const traversalTail = traversalCurrent && traversalCurrent.path[traversalCurrent.path.length - 1];
+  const traversalTail =
+    traversalCurrent && traversalCurrent.path[traversalCurrent.path.length - 1];
 
   // Indicates if the edge is next to the current traversed node,
   // this doesn't necessarily mean it is a valid connection though.
@@ -100,7 +101,8 @@ export const getEdgeState = (edge: Edge, context: GraphContext): NodeState => {
   const isCurrent = false;
 
   // If the edge index exists in the bitset, then it's been visited.
-  const isPrevious = !!traversalCurrent && traversalCurrent.bitset.get(edge.index) === 1;
+  const isPrevious =
+    !!traversalCurrent && traversalCurrent.bitset.get(edge.index) === 1;
 
   // The flag to indicate that the edge can be
   // added to the current traversal.
@@ -126,14 +128,16 @@ export const getEdgeState = (edge: Edge, context: GraphContext): NodeState => {
   };
 };
 
-
 /**
  *
  * @param {Edge} edge
  * @param {number} nodeIndex
  * @returns {number|null}
  */
-export const getOppositeEndNode = (edge: Edge, nodeIndex: null | number): number | null => {
+export const getOppositeEndNode = (
+  edge: Edge,
+  nodeIndex: null | number
+): number | null => {
   if (edge.nodes[0] === nodeIndex) return edge.nodes[1];
   if (edge.nodes[1] === nodeIndex) return edge.nodes[0];
 

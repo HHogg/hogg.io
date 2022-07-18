@@ -27,14 +27,18 @@ const PATH_LEFT_AND_UP = `
   L ${SIZE / 2 - sizeX8Px} ${SIZE / 2}
   L ${SIZE / 2 - sizeX8Px} ${SIZE / 2 - sizeX6Px}`;
 
-const getEdgePath = (state: NodeState, path: Props['path'], isTraversing?: boolean): string => {
+const getEdgePath = (
+  state: NodeState,
+  path: Props['path'],
+  isTraversing?: boolean
+): string => {
   if (state.isCurrent || !isTraversing) return '';
   if (path === 'left') return PATH_LEFT;
   if (state.isPrevious) return PATH_DOWN;
   if (state.isNext) return PATH_LEFT_AND_UP;
 
   return '';
-} ;
+};
 
 const NodeIcon = (props: Props) => {
   const {
@@ -47,20 +51,21 @@ const NodeIcon = (props: Props) => {
   } = props;
 
   return (
-    <svg
-        height={ SIZE }
-        viewBox={ `0 0 ${SIZE} ${SIZE}` }
-        width={ SIZE }>
-      <GraphVisualisationEdge { ...state }
-          animate
-          d={ getEdgePath(state, path, isTraversing) } />
+    <svg height={SIZE} viewBox={`0 0 ${SIZE} ${SIZE}`} width={SIZE}>
+      <GraphVisualisationEdge
+        {...state}
+        animate
+        d={getEdgePath(state, path, isTraversing)}
+      />
 
-      <GraphVisualisationNode { ...state }
-          isFocused={ isFocused }
-          n={ n }
-          onClick={ onClick }
-          x={ SIZE / 2 }
-          y={ SIZE / 2 } />
+      <GraphVisualisationNode
+        {...state}
+        isFocused={isFocused}
+        n={n}
+        onClick={onClick}
+        x={SIZE / 2}
+        y={SIZE / 2}
+      />
     </svg>
   );
 };

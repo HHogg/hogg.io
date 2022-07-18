@@ -1,7 +1,12 @@
 export type TypeAlgorithm = (n: number) => TypeVector[];
 export type TypeVector = [number, number];
 
-const getMax = (mx: undefined | number, my: undefined | number, x: number, y: number): [number, number] => {
+const getMax = (
+  mx: undefined | number,
+  my: undefined | number,
+  x: number,
+  y: number
+): [number, number] => {
   return [
     mx === undefined ? x : Math.max(Math.abs(x), mx),
     my === undefined ? y : Math.max(Math.abs(y), my),
@@ -58,7 +63,7 @@ export const FermatSpiral = (n: number, c = 1.5): TypeVector[] => {
 };
 
 const isPrimeNumber = (n: number) => {
-  for (let i = 2, s = Math.sqrt(n); i <= s; i++){
+  for (let i = 2, s = Math.sqrt(n); i <= s; i++) {
     if (n % i === 0) {
       return false;
     }
@@ -69,10 +74,14 @@ const isPrimeNumber = (n: number) => {
 
 export const UlamSpiral: TypeAlgorithm = (n) => {
   const vectors: TypeVector[] = [];
-  let d = 0, i = 0, sc = 1, st = 1, x = 0, y = 0;
+  let d = 0,
+    i = 0,
+    sc = 1,
+    st = 1,
+    x = 0,
+    y = 0;
   let mx: undefined | number = undefined;
   let my: undefined | number = undefined;
-
 
   while (n) {
     if (isPrimeNumber(i)) {

@@ -1,6 +1,13 @@
 import { Box, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
 import * as React from 'react';
-import { ArchimedesSpiral, FermatSpiral, UlamSpiral, VogelSpiral, ZeroSpiral, TypeAlgorithm } from './Algorithms';
+import {
+  ArchimedesSpiral,
+  FermatSpiral,
+  UlamSpiral,
+  VogelSpiral,
+  ZeroSpiral,
+  TypeAlgorithm,
+} from './Algorithms';
 import { Config } from './Spirals';
 
 interface Props {
@@ -24,7 +31,12 @@ const SysPlotControls = (props: Props) => {
     vectorCount: config.vectorCount,
   });
 
-  const handleNumberChange = (event: React.FormEvent<HTMLInputElement>, prop: string, min = -Infinity, max = Infinity) => {
+  const handleNumberChange = (
+    event: React.FormEvent<HTMLInputElement>,
+    prop: string,
+    min = -Infinity,
+    max = Infinity
+  ) => {
     const { value } = event.target as HTMLInputElement;
     const number = Math.max(min, Math.min(max, parseFloat(value)));
 
@@ -38,60 +50,70 @@ const SysPlotControls = (props: Props) => {
   return (
     <React.Fragment>
       <Box margin="x8">
-        <Text margin="x4" strong>Plotting Algorithms</Text>
+        <Text margin="x4" strong>
+          Plotting Algorithms
+        </Text>
 
-        { algorithms.map(([algorithmName, algorithm]) => (
+        {algorithms.map(([algorithmName, algorithm]) => (
           <RadioButton
-              checked={ config.algorithm === algorithm }
-              key={ algorithmName }
-              margin="x2"
-              onChange={ () => onConfigChange({ algorithm }) }>
-            { algorithmName }
+            checked={config.algorithm === algorithm}
+            key={algorithmName}
+            margin="x2"
+            onChange={() => onConfigChange({ algorithm })}
+          >
+            {algorithmName}
           </RadioButton>
-        )) }
+        ))}
       </Box>
 
       <Box margin="x8">
-        <Text margin="x4" strong>Configuration</Text>
+        <Text margin="x4" strong>
+          Configuration
+        </Text>
 
         <CheckBox
-            checked={ config.showVectors }
-            margin="x2"
-            onChange={ () => onConfigChange({ showVectors: !config.showVectors }) }>
+          checked={config.showVectors}
+          margin="x2"
+          onChange={() => onConfigChange({ showVectors: !config.showVectors })}
+        >
           Show Vectors
         </CheckBox>
 
         <CheckBox
-            checked={ config.showShapes }
-            margin="x2"
-            onChange={ () => onConfigChange({ showShapes: !config.showShapes }) }>
+          checked={config.showShapes}
+          margin="x2"
+          onChange={() => onConfigChange({ showShapes: !config.showShapes })}
+        >
           Show Shapes
         </CheckBox>
 
         <InputLabel label="Padding" margin="x2">
           <Input
-              onChange={ (e) => handleNumberChange(e, 'padding') }
-              placeholder="Padding..."
-              type="number"
-              value={ padding } />
+            onChange={(e) => handleNumberChange(e, 'padding')}
+            placeholder="Padding..."
+            type="number"
+            value={padding}
+          />
         </InputLabel>
 
         <InputLabel label="Shape Count" margin="x2">
           <Input
-              disabled
-              onChange={ (e) => handleNumberChange(e, 'shapeCount', 0, 200) }
-              placeholder="Shape count..."
-              type="number"
-              value={ shapeCount } />
+            disabled
+            onChange={(e) => handleNumberChange(e, 'shapeCount', 0, 200)}
+            placeholder="Shape count..."
+            type="number"
+            value={shapeCount}
+          />
         </InputLabel>
 
         <InputLabel label="Vector Count" margin="x2">
           <Input
-              disabled
-              onChange={ (e) => handleNumberChange(e, 'vectorCount', 0, 200) }
-              placeholder="Vector count..."
-              type="number"
-              value={ vectorCount } />
+            disabled
+            onChange={(e) => handleNumberChange(e, 'vectorCount', 0, 200)}
+            placeholder="Vector count..."
+            type="number"
+            value={vectorCount}
+          />
         </InputLabel>
       </Box>
     </React.Fragment>

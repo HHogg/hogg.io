@@ -10,14 +10,20 @@ const WritingComponent = (props: Props) => {
 
   return (
     <Link
-        backgroundColor="background-shade-2"
-        display="block"
-        margin="x2"
-        padding="x6"
-        to={ to }>
-      <Text margin="x1" strong>{ title }</Text>
-      <Text margin="x1">{ description }</Text>
-      <Text margin="x2" size="x2" strong>{ fromISO(date) }</Text>
+      backgroundColor="background-shade-2"
+      borderRadius="x3"
+      display="block"
+      margin="x3"
+      padding="x6"
+      to={to}
+    >
+      <Text margin="x1" strong>
+        {title}
+      </Text>
+      <Text margin="x1">{description}</Text>
+      <Text margin="x2" size="x2" strong>
+        {fromISO(date)}
+      </Text>
     </Link>
   );
 };

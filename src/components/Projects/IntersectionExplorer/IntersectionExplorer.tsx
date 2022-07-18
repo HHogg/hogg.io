@@ -40,16 +40,22 @@ export const IntersectionExplorerContext = createContext<Context>({
   traversals: [],
 });
 
-const IntersectionExplorer = ({ activeNodeIndex, ...rest }: HookResult & { activeNodeIndex?: number }) => {
+const IntersectionExplorer = ({
+  activeNodeIndex,
+  ...rest
+}: HookResult & { activeNodeIndex?: number }) => {
   const [activeNodeIndexLocal, setActiveNodeIndex] = useState(-1);
   const [activeTraversalIndex, setActiveTraversalIndex] = useState(-1);
   const refContainer = useRef<HTMLElement>(null);
   const match = useMatchMedia(['1000px', '1300px']);
 
-  const className = classnames('IntersectionExplorer', match({
-    '1300px': 'IntersectionExplorer--300',
-    '1000px': 'IntersectionExplorer--120',
-  }) || 'IntersectionExplorer--111');
+  const className = classnames(
+    'IntersectionExplorer',
+    match({
+      '1300px': 'IntersectionExplorer--300',
+      '1000px': 'IntersectionExplorer--120',
+    }) || 'IntersectionExplorer--111'
+  );
 
   const context: Context = {
     activeNodeIndex: activeNodeIndexLocal,
@@ -83,36 +89,36 @@ const IntersectionExplorer = ({ activeNodeIndex, ...rest }: HookResult & { activ
   }, [activeNodeIndex]);
 
   return (
-    <IntersectionExplorerContext.Provider value={ context }>
+    <IntersectionExplorerContext.Provider value={context}>
       <Box
-          flex="vertical"
-          grow
-          minHeight="400px"
-          onPointerMove={ () => enableInteractions() }>
+        flex="vertical"
+        grow
+        minHeight="400px"
+        onPointerMove={() => enableInteractions()}
+      >
         <Box
-            backgroundColor="background-shade-1"
-            className={ className }
-            grow
-            onPointerLeave={ reset }
-            onPointerOver={ reset }
-            ref={ refContainer }>
+          backgroundColor="background-shade-1"
+          className={className}
+          grow
+          onPointerLeave={reset}
+          onPointerOver={reset}
+          ref={refContainer}
+        >
           <Box>
-            <NodeList
-                onNodeOver={ (i) => setActiveNodeIndex(i) } />
+            <NodeList onNodeOver={(i) => setActiveNodeIndex(i)} />
           </Box>
 
-          <Box
-              alignChildrenVertical="start"
-              flex="vertical"
-              grow="2">
+          <Box alignChildrenVertical="start" flex="vertical" grow="2">
             <GraphVisualisation
-                onNodeOver={ (i) => setActiveNodeIndex(i) }
-                onTraversalOver={ (i) => setActiveTraversalIndex(i) } />
+              onNodeOver={(i) => setActiveNodeIndex(i)}
+              onTraversalOver={(i) => setActiveTraversalIndex(i)}
+            />
           </Box>
 
           <Box>
             <TraversalList
-                onTraversalOver={ (i) => setActiveTraversalIndex(i) } />
+              onTraversalOver={(i) => setActiveTraversalIndex(i)}
+            />
           </Box>
         </Box>
       </Box>

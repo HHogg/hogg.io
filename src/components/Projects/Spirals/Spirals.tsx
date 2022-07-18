@@ -1,7 +1,13 @@
 import random from 'lodash.random';
 import { Box, useMatchMedia, useResizeObserver } from 'preshape';
 import * as React from 'react';
-import { Box as Rect, Circle, Vector, testPolygonCircle, testCircleCircle } from 'sat';
+import {
+  Box as Rect,
+  Circle,
+  Vector,
+  testPolygonCircle,
+  testCircleCircle,
+} from 'sat';
 import data from '../../../data';
 import ProjectPage from '../../ProjectPage/ProjectPage';
 import { TypeVector, TypeAlgorithm, FermatSpiral } from './Algorithms';
@@ -24,9 +30,18 @@ const scale = (points: TypeVector[], r0: number): TypeVector[] => {
   return points.map(([x, y]) => [x * r0 * 0.5, y * r0 * 0.5]);
 };
 
-const getVectors = (config: Config, size: { height: number; width: number }): TypeVectorWithSize[] => {
-  const bounds = new Rect(new Vector(size.width * -0.5, size.height * -0.5), size.width, size.height).toPolygon();
-  const radii = Array.from({ length: config.shapeCount }).map(() => random(10, 60)).sort((a, b) => b - a);
+const getVectors = (
+  config: Config,
+  size: { height: number; width: number }
+): TypeVectorWithSize[] => {
+  const bounds = new Rect(
+    new Vector(size.width * -0.5, size.height * -0.5),
+    size.width,
+    size.height
+  ).toPolygon();
+  const radii = Array.from({ length: config.shapeCount })
+    .map(() => random(10, 60))
+    .sort((a, b) => b - a);
   const points = config.algorithm(config.vectorCount);
   const pointsScaled = scale(points, Math.min(size.height, size.width));
   const vectors: TypeVectorWithSize[] = [];
@@ -35,8 +50,12 @@ const getVectors = (config: Config, size: { height: number; width: number }): Ty
   if (config.showShapes) {
     for (const radius of radii) {
       for (const [x, y] of pointsScaled) {
-        const circle = new Circle(new Vector(x, y), (radius / 4) + config.padding); // Why "/ 4"?
-        const shouldPlace = testPolygonCircle(bounds, circle) && !hasCollided(circles, circle);
+        const circle = new Circle(
+          new Vector(x, y),
+          radius / 4 + config.padding
+        ); // Why "/ 4"?
+        const shouldPlace =
+          testPolygonCircle(bounds, circle) && !hasCollided(circles, circle);
 
         if (shouldPlace) {
           circles.push(circle);
@@ -47,7 +66,7 @@ const getVectors = (config: Config, size: { height: number; width: number }): Ty
     }
   }
 
-  for (let i = 0; i < (pointsScaled.length - circles.length); i++) {
+  for (let i = 0; i < pointsScaled.length - circles.length; i++) {
     vectors.push(config.showVectors ? [...pointsScaled[i], 2] : [0, 0, 0]);
   }
 
@@ -83,38 +102,40 @@ const Spirals = () => {
   }, [config, size]);
 
   return (
-    <ProjectPage { ...data.projects.Spirals }>
-      <Box
-          flex={ match('600px') ? 'horizontal' : 'vertical' }
-          gap="x8"
-          grow>
+    <ProjectPage {...data.projects.Spirals}>
+      <Box flex={match('600px') ? 'horizontal' : 'vertical'} gap="x8" grow>
         <Box
-            alignChildrenVertical="end"
-            backgroundColor="dark-shade-2"
-            basis={ match('600px') ? '0' : undefined }
-            flex="vertical"
-            gap="x4"
-            grow
-            minHeight="35rem"
-            padding="x4"
-            textColor="light-shade-1">
+          alignChildrenVertical="end"
+          backgroundColor="dark-shade-2"
+          basis={match('600px') ? '0' : undefined}
+          borderRadius="x3"
+          flex="vertical"
+          gap="x4"
+          grow
+          minHeight="35rem"
+          padding="x4"
+          textColor="light-shade-1"
+        >
           <Box container grow>
-            <Box absolute="edge-to-edge" ref={ ref }>
-              { !!(size.height && size.width) && (
+            <Box absolute="edge-to-edge" ref={ref}>
+              {!!(size.height && size.width) && (
                 <SpiralsVisual
-                    height={ size.height }
-                    vectors={ vectors }
-                    width={ size.width } />
-              ) }
+                  height={size.height}
+                  vectors={vectors}
+                  width={size.width}
+                />
+              )}
             </Box>
           </Box>
         </Box>
 
         <Box>
           <SpiralsControls
-              config={ config }
-              onConfigChange={ (update: Partial<Config>) =>
-                setConfig({ ...config, ...update }) } />
+            config={config}
+            onConfigChange={(update: Partial<Config>) =>
+              setConfig({ ...config, ...update })
+            }
+          />
         </Box>
       </Box>
     </ProjectPage>

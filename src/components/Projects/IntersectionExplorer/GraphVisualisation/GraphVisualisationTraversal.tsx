@@ -1,6 +1,10 @@
 import classNames from 'classnames';
 import { motion, SVGMotionProps } from 'framer-motion';
-import { transitionTimeFast, transitionTimeSlow, transitionTimingFunction } from 'preshape';
+import {
+  transitionTimeFast,
+  transitionTimeSlow,
+  transitionTimingFunction,
+} from 'preshape';
 import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
 import { NodeState, Traversal } from '../useGraph';
@@ -19,22 +23,20 @@ const transition = {
 };
 
 const GraphVisualisationTraversal = (props: Props) => {
-  const {
-    d,
-    index,
-    onPointerOver,
-    traversal,
-  } = props;
+  const { d, index, onPointerOver, traversal } = props;
 
-  const { activeNodeIndex, activeTraversalIndex, traversals } = useContext(IntersectionExplorerContext);
+  const { activeNodeIndex, activeTraversalIndex, traversals } = useContext(
+    IntersectionExplorerContext
+  );
   const currentTraversal = getCurrentTraversal(traversals);
   const refGlow = useRef<SVGPathElement>(null);
   const refPath = useRef<SVGPathElement>(null);
 
-  const isFocused = !currentTraversal && (
-    (activeNodeIndex === -1 && activeTraversalIndex === -1) ||
-    traversal.bitset.get(activeNodeIndex) === 1 ||
-    index === activeTraversalIndex);
+  const isFocused =
+    !currentTraversal &&
+    ((activeNodeIndex === -1 && activeTraversalIndex === -1) ||
+      traversal.bitset.get(activeNodeIndex) === 1 ||
+      index === activeTraversalIndex);
 
   const classes = classNames('Graph__traversal', {
     'Graph__traversal--complete': traversal?.isComplete,
@@ -68,20 +70,25 @@ const GraphVisualisationTraversal = (props: Props) => {
 
   return (
     <motion.g
-        className={ classes }
-        key={ length } /* 👀 ... you know what */
-        onPointerOver={ onPointerOver }
-        strokeDasharray={ `${length} ${length}` }
-        transition={ { ...transition, duration: transitionTimeFast / 1000 } }>
-      <motion.path { ...pathProps }
-          className="Graph__traversal-path"
-          d={ d }
-          ref={ refPath } />
+      className={classes}
+      key={length} /* 👀 ... you know what */
+      onPointerOver={onPointerOver}
+      strokeDasharray={`${length} ${length}`}
+      transition={{ ...transition, duration: transitionTimeFast / 1000 }}
+    >
+      <motion.path
+        {...pathProps}
+        className="Graph__traversal-path"
+        d={d}
+        ref={refPath}
+      />
 
-      <motion.path { ...pathProps }
-          className="Graph__traversal-hit"
-          d={ d }
-          ref={ refGlow } />
+      <motion.path
+        {...pathProps}
+        className="Graph__traversal-hit"
+        d={d}
+        ref={refGlow}
+      />
     </motion.g>
   );
 };

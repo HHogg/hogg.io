@@ -10,5 +10,7 @@ if (rootElement) {
   render(
     <BrowserRouter>
       <Root />
-    </BrowserRouter>, rootElement);
+    </BrowserRouter>,
+    rootElement
+  );
 }

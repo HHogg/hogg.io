@@ -14,13 +14,16 @@ export type Validations = [
   ValidationRuleResult,
   ValidationRuleResult,
   ValidationRuleResult,
-  ValidationRuleResult,
+  ValidationRuleResult
 ];
 
 /**
  *
  */
-export const validateIsEdgeBacktracking = (edge: Edge, context: GraphContext): ValidationRuleResult => {
+export const validateIsEdgeBacktracking = (
+  edge: Edge,
+  context: GraphContext
+): ValidationRuleResult => {
   const { index } = edge;
   const { traversalCurrent } = context;
 
@@ -33,7 +36,8 @@ export const validateIsEdgeBacktracking = (edge: Edge, context: GraphContext): V
   }
 
   const previousNode = traversalCurrent.path[traversalCurrent.path.length - 3];
-  const isValid = traversalCurrent.path[traversalCurrent.path.length - 2] !== index;
+  const isValid =
+    traversalCurrent.path[traversalCurrent.path.length - 2] !== index;
 
   return {
     number: 1,
@@ -44,11 +48,13 @@ export const validateIsEdgeBacktracking = (edge: Edge, context: GraphContext): V
   };
 };
 
-
 /**
  *
  */
-export const validateIsEdgeWithinTraversalBounds = (edge: Edge, context: GraphContext): ValidationRuleResult => {
+export const validateIsEdgeWithinTraversalBounds = (
+  edge: Edge,
+  context: GraphContext
+): ValidationRuleResult => {
   const { circles, edges, nodes, traversalCurrent } = context;
   const { index } = edge;
 
@@ -62,8 +68,16 @@ export const validateIsEdgeWithinTraversalBounds = (edge: Edge, context: GraphCo
 
       for (const c of nodeCircles) {
         if (edge.circle !== c && pathEdge.circle !== c) {
-          const isPreviousEdgeInCircle = isPointInCircle(pathEdge.x, pathEdge.y, circles[c]);
-          const isTargetEdgeInCircle = isPointInCircle(edge.x, edge.y, circles[c]);
+          const isPreviousEdgeInCircle = isPointInCircle(
+            pathEdge.x,
+            pathEdge.y,
+            circles[c]
+          );
+          const isTargetEdgeInCircle = isPointInCircle(
+            edge.x,
+            edge.y,
+            circles[c]
+          );
 
           if (isPreviousEdgeInCircle !== isTargetEdgeInCircle) {
             return {
@@ -89,11 +103,20 @@ export const validateIsEdgeWithinTraversalBounds = (edge: Edge, context: GraphCo
 /**
  *
  */
-export const validateIsTraversalUnique = (edge: Edge, context: GraphContext): ValidationRuleResult => {
-  const { traversalCurrent, traversalCurrentNode, traversalsComplete } = context;
+export const validateIsTraversalUnique = (
+  edge: Edge,
+  context: GraphContext
+): ValidationRuleResult => {
+  const { traversalCurrent, traversalCurrentNode, traversalsComplete } =
+    context;
   const endNode = getOppositeEndNode(edge, traversalCurrentNode);
 
-  if (traversalsComplete.length && traversalCurrent && traversalCurrent.path.length > 1 && endNode !== null) {
+  if (
+    traversalsComplete.length &&
+    traversalCurrent &&
+    traversalCurrent.path.length > 1 &&
+    endNode !== null
+  ) {
     const { bitset: bitsetNext } = appendEdgeToPath(traversalCurrent, edge);
 
     for (let i = 0; i < traversalsComplete.length; i++) {
@@ -119,7 +142,10 @@ export const validateIsTraversalUnique = (edge: Edge, context: GraphContext): Va
 /**
  *
  */
-export const validateIsEdgeTraversedTwice = (edge: Edge, context: GraphContext): ValidationRuleResult => {
+export const validateIsEdgeTraversedTwice = (
+  edge: Edge,
+  context: GraphContext
+): ValidationRuleResult => {
   const { traversalsComplete } = context;
 
   for (let i = 0, c = 0; i < traversalsComplete.length && c < 2; i++) {
@@ -131,7 +157,6 @@ export const validateIsEdgeTraversedTwice = (edge: Edge, context: GraphContext):
       };
     }
   }
-
 
   return {
     number: 4,
@@ -145,12 +170,15 @@ export const validateIsEdgeTraversedTwice = (edge: Edge, context: GraphContext):
  * @param {GraphContext} context
  * @returns {Validations}
  */
-export const validateEdge = (edge: Edge, context: GraphContext): Validations => {
+export const validateEdge = (
+  edge: Edge,
+  context: GraphContext
+): Validations => {
   const validations: [
     ValidationRuleResult,
     ValidationRuleResult,
     ValidationRuleResult,
-    ValidationRuleResult,
+    ValidationRuleResult
   ] = [
     validateIsEdgeBacktracking(edge, context),
     validateIsEdgeWithinTraversalBounds(edge, context),

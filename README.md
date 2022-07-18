@@ -4,7 +4,6 @@
   My personal website, which I use as a playground for my own learnings and experiments.
 </p>
 
-
 ### Technology
 
 - [Typescript](https://www.typescriptlang.org/)
@@ -12,7 +11,6 @@
 - [React](https://reactjs.org/)
 - [PostCSS](https://postcss.org/) (with postcss-preset-env for a little power)
 - [Firebase](https://firebase.google.com/) (hosting)
-
 
 ### Setup
 
@@ -57,6 +55,3 @@ Deploy to Firebase hosting (... after authenticating)
 ```
 yarn deploy
 ```
-
-
-

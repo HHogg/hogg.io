@@ -41,7 +41,10 @@ export const getNewTraversal = (index: number, node?: number): Traversal => ({
  * @param {Edge} edge The edge to be added to the traversal.
  * @returns {Traversal} A traversal object with the appended point
  */
-export const appendEdgeToPath = ({ bitset, index, path }: Traversal, { index: edgeIndex, nodes }: Edge): Traversal => {
+export const appendEdgeToPath = (
+  { bitset, index, path }: Traversal,
+  { index: edgeIndex, nodes }: Edge
+): Traversal => {
   const nodeLast = path[path.length - 1];
   const nodeNext = nodes[0] === nodeLast ? nodes[1] : nodes[0];
 
@@ -57,8 +60,13 @@ export const appendEdgeToPath = ({ bitset, index, path }: Traversal, { index: ed
  * @param {Traversal[]} traversals The complete and incomplete traversals
  * @returns {Traversal|null} An incomplete Traversal or null
  */
-export const getCurrentTraversal = (traversals: Traversal[]): Traversal | null => {
-  if (traversals[traversals.length - 1] && !traversals[traversals.length - 1].isComplete) {
+export const getCurrentTraversal = (
+  traversals: Traversal[]
+): Traversal | null => {
+  if (
+    traversals[traversals.length - 1] &&
+    !traversals[traversals.length - 1].isComplete
+  ) {
     return traversals[traversals.length - 1];
   }
 

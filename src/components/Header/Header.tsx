@@ -1,4 +1,12 @@
-import { Box, BoxProps, Icon, Link, Text, ThemeSwitcher, useMatchMedia } from 'preshape';
+import {
+  Box,
+  BoxProps,
+  Icon,
+  Link,
+  Text,
+  ThemeSwitcher,
+  useMatchMedia,
+} from 'preshape';
 import * as React from 'react';
 import { Route } from 'react-router-dom';
 import { RootContext } from '../Root';
@@ -15,11 +23,13 @@ const Header = (props: Props) => {
   const match = useMatchMedia(['800px']);
 
   return (
-    <Box { ...rest }
-        alignChildrenHorizontal="between"
-        flex={ match('800px') ? 'horizontal' : 'vertical' }
-        gap={ match('800px') ? 'x10' : 'x4' }
-        margin="x4">
+    <Box
+      {...rest}
+      alignChildrenHorizontal="between"
+      flex={match('800px') ? 'horizontal' : 'vertical'}
+      gap={match('800px') ? 'x10' : 'x4'}
+      margin="x4"
+    >
       <Box alignChildrenVertical="middle" flex="horizontal">
         <Box alignSelf="middle" grow>
           <Route path="/:nested">
@@ -36,30 +46,30 @@ const Header = (props: Props) => {
           </Route>
         </Box>
 
-        { themeable && !match('800px') && (
+        {themeable && !match('800px') && (
           <Box>
-            <ThemeSwitcher onChange={ onChangeTheme } theme={ theme } />
+            <ThemeSwitcher onChange={onChangeTheme} theme={theme} />
           </Box>
-        ) }
+        )}
       </Box>
 
-      { title && (
+      {title && (
         <React.Fragment>
           <Box basis="0" grow>
-            <Text size="x4" strong>{ title }</Text>
+            <Text size="x4" strong>
+              {title}
+            </Text>
 
-            { description && (
-              <Text>{ description }</Text>
-            ) }
+            {description && <Text>{description}</Text>}
           </Box>
         </React.Fragment>
-      ) }
+      )}
 
-      { themeable && match('800px') && (
+      {themeable && match('800px') && (
         <Box>
-          <ThemeSwitcher onChange={ onChangeTheme } theme={ theme } />
+          <ThemeSwitcher onChange={onChangeTheme} theme={theme} />
         </Box>
-      ) }
+      )}
     </Box>
   );
 };

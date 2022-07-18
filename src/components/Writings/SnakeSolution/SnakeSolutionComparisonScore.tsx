@@ -14,23 +14,29 @@ const histories: TypeHistory[] = [
   runTailEscape as TypeHistory,
 ];
 
-const series = histories.map((history) => history.map((_, index) => ({
-  x: index + 1,
-  y: getScore(15, 15, history.slice(0, index + 1)),
-})));
+const series = histories.map((history) =>
+  history.map((_, index) => ({
+    x: index + 1,
+    y: getScore(15, 15, history.slice(0, index + 1)),
+  }))
+);
 
 const seriesPoints = series.map((series) => series[series.length - 1]);
 
 const xDomain = [1, Math.max(...series.map(({ length }) => length))];
-const yDomain = [0, Math.max(...flatten(series.map((series) => series.map(({ y }) => y))))];
+const yDomain = [
+  0,
+  Math.max(...flatten(series.map((series) => series.map(({ y }) => y)))),
+];
 
 export default () => {
   return (
     <SnakeSolutionComparison
-        series={ series }
-        seriesPoints={ seriesPoints }
-        title="Score"
-        xDomain={ xDomain }
-        yDomain={ yDomain } />
+      series={series}
+      seriesPoints={seriesPoints}
+      title="Score"
+      xDomain={xDomain}
+      yDomain={yDomain}
+    />
   );
 };

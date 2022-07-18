@@ -34,20 +34,20 @@ const GraphVisualisationNode = (props: Props) => {
   });
 
   return (
-    <g { ...rest }
-        className={ classes }
-        data-visible={ isVisible }>
+    <g {...rest} className={classes} data-visible={isVisible}>
       <circle
-          className="Graph__node-point"
-          cx={ x }
-          cy={ y }
-          style={ { transformOrigin: `${x}px ${y}px` } } />
+        className="Graph__node-point"
+        cx={x}
+        cy={y}
+        style={{ transformOrigin: `${x}px ${y}px` }}
+      />
 
       <circle
-          className="Graph__node-hit"
-          cx={ x }
-          cy={ y }
-          style={ { transformOrigin: `${x}px ${y}px` } } />
+        className="Graph__node-hit"
+        cx={x}
+        cy={y}
+        style={{ transformOrigin: `${x}px ${y}px` }}
+      />
     </g>
   );
 };

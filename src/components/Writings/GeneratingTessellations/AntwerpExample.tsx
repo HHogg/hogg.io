@@ -1,6 +1,12 @@
 import { Antwerp, AntwerpProps } from '@hhogg/antwerp';
 import { scaleLinear } from 'd3-scale';
-import { Appear, Box, colorLightShade1, useIntersectionObserver, themes } from 'preshape';
+import {
+  Appear,
+  Box,
+  colorLightShade1,
+  useIntersectionObserver,
+  themes,
+} from 'preshape';
 import * as React from 'react';
 import { RootContext } from '../../Root';
 
@@ -24,13 +30,15 @@ export default ({ animate, ...rest }: AntwerpProps & { animate?: boolean }) => {
   }, [animate, isInView]);
 
   return (
-    <Box grow ref={ ref } >
-      <Appear visible={ isVisible }>
-        <Antwerp { ...rest }
-            animateInterval={ animateInterval }
-            colorScale={ colorScale }
-            height="300px"
-            width="100%" />
+    <Box grow ref={ref}>
+      <Appear visible={isVisible}>
+        <Antwerp
+          {...rest}
+          animateInterval={animateInterval}
+          colorScale={colorScale}
+          height="300px"
+          width="100%"
+        />
       </Appear>
     </Box>
   );

@@ -13,13 +13,14 @@ const TraversalList: React.FunctionComponent<Props> = ({ onTraversalOver }) => {
   const completeTraversals = getCompleteTraversals(traversals);
 
   return (
-    <Labels flex="horizontal" margin="x6" style={ { gap: 8 } } wrap>
-      { completeTraversals.map((traversal) => (
+    <Labels flex="horizontal" margin="x6" style={{ gap: 8 }} wrap>
+      {completeTraversals.map((traversal) => (
         <TraversalListItem
-            key={ traversal.bitset.toString() }
-            onPointerOver={ () => onTraversalOver(traversal.index) }
-            traversal={ traversal } />
-      )) }
+          key={traversal.bitset.toString()}
+          onPointerOver={() => onTraversalOver(traversal.index)}
+          traversal={traversal}
+        />
+      ))}
     </Labels>
   );
 };

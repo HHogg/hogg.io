@@ -1,4 +1,13 @@
-import { Box, Icon, Label, Labels, Link, Separator, Text, useMatchMedia } from 'preshape';
+import {
+  Box,
+  Icon,
+  Label,
+  Labels,
+  Link,
+  Separator,
+  Text,
+  useMatchMedia,
+} from 'preshape';
 import * as React from 'react';
 import { listedWritingsSorted } from '../../data';
 import { Writing } from '../../Types';
@@ -18,47 +27,61 @@ const WritingPage: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Metas
-          description={ description }
-          image={ imageOG }
-          title={ title } />
+      <Metas description={description} image={imageOG} title={title} />
 
       <Box flex="vertical" gap="x6" grow tag="article">
         <Box
-            backgroundColor="background-shade-1"
-            flex="vertical"
-            gap="x6"
-            padding="x6"
-            textColor="text-shade-1"
-            theme="night">
+          backgroundColor="background-shade-1"
+          borderRadius="x3"
+          flex="vertical"
+          gap="x6"
+          padding="x6"
+          textColor="text-shade-1"
+          theme="night"
+        >
           <Box>
             <Header />
           </Box>
 
           <Box>
             <Box maxWidth="600px" paddingVertical="x6">
-              <Text heading margin="x2" size="x6" strong tag="h1">{ title }</Text>
-              <Text heading margin="x2" size="x4" tag="h2">{ description }</Text>
-              <Text aria-label="article date" heading margin="x2" size="x2">{ fromISO(date) }</Text>
+              <Text heading margin="x2" size="x6" strong tag="h1">
+                {title}
+              </Text>
+              <Text heading margin="x2" size="x4" tag="h2">
+                {description}
+              </Text>
+              <Text aria-label="article date" heading margin="x2" size="x2">
+                {fromISO(date)}
+              </Text>
             </Box>
           </Box>
         </Box>
 
-        <Box backgroundColor="background-shade-1" grow padding="x6">
-          <Box>
-            { children }
-          </Box>
+        <Box
+          backgroundColor="background-shade-1"
+          borderRadius="x3"
+          grow
+          padding="x6"
+        >
+          <Box>{children}</Box>
 
           <Box margin="x16" maxWidth="600px">
             <Separator borderColor="background-shade-3" margin="x4" />
-            <Text margin="x2" size="x2" strong tag="h1">{ title }</Text>
-            <Text margin="x2" size="x1" tag="h2">{ description }</Text>
-            <Text aria-label="article date" margin="x2" size="x1">{ fromISO(date) }</Text>
+            <Text margin="x2" size="x2" strong tag="h1">
+              {title}
+            </Text>
+            <Text margin="x2" size="x1" tag="h2">
+              {description}
+            </Text>
+            <Text aria-label="article date" margin="x2" size="x1">
+              {fromISO(date)}
+            </Text>
 
             <Labels margin="x4">
-              { tags.map((tag) => (
-                <Label key={ tag }>{ tag }</Label>
-              )) }
+              {tags.map((tag) => (
+                <Label key={tag}>{tag}</Label>
+              ))}
             </Labels>
             <Separator borderColor="background-shade-3" margin="x4" />
           </Box>
@@ -68,46 +91,61 @@ const WritingPage: React.FC<Props> = (props) => {
       </Box>
 
       <Box
-          alignChildrenHorizontal="between"
-          backgroundColor="background-shade-1"
-          flex={ match('600px') ? 'horizontal' : 'vertical' }
-          gap="x6"
-          padding="x6"
-          textColor="text-shade-1"
-          theme="night">
-        { previous ? (
+        alignChildrenHorizontal="between"
+        backgroundColor="background-shade-1"
+        flex={match('600px') ? 'horizontal' : 'vertical'}
+        gap="x6"
+        padding="x6"
+        textColor="text-shade-1"
+        theme="night"
+      >
+        {previous ? (
           <Link
-              alignChildrenVertical="middle"
-              flex="horizontal"
-              gap="x3"
-              maxWidth={ match('600px') ? '33%' : undefined }
-              padding="x6"
-              to={ previous.to }>
+            alignChildrenVertical="middle"
+            flex="horizontal"
+            gap="x3"
+            maxWidth={match('600px') ? '33%' : undefined}
+            padding="x6"
+            to={previous.to}
+          >
             <Icon name="ChevronLeft" size="2rem" />
 
             <Box shrink>
-              <Text margin="x2" size="x2" strong tag="h1">{ previous.title }</Text>
-              <Text margin="x2" size="x1" tag="h2">{ previous.description }</Text>
+              <Text margin="x2" size="x2" strong tag="h1">
+                {previous.title}
+              </Text>
+              <Text margin="x2" size="x1" tag="h2">
+                {previous.description}
+              </Text>
             </Box>
           </Link>
-        ) : <Box /> }
+        ) : (
+          <Box />
+        )}
 
-        { next ? (
+        {next ? (
           <Link
-              alignChildrenVertical="middle"
-              flex="horizontal"
-              gap="x3"
-              maxWidth={ match('600px') ? '33%' : undefined }
-              padding="x6"
-              to={ next.to }>
+            alignChildrenVertical="middle"
+            flex="horizontal"
+            gap="x3"
+            maxWidth={match('600px') ? '33%' : undefined}
+            padding="x6"
+            to={next.to}
+          >
             <Box shrink>
-              <Text margin="x2" size="x2" strong tag="h1">{ next.title }</Text>
-              <Text margin="x2" size="x1" tag="h2">{ next.description }</Text>
+              <Text margin="x2" size="x2" strong tag="h1">
+                {next.title}
+              </Text>
+              <Text margin="x2" size="x1" tag="h2">
+                {next.description}
+              </Text>
             </Box>
 
             <Icon name="ChevronRight" size="2rem" />
           </Link>
-        ) : <Box /> }
+        ) : (
+          <Box />
+        )}
       </Box>
     </React.Fragment>
   );

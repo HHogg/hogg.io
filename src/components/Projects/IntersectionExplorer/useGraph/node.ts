@@ -13,7 +13,7 @@ export type Node = {
   state: NodeState;
   x: number;
   y: number;
-}
+};
 
 export interface NodeState {
   /**
@@ -82,7 +82,7 @@ export const getNodes = (circles: Circle[]): Node[] => {
         const [[p1x, p1y], [p2x, p2y]] = points;
 
         const node1: Node = {
-          [i]:  atan2(p1x, p1y, a.x, a.y),
+          [i]: atan2(p1x, p1y, a.x, a.y),
           [j]: atan2(p1x, p1y, b.x, b.y),
           circles: [i, j],
           index: nodes.length,
@@ -119,30 +119,41 @@ export const getNodes = (circles: Circle[]): Node[] => {
  * @param {GraphContext} context
  * @returns {NodeState}
  */
- export const getNodeState = (node: Node, context: GraphContext): NodeState => {
+export const getNodeState = (node: Node, context: GraphContext): NodeState => {
   const { traversalCurrent, traversals } = context;
-  const traversalTail = traversalCurrent && traversalCurrent.path[traversalCurrent.path.length - 1];
-  const traversalCount = traversals.reduce((n, { bitset }) => n + bitset.get(node.index), 0);
+  const traversalTail =
+    traversalCurrent && traversalCurrent.path[traversalCurrent.path.length - 1];
+  const traversalCount = traversals.reduce(
+    (n, { bitset }) => n + bitset.get(node.index),
+    0
+  );
 
   // The current node is the last node to be traversed to.
   const isCurrent = traversalTail === node.index;
 
   // If the node index exists in the bitset, then it's been visited.
-  const isPrevious = !!traversalCurrent && traversalCurrent.bitset.get(node.index) === 1;
+  const isPrevious =
+    !!traversalCurrent && traversalCurrent.bitset.get(node.index) === 1;
 
   //
   const isNext = !traversalCurrent;
 
-  const emptyRuleStates: [ValidationRuleResult, ValidationRuleResult, ValidationRuleResult, ValidationRuleResult] = [
+  const emptyRuleStates: [
+    ValidationRuleResult,
+    ValidationRuleResult,
+    ValidationRuleResult,
+    ValidationRuleResult
+  ] = [
     { number: 1, isValid: null, message: '' },
     { number: 2, isValid: null, message: '' },
     { number: 3, isValid: null, message: '' },
     { number: 4, isValid: null, message: '' },
   ];
 
-  const isValid: Validations = traversalCurrent === null
-    ? [traversalCount < 4 ? true : null, ...emptyRuleStates]
-    : [null, ...emptyRuleStates];
+  const isValid: Validations =
+    traversalCurrent === null
+      ? [traversalCount < 4 ? true : null, ...emptyRuleStates]
+      : [null, ...emptyRuleStates];
 
   // A node is only selectable when no traversal is in progress,
   // after than, you only interact with edges.
@@ -170,5 +181,6 @@ export const getNodes = (circles: Circle[]): Node[] => {
  */
 export const areNodesConnected = (a: number, b: number, edges: Edge[]) => {
   return edges.some(({ bitset }) =>
-    bitset.equals(new Bitset().set(a, 1).set(b, 1)));
+    bitset.equals(new Bitset().set(a, 1).set(b, 1))
+  );
 };

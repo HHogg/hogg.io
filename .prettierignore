@@ -1,0 +1,10 @@
+*.css
+*.frag
+*.vert
+
+.cache
+.firebase
+.parche-cache
+.yarn
+dist
+public

@@ -15,11 +15,11 @@ const NodeValidationIndicator = ({ validation }: Props) => {
 
   return (
     <Box
-        backgroundColor={ backgroundColor }
-        className="NodeValidation__indicator"
-        height={ 20 }
-        width={ 20 } />
-
+      backgroundColor={backgroundColor}
+      className="NodeValidation__indicator"
+      height={20}
+      width={20}
+    />
   );
 };
 

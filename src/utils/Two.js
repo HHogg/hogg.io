@@ -14,15 +14,10 @@ const createShape = (shape, props) => {
     translate,
   } = props;
 
-  const {
-    top,
-    left,
-    width,
-    height,
-  } = shape.getBoundingClientRect();
+  const { top, left, width, height } = shape.getBoundingClientRect();
 
-  const cx = left + (width / 2);
-  const cy = top + (height / 2);
+  const cx = left + width / 2;
+  const cy = top + height / 2;
 
   if (translate) {
     shape.center();
@@ -59,19 +54,19 @@ export const setClassName = (shape, className) =>
 export const createArc = (props) => {
   return createShape(
     new Two.Path(arcsToAnchors([props]), false, false, true),
-  props);
+    props
+  );
 };
 
 export const createCircle = (props) => {
-  return createShape(
-    new Two.Circle(props.x, props.y, props.radius),
-  props);
+  return createShape(new Two.Circle(props.x, props.y, props.radius), props);
 };
 
 export const createEllipse = (props) => {
   return createShape(
     new Two.Ellipsie(props.x, props.y, props.width, props.height),
-  props);
+    props
+  );
 };
 
 export const createGroup = (props = {}) => {
@@ -87,50 +82,55 @@ export const createGroup = (props = {}) => {
 export const createLine = (props) => {
   return createShape(
     new Two.Path(
-      props.vertices.map(([x, y]) =>
-        new Two.Vector(x, y)
-      ),
-    false, props.curved),
-  props);
+      props.vertices.map(([x, y]) => new Two.Vector(x, y)),
+      false,
+      props.curved
+    ),
+    props
+  );
 };
 
 export const createPolygon = (props) => {
   return createShape(
     new Two.Path(
-      props.vertices.map(([x, y]) =>
-        new Two.Vector(x, y)
-      ),
-    true, props.curved),
-  props);
+      props.vertices.map(([x, y]) => new Two.Vector(x, y)),
+      true,
+      props.curved
+    ),
+    props
+  );
 };
 
 export const createPolygonArc = (props) => {
   return createShape(
     new Two.Path(arcsToAnchors(props.arcs, true), true, false, true),
-  props);
+    props
+  );
 };
 
 export const createText = (text, props) => {
-  return createShape(
-    new Two.Text(text, props.x, props.y, props),
-  props);
+  return createShape(new Two.Text(text, props.x, props.y, props), props);
 };
 
 export const createTriangle = (props) => {
   return createShape(
-    new Two.Path([
-      new Two.Vector(props.x, props.y - (props.height / 2)),
-      new Two.Vector(props.x + (props.width / 2), props.y + (props.height / 2)),
-      new Two.Vector(props.x - (props.width / 2), props.y + (props.height / 2)),
-    ], true),
-  props);
+    new Two.Path(
+      [
+        new Two.Vector(props.x, props.y - props.height / 2),
+        new Two.Vector(props.x + props.width / 2, props.y + props.height / 2),
+        new Two.Vector(props.x - props.width / 2, props.y + props.height / 2),
+      ],
+      true
+    ),
+    props
+  );
 };
 
 const arcsToAnchors = (arcs, closed) => {
   const R = Two.Resolution * 3;
-  const anchors = Array
-    .from({ length: (R * arcs.length) })
-    .map(() => new Two.Anchor());
+  const anchors = Array.from({ length: R * arcs.length }).map(
+    () => new Two.Anchor()
+  );
 
   for (let i = 0; i < arcs.length; i++) {
     const { a1, a2, cx, cy, radius } = arcs[i];
@@ -146,8 +146,8 @@ const arcsToAnchors = (arcs, closed) => {
         anchor.command = Two.Commands.curve;
       }
 
-      anchor.x = cx + (radius * Math.cos(theta));
-      anchor.y = cy + (radius * Math.sin(theta));
+      anchor.x = cx + radius * Math.cos(theta);
+      anchor.y = cy + radius * Math.sin(theta);
 
       if (anchor.controls) {
         anchor.controls.left.clear();
@@ -155,7 +155,7 @@ const arcsToAnchors = (arcs, closed) => {
       }
 
       if (anchor.command === Two.Commands.curve) {
-        const amp = (radius * ((a2 - a1) / R) / PI);
+        const amp = (radius * ((a2 - a1) / R)) / PI;
 
         if (j !== 0) {
           anchor.controls.left.x = amp * Math.cos(theta - HALF_PI);

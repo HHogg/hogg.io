@@ -1,4 +1,10 @@
-import { useWindowScrollTo, useTheme, TypeTheme } from 'preshape';
+import {
+  useWindowScrollTo,
+  useTheme,
+  TypeTheme,
+  Box,
+  useMatchMedia,
+} from 'preshape';
 import * as React from 'react';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import data from '../data';
@@ -12,18 +18,21 @@ import GeneratingTessellations from './Writings/GeneratingTessellations/Generati
 import SnakeSolution from './Writings/SnakeSolution/SnakeSolution';
 
 export const RootContext = React.createContext<{
+  layout: 's' | 'm' | 'l';
   onChangeTheme: (theme: TypeTheme) => void;
   theme: TypeTheme;
 }>({
-      onChangeTheme: () => undefined,
-      theme: 'day',
-    });
-
+  layout: 'l',
+  onChangeTheme: () => undefined,
+  theme: 'day',
+});
 
 const Site = () => {
   const [theme, onChangeTheme] = React.useState<TypeTheme>('day');
   const history = useHistory();
   const location = useLocation();
+  const match = useMatchMedia(['800px', '1200px']);
+  const layout = match({ '480px': 'm', '1200px': 'l' }) || 's';
 
   useTheme(theme);
   useWindowScrollTo();
@@ -35,17 +44,35 @@ const Site = () => {
   }, [location, history.action]);
 
   return (
-    <RootContext.Provider value={ { onChangeTheme, theme } }>
+    <RootContext.Provider value={{ layout, onChangeTheme, theme }}>
       <Metas description="My personal projects and experience." />
-      <Switch>
-        <Route component={ Landing } exact path="/" />
-        <Route component={ CircleGraph } path={ data.projects.CircleGraph.to } />
-        <Route component={ Spirals } path={ data.projects.Spirals.to } />
-        <Route component={ CircleIntersections } path={ data.writings.CircleIntersections.to } />
-        <Route component={ CircleGraphs } path={ data.writings.CircleGraphs.to } />
-        {/* <Route component={ GeneratingTessellations } path={ data.writings.GeneratingTessellations.to } /> */}
-        <Route component={ SnakeSolution } path={ data.writings.SnakeSolution.to } />
-      </Switch>
+      <Box
+        flex="vertical"
+        grow
+        padding={layout === 'm' || layout === 'l' ? 'x6' : 'x0'}
+      >
+        <Switch>
+          <Route component={Landing} exact path="/" />
+          <Route component={CircleGraph} path={data.projects.CircleGraph.to} />
+          <Route component={Spirals} path={data.projects.Spirals.to} />
+          <Route
+            component={CircleIntersections}
+            path={data.writings.CircleIntersections.to}
+          />
+          <Route
+            component={CircleGraphs}
+            path={data.writings.CircleGraphs.to}
+          />
+          <Route
+            component={GeneratingTessellations}
+            path={data.writings.GeneratingTessellations.to}
+          />
+          <Route
+            component={SnakeSolution}
+            path={data.writings.SnakeSolution.to}
+          />
+        </Switch>
+      </Box>
     </RootContext.Provider>
   );
 };

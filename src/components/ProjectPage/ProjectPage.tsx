@@ -11,36 +11,30 @@ interface Props {
 }
 
 const ProjectPage: React.FC<Props> = (props) => {
-  const {
-    children,
-    description,
-    imageOG,
-    themeable,
-    title,
-  } = props;
+  const { children, description, imageOG, themeable, title } = props;
 
   return (
     <React.Fragment>
-      <Metas
-          description={ description }
-          image={ imageOG }
-          title={ title } />
+      <Metas description={description} image={imageOG} title={title} />
 
       <Box
-          backgroundColor="background-shade-1"
-          flex="vertical"
-          gap="x6"
-          grow
-          padding="x6">
+        backgroundColor="background-shade-1"
+        borderRadius="x3"
+        flex="vertical"
+        gap="x6"
+        grow
+        padding="x6"
+      >
         <Box>
           <Header
-              description={ description }
-              themeable={ themeable }
-              title={ title } />
+            description={description}
+            themeable={themeable}
+            title={title}
+          />
         </Box>
 
         <Box flex="vertical" grow>
-          { children }
+          {children}
         </Box>
       </Box>
     </React.Fragment>

@@ -15,13 +15,7 @@ const transition = {
 };
 
 const GraphVisualisationEdge = (props: Props) => {
-  const {
-    animate,
-    d,
-    isPrevious,
-    isNext,
-    isValid,
-  } = props;
+  const { animate, d, isPrevious, isNext, isValid } = props;
 
   const refPath = useRef<SVGPathElement>(null);
   const [length, setLength] = useState(0);
@@ -39,15 +33,16 @@ const GraphVisualisationEdge = (props: Props) => {
 
   return (
     <motion.path
-        animate={ {
-          strokeDasharray: animate ? length : 0,
-        } }
-        className={ classes }
-        d={ d }
-        ref={ refPath }
-        strokeDasharray={ 0 }
-        strokeDashoffset={ 0 }
-        transition={ transition } />
+      animate={{
+        strokeDasharray: animate ? length : 0,
+      }}
+      className={classes}
+      d={d}
+      ref={refPath}
+      strokeDasharray={0}
+      strokeDashoffset={0}
+      transition={transition}
+    />
   );
 };
 

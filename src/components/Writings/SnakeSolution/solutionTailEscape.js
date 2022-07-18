@@ -1,8 +1,15 @@
-const adjacentes = (a, xMax, yMax) => [[a[0], a[1] - 1], [a[0] + 1, a[1]], [a[0], a[1] + 1], [a[0] - 1, a[1]]].filter((b) => b[0] >= 0 && b[1] >= 0 && b[0] <= xMax && b[1] <= yMax);
+const adjacentes = (a, xMax, yMax) =>
+  [
+    [a[0], a[1] - 1],
+    [a[0] + 1, a[1]],
+    [a[0], a[1] + 1],
+    [a[0] - 1, a[1]],
+  ].filter((b) => b[0] >= 0 && b[1] >= 0 && b[0] <= xMax && b[1] <= yMax);
 const equals = ([x1, y1], [x2, y2]) => x1 === x2 && y1 === y2;
 const includes = (a, b) => a.some((a) => equals(a, b));
 const difference = (a, b) => a.filter((a) => !includes(b, a));
-const shift = (a, b, collect) => b.concat(a).slice(0, b.length + (a.length - b.length + (collect ? 1 : 0)));
+const shift = (a, b, collect) =>
+  b.concat(a).slice(0, b.length + (a.length - b.length + (collect ? 1 : 0)));
 const tail = (a) => a[a.length - 1];
 
 const search = (start, end, xMax, yMax, snake) => {
@@ -11,13 +18,19 @@ const search = (start, end, xMax, yMax, snake) => {
 
   while (queue.length) {
     const current = queue.shift();
-    const snakeShifted = shift(snake, paths[current] = paths[current] || [start]);
+    const snakeShifted = shift(
+      snake,
+      (paths[current] = paths[current] || [start])
+    );
 
     if (equals(current, end)) {
       return paths[current];
     }
 
-    for (const next of difference(adjacentes(current, xMax, yMax), snakeShifted)) {
+    for (const next of difference(
+      adjacentes(current, xMax, yMax),
+      snakeShifted
+    )) {
       if (!(next in paths)) {
         queue.push(next);
         paths[next] = [next].concat(paths[current]);
@@ -38,7 +51,7 @@ const search = (start, end, xMax, yMax, snake) => {
  * @returns number The value for the cell
  */
 function heuristic(cell, xLength, yLength, snake, point) {
-  const size = (xLength * yLength) * 2;
+  const size = xLength * yLength * 2;
   const xMax = xLength - 1;
   const yMax = yLength - 1;
 
@@ -49,7 +62,10 @@ function heuristic(cell, xLength, yLength, snake, point) {
   if (pathToPoint) {
     const snakeAtPoint = shift(snake, pathToPoint, true);
 
-    for (const next of difference(adjacentes(point, xMax, yMax), snakeAtPoint)) {
+    for (const next of difference(
+      adjacentes(point, xMax, yMax),
+      snakeAtPoint
+    )) {
       if (search(next, tail(snakeAtPoint), xMax, yMax, snakeAtPoint)) {
         return pathToPoint.length;
       }

@@ -25,7 +25,10 @@ export const atan2 = (x1: number, y1: number, x2: number, y2: number) => {
  * @param {Circle} circle2
  * @returns {[[number, number], [number, number]] | null}
  */
-export const getIntersectionPoints = (circle1: Circle, circle2: Circle): [[number, number], [number, number]] | null => {
+export const getIntersectionPoints = (
+  circle1: Circle,
+  circle2: Circle
+): [[number, number], [number, number]] | null => {
   const { x: x1, y: y1, radius: r1 } = circle1;
   const { x: x2, y: y2, radius: r2 } = circle2;
   const d = Math.hypot(x2 - x1, y2 - y1);
@@ -33,8 +36,8 @@ export const getIntersectionPoints = (circle1: Circle, circle2: Circle): [[numbe
   if (d && d <= r1 + r2 && d >= Math.abs(r2 - r1)) {
     const a = (r1 * r1 - r2 * r2 + d * d) / (2 * d);
     const h = Math.sqrt(r1 * r1 - a * a);
-    const x = x1 + a * (x2 - x1) / d;
-    const y = y1 + a * (y2 - y1) / d;
+    const x = x1 + (a * (x2 - x1)) / d;
+    const y = y1 + (a * (y2 - y1)) / d;
     const rx = -(y2 - y1) * (h / d);
     const ry = -(x2 - x1) * (h / d);
     const p1: [number, number] = [floor(x + rx, 5), floor(y - ry, 5)];
@@ -53,6 +56,10 @@ export const getIntersectionPoints = (circle1: Circle, circle2: Circle): [[numbe
  * @param {Circle} circle
  * @returns {boolean}
  */
-export const isPointInCircle = (x: number, y: number, { radius, x: cx, y: cy }: Circle): boolean => {
-  return ((x - cx) ** 2) + ((y - cy) ** 2) < (radius ** 2);
+export const isPointInCircle = (
+  x: number,
+  y: number,
+  { radius, x: cx, y: cy }: Circle
+): boolean => {
+  return (x - cx) ** 2 + (y - cy) ** 2 < radius ** 2;
 };
