@@ -1,7 +1,7 @@
 import { Text, TextProps } from 'preshape';
-import * as React from 'react';
+import React, { FC } from 'react';
 
-const WritingParagraph: React.FC<TextProps> = (props) => {
+const WritingParagraph: FC<TextProps> = (props) => {
   return <Text {...props} margin="x3" />;
 };
 

@@ -1,4 +1,3 @@
 {
-  "extends": "stylelint-config-preshape",
-  "ignoreFiles": ["**/*.tsx"]
+  "extends": "stylelint-config-standard"
 }

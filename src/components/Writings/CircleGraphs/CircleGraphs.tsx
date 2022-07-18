@@ -115,7 +115,7 @@ const CircleGraphs = () => {
             This is a rewrite of a previous article, which I didn't like as it
             didn't focus on the main concept of traversing the intersections
             with graphs. You can read the origin article{' '}
-            <Link to="/writings/circle-intersections" underline>
+            <Link to="/writings/circle-intersections" isTextLink>
               here
             </Link>
             .
@@ -164,7 +164,7 @@ const CircleGraphs = () => {
           <Link
             href="http://mathworld.wolfram.com/Circle-CircleIntersection.html"
             target="CircleIntersections"
-            underline
+            isTextLink
           >
             well solved problem
           </Link>
@@ -372,7 +372,7 @@ const CircleGraphs = () => {
             <Box borderSize="x1" height="16px" />
           </Box>
 
-          <Text align="middle" margin="x2" size="x1" strong uppercase>
+          <Text align="middle" margin="x2" size="x2" strong uppercase>
             Rule Example Configurations
           </Text>
         </Box>

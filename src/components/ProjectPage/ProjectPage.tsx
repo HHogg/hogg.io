@@ -1,5 +1,5 @@
 import { Box } from 'preshape';
-import * as React from 'react';
+import React, { PropsWithChildren } from 'react';
 import Header from '../Header/Header';
 import Metas from '../Metas/Metas';
 
@@ -10,11 +10,11 @@ interface Props {
   title: string;
 }
 
-const ProjectPage: React.FC<Props> = (props) => {
+const ProjectPage = (props: PropsWithChildren<Props>) => {
   const { children, description, imageOG, themeable, title } = props;
 
   return (
-    <React.Fragment>
+    <>
       <Metas description={description} image={imageOG} title={title} />
 
       <Box
@@ -37,7 +37,7 @@ const ProjectPage: React.FC<Props> = (props) => {
           {children}
         </Box>
       </Box>
-    </React.Fragment>
+    </>
   );
 };
 

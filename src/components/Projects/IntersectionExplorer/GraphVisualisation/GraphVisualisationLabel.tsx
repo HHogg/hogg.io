@@ -28,7 +28,7 @@ const GraphVisualisationLabel: FunctionComponent<Props> = (props) => {
             display="inline-block"
             paddingHorizontal="x1"
             paddingVertical="x0"
-            size="x2"
+            size="x3"
             strong
             style={{
               pointerEvents: 'none',

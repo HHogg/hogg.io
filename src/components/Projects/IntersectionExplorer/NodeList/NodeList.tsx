@@ -1,10 +1,10 @@
 import { AnimateSharedLayout, motion } from 'framer-motion';
 import { Box, Button, Grid } from 'preshape';
-import React, { useContext } from 'react';
+import React, { useContext, PointerEvent } from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
 import { getCurrentTraversal } from '../useGraph/traversal';
-import getSortedNodes from './getSortedNodes';
 import NodeListItem from './NodeListItem';
+import getSortedNodes from './getSortedNodes';
 import './NodeList.css';
 
 interface Props {
@@ -29,7 +29,7 @@ const NodeList = ({ onNodeOver }: Props) => {
     onNodeOver(-1);
   };
 
-  const handlePointerOver = (index: number) => (event: React.PointerEvent) => {
+  const handlePointerOver = (index: number) => (event: PointerEvent) => {
     event.stopPropagation();
     onNodeOver(index);
   };

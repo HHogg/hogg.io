@@ -1,11 +1,11 @@
 import { TypeHistory, getAverage } from '@hhogg/snake';
 import flatten from 'lodash.flatten';
-import * as React from 'react';
+import React from 'react';
+import SnakeSolutionComparison from './SnakeSolutionComparison';
 import runEuclideanDistance from './runEuclideanDistance.json';
 import runHamiltonianCycle from './runHamiltonianCycle.json';
 import runManhattanDistance from './runManhattanDistance.json';
 import runTailEscape from './runTailEscape.json';
-import SnakeSolutionComparison from './SnakeSolutionComparison';
 
 const histories: TypeHistory[] = [
   runManhattanDistance as TypeHistory,
@@ -29,7 +29,7 @@ const yDomain = [
   Math.max(...flatten(series.map((series) => series.map(({ y }) => y)))),
 ];
 
-export default () => {
+const SnakeSolutionComparisonAverage = () => {
   return (
     <SnakeSolutionComparison
       series={series}
@@ -40,3 +40,5 @@ export default () => {
     />
   );
 };
+
+export default SnakeSolutionComparisonAverage;

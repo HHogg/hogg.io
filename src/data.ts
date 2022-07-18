@@ -1,4 +1,4 @@
-import { Data } from './Types';
+import { Data } from './types';
 
 const data: Data<
   'Pure360' | 'Reedsy' | 'Brandwatch' | 'Bitrise' | 'Spotify',

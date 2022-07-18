@@ -4,7 +4,13 @@
     "es2021": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "google", "eslint-config-prettier"],
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "google",
+    "eslint-config-prettier"
+  ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
@@ -20,11 +26,19 @@
     }
   },
   "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "import/order": [
+      "error",
+      {
+        "alphabetize": { "order": "asc" },
+        "groups": ["builtin", "external", "internal", "parent", "sibling"]
+      }
+    ],
     "react/no-unescaped-entities": "off",
     "require-jsdoc": "off",
+    "no-console": [2, { "allow": ["warn", "error"] }],
     "valid-jsdoc": "off",
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "error",
     "react/prop-types": "off"
   }
 }

@@ -10,8 +10,8 @@ const NodeValidationIndicator = ({ validation }: Props) => {
   const { isValid } = validation;
   const backgroundColor =
     (isValid === null && 'text-shade-3') ||
-    (isValid === true && 'positive-shade-2') ||
-    'negative-shade-2';
+    (isValid === true && 'positive-shade-4') ||
+    'negative-shade-4';
 
   return (
     <Box

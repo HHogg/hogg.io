@@ -7,19 +7,22 @@ import {
   useIntersectionObserver,
   themes,
 } from 'preshape';
-import * as React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { RootContext } from '../../Root';
 
-export default ({ animate, ...rest }: AntwerpProps & { animate?: boolean }) => {
+const AntwerpExample = ({
+  animate,
+  ...rest
+}: AntwerpProps & { animate?: boolean }) => {
   const [isInView, ref] = useIntersectionObserver<HTMLElement>();
-  const { theme } = React.useContext(RootContext);
-  const [animateInterval, setAnimateInterval] = React.useState(0);
-  const [isVisible, setIsVisible] = React.useState(isInView);
+  const { theme } = useContext(RootContext);
+  const [animateInterval, setAnimateInterval] = useState(0);
+  const [isVisible, setIsVisible] = useState(isInView);
   const colorScale = scaleLinear<string>()
     .domain([0, 1])
-    .range([colorLightShade1, themes[theme].colorAccentShade3]);
+    .range([colorLightShade1, themes[theme].colorAccentShade5]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isInView) {
       setIsVisible((isVisible) => isVisible || isInView);
     }
@@ -43,3 +46,5 @@ export default ({ animate, ...rest }: AntwerpProps & { animate?: boolean }) => {
     </Box>
   );
 };
+
+export default AntwerpExample;

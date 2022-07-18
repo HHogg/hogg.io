@@ -12,7 +12,7 @@ const NodeTooltipContentNoStart: FunctionComponent<Props> = (props) => {
 
   return (
     <Box alignChildrenVertical="middle" flex="vertical">
-      <Text size="x2" strong>
+      <Text size="x3" strong>
         <NodeValidationBadge>Node {node.index}</NodeValidationBadge> has
         traversed all edges.
       </Text>

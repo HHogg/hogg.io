@@ -26,7 +26,7 @@ export const ZeroSpiral: TypeAlgorithm = (n) => {
   return vectors;
 };
 
-export const ArchimedesSpiral: TypeAlgorithm = (n) => {
+export const getArchimedesSpiral: TypeAlgorithm = (n) => {
   const vectors: TypeVector[] = [];
   let mx: undefined | number = undefined;
   let my: undefined | number = undefined;
@@ -44,7 +44,7 @@ export const ArchimedesSpiral: TypeAlgorithm = (n) => {
   return scale(vectors, mx, my);
 };
 
-export const FermatSpiral = (n: number, c = 1.5): TypeVector[] => {
+export const getFermatSpiral = (n: number, c = 1.5): TypeVector[] => {
   const vectors: TypeVector[] = [];
   let mx: undefined | number = undefined;
   let my: undefined | number = undefined;
@@ -72,14 +72,14 @@ const isPrimeNumber = (n: number) => {
   return n !== 1;
 };
 
-export const UlamSpiral: TypeAlgorithm = (n) => {
+export const getUlamSpiral: TypeAlgorithm = (n) => {
   const vectors: TypeVector[] = [];
-  let d = 0,
-    i = 0,
-    sc = 1,
-    st = 1,
-    x = 0,
-    y = 0;
+  let d = 0;
+  let i = 0;
+  let sc = 1;
+  let st = 1;
+  let x = 0;
+  let y = 0;
   let mx: undefined | number = undefined;
   let my: undefined | number = undefined;
 
@@ -107,6 +107,6 @@ export const UlamSpiral: TypeAlgorithm = (n) => {
   return scale(vectors, mx, my);
 };
 
-export const VogelSpiral: TypeAlgorithm = (n) => {
-  return FermatSpiral(n, 2.39998131);
+export const getVogelSpiral: TypeAlgorithm = (n) => {
+  return getFermatSpiral(n, 2.39998131);
 };

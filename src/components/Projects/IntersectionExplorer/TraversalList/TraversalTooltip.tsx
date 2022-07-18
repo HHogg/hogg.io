@@ -38,7 +38,7 @@ const TraversalTooltip: FunctionComponent<Props> = (props) => {
       <Text
         inline
         key={i}
-        textColor={!+v ? 'negative-shade-2' : 'positive-shade-2'}
+        textColor={!+v ? 'negative-shade-4' : 'positive-shade-4'}
       >
         {v}
       </Text>
@@ -76,7 +76,7 @@ const TraversalTooltip: FunctionComponent<Props> = (props) => {
             paddingHorizontal="x2"
             paddingVertical="x2"
           >
-            <Text breakOn="all" monospace size="x1" strong>
+            <Text breakOn="all" monospace size="x2" strong>
               {bitsetStringPadded}
             </Text>
           </Box>

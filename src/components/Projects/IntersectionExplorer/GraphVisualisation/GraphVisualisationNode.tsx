@@ -1,8 +1,8 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { SVGAttributes } from 'react';
 import { NodeState } from '../useGraph';
 
-interface Props extends NodeState, React.SVGAttributes<SVGGElement> {
+interface Props extends NodeState, SVGAttributes<SVGGElement> {
   isFocused?: boolean;
   n: number;
   x: number;

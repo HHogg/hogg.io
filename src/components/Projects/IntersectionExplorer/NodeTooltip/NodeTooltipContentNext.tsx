@@ -1,4 +1,4 @@
-import { Box, Icon, Text } from 'preshape';
+import { Box, Icons, Text } from 'preshape';
 import React, { FunctionComponent } from 'react';
 import NodeValidationMessage from '../NodeValidation/NodeValidationMessage';
 import { Node, Edge } from '../useGraph';
@@ -33,21 +33,22 @@ const NodeTooltipContentNext: FunctionComponent<Props> = (props) => {
         >
           <Box
             backgroundColor={
-              (validation.isValid === false && 'negative-shade-2') ||
-              (validation.isValid === true && 'positive-shade-2') ||
+              (validation.isValid === false && 'negative-shade-4') ||
+              (validation.isValid === true && 'positive-shade-4') ||
               'text-shade-3'
             }
             borderRadius="full"
             padding="x1"
           >
-            <Icon
-              name={validation.isValid === false ? 'Cross' : 'Check'}
-              size="1rem"
-            />
+            {validation.isValid === false ? (
+              <Icons.X size="1rem" />
+            ) : (
+              <Icons.Check size="1rem" />
+            )}
           </Box>
 
           <Box shrink>
-            <Text size="x1" strong>
+            <Text size="x2" strong>
               <NodeValidationMessage validation={validation} />
             </Text>
           </Box>

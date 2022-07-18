@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
 import SnakeSolutionComparisonAverage from './SnakeSolutionComparisonAverage';
 import SnakeSolutionComparisonScore from './SnakeSolutionComparisonScore';
 
-export default () => (
+const SnakeSolutionComparisonFigs = () => (
   <WritingFigs maxWidth="900px">
     <WritingFig
       description="Solutions Moving Average comparison, with number of points along the X axis and average number of moves along the Y axis."
@@ -21,3 +21,5 @@ export default () => (
     </WritingFig>
   </WritingFigs>
 );
+
+export default SnakeSolutionComparisonFigs;

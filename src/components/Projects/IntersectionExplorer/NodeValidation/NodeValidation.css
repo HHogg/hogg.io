@@ -5,8 +5,8 @@
 
 .NodeValidation__indicator {
   transition-property: background-color;
-  transition-duration: var(--transition-time--base);
-  transition-timing-function: var(--transition-function);
+  transition-duration: var(--transition-duration--base);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .NodeValidation__badge {

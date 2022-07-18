@@ -12,7 +12,7 @@ import {
 import numbro from 'numbro';
 import openColor from 'open-color';
 import { sizeX8Px, themes, Box, List, ListItem, Text } from 'preshape';
-import * as React from 'react';
+import React from 'react';
 
 const format = (v: number) =>
   numbro(v).format({
@@ -43,13 +43,13 @@ interface Props {
   yDomain: number[];
 }
 
-export default (props: Props) => {
+const SnakeSolutionComparison = (props: Props) => {
   const { series, seriesPoints, title, xDomain, yDomain } = props;
 
   return (
     <Box basis="0" flex="vertical" gap="x3" grow>
       <Box>
-        <Text align="middle" margin="x2" size="x2" strong>
+        <Text align="middle" margin="x2" size="x3" strong>
           {title}
         </Text>
 
@@ -130,7 +130,7 @@ export default (props: Props) => {
                 </Box>
 
                 <Box>
-                  <Text size="x2" strong>
+                  <Text size="x3" strong>
                     {name}
                   </Text>
                 </Box>
@@ -142,3 +142,5 @@ export default (props: Props) => {
     </Box>
   );
 };
+
+export default SnakeSolutionComparison;

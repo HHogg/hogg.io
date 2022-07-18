@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import {
   themes,
   Box,
-  Icon,
+  Icons,
   Link,
   Placement,
   PlacementArrow,
@@ -54,10 +54,10 @@ const RuleBox = ({ asIcon, description, onClick, number, title }: Props) => {
               onClick={onClick}
               paddingHorizontal="x6"
               paddingVertical="x3"
-              size="x2"
+              size="x3"
             >
               <Box grow={asIcon}>
-                <Text align="middle" size="x4" strong>
+                <Text align="middle" size="x5" strong>
                   {number}
                 </Text>
               </Box>
@@ -71,7 +71,7 @@ const RuleBox = ({ asIcon, description, onClick, number, title }: Props) => {
 
                   <Box>
                     <Link borderRadius="x2" color="accent" padding="x4">
-                      <Icon name="ChevronDown" size="2rem" />
+                      <Icons.ChevronDown size="2rem" />
                     </Link>
                   </Box>
                 </>
@@ -96,7 +96,7 @@ const RuleBox = ({ asIcon, description, onClick, number, title }: Props) => {
             padding="x4"
             textColor="background-shade-1"
           >
-            <Text size="x2">
+            <Text size="x3">
               <Text inline strong>
                 {title}
               </Text>{' '}

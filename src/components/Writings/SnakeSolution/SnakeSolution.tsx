@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { BulletPoint, BulletPoints, Code, Image, Link, Text } from 'preshape';
-import * as React from 'react';
+import React, { lazy, Suspense } from 'react';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
@@ -29,11 +29,11 @@ const solutionTailEscape = fs.readFileSync(
 const SnakeRunner =
   navigator.userAgent === 'ReactSnap'
     ? () => null
-    : React.lazy(() => import('./SnakeRunner'));
+    : lazy(() => import('./SnakeRunner'));
 const SnakeSolutionComparison =
   navigator.userAgent === 'ReactSnap'
     ? () => null
-    : React.lazy(() => import('./SnakeSolutionComparisonFigs'));
+    : lazy(() => import('./SnakeSolutionComparisonFigs'));
 
 const SnakeSolution = () => {
   return (
@@ -46,7 +46,7 @@ const SnakeSolution = () => {
           <Link
             href="https://cdn.jpg.wtf/futurico/71/97/51974-6a6a0c50128edc7aacd9a223719672d3.gif"
             target="SnakeSolution"
-            underline
+            isTextLink
           >
             'the perfect game'
           </Link>
@@ -74,7 +74,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Graph_theory"
             target="SnakeSolution"
-            underline
+            isTextLink
           >
             graph theory
           </Link>
@@ -101,7 +101,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Breadth-first_search"
             target="SnakeSolution"
-            underline
+            isTextLink
           >
             'Breadth-First Search'
           </Link>{' '}
@@ -109,7 +109,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Best-first_search"
             target="SnakeSolution"
-            underline
+            isTextLink
           >
             'Best-First Search'
           </Link>
@@ -217,7 +217,7 @@ const SnakeSolution = () => {
         <WritingParagraph>
           A live runner with each solution can be used to play out the game of
           snake with that solution, and is taken from my{' '}
-          <Link href="https://snake.hogg.io" target="Snake" underline>
+          <Link href="https://snake.hogg.io" target="Snake" isTextLink>
             interactive developer game
           </Link>{' '}
           of writing your own heuristic (in Javascript).
@@ -232,7 +232,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Taxicab_geometry"
             target="SnakeSolution"
-            underline
+            isTextLink
           >
             Taxicab geometry
           </Link>
@@ -244,9 +244,9 @@ const SnakeSolution = () => {
 
       <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
         <WritingFig description="Snake runner: Manhattan Distance." number={3}>
-          <React.Suspense fallback={null}>
+          <Suspense fallback={null}>
             <SnakeRunner solution={solutionManhattanDistance} />
-          </React.Suspense>
+          </Suspense>
         </WritingFig>
       </WritingFigs>
 
@@ -271,9 +271,9 @@ const SnakeSolution = () => {
 
       <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
         <WritingFig description="Snake runner: Euclidean Distance." number={4}>
-          <React.Suspense fallback={null}>
+          <Suspense fallback={null}>
             <SnakeRunner solution={solutionEuclideanDistance} />
-          </React.Suspense>
+          </Suspense>
         </WritingFig>
       </WritingFigs>
 
@@ -295,7 +295,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Hamiltonian_path"
             target="SnakeSolution"
-            underline
+            isTextLink
           >
             Hamiltonian Path
           </Link>{' '}
@@ -307,9 +307,9 @@ const SnakeSolution = () => {
 
       <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
         <WritingFig description="Snake runner: Hamiltonian Cycle." number={5}>
-          <React.Suspense fallback={null}>
+          <Suspense fallback={null}>
             <SnakeRunner solution={solutionHamiltonianCycle} />
-          </React.Suspense>
+          </Suspense>
         </WritingFig>
       </WritingFigs>
 
@@ -354,9 +354,9 @@ const SnakeSolution = () => {
 
       <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
         <WritingFig description="Snake runner: Tail Escape." number={6}>
-          <React.Suspense fallback={null}>
+          <Suspense fallback={null}>
             <SnakeRunner solution={solutionTailEscape} />
-          </React.Suspense>
+          </Suspense>
         </WritingFig>
       </WritingFigs>
 
@@ -413,7 +413,7 @@ const SnakeSolution = () => {
           <Link
             href="https://cdn.jpg.wtf/futurico/71/97/51974-6a6a0c50128edc7aacd9a223719672d3.gif"
             target="SnakeSolution"
-            underline
+            isTextLink
           >
             'the perfect game'
           </Link>{' '}
@@ -421,9 +421,9 @@ const SnakeSolution = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <React.Suspense fallback={null}>
+      <Suspense fallback={null}>
         <SnakeSolutionComparison />
-      </React.Suspense>
+      </Suspense>
 
       <WritingSection>
         <WritingParagraph>

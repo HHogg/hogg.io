@@ -1,8 +1,8 @@
 import { Text, TextProps } from 'preshape';
-import * as React from 'react';
+import React, { FC } from 'react';
 
-const WritingHeading: React.FC<TextProps> = (props) => {
-  return <Text {...props} margin="x2" size="x5" strong />;
+const WritingHeading: FC<TextProps> = (props) => {
+  return <Text {...props} margin="x2" size="x6" strong />;
 };
 
 export default WritingHeading;

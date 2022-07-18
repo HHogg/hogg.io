@@ -154,7 +154,6 @@ export default function useGraph(
         state: getNodeState(node, context),
       })),
     }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [traversals]);
 
   useEffect(() => {

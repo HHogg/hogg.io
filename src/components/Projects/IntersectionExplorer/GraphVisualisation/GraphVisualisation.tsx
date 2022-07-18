@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { Box, useResizeObserver } from 'preshape';
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useContext, useMemo, useRef, PointerEvent } from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
 import { Edge, Node, Traversal } from '../useGraph';
 import GraphVisualisationEdge from './GraphVisualisationEdge';
@@ -93,7 +93,7 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
   );
   const [size, ref] = useResizeObserver();
   const min = size.width;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   const circles = useMemo(
     () => scaleProps(graph.circles, ['radius', 'x', 'y'], min),
     [min]
@@ -123,18 +123,17 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
     onNodeOver(-1);
   };
 
-  const handleNodeOver = (index: number) => (event: React.PointerEvent) => {
+  const handleNodeOver = (index: number) => (event: PointerEvent) => {
     event.stopPropagation();
     onTraversalOver(-1);
     onNodeOver(index);
   };
 
-  const handleTraversalOver =
-    (index: number) => (event: React.PointerEvent) => {
-      event.stopPropagation();
-      onNodeOver(-1);
-      onTraversalOver(index);
-    };
+  const handleTraversalOver = (index: number) => (event: PointerEvent) => {
+    event.stopPropagation();
+    onNodeOver(-1);
+    onTraversalOver(index);
+  };
 
   return (
     <Box container height={size.width} ref={ref}>

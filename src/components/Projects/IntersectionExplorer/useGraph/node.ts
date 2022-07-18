@@ -61,6 +61,7 @@ const blankNodeState: NodeState = {
     { number: 1, isValid: null, message: '' },
     { number: 2, isValid: null, message: '' },
     { number: 3, isValid: null, message: '' },
+    { number: 4, isValid: null, message: '' },
   ],
 };
 

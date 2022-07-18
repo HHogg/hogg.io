@@ -1,6 +1,11 @@
 import { motion } from 'framer-motion';
-import { Appear, Box, Icon, Label, Link } from 'preshape';
-import React, { Fragment, useContext } from 'react';
+import { Appear, Box, Icons, Label, Link } from 'preshape';
+import React, {
+  Fragment,
+  FunctionComponent,
+  PointerEvent,
+  useContext,
+} from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
 import { Traversal } from '../useGraph';
 import TraversalTooltip from './TraversalTooltip';
@@ -10,7 +15,7 @@ interface Props {
   traversal: Traversal;
 }
 
-const TraversalListItem: React.FunctionComponent<Props> = ({
+const TraversalListItem: FunctionComponent<Props> = ({
   onPointerOver,
   traversal,
 }) => {
@@ -26,7 +31,7 @@ const TraversalListItem: React.FunctionComponent<Props> = ({
     (activeNodeIndex === -1 && activeTraversalIndex === -1) ||
     isTraversalActive;
 
-  const handlePointerOver = (event: React.PointerEvent) => {
+  const handlePointerOver = (event: PointerEvent) => {
     event.stopPropagation();
     onPointerOver();
   };
@@ -57,7 +62,7 @@ const TraversalListItem: React.FunctionComponent<Props> = ({
               flex="horizontal"
               gap="x2"
               onPointerOver={handlePointerOver}
-              size="x1"
+              size="x2"
             >
               <Box>
                 {nodesInPath.slice(0, -1).map((c, i, { length }) => (
@@ -104,7 +109,7 @@ const TraversalListItem: React.FunctionComponent<Props> = ({
 
               <Box>
                 <Link onClick={() => removeTraversal(traversal.index)}>
-                  <Icon name="Cross" size="1rem" />
+                  <Icons.X size="1rem" />
                 </Link>
               </Box>
             </Label>

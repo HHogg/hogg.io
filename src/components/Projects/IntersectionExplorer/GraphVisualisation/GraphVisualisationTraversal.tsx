@@ -5,7 +5,13 @@ import {
   transitionTimeSlow,
   transitionTimingFunction,
 } from 'preshape';
-import React, { useContext, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  PointerEvent,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
 import { NodeState, Traversal } from '../useGraph';
 import { getCurrentTraversal } from '../useGraph/traversal';
@@ -13,7 +19,7 @@ import { getCurrentTraversal } from '../useGraph/traversal';
 interface Props extends Partial<NodeState> {
   index?: number;
   d: string;
-  onPointerOver?: (event: React.PointerEvent) => void;
+  onPointerOver?: (event: PointerEvent) => void;
   traversal: Traversal;
 }
 

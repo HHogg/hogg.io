@@ -1,12 +1,12 @@
 import { Box, BoxProps, Text } from 'preshape';
-import * as React from 'react';
+import React, { PropsWithChildren } from 'react';
 
 interface Props extends BoxProps {
   description?: string;
   number: number;
 }
 
-export default (props: React.PropsWithChildren<Props>) => {
+const WritingFig = (props: PropsWithChildren<Props>) => {
   const { children, description, number, ...rest } = props;
 
   return (
@@ -24,3 +24,5 @@ export default (props: React.PropsWithChildren<Props>) => {
     </Box>
   );
 };
+
+export default WritingFig;

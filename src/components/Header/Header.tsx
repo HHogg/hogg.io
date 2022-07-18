@@ -1,14 +1,14 @@
 import {
   Box,
   BoxProps,
-  Icon,
+  Icons,
   Link,
   Text,
   ThemeSwitcher,
   useMatchMedia,
 } from 'preshape';
-import * as React from 'react';
-import { Route } from 'react-router-dom';
+import React, { Fragment, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { RootContext } from '../Root';
 
 interface Props extends BoxProps {
@@ -19,8 +19,11 @@ interface Props extends BoxProps {
 
 const Header = (props: Props) => {
   const { description, themeable = true, title, ...rest } = props;
-  const { onChangeTheme, theme } = React.useContext(RootContext);
+  const { onChangeTheme, theme } = useContext(RootContext);
   const match = useMatchMedia(['800px']);
+
+  const location = useLocation();
+  const isOnSubPage = location.pathname.split('/').length > 2;
 
   return (
     <Box
@@ -32,18 +35,18 @@ const Header = (props: Props) => {
     >
       <Box alignChildrenVertical="middle" flex="horizontal">
         <Box alignSelf="middle" grow>
-          <Route path="/:nested">
+          {isOnSubPage && (
             <Link display="block" paddingVertical="x4" to="/">
               <Box flex="horizontal">
                 <Box>
-                  <Icon name="ChevronLeft" size="24px" />
+                  <Icons.ChevronLeft size="24px" />
                 </Box>
                 <Box>
                   <Text strong>Back</Text>
                 </Box>
               </Box>
             </Link>
-          </Route>
+          )}
         </Box>
 
         {themeable && !match('800px') && (
@@ -54,15 +57,15 @@ const Header = (props: Props) => {
       </Box>
 
       {title && (
-        <React.Fragment>
+        <Fragment>
           <Box basis="0" grow>
-            <Text size="x4" strong>
+            <Text size="x5" strong>
               {title}
             </Text>
 
             {description && <Text>{description}</Text>}
           </Box>
-        </React.Fragment>
+        </Fragment>
       )}
 
       {themeable && match('800px') && (

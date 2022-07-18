@@ -12,7 +12,7 @@ import {
   TableRow,
   Text,
 } from 'preshape';
-import * as React from 'react';
+import React, { Fragment } from 'react';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
@@ -37,7 +37,7 @@ const GeneratingTessellations = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Euclidean_tilings_by_convex_regular_polygons"
             target="GTInfo"
-            underline
+            isTextLink
           >
             Euclidean tilings
           </Link>{' '}
@@ -49,7 +49,7 @@ const GeneratingTessellations = () => {
           (uniform) and demiregular (k-uniform, up to at least k=3) in a
           consistent, unique and unequivocal manner. Moreover, it's implemented
           in the{' '}
-          <Link href="https://antwerp.hogg.io" target="Antwerp" underline>
+          <Link href="https://antwerp.hogg.io" target="Antwerp" isTextLink>
             Antwerp application
           </Link>
           , which is publicly shared to prove that all the basic tilings can be
@@ -128,7 +128,7 @@ const GeneratingTessellations = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Schl%C3%A4fli_symbol"
             target="GTInfo"
-            underline
+            isTextLink
           >
             Schläfli symbol
           </Link>
@@ -607,7 +607,7 @@ const GeneratingTessellations = () => {
       <WritingSection
         backgroundColor="background-shade-2"
         padding="x6"
-        size="x2"
+        size="x3"
       >
         <WritingParagraph>
           <Text inline strong>
@@ -621,7 +621,7 @@ const GeneratingTessellations = () => {
           </Link>
         </WritingParagraph>
 
-        <Table size="x2">
+        <Table size="x3">
           <TableHeader>
             <TableRow>
               <TableHeaderCell>Cundy & Rollett</TableHeaderCell>
@@ -633,7 +633,7 @@ const GeneratingTessellations = () => {
           <TableBody>
             {Object.entries(configurationsGrouped).map(
               ([groupKey, configurations]) => (
-                <React.Fragment key={groupKey}>
+                <Fragment key={groupKey}>
                   <TableRow>
                     <TableCell colSpan={2}>
                       <Text strong uppercase>
@@ -649,7 +649,7 @@ const GeneratingTessellations = () => {
                       <TableCell>{gomJauHogg}</TableCell>
                     </TableRow>
                   ))}
-                </React.Fragment>
+                </Fragment>
               )
             )}
           </TableBody>

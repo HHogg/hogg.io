@@ -1,10 +1,10 @@
 .NodeList__item {
   width: 100%;
-  background-color: var(--color-text--shade-1);
-  color: var(--color-background--shade-1);
+  background-color: var(--color-text-shade-1);
+  color: var(--color-background-shade-1);
   transition-property: transform, width;
-  transition-duration: var(--transition-time--base);
-  transition-timing-function: var(--transition-function);
+  transition-duration: var(--transition-duration--base);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .NodeList__item--next {

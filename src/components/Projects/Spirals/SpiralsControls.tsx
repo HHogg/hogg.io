@@ -1,10 +1,10 @@
 import { Box, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
-import * as React from 'react';
+import React, { FormEvent, useState } from 'react';
 import {
-  ArchimedesSpiral,
-  FermatSpiral,
-  UlamSpiral,
-  VogelSpiral,
+  getArchimedesSpiral,
+  getFermatSpiral,
+  getUlamSpiral,
+  getVogelSpiral,
   ZeroSpiral,
   TypeAlgorithm,
 } from './Algorithms';
@@ -17,22 +17,22 @@ interface Props {
 
 export const algorithms: [string, TypeAlgorithm][] = [
   ['Zero', ZeroSpiral],
-  ['Archimedes Spiral', ArchimedesSpiral],
-  ['Fermat Spiral', FermatSpiral],
-  ['Ulam Spiral', UlamSpiral],
-  ['Vogel Spiral', VogelSpiral],
+  ['Archimedes Spiral', getArchimedesSpiral],
+  ['Fermat Spiral', getFermatSpiral],
+  ['Ulam Spiral', getUlamSpiral],
+  ['Vogel Spiral', getVogelSpiral],
 ];
 
 const SysPlotControls = (props: Props) => {
   const { config, onConfigChange } = props;
-  const [{ padding, shapeCount, vectorCount }, setState] = React.useState({
+  const [{ padding, shapeCount, vectorCount }, setState] = useState({
     padding: config.padding,
     shapeCount: config.shapeCount,
     vectorCount: config.vectorCount,
   });
 
   const handleNumberChange = (
-    event: React.FormEvent<HTMLInputElement>,
+    event: FormEvent<HTMLInputElement>,
     prop: string,
     min = -Infinity,
     max = Infinity
@@ -48,7 +48,7 @@ const SysPlotControls = (props: Props) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Box margin="x8">
         <Text margin="x4" strong>
           Plotting Algorithms
@@ -89,7 +89,7 @@ const SysPlotControls = (props: Props) => {
 
         <InputLabel label="Padding" margin="x2">
           <Input
-            onChange={(e) => handleNumberChange(e, 'padding')}
+            onChange={(e: any) => handleNumberChange(e, 'padding')}
             placeholder="Padding..."
             type="number"
             value={padding}
@@ -99,7 +99,7 @@ const SysPlotControls = (props: Props) => {
         <InputLabel label="Shape Count" margin="x2">
           <Input
             disabled
-            onChange={(e) => handleNumberChange(e, 'shapeCount', 0, 200)}
+            onChange={(e: any) => handleNumberChange(e, 'shapeCount', 0, 200)}
             placeholder="Shape count..."
             type="number"
             value={shapeCount}
@@ -109,14 +109,14 @@ const SysPlotControls = (props: Props) => {
         <InputLabel label="Vector Count" margin="x2">
           <Input
             disabled
-            onChange={(e) => handleNumberChange(e, 'vectorCount', 0, 200)}
+            onChange={(e: any) => handleNumberChange(e, 'vectorCount', 0, 200)}
             placeholder="Vector count..."
             type="number"
             value={vectorCount}
           />
         </InputLabel>
       </Box>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -3,7 +3,7 @@ import { TypeVectorWithSize } from './Spirals';
 
 const lerp = (n0: number, n1: number, t: number) => n0 + (n1 - n0) * t;
 
-export default (
+const useStateTween = (
   t: number,
   vectorsA: TypeVectorWithSize[]
 ): [TypeVectorWithSize[], TypeVectorWithSize[]] => {
@@ -21,6 +21,7 @@ export default (
     refVectorsB.current = vectorsA;
 
     return [vectors, vectorsA];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vectorsA]);
 };
+
+export default useStateTween;

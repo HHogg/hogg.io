@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import { Box, Label, Labels, Text } from 'preshape';
-import * as React from 'react';
-import { Experience } from '../../Types';
+import React from 'react';
+import { Experience } from '../../types';
 
 interface Props extends Experience {
   current?: boolean;
@@ -16,11 +16,11 @@ const ExperienceComponent = (props: Props) => {
         {current && (
           <Box>
             <Text
-              backgroundColor="accent-shade-2"
+              backgroundColor="accent-shade-4"
               borderRadius="x1"
               paddingHorizontal="x2"
               paddingVertical="x1"
-              size="x2"
+              size="x3"
               strong
               textColor="light-shade-1"
             >
@@ -31,17 +31,17 @@ const ExperienceComponent = (props: Props) => {
 
         <Box alignChildrenHorizontal="middle" flex="horizontal" grow>
           <Box alignChildrenHorizontal="middle" flex="vertical">
-            <Box backgroundColor="accent-shade-2" grow width="2px" />
+            <Box backgroundColor="accent-shade-4" grow width="2px" />
           </Box>
         </Box>
 
         <Box>
           <Text
-            backgroundColor="accent-shade-2"
+            backgroundColor="accent-shade-4"
             borderRadius="x1"
             paddingHorizontal="x2"
             paddingVertical="x1"
-            size="x2"
+            size="x3"
             strong
             textColor="light-shade-1"
           >
@@ -57,7 +57,7 @@ const ExperienceComponent = (props: Props) => {
         grow
         padding="x6"
       >
-        <Text size="x4" strong>
+        <Text size="x5" strong>
           {company}
         </Text>
         <Text strong>{role}</Text>

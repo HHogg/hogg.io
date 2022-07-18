@@ -13,7 +13,7 @@ const NodeTooltipContentCurrent: FunctionComponent<Props> = (props) => {
   return (
     <Box alignChildren="middle" flex="vertical">
       <NodeValidationBadge>Node {node.index}</NodeValidationBadge>
-      <Text margin="x2" size="x1" strong>
+      <Text margin="x2" size="x2" strong>
         You are here!
       </Text>
     </Box>

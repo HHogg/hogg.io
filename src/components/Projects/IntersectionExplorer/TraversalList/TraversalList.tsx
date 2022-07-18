@@ -1,5 +1,5 @@
 import { Labels } from 'preshape';
-import React, { useContext } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
 import { getCompleteTraversals } from '../useGraph/traversal';
 import TraversalListItem from './TraversalListItem';
@@ -8,7 +8,7 @@ interface Props {
   onTraversalOver: (index: number) => void;
 }
 
-const TraversalList: React.FunctionComponent<Props> = ({ onTraversalOver }) => {
+const TraversalList: FunctionComponent<Props> = ({ onTraversalOver }) => {
   const { traversals } = useContext(IntersectionExplorerContext);
   const completeTraversals = getCompleteTraversals(traversals);
 

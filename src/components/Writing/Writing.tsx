@@ -1,6 +1,6 @@
 import { Link, Text } from 'preshape';
-import * as React from 'react';
-import { Writing } from '../../Types';
+import React from 'react';
+import { Writing } from '../../types';
 import { fromISO } from '../../utils/date';
 
 interface Props extends Writing {}
@@ -21,7 +21,7 @@ const WritingComponent = (props: Props) => {
         {title}
       </Text>
       <Text margin="x1">{description}</Text>
-      <Text margin="x2" size="x2" strong>
+      <Text margin="x2" size="x3" strong>
         {fromISO(date)}
       </Text>
     </Link>

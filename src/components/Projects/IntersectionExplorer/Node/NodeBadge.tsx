@@ -8,7 +8,7 @@ const NodeBadge: FunctionComponent<Props> = ({ children }) => {
     <Text
       backgroundColor="background-shade-1"
       className="NodeValidation__badge"
-      size="x1"
+      size="x2"
       strong
       textColor="text-shade-1"
     >

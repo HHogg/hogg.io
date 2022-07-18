@@ -1,5 +1,5 @@
 import { Alert, Image, Link, Text } from 'preshape';
-import * as React from 'react';
+import React from 'react';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
@@ -15,7 +15,7 @@ const CircleIntersections = () => {
         <Alert color="accent" padding="x3">
           <Text strong>
             Please{' '}
-            <Link to="/writings/circle-graphs" underline>
+            <Link to="/writings/circle-graphs" isTextLink>
               click here
             </Link>{' '}
             for the rewritten and updated version of this article.
@@ -42,7 +42,7 @@ const CircleIntersections = () => {
           <Link
             href="http://mathworld.wolfram.com/Circle-CircleIntersection.html"
             target="CircleIntersections"
-            underline
+            isTextLink
           >
             well solved problem
           </Link>
@@ -55,7 +55,7 @@ const CircleIntersections = () => {
           <Link
             href="http://mathworld.wolfram.com/Mid-ArcPoints.html"
             target="CircleIntersections"
-            underline
+            isTextLink
           >
             calculate the midpoint
           </Link>{' '}
@@ -226,7 +226,7 @@ const CircleIntersections = () => {
           <Link
             href="https://circles.hogg.io"
             target="CircleIntersections"
-            underline
+            isTextLink
           >
             here
           </Link>

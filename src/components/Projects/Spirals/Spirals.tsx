@@ -1,6 +1,6 @@
 import random from 'lodash.random';
 import { Box, useMatchMedia, useResizeObserver } from 'preshape';
-import * as React from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import {
   Box as Rect,
   Circle,
@@ -10,7 +10,7 @@ import {
 } from 'sat';
 import data from '../../../data';
 import ProjectPage from '../../ProjectPage/ProjectPage';
-import { TypeVector, TypeAlgorithm, FermatSpiral } from './Algorithms';
+import { TypeVector, TypeAlgorithm, getFermatSpiral } from './Algorithms';
 import SpiralsControls from './SpiralsControls';
 import SpiralsVisual from './SpiralsVisual';
 
@@ -83,7 +83,7 @@ export interface Config {
 }
 
 const defaultConfig: Config = {
-  algorithm: FermatSpiral,
+  algorithm: getFermatSpiral,
   padding: 10,
   shapeCount: 100,
   showShapes: true,
@@ -94,10 +94,10 @@ const defaultConfig: Config = {
 const Spirals = () => {
   const match = useMatchMedia(['600px']);
   const [size, ref] = useResizeObserver();
-  const [config, setConfig] = React.useState<Config>(defaultConfig);
-  const [vectors, setState] = React.useState<TypeVectorWithSize[]>([]);
+  const [config, setConfig] = useState<Config>(defaultConfig);
+  const [vectors, setState] = useState<TypeVectorWithSize[]>([]);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     setState(getVectors(config, size));
   }, [config, size]);
 

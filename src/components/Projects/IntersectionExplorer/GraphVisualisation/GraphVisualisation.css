@@ -19,20 +19,20 @@
 }
 
 .Graph__node-point {
-  fill: var(--color-background--shade-3);
-  stroke: var(--color-text--shade-1);
+  fill: var(--color-background-shade-3);
+  stroke: var(--color-text-shade-1);
   stroke-width: var(--border-size--x2);
   transition-property: fill, r;
-  transition-duration: var(--transition-time--base);
-  transition-timing-function: var(--transition-function);
+  transition-duration: var(--transition-duration--base);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .Graph__node-hit {
   fill: transparent;
   fill-opacity: 0.2;
   transition-property: fill, fill-opacity, r;
-  transition-duration: var(--transition-time--base);
-  transition-timing-function: var(--transition-function);
+  transition-duration: var(--transition-duration--base);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 /**
@@ -84,13 +84,13 @@
 .Graph__node--connected.Graph__node--invalid .Graph__node-point,
 .Graph__node--connected.Graph__node--invalid:hover .Graph__node-hit,
 .Graph__node--connected.Graph__node--invalid.Graph__node--focused .Graph__node-hit {
-  fill: var(--color-negative--shade-2);
+  fill: var(--color-negative-shade-4);
 }
 
 .Graph__node--connected.Graph__node--valid .Graph__node-point,
 .Graph__node--connected.Graph__node--valid:hover .Graph__node-hit,
 .Graph__node--connected.Graph__node--valid.Graph__node--focused .Graph__node-hit {
-  fill: var(--color-positive--shade-2);
+  fill: var(--color-positive-shade-4);
 }
 
 .Graph__node--traversed.Graph__node--traversed .Graph__node-point,
@@ -102,7 +102,7 @@
 .Graph__node--selected.Graph__node--selected .Graph__node-point,
 .Graph__node--selected.Graph__node--selected:hover .Graph__node-hit,
 .Graph__node--selected.Graph__node--selected.Graph__node--focused .Graph__node-hit {
-  fill: var(--color-accent--shade-2);
+  fill: var(--color-accent-shade-4);
 }
 
 /**
@@ -110,17 +110,17 @@
  */
 .Graph__edge {
   fill: none;
-  stroke: var(--color-text--shade-3);
+  stroke: var(--color-text-shade-3);
   stroke-linecap: round;
   stroke-width: var(--border-size--x2);
 }
 
 .Graph__edge--next {
-  stroke: var(--color-negative--shade-2);
+  stroke: var(--color-negative-shade-4);
 }
 
 .Graph__edge--next.Graph__edge--valid {
-  stroke: var(--color-positive--shade-2);
+  stroke: var(--color-positive-shade-4);
 }
 
 .Graph__edge.Graph__edge--previous {
@@ -137,8 +137,8 @@
   stroke: var(--color-highlight);
   stroke-linecap: round;
   transition-property: opacity;
-  transition-duration: var(--transition-time--fast);
-  transition-timing-function: var(--transition-function);
+  transition-duration: var(--transition-duration--fast);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .Graph__traversal--complete {
@@ -156,9 +156,9 @@
 .Graph__traversal-path,
 .Graph__traversal-hit {
   transition-property: fill-opacity, stroke, stroke-opacity;
-  transition-delay: 0, calc(var(--transition-time--base) * 4), 0;
-  transition-duration: var(--transition-time--base);
-  transition-timing-function: var(--transition-function);
+  transition-delay: 0, calc(var(--transition-duration--base) * 4), 0;
+  transition-duration: var(--transition-duration--base);
+  transition-timing-function: var(--transition-timing-function);
 }
 
 .Graph__traversal-path {

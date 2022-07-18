@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import * as SAT from 'sat';
-import { FermatSpiral } from '../../Spirals/Algorithms';
+import { getFermatSpiral } from '../../Spirals/Algorithms';
 import { Circle, Graph } from '../useGraph';
 
 const PADDING = 3;
@@ -20,7 +20,7 @@ interface XY {
   y: number;
 }
 
-const points = FermatSpiral(500).map(([x, y]) => [
+const points = getFermatSpiral(500).map(([x, y]) => [
   x * MAX_SEARCH_AREA,
   y * MAX_SEARCH_AREA,
 ]);
@@ -196,8 +196,6 @@ const useLabelPositionShifts = (
 
       setShifts(shifts);
     }, 1000);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [circles]);
 
   // console.log(shifts);

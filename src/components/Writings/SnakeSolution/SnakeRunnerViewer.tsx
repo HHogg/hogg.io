@@ -5,33 +5,32 @@ import {
   Button,
   CodeBlock,
   Box,
-  Icon,
+  Icons,
   Link,
   List,
   ListItem,
   Text,
   useIntersectionObserver,
 } from 'preshape';
-import * as React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import 'brace/mode/javascript';
 
 interface Props {
   solution: string;
 }
 
-export default (props: Props) => {
+const SnakeRunnerViewer = (props: Props) => {
   const { solution } = props;
   const { history, onPause, onPlay, onStart, onReset, xLength, yLength } =
-    React.useContext(SnakeContext);
-  const [isCodeVisible, setCodeVisible] = React.useState(false);
+    useContext(SnakeContext);
+  const [isCodeVisible, setCodeVisible] = useState(false);
   const [isInView, ref] = useIntersectionObserver();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isInView) {
       onPause();
       onReset();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isInView]);
 
   return (
@@ -40,7 +39,7 @@ export default (props: Props) => {
         <Appear
           absolute="edge-to-edge"
           animation="FadeSlideUp"
-          scrollable
+          overflow="auto"
           style={{ pointerEvents: isCodeVisible ? undefined : 'none' }}
           visible={isCodeVisible}
         >
@@ -90,15 +89,15 @@ export default (props: Props) => {
                     onPlay();
                   }}
                 >
-                  <Icon name="Play" size="1rem" />
+                  <Icons.Play size="1rem" />
                 </Button>
 
                 <Button onClick={() => onPause()}>
-                  <Icon name="Pause" size="1rem" />
+                  <Icons.Pause size="1rem" />
                 </Button>
 
                 <Button onClick={() => onReset()}>
-                  <Icon name="Refresh" size="1rem" />
+                  <Icons.RefreshCw size="1rem" />
                 </Button>
               </Buttons>
             </Box>
@@ -107,10 +106,12 @@ export default (props: Props) => {
       </Box>
 
       <Box alignChildren="middle" flex="horizontal">
-        <Link onClick={() => setCodeVisible(!isCodeVisible)} strong underline>
+        <Link onClick={() => setCodeVisible(!isCodeVisible)} strong isTextLink>
           {isCodeVisible ? 'Back to Runner' : 'See solution code'}
         </Link>
       </Box>
     </Box>
   );
 };
+
+export default SnakeRunnerViewer;

@@ -12,7 +12,7 @@ const NodeTooltipContentStart: FunctionComponent<Props> = (props) => {
 
   return (
     <Box alignChildrenVertical="middle" flex="vertical">
-      <Text size="x2" strong>
+      <Text size="x3" strong>
         Start at <NodeValidationBadge>Node {node.index}</NodeValidationBadge>
       </Text>
     </Box>

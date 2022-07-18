@@ -1,6 +1,6 @@
 import {
   Box,
-  Icon,
+  Icons,
   Label,
   Labels,
   Link,
@@ -8,16 +8,16 @@ import {
   Text,
   useMatchMedia,
 } from 'preshape';
-import * as React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { listedWritingsSorted } from '../../data';
-import { Writing } from '../../Types';
+import { Writing } from '../../types';
 import { fromISO } from '../../utils/date';
 import Header from '../Header/Header';
 import Metas from '../Metas/Metas';
 
 interface Props extends Writing {}
 
-const WritingPage: React.FC<Props> = (props) => {
+const WritingPage = (props: PropsWithChildren<Props>) => {
   const { children, date, description, id, imageOG, tags, title } = props;
   const index = listedWritingsSorted.findIndex((writing) => writing.id === id);
   const previous = listedWritingsSorted[index - 1];
@@ -26,7 +26,7 @@ const WritingPage: React.FC<Props> = (props) => {
   const match = useMatchMedia(['600px']);
 
   return (
-    <React.Fragment>
+    <>
       <Metas description={description} image={imageOG} title={title} />
 
       <Box flex="vertical" gap="x6" grow tag="article">
@@ -45,13 +45,13 @@ const WritingPage: React.FC<Props> = (props) => {
 
           <Box>
             <Box maxWidth="600px" paddingVertical="x6">
-              <Text heading margin="x2" size="x6" strong tag="h1">
+              <Text heading margin="x2" size="x7" strong tag="h1">
                 {title}
               </Text>
-              <Text heading margin="x2" size="x4" tag="h2">
+              <Text heading margin="x2" size="x5" tag="h2">
                 {description}
               </Text>
-              <Text aria-label="article date" heading margin="x2" size="x2">
+              <Text aria-label="article date" heading margin="x2" size="x3">
                 {fromISO(date)}
               </Text>
             </Box>
@@ -68,13 +68,13 @@ const WritingPage: React.FC<Props> = (props) => {
 
           <Box margin="x16" maxWidth="600px">
             <Separator borderColor="background-shade-3" margin="x4" />
-            <Text margin="x2" size="x2" strong tag="h1">
+            <Text margin="x2" size="x3" strong tag="h1">
               {title}
             </Text>
-            <Text margin="x2" size="x1" tag="h2">
+            <Text margin="x2" size="x2" tag="h2">
               {description}
             </Text>
-            <Text aria-label="article date" margin="x2" size="x1">
+            <Text aria-label="article date" margin="x2" size="x2">
               {fromISO(date)}
             </Text>
 
@@ -108,13 +108,13 @@ const WritingPage: React.FC<Props> = (props) => {
             padding="x6"
             to={previous.to}
           >
-            <Icon name="ChevronLeft" size="2rem" />
+            <Icons.ChevronLeft size="2rem" />
 
             <Box shrink>
-              <Text margin="x2" size="x2" strong tag="h1">
+              <Text margin="x2" size="x3" strong tag="h1">
                 {previous.title}
               </Text>
-              <Text margin="x2" size="x1" tag="h2">
+              <Text margin="x2" size="x2" tag="h2">
                 {previous.description}
               </Text>
             </Box>
@@ -133,21 +133,21 @@ const WritingPage: React.FC<Props> = (props) => {
             to={next.to}
           >
             <Box shrink>
-              <Text margin="x2" size="x2" strong tag="h1">
+              <Text margin="x2" size="x3" strong tag="h1">
                 {next.title}
               </Text>
-              <Text margin="x2" size="x1" tag="h2">
+              <Text margin="x2" size="x2" tag="h2">
                 {next.description}
               </Text>
             </Box>
 
-            <Icon name="ChevronRight" size="2rem" />
+            <Icons.ChevronRight size="2rem" />
           </Link>
         ) : (
           <Box />
         )}
       </Box>
-    </React.Fragment>
+    </>
   );
 };
 

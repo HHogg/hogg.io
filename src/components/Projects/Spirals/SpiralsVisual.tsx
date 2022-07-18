@@ -1,11 +1,11 @@
-import BezierEasing from 'bezier-easing';
+import getBezierEasing from 'bezier-easing';
 import { mat3 } from 'gl-matrix';
 import { transitionTimingFunction, Box } from 'preshape';
-import * as React from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import regl from 'regl';
+import { TypeVectorWithSize } from './Spirals';
 import frag from './shader.frag';
 import vert from './shader.vert';
-import { TypeVectorWithSize } from './Spirals';
 import useStateTween from './useStateTween';
 
 interface Props {
@@ -14,21 +14,21 @@ interface Props {
   width: number;
 }
 
-const ease = BezierEasing(
+const ease = getBezierEasing(
   ...(transitionTimingFunction as [number, number, number, number])
 );
 const duration = 2000;
 
 const SpiralsVisual = (props: Props) => {
   const { height, vectors, width } = props;
-  const refCanvas = React.useRef<HTMLCanvasElement>(null);
-  const regFrameLoop = React.useRef<regl.Cancellable>();
-  const refRegl = React.useRef<regl.Regl>();
-  const refStartTime = React.useRef<number | null>(null);
-  const refT = React.useRef<number>(0);
+  const refCanvas = useRef<HTMLCanvasElement>(null);
+  const regFrameLoop = useRef<regl.Cancellable>();
+  const refRegl = useRef<regl.Regl>();
+  const refStartTime = useRef<number | null>(null);
+  const refT = useRef<number>(0);
   const state = useStateTween(refT.current, vectors);
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     if (refCanvas.current && !refRegl.current) {
       refRegl.current = regl({ canvas: refCanvas.current });
     }
@@ -38,7 +38,7 @@ const SpiralsVisual = (props: Props) => {
     };
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     refCanvas.current?.setAttribute('height', `${height * 2}`);
     refCanvas.current?.setAttribute('width', `${width * 2}`);
 
