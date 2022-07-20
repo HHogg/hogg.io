@@ -24,7 +24,7 @@ const NodeTooltipContentNext: FunctionComponent<Props> = (props) => {
       {validations.map((validation) => (
         <Box
           alignChildrenVertical="middle"
-          backgroundColor="text-shade-2"
+          backgroundColor="dark-shade-2"
           flex="horizontal"
           gap="x4"
           key={validation.number}

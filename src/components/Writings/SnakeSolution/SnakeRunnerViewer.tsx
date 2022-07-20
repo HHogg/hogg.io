@@ -1,4 +1,3 @@
-import { getAverage, getScore, SnakeContext, SnakeViewer } from '@hhogg/snake';
 import {
   Appear,
   Buttons,
@@ -12,8 +11,12 @@ import {
   Text,
   useIntersectionObserver,
 } from 'preshape';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'brace/mode/javascript';
+import { useSnakeContext } from '../../Projects/Snake/SnakeProvider';
+import SnakeViewer from '../../Projects/Snake/SnakeViewer';
+import getAverage from '../../Projects/Snake/utils/getAverage';
+import getScore from '../../Projects/Snake/utils/getScore';
 
 interface Props {
   solution: string;
@@ -22,7 +25,7 @@ interface Props {
 const SnakeRunnerViewer = (props: Props) => {
   const { solution } = props;
   const { history, onPause, onPlay, onStart, onReset, xLength, yLength } =
-    useContext(SnakeContext);
+    useSnakeContext();
   const [isCodeVisible, setCodeVisible] = useState(false);
   const [isInView, ref] = useIntersectionObserver();
 
