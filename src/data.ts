@@ -84,8 +84,8 @@ const data: Data<
     },
     Snake: {
       description:
-        'Snake Heuristics is a game for developers to write a heuristic function, to play the perfect classic game of snake. This was created for a workshop at the AsyncJS meetup.',
-      href: 'https://snake.hogg.io',
+        'A project that was originally created as a game for developers to compete on writing a heuristic function to complete the game of snake in the most efficient way possible.',
+        to: '/projects/snakes',
       image: require('./assets/snake.svg'),
       tags: ['javascript', 'react', 'css'],
       title: 'Snake',

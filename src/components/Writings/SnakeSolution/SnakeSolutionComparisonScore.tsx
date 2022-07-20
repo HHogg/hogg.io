@@ -1,6 +1,7 @@
-import { TypeHistory, getScore } from '@hhogg/snake';
 import flatten from 'lodash.flatten';
 import React from 'react';
+import { TypeHistory } from '../../Projects/Snake/types';
+import getScore from '../../Projects/Snake/utils/getScore';
 import SnakeSolutionComparison from './SnakeSolutionComparison';
 import runEuclideanDistance from './runEuclideanDistance.json';
 import runHamiltonianCycle from './runHamiltonianCycle.json';

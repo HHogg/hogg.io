@@ -5,12 +5,13 @@ import {
   Box,
   useMatchMedia,
 } from 'preshape';
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import data from '../data';
 import Landing from './Landing/Landing';
 import Metas from './Metas/Metas';
 import CircleGraph from './Projects/CircleGraph/CircleGraph';
+import Snake from './Projects/Snake/Snake';
 import Spirals from './Projects/Spirals/Spirals';
 import CircleGraphs from './Writings/CircleGraphs/CircleGraphs';
 import CircleIntersections from './Writings/CircleIntersections/CircleIntersections';
@@ -26,6 +27,8 @@ export const RootContext = createContext<{
   onChangeTheme: () => undefined,
   theme: 'day',
 });
+
+export const useLayoutContext = () => useContext(RootContext);
 
 const Site = () => {
   const [theme, onChangeTheme] = useState<TypeTheme>('day');
@@ -57,6 +60,7 @@ const Site = () => {
               path={data.projects.CircleGraph.to}
             />
             <Route element={<Spirals />} path={data.projects.Spirals.to} />
+            <Route element={<Snake />} path={data.projects.Snake.to} />
             <Route
               element={<CircleIntersections />}
               path={data.writings.CircleIntersections.to}

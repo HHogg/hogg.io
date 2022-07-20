@@ -1,7 +1,7 @@
 .NodeList__item {
   width: 100%;
-  background-color: var(--color-text-shade-1);
-  color: var(--color-background-shade-1);
+  background-color: var(--color-dark-shade-1);
+  color: var(--color-light-shade-1);
   transition-property: transform, width;
   transition-duration: var(--transition-duration--base);
   transition-timing-function: var(--transition-timing-function);

@@ -104,6 +104,7 @@ const SnakeSolutionComparison = (props: Props) => {
 
                 <VizSVGAxisY
                   fill={themes.day.colorTextShade3}
+                  flip
                   fontWeight="bold"
                   format={format}
                   stroke={themes.day.colorTextShade3}

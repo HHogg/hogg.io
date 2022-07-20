@@ -61,16 +61,16 @@ const NodeTooltip: FunctionComponent<Props> = (props) => {
         unrender
         visible={visible}
       >
-        <PlacementArrow backgroundColor="text-shade-1" />
+        <PlacementArrow backgroundColor="dark-shade-1" />
         <PlacementContent
-          backgroundColor="text-shade-1"
+          backgroundColor="dark-shade-1"
           borderRadius="x2"
           maxWidth="20rem"
           onClick={(event) => event.stopPropagation()}
           paddingHorizontal="x4"
           paddingVertical="x4"
           style={{ pointerEvents: 'none' }}
-          textColor="background-shade-1"
+          textColor="light-shade-1"
         >
           <TooltipContent />
         </PlacementContent>
