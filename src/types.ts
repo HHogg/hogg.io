@@ -1,4 +1,17 @@
-export interface Experience {
+
+type ExperienceList =
+| 'Pure360' | 'Reedsy' | 'Brandwatch' | 'Bitrise' | 'Spotify';
+
+type ProjectsList =
+| 'Antwerp' | 'CircleGraph' | 'CircleArt' | 'Preshape' | 'Snake' | 'Spirals';
+
+type WritingsList =
+| 'CircleGraphs' | 'CircleIntersections' | 'SnakeSolution'
+
+type PublicationsList =
+| 'Tilings';
+
+export type Experience = {
   company: string;
   date: string;
   description?: string;
@@ -6,7 +19,7 @@ export interface Experience {
   role: string;
 }
 
-export interface Project {
+export type Project = {
   description: string;
   href?: string;
   image: string;
@@ -16,7 +29,7 @@ export interface Project {
   to?: string;
 }
 
-export interface Writing {
+export type Writing = {
   id: string;
   date: string;
   description: string;
@@ -27,8 +40,18 @@ export interface Writing {
   unlisted?: boolean;
 }
 
-export interface Data<E extends string, P extends string, W extends string> {
-  experience: Record<E, Experience>;
-  projects: Record<P, Project>;
-  writings: Record<W, Writing>;
+export type Publication = {
+  title: string;
+  date: string;
+  journal: string;
+  authors: string[];
+  href: string;
+  description: string;
+};
+
+export interface Data {
+  experience: Record<ExperienceList, Experience>;
+  projects: Record<ProjectsList, Project>;
+  writings: Record<WritingsList, Writing>;
+  publications: Record<PublicationsList, Publication>,
 }
