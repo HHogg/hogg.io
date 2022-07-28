@@ -1,10 +1,15 @@
 import { motion } from 'framer';
 import { Box, Grid, Link, Text, Icons, useMatchMedia } from 'preshape';
 import React from 'react';
-import data, { experienceSorted, listedWritingsSorted } from '../../data';
+import data, {
+  experienceSorted,
+  listedWritingsSorted,
+  publicationsSorted,
+} from '../../data';
 import Experience from '../Experience/Experience';
 import Header from '../Header/Header';
 import Project from '../Project/Project';
+import Publication from '../Publication/Publication';
 import Writing from '../Writing/Writing';
 
 export default function Landing() {
@@ -67,9 +72,6 @@ export default function Landing() {
             <Text size="x6" strong>
               Personal Projects
             </Text>
-            <Text margin="x2">
-              Some of my favourite and finished personal side projects.
-            </Text>
           </Box>
 
           <Grid gap="x4" margin="x6" repeatWidthMin="300px">
@@ -90,9 +92,6 @@ export default function Landing() {
               <Text margin="x2" size="x6" strong>
                 Experience
               </Text>
-              <Text margin="x2">
-                A timeline of where and what I've worked on over the years.
-              </Text>
             </Box>
 
             {experienceSorted.map((exp, index) => (
@@ -106,11 +105,6 @@ export default function Landing() {
                 <Text margin="x2" size="x6" strong>
                   Writings
                 </Text>
-                <Text margin="x2">
-                  Usually when doing one of my side projects, I find something
-                  to write about and then add them to this list. It's like an
-                  infrequent blog with no consistent theme.
-                </Text>
               </Box>
 
               {listedWritingsSorted.map((writing) => (
@@ -123,12 +117,11 @@ export default function Landing() {
                 <Text margin="x2" size="x6" strong>
                   Publications
                 </Text>
-                <Text margin="x2">
-                  Usually when doing one of my side projects, I find something
-                  to write about and then add them to this list. It's like an
-                  infrequent blog with no consistent theme.
-                </Text>
               </Box>
+
+              {publicationsSorted.map((publication) => (
+                <Publication {...publication} key={publication.title} />
+              ))}
             </Box>
           </Box>
         </Box>

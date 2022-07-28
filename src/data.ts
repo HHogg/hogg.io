@@ -1,13 +1,6 @@
 import { Data } from './types';
 
-const data: Data<
-  'Pure360' | 'Reedsy' | 'Brandwatch' | 'Bitrise' | 'Spotify',
-  'CircleGraph' | 'CircleArt' | 'Antwerp' | 'Preshape' | 'Snake' | 'Spirals',
-  | 'CircleGraphs'
-  | 'CircleIntersections'
-  | 'GeneratingTessellations'
-  | 'SnakeSolution'
-> = {
+const data: Data = {
   experience: {
     Pure360: {
       company: 'Pure360',
@@ -45,6 +38,7 @@ const data: Data<
       company: 'Spotify',
       date: '2021-08-30',
       role: 'Senior Engineer',
+      tags: ['typescript', 'nodejs', 'java', 'react', 'gcp'],
     },
   },
 
@@ -138,23 +132,23 @@ const data: Data<
       to: '/writings/circle-intersections',
       unlisted: true,
     },
-    GeneratingTessellations: {
-      id: 'GeneratingTessellations',
-      date: '2020-01-31',
-      description:
-        'An explanation of the GomJau-Hogg’s notation for generating all of the regular, semiregular (uniform) and demigular (k-uniform, up to at least k=3) in a consistent, unique and unequivocal manner.',
-      imageOG: require('./assets/antwerp.png'),
-      tags: [
-        'svg',
-        'visualisation',
-        'geometry',
-        'tessellations',
-        'nomenclature',
-      ],
-      title:
-        'GomJau-Hogg’s notation for automatic generation of k-uniform tessellations',
-      to: '/writings/generating-tessellations',
-    },
+    // GeneratingTessellations: {
+    //   id: 'GeneratingTessellations',
+    //   date: '2020-01-31',
+    //   description:
+    //     'An explanation of the GomJau-Hogg’s notation for generating all of the regular, semiregular (uniform) and demigular (k-uniform, up to at least k=3) in a consistent, unique and unequivocal manner.',
+    //   imageOG: require('./assets/antwerp.png'),
+    //   tags: [
+    //     'svg',
+    //     'visualisation',
+    //     'geometry',
+    //     'tessellations',
+    //     'nomenclature',
+    //   ],
+    //   title:
+    //     'GomJau-Hogg’s notation for automatic generation of k-uniform tessellations',
+    //   to: '/writings/generating-tessellations',
+    // },
     SnakeSolution: {
       id: 'SnakeSolution',
       date: '2020-04-13',
@@ -174,6 +168,17 @@ const data: Data<
       to: '/writings/snake-solution',
     },
   },
+
+  publications: {
+    Tilings: {
+      title: 'GomJau-Hogg’s Notation for Automatic Generation of k-Uniform Tessellations with ANTWERP v3.0',
+      date: '2021-12-09',
+      authors: ['Valentin Gomez-Jauregui', 'Harrison Hogg', 'Cristina Manchado', 'Cesar Otero'],
+      journal: 'MDPI Symmetry',
+      description: 'Euclidean tilings are constantly applied to many fields of engineering (mechanical, civil, chemical, etc.). These tessellations are usually named after Cundy & Rollett’s notation. However, this notation has two main problems related to ambiguous conformation and uniqueness. This communication explains the GomJau-Hogg’s notation for generating all the regular, semi-regular (uniform) and demi-regular (k-uniform, up to at least k = 3) in a consistent, unique and unequivocal manner. Moreover, it presents Antwerp v3.0, a free online application, which is publicly shared to prove that all the basic tilings can be obtained directly from the GomJau-Hogg’s notation.',
+      href: 'https://www.mdpi.com/2073-8994/13/12/2376',
+    }
+  },
 };
 
 export const listedWritingsSorted = Object.values(data.writings)
@@ -181,6 +186,10 @@ export const listedWritingsSorted = Object.values(data.writings)
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 export const experienceSorted = Object.values(data.experience).sort(
+  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+);
+
+export const publicationsSorted = Object.values(data.publications).sort(
   (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
 );
 

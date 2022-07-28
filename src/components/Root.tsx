@@ -16,7 +16,6 @@ import Snake from './Projects/Snake/Snake';
 import Spirals from './Projects/Spirals/Spirals';
 import CircleGraphs from './Writings/CircleGraphs/CircleGraphs';
 import CircleIntersections from './Writings/CircleIntersections/CircleIntersections';
-import GeneratingTessellations from './Writings/GeneratingTessellations/GeneratingTessellations';
 import SnakeSolution from './Writings/SnakeSolution/SnakeSolution';
 
 export const RootContext = createContext<{
@@ -71,10 +70,10 @@ const Site = () => {
               element={<CircleGraphs />}
               path={data.writings.CircleGraphs.to}
             />
-            <Route
+            {/* <Route
               element={<GeneratingTessellations />}
               path={data.writings.GeneratingTessellations.to}
-            />
+            /> */}
             <Route
               element={<SnakeSolution />}
               path={data.writings.SnakeSolution.to}
