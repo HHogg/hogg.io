@@ -12,14 +12,9 @@ interface Props {
 }
 
 const NodeList = ({ onNodeOver }: Props) => {
-  const {
-    activeNodeIndex,
-    addToTraversal,
-    cancelTraversal,
-    graph,
-    traversals,
-  } = useContext(IntersectionExplorerContext);
-  const currentTraversal = getCurrentTraversal(traversals);
+  const { activeNodeIndex, addToTraversal, cancelTraversal, graph } =
+    useContext(IntersectionExplorerContext);
+  const currentTraversal = getCurrentTraversal(graph.traversals);
   const currentTraversalNode =
     currentTraversal?.path[currentTraversal.path.length - 1];
   const nodesSorted = getSortedNodes(graph, currentTraversal);

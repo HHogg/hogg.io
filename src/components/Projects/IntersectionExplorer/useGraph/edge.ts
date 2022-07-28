@@ -1,8 +1,8 @@
 import Bitset from 'bitset';
 import { Circle } from './circle';
+import { GraphContext } from './graph';
 import { Node, NodeState } from './node';
 import { validateEdge } from './validate';
-import { GraphContext } from '.';
 
 export type Edge = {
   angleStart: number;

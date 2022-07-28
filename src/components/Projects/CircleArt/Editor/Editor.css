@@ -1,0 +1,68 @@
+.CircleArt__circle,
+.CircleArt__intersection {
+  stroke-width: 1;
+  transition-property: fill, stroke, stroke-width;
+  transition-duration: var(--transition-duration--fast);
+  transition-timing-function: var(--transition-timing-function);
+}
+
+.CircleArt__circle--active {
+  stroke: var(--color-accent-shade-4);
+  stroke-width: 2;
+}
+
+.CircleArt--mode-draw {
+  & .CircleArt__circle {
+    fill: transparent;
+
+    &:hover {
+      stroke: var(--color-accent-shade-4);
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* .CircleArt__circle--active,
+.CircleArt__circle:hover {
+  stroke: var(--color-accent-shade-4);
+}
+
+.CircleArt__circle--selectable,
+.CircleArt__intersection--selectable {
+  stroke: var(--color-text-shade-4);
+}
+
+.CircleArt__circle--selectable:hover,
+.CircleArt__intersection--selectable:hover {
+  stroke: var(--color-accent-shade-4);
+} */
+
+
+
+
+
+
+
+.CircleArt--mode-fill,
+.CircleArt--mode-view {
+  /* & .CircleArt__circle--selectable.CircleArt__circle--filled:hover,
+  & .CircleArt__intersection--selectable.CircleArt__intersection--filled:hover {
+    fill: var(--color-text-shade-1);
+  } */
+}
+
+/* .CircleArt--mode-view {
+  & .CircleArt__circle,
+  & .CircleArt__intersection {
+    stroke: rgba(var(--rgb-text-shade-3), 0.25);
+  }
+} */

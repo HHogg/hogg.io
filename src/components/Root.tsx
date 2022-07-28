@@ -10,6 +10,7 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import data from '../data';
 import Landing from './Landing/Landing';
 import Metas from './Metas/Metas';
+import CircleArt from './Projects/CircleArt/CircleArt';
 import CircleGraph from './Projects/CircleGraph/CircleGraph';
 import Snake from './Projects/Snake/Snake';
 import Spirals from './Projects/Spirals/Spirals';
@@ -55,6 +56,7 @@ const Site = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Landing />} />
+            <Route element={<CircleArt />} path={data.projects.CircleArt.to} />
             <Route
               element={<CircleGraph />}
               path={data.projects.CircleGraph.to}

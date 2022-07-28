@@ -1,7 +1,7 @@
 import { isPointInCircle } from './circle';
 import { Edge, getOppositeEndNode } from './edge';
+import { GraphContext } from './graph';
 import { appendEdgeToPath } from './traversal';
-import { GraphContext } from '.';
 
 export interface ValidationRuleResult {
   number: 1 | 2 | 3 | 4;

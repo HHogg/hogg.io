@@ -1,4 +1,4 @@
-import { Labels } from 'preshape';
+import { Labels, Text } from 'preshape';
 import React, { FunctionComponent, useContext } from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
 import { getCompleteTraversals } from '../useGraph/traversal';
@@ -9,8 +9,12 @@ interface Props {
 }
 
 const TraversalList: FunctionComponent<Props> = ({ onTraversalOver }) => {
-  const { traversals } = useContext(IntersectionExplorerContext);
-  const completeTraversals = getCompleteTraversals(traversals);
+  const { graph } = useContext(IntersectionExplorerContext);
+  const completeTraversals = getCompleteTraversals(graph.traversals);
+
+  if (completeTraversals.length === 0) {
+    return <Text>No traversals added</Text>;
+  }
 
   return (
     <Labels flex="horizontal" margin="x6" style={{ gap: 8 }} wrap>
