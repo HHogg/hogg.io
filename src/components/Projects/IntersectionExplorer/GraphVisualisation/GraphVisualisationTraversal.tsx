@@ -31,10 +31,10 @@ const transition = {
 const GraphVisualisationTraversal = (props: Props) => {
   const { d, index, onPointerOver, traversal } = props;
 
-  const { activeNodeIndex, activeTraversalIndex, traversals } = useContext(
+  const { activeNodeIndex, activeTraversalIndex, graph } = useContext(
     IntersectionExplorerContext
   );
-  const currentTraversal = getCurrentTraversal(traversals);
+  const currentTraversal = getCurrentTraversal(graph.traversals);
   const refGlow = useRef<SVGPathElement>(null);
   const refPath = useRef<SVGPathElement>(null);
 

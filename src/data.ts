@@ -2,7 +2,7 @@ import { Data } from './types';
 
 const data: Data<
   'Pure360' | 'Reedsy' | 'Brandwatch' | 'Bitrise' | 'Spotify',
-  'CircleGraph' | 'Circles' | 'Antwerp' | 'Preshape' | 'Snake' | 'Spirals',
+  'CircleGraph' | 'CircleArt' | 'Antwerp' | 'Preshape' | 'Snake' | 'Spirals',
   | 'CircleGraphs'
   | 'CircleIntersections'
   | 'GeneratingTessellations'
@@ -58,13 +58,13 @@ const data: Data<
       title: 'Circle Graph',
       to: '/projects/circle-graph',
     },
-    Circles: {
+    CircleArt: {
       description:
         'A web application for creating artwork by filling in the intersection areas of overlapping circles. Using an experimental way of calculating intersections areas with graphs.',
-      href: 'https://circles.hogg.io',
       image: require('./assets/circles.svg'),
       tags: ['typescript', 'react', 'geometry'],
-      title: 'Circles',
+      title: 'Circle Art',
+      to: '/projects/circle-art'
     },
     Antwerp: {
       description:

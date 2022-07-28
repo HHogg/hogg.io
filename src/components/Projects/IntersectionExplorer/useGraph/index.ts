@@ -1,38 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Circle } from './circle';
-import { Edge, getEdges, getEdgeState } from './edge';
-import { Node, NodeState, getNodes, getNodeState } from './node';
+import { Edge, getEdges } from './edge';
+import { Graph, getUpdatedGraphState } from './graph';
+import { Node, NodeState, getNodes } from './node';
 import {
   Traversal,
-  appendEdgeToPath,
-  getNewTraversal,
-  getCurrentTraversal,
-  getCompleteTraversals,
+  addIndexToTraversal,
+  getTraversals,
 } from './traversal';
 import { ValidationRuleResult } from './validate';
 
-export { Circle, Edge, Node, NodeState, Traversal, ValidationRuleResult };
-
-export interface Graph {
-  circles: Circle[];
-  edges: Edge[];
-  nodes: Node[];
-}
-
-export interface GraphState {
-  edges: NodeState[];
-  nodes: NodeState[];
-}
-
-export interface GraphContext {
-  circles: Circle[];
-  edges: Edge[];
-  nodes: Node[];
-  traversals: Traversal[];
-  traversalCurrent: Traversal | null;
-  traversalCurrentNode: number | null;
-  traversalsComplete: Traversal[];
-}
+export { Circle, Graph, Edge, Node, NodeState, Traversal, ValidationRuleResult };
 
 export interface HookResult {
   /**
@@ -52,19 +30,17 @@ export interface HookResult {
   /**
    *
    */
-  graph: Graph;
-  /**
-   *
-   */
   removeTraversal: (index: number) => void;
   /**
    *
    */
-  traversals: Traversal[];
+  graph: Graph;
 }
 
-/** Consistent referenced array */
-const DONT_REMOVE__READ_COMMENT: [] = [];
+type UseGraphOptions = {
+  findTraversalsOnUpdate?: boolean;
+  traversals?: Traversal[];
+};
 
 /**
  *
@@ -73,46 +49,43 @@ const DONT_REMOVE__READ_COMMENT: [] = [];
  */
 export default function useGraph(
   circles: Circle[],
-  traversalsControlled: Traversal[] = DONT_REMOVE__READ_COMMENT
+  opts: UseGraphOptions = {},
 ): HookResult {
-  const [traversals, setTraversals] = useState<Traversal[]>([]);
+  const {
+    findTraversalsOnUpdate = false,
+    traversals: traversalsControlled,
+  } = opts;
+
   const [graph, setGraph] = useState<Graph>({
-    circles: circles,
+    circles: [],
     edges: [],
     nodes: [],
+    traversals: [],
   });
 
-  const addToTraversal = (point: number) => {
-    const currentTraversal = getCurrentTraversal(traversals);
-
-    if (currentTraversal) {
-      if (point < graph.nodes.length) {
-        throw new Error(
-          'Once a traversal has been started, only edges can be added.'
-        );
-      }
-
-      setTraversals([
-        ...traversals.slice(0, -1),
-        appendEdgeToPath(
-          currentTraversal,
-          graph.edges[point - graph.nodes.length]
-        ),
-      ]);
-    } else {
-      setTraversals([...traversals, getNewTraversal(traversals.length, point)]);
-    }
+  const addToTraversal = (index: number) => {
+    setGraph((graph) => {
+      const traversals = addIndexToTraversal(graph, index);
+      return getUpdatedGraphState({ ...graph, traversals });
+    });
   };
 
   const removeTraversal = (index: number) => {
-    setTraversals((traversals) => [
-      ...traversals.slice(0, index),
-      ...traversals.slice(index + 1),
-    ]);
+    setGraph((graph) => {
+      const traversals = [
+        ...graph.traversals.slice(0, index),
+        ...graph.traversals.slice(index + 1),
+      ];
+
+      return getUpdatedGraphState({
+        ...graph,
+        traversals,
+      });
+    });
   };
 
   const cancelTraversal = () => {
-    removeTraversal(traversals.length - 1);
+    removeTraversal(graph.traversals.length - 1);
   };
 
   /**
@@ -121,43 +94,19 @@ export default function useGraph(
   useEffect(() => {
     const nodes = getNodes(circles);
     const edges = getEdges(circles, nodes);
+    const traversals = findTraversalsOnUpdate ? getTraversals(circles, nodes, edges) : [];
+    const graph = getUpdatedGraphState({ circles, nodes, edges, traversals });
 
-    setGraph({ circles, nodes, edges });
-  }, [circles]);
-
-  /**
-   * On traversals changing, update the graph state.
-   */
-  useEffect(() => {
-    const traversalCurrent = getCurrentTraversal(traversals);
-    const traversalCurrentNode =
-      traversalCurrent &&
-      traversalCurrent.path[traversalCurrent.path.length - 1];
-    const traversalsComplete = getCompleteTraversals(traversals);
-
-    const context: GraphContext = {
-      ...graph,
-      traversalCurrent,
-      traversalCurrentNode,
-      traversals,
-      traversalsComplete,
-    };
-
-    setGraph((graph) => ({
-      ...graph,
-      edges: graph.edges.map((edge) => ({
-        ...edge,
-        state: getEdgeState(edge, context),
-      })),
-      nodes: graph.nodes.map((node) => ({
-        ...node,
-        state: getNodeState(node, context),
-      })),
-    }));
-  }, [traversals]);
+    setGraph(graph);
+  }, [circles, findTraversalsOnUpdate]);
 
   useEffect(() => {
-    setTraversals(traversalsControlled);
+    if (traversalsControlled) {
+      setGraph((graph) => getUpdatedGraphState({
+        ...graph,
+        traversals: traversalsControlled,
+      }));
+    }
   }, [traversalsControlled]);
 
   return {
@@ -165,6 +114,5 @@ export default function useGraph(
     cancelTraversal,
     removeTraversal,
     graph,
-    traversals,
   };
 }

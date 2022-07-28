@@ -3,84 +3,15 @@ import { motion } from 'framer-motion';
 import { Box, useResizeObserver } from 'preshape';
 import React, { useContext, useMemo, useRef, PointerEvent } from 'react';
 import { IntersectionExplorerContext } from '../IntersectionExplorer';
-import { Edge, Node, Traversal } from '../useGraph';
 import GraphVisualisationEdge from './GraphVisualisationEdge';
 import GraphVisualisationLabel from './GraphVisualisationLabel';
 import GraphVisualisationNode from './GraphVisualisationNode';
 import GraphVisualisationTraversal from './GraphVisualisationTraversal';
+import getArcPath from './getArcPath';
+import getScaledProps from './getScaledProps';
+import getTraversalPath from './getTraversalPath';
 import useLabelPositionShifts from './useLabelPositionShifts';
 import './GraphVisualisation.css';
-
-const scale = (v: number, m: number) => m * (v / 1);
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-const scaleProps = <T extends {}>(
-  entities: T[],
-  props: (keyof T)[],
-  range: number
-): T[] => {
-  return entities.map((entity) => {
-    const entityScaled: T = { ...entity };
-
-    for (const prop of props) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      entityScaled[prop] = scale(
-        entityScaled[prop] as unknown as number,
-        range
-      ) as any;
-    }
-
-    return entityScaled;
-  });
-};
-
-const getArcPath = (
-  edge: Edge,
-  nodes: Node[],
-  start = true,
-  reverse = false
-): string => {
-  const {
-    angleStart,
-    angleEnd,
-    nodes: [a, b],
-    radius,
-  } = edge;
-  const { x: sx, y: sy } = reverse ? nodes[b] : nodes[a];
-  const { x: ex, y: ey } = reverse ? nodes[a] : nodes[b];
-
-  const largeArcFlag = Math.abs(angleEnd - angleStart) >= Math.PI ? 1 : 0;
-  const sweepFlag = reverse ? 0 : 1;
-
-  return (
-    (start ? `M ${sx} ${sy} ` : '') +
-    `A ${radius} ${radius} 0 ${largeArcFlag} ${sweepFlag} ${ex} ${ey} `
-  );
-};
-
-const getTraversalPath = (
-  traversal: Traversal,
-  nodes: Node[],
-  edges: Edge[]
-): string => {
-  let path = '';
-
-  for (let i = 1; i < traversal.path.length; i += 2) {
-    const e = traversal.path[i] - nodes.length;
-    const a = traversal.path[i - 1];
-    const reverse = edges[e].nodes[0] !== a;
-
-    path +=
-      getArcPath(
-        edges[traversal.path[i] - nodes.length],
-        nodes,
-        i === 1,
-        reverse
-      ) + ' ';
-  }
-
-  return path;
-};
 
 interface Props {
   onNodeOver: (index: number) => void;
@@ -88,22 +19,22 @@ interface Props {
 }
 
 const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
-  const { activeNodeIndex, addToTraversal, graph, traversals } = useContext(
+  const { activeNodeIndex, addToTraversal, graph } = useContext(
     IntersectionExplorerContext
   );
   const [size, ref] = useResizeObserver();
   const min = size.width;
 
   const circles = useMemo(
-    () => scaleProps(graph.circles, ['radius', 'x', 'y'], min),
+    () => getScaledProps(graph.circles, ['radius', 'x', 'y'], min),
     [min]
   );
   const edges = useMemo(
-    () => scaleProps(graph.edges, ['radius', 'x', 'y'], min),
+    () => getScaledProps(graph.edges, ['radius', 'x', 'y'], min),
     [graph, min]
   );
   const nodes = useMemo(
-    () => scaleProps(graph.nodes, ['x', 'y'], min),
+    () => getScaledProps(graph.nodes, ['x', 'y'], min),
     [graph, min]
   );
   const classes = classNames('GraphVisualisation', {
@@ -113,7 +44,7 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
   const refLabels = useRef<SVGGElement>(null);
   const refObstacles = useRef<SVGGElement>(null);
   const labelPositionShifts = useLabelPositionShifts(
-    { circles, edges, nodes },
+    { ...graph, circles, edges, nodes },
     refLabels.current,
     refObstacles.current
   );
@@ -155,7 +86,7 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
           ))}
 
           {/* Animating yellow traversals */}
-          {traversals.map((traversal, index) => (
+          {graph.traversals.map((traversal, index) => (
             <GraphVisualisationTraversal
               d={getTraversalPath(traversal, nodes, edges)}
               index={index}

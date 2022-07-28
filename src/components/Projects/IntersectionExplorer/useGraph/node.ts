@@ -1,8 +1,8 @@
 import Bitset from 'bitset';
 import { Circle, atan2, getIntersectionPoints } from './circle';
 import { Edge } from './edge';
+import { GraphContext } from './graph';
 import { ValidationRuleResult, Validations } from './validate';
-import { GraphContext } from '.';
 
 export type Node = {
   [n: number]: number;

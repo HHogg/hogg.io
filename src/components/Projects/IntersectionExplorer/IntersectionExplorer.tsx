@@ -1,5 +1,5 @@
 import classnames from 'classnames';
-import { Box, useMatchMedia } from 'preshape';
+import { Box, Text, useMatchMedia } from 'preshape';
 import React, { createContext, useEffect, useRef, useState } from 'react';
 import GraphVisualisation from './GraphVisualisation/GraphVisualisation';
 import NodeList from './NodeList/NodeList';
@@ -36,8 +36,8 @@ export const IntersectionExplorerContext = createContext<Context>({
     circles: [],
     edges: [],
     nodes: [],
+    traversals: [],
   },
-  traversals: [],
 });
 
 const IntersectionExplorer = ({
@@ -105,6 +105,10 @@ const IntersectionExplorer = ({
           ref={refContainer}
         >
           <Box>
+            <Text margin="x2" size="x5" strong>
+              Nodes & Edges
+            </Text>
+
             <NodeList onNodeOver={(i) => setActiveNodeIndex(i)} />
           </Box>
 
@@ -116,6 +120,10 @@ const IntersectionExplorer = ({
           </Box>
 
           <Box>
+            <Text margin="x2" size="x5" strong>
+              Traversals
+            </Text>
+
             <TraversalList
               onTraversalOver={(i) => setActiveTraversalIndex(i)}
             />

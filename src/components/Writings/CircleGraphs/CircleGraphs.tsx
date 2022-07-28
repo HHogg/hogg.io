@@ -55,7 +55,7 @@ const CircleGraphs = () => {
 
   const match = useMatchMedia(['600px']);
   const refVisualisation = useRef<HTMLElement>(null);
-  const resultUseGraphHook = useGraph(sampleCircles, traversals);
+  const resultUseGraphHook = useGraph(sampleCircles, { traversals });
 
   const handleSetTraversals = (
     activeNodeIndex: number,

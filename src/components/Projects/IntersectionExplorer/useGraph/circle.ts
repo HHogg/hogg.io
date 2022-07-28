@@ -1,6 +1,5 @@
-import floor from 'lodash.floor';
-
 export interface Circle {
+  id?: string;
   radius: number;
   x: number;
   y: number;
@@ -40,8 +39,8 @@ export const getIntersectionPoints = (
     const y = y1 + (a * (y2 - y1)) / d;
     const rx = -(y2 - y1) * (h / d);
     const ry = -(x2 - x1) * (h / d);
-    const p1: [number, number] = [floor(x + rx, 5), floor(y - ry, 5)];
-    const p2: [number, number] = [floor(x - rx, 5), floor(y + ry, 5)];
+    const p1: [number, number] = [x + rx, y - ry];
+    const p2: [number, number] = [x - rx, y + ry];
 
     return [p1, p2];
   }
