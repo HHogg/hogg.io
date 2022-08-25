@@ -38,7 +38,8 @@ type MinimalEvent = {
 };
 
 type Props = {
-  data: CircleArtData;
+  data?: CircleArtData;
+  onChange: () => void;
 };
 
 const COPY_OFFSET = 25;
@@ -71,7 +72,7 @@ export const getColors = (theme: TypeTheme, filled?: boolean) => {
   };
 };
 
-const Editor = ({ data }: Props) => {
+const Editor = ({ data, onChange }: Props) => {
   const [{ width, height }, ref] = useResizeObserver();
 
   const refActiveCircle = useRef<Circle | null>(null);
@@ -82,12 +83,13 @@ const Editor = ({ data }: Props) => {
   const refIsMoving = useRef(false);
   const refIsPointerDown = useRef(false);
   const refIsResizing = useRef(false);
+  const refNotifyChange = useRef(false);
   const refPointerPosition = useRef<[number, number]>([-1, -1]);
   const refQueueActiveUpdate = useRef(false);
 
   const [activeCircle, setActiveCircle] = useState<Circle | null>(null);
   const [toolbarRect, setToolbarRect] = useState<DOMRect | null>(null);
-  const [fills, setFills] = useState(data.fills);
+  const [fills, setFills] = useState(data?.fills || {});
   const [mode, setMode] = useState<TypeMode>('view');
 
   const [circles, setCircles] = useState<Circle[]>([]);
@@ -97,12 +99,22 @@ const Editor = ({ data }: Props) => {
     findTraversalsOnUpdate: mode === 'fill' || mode === 'view',
   });
 
-  const getScaledCircles = (circles: Circle[]) => {
+  const handleSetCircles: typeof setCircles = (circles) => {
+    setCircles(circles);
+    refNotifyChange.current && onChange();
+  };
+
+  const handleSetFills: typeof setFills = (fills) => {
+    setFills(fills);
+    refNotifyChange.current && onChange();
+  };
+
+  const getScaledCircles = (data: CircleArtData) => {
     const scale = Math.min(width / data.width, height / data.height);
     const tx = (width - data.width * scale) * 0.5;
     const ty = (height - data.height * scale) * 0.5;
 
-    return circles.map(({ id, radius, x, y }) => ({
+    return data.circles.map(({ id, radius, x, y }) => ({
       id,
       radius: radius * scale,
       x: x * scale + tx,
@@ -155,7 +167,7 @@ ${svgString}
   };
 
   const handleClear = () => {
-    setCircles([]);
+    handleSetCircles([]);
     setMode('draw');
     handleSetActiveCircle(null);
     handleSetToolbarRect(null);
@@ -267,14 +279,16 @@ ${svgString}
   };
 
   const handleAddCircle = (circle: Circle) => {
-    setCircles((circles) => [...circles, circle]);
+    handleSetCircles((circles) => [...circles, circle]);
     handleSetActiveCircle(circle);
   };
 
   const handleRemoveCircle = (circle: Circle) => {
     editorHistory.push(
       () => {
-        setCircles((circles) => circles.filter(({ id }) => circle.id !== id));
+        handleSetCircles((circles) =>
+          circles.filter(({ id }) => circle.id !== id)
+        );
         handleSetActiveCircle(null);
         handleSetToolbarRect(null);
       },
@@ -287,7 +301,7 @@ ${svgString}
   };
 
   const handleUpdateCircle = (update: Circle) => {
-    setCircles((circles) =>
+    handleSetCircles((circles) =>
       circles.map((circle) => (circle.id === update.id ? update : circle))
     );
   };
@@ -349,11 +363,11 @@ ${svgString}
   const handleToggleFilled = (id: string) => {
     editorHistory.push(
       () => {
-        setFills((fills) => ({ ...fills, [id]: !fills[id] }));
+        handleSetFills((fills) => ({ ...fills, [id]: !fills[id] }));
       },
       {
         undo: () => {
-          setFills((fills) => ({ ...fills, [id]: !fills[id] }));
+          handleSetFills((fills) => ({ ...fills, [id]: !fills[id] }));
         },
       }
     );
@@ -532,9 +546,11 @@ ${svgString}
   );
 
   useEffect(() => {
-    if (width && height) {
-      setCircles(getScaledCircles(data.circles));
-      setFills(data.fills);
+    if (width && height && data) {
+      refNotifyChange.current = false;
+      handleSetCircles(getScaledCircles(data));
+      handleSetFills(data.fills);
+      refNotifyChange.current = true;
     }
   }, [data, width, height]);
 
