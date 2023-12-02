@@ -1,10 +1,5 @@
 import { TypePoint, TypeSnake, TypeValues } from './types';
 
-interface Config {
-  timeout: number;
-  worker: Worker;
-}
-
 interface MessageData {
   values: TypeValues;
 }
@@ -22,16 +17,21 @@ interface RunData {
 type ErrorHandler = (error: Error | ErrorEvent) => void;
 type MessageHandler = (data: MessageData) => void;
 
+const TIMEOUT = 1000;
+
 export default class SolutionRunner {
-  config: Config;
   onError?: ErrorHandler;
   onMessage?: MessageHandler;
   timeout?: NodeJS.Timeout;
   worker: Worker;
 
-  constructor(config: Config) {
-    this.config = config;
-    this.worker = config.worker;
+  constructor() {
+    this.worker = new Worker(
+      new URL('./SolutionRunnerWorker', import.meta.url),
+      {
+        type: 'classic',
+      }
+    );
 
     this.worker.onerror = (error) => {
       this.reset();
@@ -55,12 +55,12 @@ export default class SolutionRunner {
       this.worker.postMessage(args);
       this.timeout = setTimeout(() => {
         const error = new Error('Timeout');
-        error.message = `⏰ Your code exceeded the maximum ${this.config.timeout} ms run time.`;
+        error.message = `⏰ Your code exceeded the maximum ${TIMEOUT} ms run time.`;
 
         if (this.onError) {
           this.onError(error);
         }
-      }, this.config.timeout);
+      }, TIMEOUT);
     }
   }
 

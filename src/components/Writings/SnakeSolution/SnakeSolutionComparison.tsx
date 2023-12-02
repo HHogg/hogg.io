@@ -1,18 +1,6 @@
-import {
-  SeriesPointXY,
-  Viz,
-  VizSVG,
-  VizSVGAxisX,
-  VizSVGAxisY,
-  VizSVGCircles,
-  VizSVGGridLinesAxisX,
-  VizSVGGridLinesAxisY,
-  VizSVGLine,
-} from '@bitrise/bitviz';
 import numbro from 'numbro';
 import openColor from 'open-color';
 import { sizeX8Px, themes, Box, List, ListItem, Text } from 'preshape';
-import React from 'react';
 
 const format = (v: number) =>
   numbro(v).format({
@@ -49,13 +37,13 @@ const SnakeSolutionComparison = (props: Props) => {
   return (
     <Box basis="0" flex="vertical" gap="x3" grow>
       <Box>
-        <Text align="middle" margin="x2" size="x3" strong>
+        <Text align="middle" margin="x2" size="x3" weight="x2">
           {title}
         </Text>
 
         <Box flex="horizontal">
           <Box basis="0" grow>
-            <Viz
+            {/* <Viz
               height={300}
               paddingBottom={sizeX8Px}
               paddingLeft={sizeX8Px}
@@ -111,7 +99,7 @@ const SnakeSolutionComparison = (props: Props) => {
                   strokeWidth="2"
                 />
               </VizSVG>
-            </Viz>
+            </Viz> */}
           </Box>
         </Box>
       </Box>
@@ -131,7 +119,7 @@ const SnakeSolutionComparison = (props: Props) => {
                 </Box>
 
                 <Box>
-                  <Text size="x3" strong>
+                  <Text size="x3" weight="x2">
                     {name}
                   </Text>
                 </Box>

@@ -1,21 +1,20 @@
 import { Alert, Image, Link, Text } from 'preshape';
-import React from 'react';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
-import WritingSection from '../../WritingPage/WritingSection';
+import { WritingSection } from '../../WritingPage/WritingSection';
 
 const CircleIntersections = () => {
   return (
     <WritingPage {...data.writings.CircleIntersections}>
       <WritingSection>
         <Alert color="accent" padding="x3">
-          <Text strong>
+          <Text weight="x2">
             Please{' '}
-            <Link to="/writings/circle-graphs" isTextLink>
+            <Link to="/writings/circle-graphs" underline>
               click here
             </Link>{' '}
             for the rewritten and updated version of this article.
@@ -42,7 +41,7 @@ const CircleIntersections = () => {
           <Link
             href="http://mathworld.wolfram.com/Circle-CircleIntersection.html"
             target="CircleIntersections"
-            isTextLink
+            underline
           >
             well solved problem
           </Link>
@@ -55,7 +54,7 @@ const CircleIntersections = () => {
           <Link
             href="http://mathworld.wolfram.com/Mid-ArcPoints.html"
             target="CircleIntersections"
-            isTextLink
+            underline
           >
             calculate the midpoint
           </Link>{' '}
@@ -89,7 +88,7 @@ const CircleIntersections = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>
+        <WritingParagraph weight="x2">
           1. An arc cannot be a continuation of the previously traversed arc
         </WritingParagraph>
       </WritingSection>
@@ -119,7 +118,7 @@ const CircleIntersections = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>
+        <WritingParagraph weight="x2">
           2. The same two arcs cannot have been traversed before
         </WritingParagraph>
 
@@ -166,7 +165,7 @@ const CircleIntersections = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>
+        <WritingParagraph weight="x2">
           3. The midpoint of an arc must exist inside or outside of the
           non-intersecting circles of the endpoints of all previously traversed
           arcs
@@ -226,7 +225,7 @@ const CircleIntersections = () => {
           <Link
             href="https://circles.hogg.io"
             target="CircleIntersections"
-            isTextLink
+            underline
           >
             here
           </Link>

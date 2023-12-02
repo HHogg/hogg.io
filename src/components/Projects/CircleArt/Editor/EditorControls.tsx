@@ -1,6 +1,14 @@
-import { useMatchMedia, Button, Buttons, Box, Icons } from 'preshape';
-import React from 'react';
-import { TypeMode } from '../types';
+import {
+  DownloadIcon,
+  DropletIcon,
+  Edit2Icon,
+  EyeIcon,
+  FileIcon,
+  RotateCcwIcon,
+  RotateCwIcon,
+} from 'lucide-react';
+import { useMatchMedia, Button, Buttons, Box } from 'preshape';
+import { TypeMode } from './Editor';
 
 const canSave = typeof window !== 'undefined' && window.Blob !== undefined;
 
@@ -49,7 +57,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onChangeMode('draw')}
           >
             <Box>
-              <Icons.Edit2 size="1rem" />
+              <Edit2Icon size="1rem" />
             </Box>
             <Box>Draw</Box>
           </Button>
@@ -61,7 +69,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onChangeMode('fill')}
           >
             <Box>
-              <Icons.Droplet size="1rem" />
+              <DropletIcon size="1rem" />
             </Box>
             <Box>Fill</Box>
           </Button>
@@ -73,7 +81,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onChangeMode('view')}
           >
             <Box>
-              <Icons.Eye size="1rem" />
+              <EyeIcon size="1rem" />
             </Box>
             <Box>View</Box>
           </Button>
@@ -87,7 +95,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onUndo()}
           >
             <Box>
-              <Icons.RotateCcw size="1rem" />
+              <RotateCcwIcon size="1rem" />
             </Box>
             <Box>Undo</Box>
           </Button>
@@ -99,7 +107,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onRedo()}
           >
             <Box>
-              <Icons.RotateCw size="1rem" />
+              <RotateCwIcon size="1rem" />
             </Box>
             <Box>Redo</Box>
           </Button>
@@ -115,7 +123,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onSaveJSON()}
           >
             <Box>
-              <Icons.Download size="1rem" />
+              <DownloadIcon size="1rem" />
             </Box>
             <Box>JSON</Box>
           </Button>
@@ -127,7 +135,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onSavePNG()}
           >
             <Box>
-              <Icons.Download size="1rem" />
+              <DownloadIcon size="1rem" />
             </Box>
             <Box>SVG</Box>
           </Button>
@@ -141,7 +149,7 @@ const EditorControls = (props: Props) => {
             onClick={() => onClear()}
           >
             <Box>
-              <Icons.File size="1rem" />
+              <FileIcon size="1rem" />
             </Box>
             <Box>Clear</Box>
           </Button>

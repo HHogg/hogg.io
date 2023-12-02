@@ -1,27 +1,12 @@
 import { Box, CheckBox, Input, InputLabel, RadioButton, Text } from 'preshape';
-import React, { FormEvent, useState } from 'react';
-import {
-  getArchimedesSpiral,
-  getFermatSpiral,
-  getUlamSpiral,
-  getVogelSpiral,
-  ZeroSpiral,
-  TypeAlgorithm,
-} from './Algorithms';
+import { FormEvent, useState } from 'react';
+import { algorithms } from './Algorithms';
 import { Config } from './Spirals';
 
 interface Props {
   config: Config;
   onConfigChange: (config: Partial<Config>) => void;
 }
-
-export const algorithms: [string, TypeAlgorithm][] = [
-  ['Zero', ZeroSpiral],
-  ['Archimedes Spiral', getArchimedesSpiral],
-  ['Fermat Spiral', getFermatSpiral],
-  ['Ulam Spiral', getUlamSpiral],
-  ['Vogel Spiral', getVogelSpiral],
-];
 
 const SysPlotControls = (props: Props) => {
   const { config, onConfigChange } = props;
@@ -50,7 +35,7 @@ const SysPlotControls = (props: Props) => {
   return (
     <>
       <Box margin="x8">
-        <Text margin="x4" strong>
+        <Text margin="x4" weight="x2">
           Plotting Algorithms
         </Text>
 
@@ -67,7 +52,7 @@ const SysPlotControls = (props: Props) => {
       </Box>
 
       <Box margin="x8">
-        <Text margin="x4" strong>
+        <Text margin="x4" weight="x2">
           Configuration
         </Text>
 
@@ -98,7 +83,6 @@ const SysPlotControls = (props: Props) => {
 
         <InputLabel label="Shape Count" margin="x2">
           <Input
-            disabled
             onChange={(e: any) => handleNumberChange(e, 'shapeCount', 0, 200)}
             placeholder="Shape count..."
             type="number"
@@ -108,8 +92,7 @@ const SysPlotControls = (props: Props) => {
 
         <InputLabel label="Vector Count" margin="x2">
           <Input
-            disabled
-            onChange={(e: any) => handleNumberChange(e, 'vectorCount', 0, 200)}
+            onChange={(e: any) => handleNumberChange(e, 'vectorCount', 0, 5000)}
             placeholder="Vector count..."
             type="number"
             value={vectorCount}

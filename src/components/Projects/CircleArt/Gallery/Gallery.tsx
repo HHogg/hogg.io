@@ -1,5 +1,4 @@
 import { Button, Grid, Image } from 'preshape';
-import React from 'react';
 import { CircleArtGalleryItem } from '../types';
 import configurations from './configurations';
 

@@ -1,5 +1,4 @@
 import { Box, Text } from 'preshape';
-import React from 'react';
 
 interface Props {
   label: string;
@@ -18,10 +17,10 @@ const SnakeScoreTile = (props: Props) => {
       padding="x3"
     >
       <Text align="middle">
-        <Text inline size="x5">
+        <Text tag="span" size="x5">
           {value}
         </Text>{' '}
-        <Text color="shade-3" inline size="x1">
+        <Text color="shade-3" tag="span" size="x1">
           {label}
         </Text>
       </Text>

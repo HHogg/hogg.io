@@ -1,5 +1,5 @@
 import { Box, Link, Text, useMatchMedia } from 'preshape';
-import React, { useState } from 'react';
+import { useCallback, useState } from 'react';
 import data from '../../../data';
 import ProjectPage from '../../ProjectPage/ProjectPage';
 import Editor from './Editor/Editor';
@@ -13,9 +13,9 @@ const CircleArt = () => {
     configurations[0]
   );
 
-  const handleEditorChange = () => {
+  const handleEditorChange = useCallback(() => {
     setCircleData(null);
-  };
+  }, [setCircleData]);
 
   return (
     <ProjectPage {...data.projects.CircleArt}>
@@ -32,8 +32,8 @@ const CircleArt = () => {
 
           {circleData?.author && (
             <Box absolute="top-left" padding="x4">
-              <Text strong>{circleData.author}</Text>
-              <Link href={circleData.authorUrl} isTextLink size="x2">
+              <Text weight="x2">{circleData.author}</Text>
+              <Link href={circleData.authorUrl} underline size="x2">
                 {circleData.authorUrl}
               </Link>
             </Box>

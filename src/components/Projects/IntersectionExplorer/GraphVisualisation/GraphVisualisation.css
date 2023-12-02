@@ -21,7 +21,6 @@
 .Graph__node-point {
   fill: var(--color-background-shade-3);
   stroke: var(--color-text-shade-1);
-  stroke-width: var(--border-size--x2);
   transition-property: fill, r;
   transition-duration: var(--transition-duration--base);
   transition-timing-function: var(--transition-timing-function);
@@ -155,10 +154,7 @@
 
 .Graph__traversal-path,
 .Graph__traversal-hit {
-  transition-property: fill-opacity, stroke, stroke-opacity;
-  transition-delay: 0, calc(var(--transition-duration--base) * 4), 0;
-  transition-duration: var(--transition-duration--base);
-  transition-timing-function: var(--transition-timing-function);
+  transition: fill-opacity var(--transition-duration--base) var(--transition-timing-function) 0, stroke var(--transition-duration--base) var(--transition-timing-function) calc(var(--transition-duration--base) * 4), stroke-opacity var(--transition-duration--base) var(--transition-timing-function) 0;
 }
 
 .Graph__traversal-path {

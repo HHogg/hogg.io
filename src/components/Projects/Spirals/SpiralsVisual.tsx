@@ -1,11 +1,11 @@
 import getBezierEasing from 'bezier-easing';
 import { mat3 } from 'gl-matrix';
 import { transitionTimingFunction, Box } from 'preshape';
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import regl from 'regl';
-import { TypeVectorWithSize } from './Spirals';
-import frag from './shader.frag';
-import vert from './shader.vert';
+import { TypeVectorWithSize } from './getVectors';
+import frag from './shader.frag?raw';
+import vert from './shader.vert?raw';
 import useStateTween from './useStateTween';
 
 interface Props {
@@ -22,11 +22,11 @@ const duration = 2000;
 const SpiralsVisual = (props: Props) => {
   const { height, vectors, width } = props;
   const refCanvas = useRef<HTMLCanvasElement>(null);
-  const regFrameLoop = useRef<regl.Cancellable>();
+  const refFrameLoop = useRef<regl.Cancellable>();
   const refRegl = useRef<regl.Regl>();
   const refStartTime = useRef<number | null>(null);
   const refT = useRef<number>(0);
-  const state = useStateTween(refT.current, vectors);
+  const state = useStateTween(refT, vectors);
 
   useLayoutEffect(() => {
     if (refCanvas.current && !refRegl.current) {
@@ -35,25 +35,34 @@ const SpiralsVisual = (props: Props) => {
 
     return () => {
       refRegl.current?.destroy();
+      refRegl.current = undefined;
+      refFrameLoop.current = undefined;
     };
   }, []);
 
   useEffect(() => {
-    refCanvas.current?.setAttribute('height', `${height * 2}`);
-    refCanvas.current?.setAttribute('width', `${width * 2}`);
+    refCanvas.current?.setAttribute(
+      'height',
+      `${height * window.devicePixelRatio}`
+    );
+    refCanvas.current?.setAttribute(
+      'width',
+      `${width * window.devicePixelRatio}`
+    );
 
-    if (regFrameLoop.current) {
+    if (refFrameLoop.current) {
       refStartTime.current = null;
-      regFrameLoop.current.cancel();
+      refFrameLoop.current.cancel();
+      refFrameLoop.current = undefined;
     }
 
     if (refRegl.current) {
       const buffers: Record<string, regl.Buffer | undefined> = {
-        a_vector_0: refRegl.current?.buffer(state[0]),
-        a_vector_1: refRegl.current?.buffer(state[1]),
+        a_vector_0: refRegl.current.buffer(state[0]),
+        a_vector_1: refRegl.current.buffer(state[1]),
       };
 
-      regFrameLoop.current = refRegl.current.frame(({ time }) => {
+      refFrameLoop.current = refRegl.current.frame(({ time }) => {
         if (refRegl.current) {
           if (refStartTime.current === null) {
             refStartTime.current = time;
@@ -74,6 +83,7 @@ const SpiralsVisual = (props: Props) => {
             attributes: buffers,
             uniforms: {
               u_projection: mat3.projection(mat3.create(), width, height),
+              u_device_pixel_ratio: window.devicePixelRatio,
               u_t: refT.current,
             },
           })();
@@ -81,9 +91,9 @@ const SpiralsVisual = (props: Props) => {
           if (refT.current >= 1) {
             refStartTime.current = null;
 
-            if (regFrameLoop.current) {
-              regFrameLoop.current.cancel();
-              regFrameLoop.current = undefined;
+            if (refFrameLoop.current) {
+              refFrameLoop.current.cancel();
+              refFrameLoop.current = undefined;
             }
           }
         }

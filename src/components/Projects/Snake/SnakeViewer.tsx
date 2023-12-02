@@ -7,10 +7,10 @@ import {
   Box,
   BoxProps,
   TypeTheme,
+  useThemeContext,
 } from 'preshape';
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
-import { useLayoutContext } from '../../Root';
-import { useSnakeContext } from './SnakeProvider';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useSnakeContext } from './useSnakeContext';
 import getGradientColor from './utils/getGradientColor';
 
 const padding = 0;
@@ -21,7 +21,7 @@ type Props = BoxProps & {
 
 const SnakeViewer = ({ theme: themeProps, ...rest }: Props) => {
   const { point, snake, values, xLength, yLength } = useSnakeContext();
-  const { theme: themeContext } = useLayoutContext();
+  const { theme: themeContext } = useThemeContext();
   const theme = themeProps || themeContext;
 
   const [{ height, width }, refContainer] = useResizeObserver();
@@ -35,13 +35,13 @@ const SnakeViewer = ({ theme: themeProps, ...rest }: Props) => {
   const offsetX = padding + (width - cellStep * xLength) / 2;
   const offsetY = padding + (height - cellStep * yLength) / 2;
 
-  const redraw = () => {
+  const redraw = useCallback(() => {
     if (refCanvas.current) {
       const ctx = refCanvas.current.getContext('2d');
 
       if (ctx) {
         ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = themes[theme].colorBackgroundShade1;
+        ctx.fillStyle = themes[theme].colorBackgroundShade2;
         ctx.fillRect(
           offsetX - padding,
           offsetY - padding,
@@ -55,7 +55,7 @@ const SnakeViewer = ({ theme: themeProps, ...rest }: Props) => {
             const color =
               value !== undefined && isNaN(value)
                 ? colorNegativeShade4
-                : themes[theme].colorBackgroundShade2;
+                : themes[theme].colorBackgroundShade3;
 
             ctx.fillStyle = color;
             ctx.fillRect(
@@ -114,9 +114,23 @@ const SnakeViewer = ({ theme: themeProps, ...rest }: Props) => {
         }
       }
     }
-  };
+  }, [
+    cellSize,
+    cellStep,
+    height,
+    offsetX,
+    offsetY,
+    point,
+    snake,
+    theme,
+    themeContext,
+    values,
+    width,
+    xLength,
+    yLength,
+  ]);
 
-  useEffect(redraw, [point, snake, theme, themeContext, values]);
+  useEffect(redraw, [redraw]);
 
   useLayoutEffect(() => {
     if (refCanvas.current) {
@@ -129,7 +143,7 @@ const SnakeViewer = ({ theme: themeProps, ...rest }: Props) => {
         ?.scale(window.devicePixelRatio, window.devicePixelRatio);
       redraw();
     }
-  }, [refCanvas.current, height, width]);
+  }, [height, width, redraw]);
 
   return (
     <Box {...rest} container grow ref={refContainer}>

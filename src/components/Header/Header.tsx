@@ -1,15 +1,14 @@
+import { ChevronLeftIcon } from 'lucide-react';
 import {
   Box,
   BoxProps,
-  Icons,
   Link,
   Text,
   ThemeSwitcher,
   useMatchMedia,
 } from 'preshape';
-import React, { Fragment, useContext } from 'react';
+import { Fragment } from 'react';
 import { useLocation } from 'react-router-dom';
-import { RootContext } from '../Root';
 
 interface Props extends BoxProps {
   description?: string;
@@ -19,7 +18,6 @@ interface Props extends BoxProps {
 
 const Header = (props: Props) => {
   const { description, themeable = true, title, ...rest } = props;
-  const { onChangeTheme, theme } = useContext(RootContext);
   const match = useMatchMedia(['800px']);
 
   const location = useLocation();
@@ -39,10 +37,10 @@ const Header = (props: Props) => {
             <Link display="block" paddingVertical="x4" to="/">
               <Box flex="horizontal">
                 <Box>
-                  <Icons.ChevronLeft size="24px" />
+                  <ChevronLeftIcon size="24px" />
                 </Box>
                 <Box>
-                  <Text strong>Back</Text>
+                  <Text weight="x2">Back</Text>
                 </Box>
               </Box>
             </Link>
@@ -51,7 +49,7 @@ const Header = (props: Props) => {
 
         {themeable && !match('800px') && (
           <Box>
-            <ThemeSwitcher onChange={onChangeTheme} theme={theme} />
+            <ThemeSwitcher />
           </Box>
         )}
       </Box>
@@ -59,7 +57,7 @@ const Header = (props: Props) => {
       {title && (
         <Fragment>
           <Box basis="0" grow>
-            <Text size="x5" strong>
+            <Text size="x5" weight="x2">
               {title}
             </Text>
 
@@ -70,7 +68,7 @@ const Header = (props: Props) => {
 
       {themeable && match('800px') && (
         <Box>
-          <ThemeSwitcher onChange={onChangeTheme} theme={theme} />
+          <ThemeSwitcher />
         </Box>
       )}
     </Box>

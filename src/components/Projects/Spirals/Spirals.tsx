@@ -1,77 +1,11 @@
-import random from 'lodash.random';
 import { Box, useMatchMedia, useResizeObserver } from 'preshape';
-import React, { useLayoutEffect, useState } from 'react';
-import {
-  Box as Rect,
-  Circle,
-  Vector,
-  testPolygonCircle,
-  testCircleCircle,
-} from 'sat';
+import { useEffect, useState } from 'react';
 import data from '../../../data';
 import ProjectPage from '../../ProjectPage/ProjectPage';
-import { TypeVector, TypeAlgorithm, getFermatSpiral } from './Algorithms';
+import { TypeAlgorithm, getFermatSpiral } from './Algorithms';
 import SpiralsControls from './SpiralsControls';
 import SpiralsVisual from './SpiralsVisual';
-
-export type TypeVectorWithSize = [number, number, number];
-
-const hasCollided = (shapes: Circle[], circleA: Circle) => {
-  for (const circleB of shapes) {
-    if (testCircleCircle(circleA, circleB)) {
-      return true;
-    }
-  }
-
-  return false;
-};
-
-const scale = (points: TypeVector[], r0: number): TypeVector[] => {
-  return points.map(([x, y]) => [x * r0 * 0.5, y * r0 * 0.5]);
-};
-
-const getVectors = (
-  config: Config,
-  size: { height: number; width: number }
-): TypeVectorWithSize[] => {
-  const bounds = new Rect(
-    new Vector(size.width * -0.5, size.height * -0.5),
-    size.width,
-    size.height
-  ).toPolygon();
-  const radii = Array.from({ length: config.shapeCount })
-    .map(() => random(10, 60))
-    .sort((a, b) => b - a);
-  const points = config.algorithm(config.vectorCount);
-  const pointsScaled = scale(points, Math.min(size.height, size.width));
-  const vectors: TypeVectorWithSize[] = [];
-  const circles: Circle[] = [];
-
-  if (config.showShapes) {
-    for (const radius of radii) {
-      for (const [x, y] of pointsScaled) {
-        const circle = new Circle(
-          new Vector(x, y),
-          radius / 4 + config.padding
-        ); // Why "/ 4"?
-        const shouldPlace =
-          testPolygonCircle(bounds, circle) && !hasCollided(circles, circle);
-
-        if (shouldPlace) {
-          circles.push(circle);
-          vectors.push([circle.pos.x, circle.pos.y, radius]);
-          break;
-        }
-      }
-    }
-  }
-
-  for (let i = 0; i < pointsScaled.length - circles.length; i++) {
-    vectors.push(config.showVectors ? [...pointsScaled[i], 2] : [0, 0, 0]);
-  }
-
-  return vectors;
-};
+import { TypeVectorWithSize, getVectors } from './getVectors';
 
 export interface Config {
   algorithm: TypeAlgorithm;
@@ -84,7 +18,7 @@ export interface Config {
 
 const defaultConfig: Config = {
   algorithm: getFermatSpiral,
-  padding: 10,
+  padding: 5,
   shapeCount: 100,
   showShapes: true,
   showVectors: true,
@@ -97,7 +31,7 @@ const Spirals = () => {
   const [config, setConfig] = useState<Config>(defaultConfig);
   const [vectors, setState] = useState<TypeVectorWithSize[]>([]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setState(getVectors(config, size));
   }, [config, size]);
 

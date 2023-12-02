@@ -6,6 +6,7 @@
   },
   "extends": [
     "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:import/recommended",
     "plugin:import/typescript",
     "google",
@@ -16,17 +17,22 @@
     "ecmaFeatures": {
       "jsx": true
     },
-    "ecmaVersion": 12,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "react-refresh", "@typescript-eslint"],
   "settings": {
     "react": {
       "version": "detect"
+    },
+    "import/resolver": {
+      "typescript": true,
+      "node": true
     }
   },
   "rules": {
     "@typescript-eslint/no-unused-vars": "error",
+    "guard-for-in": "off",
     "import/order": [
       "error",
       {
@@ -34,11 +40,13 @@
         "groups": ["builtin", "external", "internal", "parent", "sibling"]
       }
     ],
-    "react/no-unescaped-entities": "off",
-    "require-jsdoc": "off",
     "no-console": [2, { "allow": ["warn", "error"] }],
-    "valid-jsdoc": "off",
-    "no-unused-vars": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react/no-unescaped-entities": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-refresh/only-export-components": "warn",
+    "react/display-name": "off",
+    "require-jsdoc": "off",
+    "valid-jsdoc": "off"
   }
 }

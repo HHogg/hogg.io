@@ -16,6 +16,6 @@
   line-height: 1;
 
   &:not(:only-child) {
-    margin: 0.125rem 0.125rem;
+    margin: 0.125rem;
   }
 }

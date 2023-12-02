@@ -1,6 +1,5 @@
-import { motion } from 'framer';
-import { Box, Grid, Link, Text, Icons, useMatchMedia } from 'preshape';
-import React from 'react';
+import { GithubIcon, LinkedinIcon, MailIcon } from 'lucide-react';
+import { Box, Grid, Link, Motion, Text, useMatchMedia } from 'preshape';
 import data, {
   experienceSorted,
   listedWritingsSorted,
@@ -22,9 +21,9 @@ export default function Landing() {
       <Box alignChildrenHorizontal="middle" flex="vertical" gap="x16">
         <Box maxWidth="600px" paddingVertical="x3">
           <Box margin="x6">
-            <Text margin="x2" size="x8" strong>
+            <Text margin="x2" size="x8" weight="x2">
               Hi.{' '}
-              <motion.span
+              <Motion
                 animate={{
                   rotate: [
                     '0deg',
@@ -46,9 +45,9 @@ export default function Landing() {
                 }}
               >
                 👋
-              </motion.span>
+              </Motion>
             </Text>
-            <Text margin="x2" size="x7" strong>
+            <Text margin="x2" size="x7" weight="x2">
               I'm Harrison Hogg, a Software Engineer from Brighton, UK.
             </Text>
           </Box>
@@ -57,7 +56,7 @@ export default function Landing() {
             <Text margin="x3" size="x5">
               I love designing and building things, which frequently sends me
               down rabbit holes on side projects. I studied at{' '}
-              <Link href="https://www.open.ac.uk/" isTextLink>
+              <Link href="https://www.open.ac.uk/" underline>
                 The Open University
               </Link>{' '}
               where I received my BSc Computing and Design Honours degree. When
@@ -69,7 +68,7 @@ export default function Landing() {
 
         <Box maxWidth="1240px" paddingVertical="x3">
           <Box maxWidth="600px">
-            <Text size="x6" strong>
+            <Text size="x6" weight="x2">
               Personal Projects
             </Text>
           </Box>
@@ -89,7 +88,7 @@ export default function Landing() {
         >
           <Box basis="0" grow paddingVertical="x3" shrink>
             <Box margin="x10">
-              <Text margin="x2" size="x6" strong>
+              <Text margin="x2" size="x6" weight="x2">
                 Experience
               </Text>
             </Box>
@@ -102,7 +101,7 @@ export default function Landing() {
           <Box basis="0" grow paddingVertical="x3" shrink>
             <Box margin="x16">
               <Box margin="x6">
-                <Text margin="x2" size="x6" strong>
+                <Text margin="x2" size="x6" weight="x2">
                   Writings
                 </Text>
               </Box>
@@ -114,7 +113,7 @@ export default function Landing() {
 
             <Box margin="x16">
               <Box margin="x6">
-                <Text margin="x2" size="x6" strong>
+                <Text margin="x2" size="x6" weight="x2">
                   Publications
                 </Text>
               </Box>
@@ -135,13 +134,13 @@ export default function Landing() {
         >
           <Box>
             <Link href="mailto:harry@hogg.io">
-              <Icons.Mail size="2rem" />
+              <MailIcon size="2rem" />
             </Link>
           </Box>
 
           <Box>
             <Link href="https://github.com/HHogg" target="Github">
-              <Icons.Github size="2rem" />
+              <GithubIcon size="2rem" />
             </Link>
           </Box>
 
@@ -150,7 +149,7 @@ export default function Landing() {
               href="https://linkedin.com/in/harrison-hogg"
               target="LinkedIn"
             >
-              <Icons.Linkedin size="2rem" />
+              <LinkedinIcon size="2rem" />
             </Link>
           </Box>
         </Box>

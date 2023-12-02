@@ -3,16 +3,20 @@ import { Circle } from './circle';
 import { Edge, getEdges } from './edge';
 import { Graph, getUpdatedGraphState } from './graph';
 import { Node, NodeState, getNodes } from './node';
-import {
-  Traversal,
-  addIndexToTraversal,
-  getTraversals,
-} from './traversal';
+import { Traversal, addIndexToTraversal, getTraversals } from './traversal';
 import { ValidationRuleResult } from './validate';
 
-export { Circle, Graph, Edge, Node, NodeState, Traversal, ValidationRuleResult };
+export type {
+  Circle,
+  Graph,
+  Edge,
+  Node,
+  NodeState,
+  Traversal,
+  ValidationRuleResult,
+};
 
-export interface HookResult {
+export interface UseGraphResult {
   /**
    * Given a point to traverse to, this creates or amends
    * a traversal with the point given.
@@ -49,12 +53,10 @@ type UseGraphOptions = {
  */
 export default function useGraph(
   circles: Circle[],
-  opts: UseGraphOptions = {},
-): HookResult {
-  const {
-    findTraversalsOnUpdate = false,
-    traversals: traversalsControlled,
-  } = opts;
+  opts: UseGraphOptions = {}
+): UseGraphResult {
+  const { findTraversalsOnUpdate = false, traversals: traversalsControlled } =
+    opts;
 
   const [graph, setGraph] = useState<Graph>({
     circles: [],
@@ -94,7 +96,9 @@ export default function useGraph(
   useEffect(() => {
     const nodes = getNodes(circles);
     const edges = getEdges(circles, nodes);
-    const traversals = findTraversalsOnUpdate ? getTraversals(circles, nodes, edges) : [];
+    const traversals = findTraversalsOnUpdate
+      ? getTraversals(circles, nodes, edges)
+      : [];
     const graph = getUpdatedGraphState({ circles, nodes, edges, traversals });
 
     setGraph(graph);
@@ -102,10 +106,12 @@ export default function useGraph(
 
   useEffect(() => {
     if (traversalsControlled) {
-      setGraph((graph) => getUpdatedGraphState({
-        ...graph,
-        traversals: traversalsControlled,
-      }));
+      setGraph((graph) =>
+        getUpdatedGraphState({
+          ...graph,
+          traversals: traversalsControlled,
+        })
+      );
     }
   }, [traversalsControlled]);
 

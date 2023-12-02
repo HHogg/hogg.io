@@ -1,33 +1,14 @@
-import {
-  Box,
-  Placement,
-  PlacementArrow,
-  PlacementContent,
-  PlacementManager,
-  PlacementProps,
-  PlacementReference,
-  PlacementReferenceProps,
-  Text,
-} from 'preshape';
-import React, { FunctionComponent } from 'react';
+import { Box, Text, Tooltip } from 'preshape';
+import { PropsWithChildren } from 'react';
 import NodeBadge from '../Node/NodeBadge';
 import { Traversal } from '../useGraph';
 
 interface Props {
-  children: PlacementReferenceProps['children'];
   traversal: Traversal;
   visible?: boolean;
 }
 
-const options: PlacementProps['options'] = {
-  modifiers: {
-    preventOverflow: {
-      boundariesElement: 'window',
-    },
-  },
-};
-
-const TraversalTooltip: FunctionComponent<Props> = (props) => {
+const TraversalTooltip = (props: PropsWithChildren<Props>) => {
   const { children, traversal, visible } = props;
 
   const bitsetString = traversal.bitset.toString();
@@ -36,53 +17,38 @@ const TraversalTooltip: FunctionComponent<Props> = (props) => {
     .split('')
     .map((v, i) => (
       <Text
-        inline
+        tag="span"
         key={i}
-        textColor={!+v ? 'negative-shade-4' : 'positive-shade-4'}
+        textColor={!+v ? 'text-shade-1' : 'negative-shade-4'}
       >
         {v}
       </Text>
     ));
 
   return (
-    <PlacementManager>
-      <PlacementReference>{children}</PlacementReference>
-
-      <Placement
-        animation="Fade"
-        options={options}
-        placement="top"
-        style={{ pointerEvents: 'none' }}
-        unrender
-        visible={visible}
-      >
-        <PlacementArrow backgroundColor="text-shade-1" />
-        <PlacementContent
-          backgroundColor="text-shade-1"
-          borderRadius="x2"
-          maxWidth="10.5rem"
-          onClick={(event) => event.stopPropagation()}
-          paddingHorizontal="x4"
-          paddingVertical="x4"
-          style={{ pointerEvents: 'none' }}
-          textColor="background-shade-1"
-        >
+    <Tooltip
+      content={
+        <Box maxWidth="10.5rem">
           <Box alignChildren="middle" flex="vertical" margin="x3">
             <NodeBadge>Traversal {traversal.index}</NodeBadge>
           </Box>
 
           <Box
-            backgroundColor="text-shade-2"
+            backgroundColor="background-shade-3"
+            borderRadius="x2"
             paddingHorizontal="x2"
             paddingVertical="x2"
           >
-            <Text breakOn="all" monospace size="x2" strong>
+            <Text breakOn="all" monospace size="x2" weight="x2">
               {bitsetStringPadded}
             </Text>
           </Box>
-        </PlacementContent>
-      </Placement>
-    </PlacementManager>
+        </Box>
+      }
+      visible={visible}
+    >
+      {children}
+    </Tooltip>
   );
 };
 

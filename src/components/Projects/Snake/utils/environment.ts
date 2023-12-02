@@ -1,4 +1,4 @@
-import { IEnvironment, TypeCell, TypeSnake } from '../types';
+import { Environment, TypeCell, TypeSnake } from '../types';
 import isCellIncluded from './isCellIncluded';
 
 export const createSnake = (xLength: number, yLength: number): TypeSnake =>
@@ -7,9 +7,12 @@ export const createSnake = (xLength: number, yLength: number): TypeSnake =>
     Math.floor(yLength / 2),
   ]);
 
-export const createPoint = (xLength: number, yLength: number, snake: TypeSnake): undefined | TypeCell => {
-  const freeGrid = Array
-    .from({ length: xLength * yLength })
+export const createPoint = (
+  xLength: number,
+  yLength: number,
+  snake: TypeSnake
+): undefined | TypeCell => {
+  const freeGrid = Array.from({ length: xLength * yLength })
     .map<[number, number]>((_, i) => [i % xLength, Math.floor(i / yLength)])
     .filter((cell) => !isCellIncluded(snake, cell));
 
@@ -18,7 +21,11 @@ export const createPoint = (xLength: number, yLength: number, snake: TypeSnake):
     : undefined;
 };
 
-export const createEnvironment = (xLength: number, yLength: number, snake: TypeSnake = createSnake(xLength, yLength)): IEnvironment => {
+export const createEnvironment = (
+  xLength: number,
+  yLength: number,
+  snake: TypeSnake = createSnake(xLength, yLength)
+): Environment => {
   return {
     path: [],
     point: createPoint(xLength, yLength, snake),

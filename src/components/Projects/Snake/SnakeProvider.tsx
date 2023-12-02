@@ -1,81 +1,25 @@
-import React, {
-  createContext,
-  FC,
+import {
+  PropsWithChildren,
   useCallback,
-  useContext,
   useEffect,
   useRef,
   useState,
 } from 'react';
 import SolutionRunner from './SolutionRunner';
-import {
-  TypeCell,
-  TypeHistory,
-  TypePoint,
-  TypeSnake,
-  TypeValues,
-} from './types';
+import { TypeCell, TypeHistory, TypeValues } from './types';
+import { SnakeContext } from './useSnakeContext';
 import getSurroundingCells from './utils/getSurroundingCells';
 import { createBlock, moveForwards, moveBackwards } from './utils/history';
 import isCellIncluded from './utils/isCellIncluded';
 
 interface Props {
   solution: string;
-  timeout?: number;
-  worker: Worker;
   xLength?: number;
   yLength?: number;
 }
 
-export const SnakeContext = createContext<{
-  history: TypeHistory;
-  isStarted: boolean;
-  isRunning: boolean;
-  logs: string[];
-  onClearLog: () => void;
-  onPause: () => void;
-  onPlay: () => void;
-  onRefresh: () => void;
-  onReset: () => void;
-  onStart: () => void;
-  onStepBackwards: () => void;
-  onStepForwards: () => void;
-  point: undefined | TypePoint;
-  snake: undefined | TypeSnake;
-  values: undefined | TypeValues;
-  xLength: number;
-  yLength: number;
-}>({
-  history: [],
-  isStarted: false,
-  isRunning: false,
-  logs: [],
-  onClearLog: () => {},
-  onPause: () => {},
-  onPlay: () => {},
-  onRefresh: () => {},
-  onReset: () => {},
-  onStart: () => {},
-  onStepBackwards: () => {},
-  onStepForwards: () => {},
-  point: undefined,
-  snake: undefined,
-  values: undefined,
-  xLength: 15,
-  yLength: 15,
-});
-
-export const useSnakeContext = () => useContext(SnakeContext);
-
-const SnakeProvider: FC<Props> = (props) => {
-  const {
-    solution,
-    timeout = 1000,
-    worker,
-    xLength = 15,
-    yLength = 15,
-    ...rest
-  } = props;
+const SnakeProvider = (props: PropsWithChildren<Props>) => {
+  const { solution, xLength = 15, yLength = 15, ...rest } = props;
 
   const refAnimationFrame = useRef<number>();
   const refSolutionRunner = useRef<SolutionRunner>();
@@ -100,9 +44,12 @@ const SnakeProvider: FC<Props> = (props) => {
     setHistory([]);
   };
 
-  const handleLog = (log: string) => {
-    setLogs([log, ...logs]);
-  };
+  const handleLog = useCallback(
+    (log: string) => {
+      setLogs([log, ...logs]);
+    },
+    [logs]
+  );
 
   const runSolution = useCallback(() => {
     if (point && snake) {
@@ -119,7 +66,7 @@ const SnakeProvider: FC<Props> = (props) => {
       setIsRunning(false);
       handleLog('🎉 You have conquered Snake! 🎉');
     }
-  }, [solution, point, snake]);
+  }, [point, snake, xLength, yLength, solution, handleLog]);
 
   const moveSnake = useCallback(() => {
     if (!Array.isArray(values)) {
@@ -172,15 +119,15 @@ const SnakeProvider: FC<Props> = (props) => {
     } else {
       setHistory(moveForwards(history, nextCell));
     }
-  }, [values, snake, point]);
+  }, [values, snake, point, xLength, yLength, handleLog, history]);
 
   useEffect(() => {
-    refSolutionRunner.current = new SolutionRunner({ timeout, worker });
+    refSolutionRunner.current = new SolutionRunner();
 
     return () => {
       refSolutionRunner.current?.destroy();
     };
-  }, [timeout, worker]);
+  }, []);
 
   useEffect(() => {
     if (refSolutionRunner.current) {
@@ -196,23 +143,23 @@ const SnakeProvider: FC<Props> = (props) => {
       };
 
       if (!isStarted) {
-        refSolutionRunner.current.reset();
+        refSolutionRunner.current?.reset();
       }
     }
-  }, [isStarted, isRunning]);
+  }, [isStarted, isRunning, handleLog]);
 
   useEffect(() => {
     if (!point || !snake) {
       setValues(undefined);
       setHistory(createBlock(xLength, yLength, history));
     }
-  }, [point, snake]);
+  }, [history, point, snake, xLength, yLength]);
 
   useEffect(() => {
     if (isStarted) {
       runSolution();
     }
-  }, [isStarted, point, snake]);
+  }, [isStarted, point, runSolution, snake]);
 
   useEffect(() => {
     if (isRunning && values) {
@@ -220,7 +167,7 @@ const SnakeProvider: FC<Props> = (props) => {
         moveSnake();
       });
     }
-  }, [isRunning, values]);
+  }, [isRunning, moveSnake, values]);
 
   return (
     <SnakeContext.Provider

@@ -1,39 +1,43 @@
-import fs from 'fs';
 import { BulletPoint, BulletPoints, Code, Image, Link, Text } from 'preshape';
-import React, { lazy, Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import data from '../../../data';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
-import WritingSection from '../../WritingPage/WritingSection';
+import { WritingSection } from '../../WritingPage/WritingSection';
 
-const solutionManhattanDistance = fs.readFileSync(
-  __dirname + '/solutionManhattanDistance.js',
-  'utf8'
-);
-const solutionEuclideanDistance = fs.readFileSync(
-  __dirname + '/solutionEuclideanDistance.js',
-  'utf8'
-);
-const solutionHamiltonianCycle = fs.readFileSync(
-  __dirname + '/solutionHamiltonianCycle.js',
-  'utf8'
-);
-const solutionTailEscape = fs.readFileSync(
-  __dirname + '/solutionTailEscape.js',
-  'utf8'
-);
+import solutionManhattanDistance from './solutionManhattanDistance.js?raw';
+import image1 from './writings-snake-1.svg';
+import image2 from './writings-snake-2.gif';
+
+// const solutionManhattanDistance = fs.readFileSync(
+//   __dirname + '/solutionManhattanDistance.js',
+//   'utf8'
+// );
+// const solutionEuclideanDistance = fs.readFileSync(
+//   __dirname + '/solutionEuclideanDistance.js',
+//   'utf8'
+// );
+// const solutionHamiltonianCycle = fs.readFileSync(
+//   __dirname + '/solutionHamiltonianCycle.js',
+//   'utf8'
+// );
+// const solutionTailEscape = fs.readFileSync(
+//   __dirname + '/solutionTailEscape.js',
+//   'utf8'
+// );
 
 const SnakeRunner =
   navigator.userAgent === 'ReactSnap'
     ? () => null
     : lazy(() => import('./SnakeRunner'));
-const SnakeSolutionComparison =
-  navigator.userAgent === 'ReactSnap'
-    ? () => null
-    : lazy(() => import('./SnakeSolutionComparisonFigs'));
+
+// const SnakeSolutionComparison =
+//   navigator.userAgent === 'ReactSnap'
+//     ? () => null
+//     : lazy(() => import('./SnakeSolutionComparisonFigs'));
 
 const SnakeSolution = () => {
   return (
@@ -46,7 +50,7 @@ const SnakeSolution = () => {
           <Link
             href="https://cdn.jpg.wtf/futurico/71/97/51974-6a6a0c50128edc7aacd9a223719672d3.gif"
             target="SnakeSolution"
-            isTextLink
+            underline
           >
             'the perfect game'
           </Link>
@@ -74,7 +78,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Graph_theory"
             target="SnakeSolution"
-            isTextLink
+            underline
           >
             graph theory
           </Link>
@@ -89,7 +93,7 @@ const SnakeSolution = () => {
           description="A graph representation, nodes visualised as circles and links as lines between them."
           number={1}
         >
-          <Image src={require('./writings-snake-1.svg')} />
+          <Image src={image1} />
         </WritingFig>
       </WritingFigs>
 
@@ -101,7 +105,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Breadth-first_search"
             target="SnakeSolution"
-            isTextLink
+            underline
           >
             'Breadth-First Search'
           </Link>{' '}
@@ -109,7 +113,7 @@ const SnakeSolution = () => {
           <Link
             href="https://en.wikipedia.org/wiki/Best-first_search"
             target="SnakeSolution"
-            isTextLink
+            underline
           >
             'Best-First Search'
           </Link>
@@ -118,7 +122,7 @@ const SnakeSolution = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>Breadth-First Search</WritingParagraph>
+        <WritingParagraph weight="x2">Breadth-First Search</WritingParagraph>
       </WritingSection>
 
       <WritingFigs>
@@ -126,7 +130,7 @@ const SnakeSolution = () => {
           description="Breadth-First Search frontier ring."
           number={2}
         >
-          <Image src={require('./writings-snake-2.gif')} />
+          <Image src={image2} />
         </WritingFig>
       </WritingFigs>
 
@@ -144,7 +148,7 @@ const SnakeSolution = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>Best-First Search</WritingParagraph>
+        <WritingParagraph weight="x2">Best-First Search</WritingParagraph>
 
         <WritingParagraph>
           The Best-First Search algorithm explores a single path by prioritising
@@ -171,7 +175,7 @@ const SnakeSolution = () => {
 
         <BulletPoints margin="x4">
           <BulletPoint>
-            <Text inline strong>
+            <Text tag="span" weight="x2">
               Points:{' '}
             </Text>{' '}
             The number of points that the snake collects is an indication to how
@@ -181,7 +185,7 @@ const SnakeSolution = () => {
           </BulletPoint>
 
           <BulletPoint>
-            <Text inline strong>
+            <Text tag="span" weight="x2">
               Cumulative moving average:{' '}
             </Text>{' '}
             Tracking the number of moves from point to point helps to see the
@@ -217,7 +221,7 @@ const SnakeSolution = () => {
         <WritingParagraph>
           A live runner with each solution can be used to play out the game of
           snake with that solution, and is taken from my{' '}
-          <Link href="https://snake.hogg.io" target="Snake" isTextLink>
+          <Link href="https://snake.hogg.io" target="Snake" underline>
             interactive developer game
           </Link>{' '}
           of writing your own heuristic (in Javascript).
@@ -225,14 +229,14 @@ const SnakeSolution = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>Manhattan Distance</WritingParagraph>
+        <WritingParagraph weight="x2">Manhattan Distance</WritingParagraph>
 
         <WritingParagraph>
           The Manhattan Distance is a taxicab metric of{' '}
           <Link
             href="https://en.wikipedia.org/wiki/Taxicab_geometry"
             target="SnakeSolution"
-            isTextLink
+            underline
           >
             Taxicab geometry
           </Link>
@@ -260,7 +264,7 @@ const SnakeSolution = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>Euclidean Distance</WritingParagraph>
+        <WritingParagraph weight="x2">Euclidean Distance</WritingParagraph>
 
         <WritingParagraph>
           The Euclidean Distance is the straight-line distance between two
@@ -269,13 +273,13 @@ const SnakeSolution = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
+      {/* <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
         <WritingFig description="Snake runner: Euclidean Distance." number={4}>
           <Suspense fallback={null}>
             <SnakeRunner solution={solutionEuclideanDistance} />
           </Suspense>
         </WritingFig>
-      </WritingFigs>
+      </WritingFigs> */}
 
       <WritingSection>
         <WritingParagraph>
@@ -288,14 +292,14 @@ const SnakeSolution = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>Hamiltonian Cycle</WritingParagraph>
+        <WritingParagraph weight="x2">Hamiltonian Cycle</WritingParagraph>
 
         <WritingParagraph>
           A{' '}
           <Link
             href="https://en.wikipedia.org/wiki/Hamiltonian_path"
             target="SnakeSolution"
-            isTextLink
+            underline
           >
             Hamiltonian Path
           </Link>{' '}
@@ -305,13 +309,13 @@ const SnakeSolution = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
+      {/* <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
         <WritingFig description="Snake runner: Hamiltonian Cycle." number={5}>
           <Suspense fallback={null}>
             <SnakeRunner solution={solutionHamiltonianCycle} />
           </Suspense>
         </WritingFig>
-      </WritingFigs>
+      </WritingFigs> */}
 
       <WritingSection>
         <WritingParagraph>
@@ -335,7 +339,7 @@ const SnakeSolution = () => {
       </WritingSection>
 
       <WritingSection>
-        <WritingParagraph strong>Tail Escape</WritingParagraph>
+        <WritingParagraph weight="x2">Tail Escape</WritingParagraph>
 
         <WritingParagraph>
           Some observations we can make from the previous solutions is that the
@@ -352,13 +356,13 @@ const SnakeSolution = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
+      {/* <WritingFigs backgroundColor="dark-shade-1" textColor="light-shade-1">
         <WritingFig description="Snake runner: Tail Escape." number={6}>
           <Suspense fallback={null}>
             <SnakeRunner solution={solutionTailEscape} />
           </Suspense>
         </WritingFig>
-      </WritingFigs>
+      </WritingFigs> */}
 
       <WritingSection>
         <WritingParagraph>
@@ -413,7 +417,7 @@ const SnakeSolution = () => {
           <Link
             href="https://cdn.jpg.wtf/futurico/71/97/51974-6a6a0c50128edc7aacd9a223719672d3.gif"
             target="SnakeSolution"
-            isTextLink
+            underline
           >
             'the perfect game'
           </Link>{' '}
@@ -421,9 +425,9 @@ const SnakeSolution = () => {
         </WritingParagraph>
       </WritingSection>
 
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         <SnakeSolutionComparison />
-      </Suspense>
+      </Suspense> */}
 
       <WritingSection>
         <WritingParagraph>

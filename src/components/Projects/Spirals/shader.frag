@@ -1,7 +1,5 @@
 precision mediump float;
 
-varying vec4 fragColor;
-
 void main () {
   vec2 cxy = 2.0 * gl_PointCoord - 1.0;
 
@@ -9,5 +7,5 @@ void main () {
     discard;
   }
 
-  gl_FragColor = fragColor;
+  gl_FragColor = vec4(1, 1, 1, 1);
 }

@@ -1,6 +1,5 @@
 import { DateTime } from 'luxon';
 import { Box, Label, Labels, Text } from 'preshape';
-import React from 'react';
 import { Experience } from '../../types';
 
 interface Props extends Experience {
@@ -21,7 +20,7 @@ const ExperienceComponent = (props: Props) => {
               paddingHorizontal="x2"
               paddingVertical="x1"
               size="x3"
-              strong
+              weight="x2"
               textColor="light-shade-1"
             >
               Now
@@ -42,7 +41,7 @@ const ExperienceComponent = (props: Props) => {
             paddingHorizontal="x2"
             paddingVertical="x1"
             size="x3"
-            strong
+            weight="x2"
             textColor="light-shade-1"
           >
             {DateTime.fromISO(date).toFormat('yyyy')}
@@ -57,10 +56,10 @@ const ExperienceComponent = (props: Props) => {
         grow
         padding="x6"
       >
-        <Text size="x5" strong>
+        <Text size="x5" weight="x2">
           {company}
         </Text>
-        <Text strong>{role}</Text>
+        <Text weight="x2">{role}</Text>
 
         {description && <Text margin="x2">{description}</Text>}
 

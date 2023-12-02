@@ -1,6 +1,6 @@
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import {
   Box,
-  Icons,
   Label,
   Labels,
   Link,
@@ -8,7 +8,7 @@ import {
   Text,
   useMatchMedia,
 } from 'preshape';
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { listedWritingsSorted } from '../../data';
 import { Writing } from '../../types';
 import { fromISO } from '../../utils/date';
@@ -45,13 +45,13 @@ const WritingPage = (props: PropsWithChildren<Props>) => {
 
           <Box>
             <Box maxWidth="600px" paddingVertical="x6">
-              <Text heading margin="x2" size="x7" strong tag="h1">
+              <Text margin="x2" size="x7" weight="x2" tag="h1">
                 {title}
               </Text>
-              <Text heading margin="x2" size="x5" tag="h2">
+              <Text margin="x2" size="x5" tag="h2">
                 {description}
               </Text>
-              <Text aria-label="article date" heading margin="x2" size="x3">
+              <Text aria-label="article date" margin="x2" size="x3">
                 {fromISO(date)}
               </Text>
             </Box>
@@ -68,7 +68,7 @@ const WritingPage = (props: PropsWithChildren<Props>) => {
 
           <Box margin="x16" maxWidth="600px">
             <Separator borderColor="background-shade-3" margin="x4" />
-            <Text margin="x2" size="x3" strong tag="h1">
+            <Text margin="x2" size="x3" weight="x2" tag="h1">
               {title}
             </Text>
             <Text margin="x2" size="x2" tag="h2">
@@ -108,10 +108,10 @@ const WritingPage = (props: PropsWithChildren<Props>) => {
             padding="x6"
             to={previous.to}
           >
-            <Icons.ChevronLeft size="2rem" />
+            <ChevronLeftIcon size="2rem" />
 
             <Box shrink>
-              <Text margin="x2" size="x3" strong tag="h1">
+              <Text margin="x2" size="x3" weight="x2" tag="h1">
                 {previous.title}
               </Text>
               <Text margin="x2" size="x2" tag="h2">
@@ -133,7 +133,7 @@ const WritingPage = (props: PropsWithChildren<Props>) => {
             to={next.to}
           >
             <Box shrink>
-              <Text margin="x2" size="x3" strong tag="h1">
+              <Text margin="x2" size="x3" weight="x2" tag="h1">
                 {next.title}
               </Text>
               <Text margin="x2" size="x2" tag="h2">
@@ -141,7 +141,7 @@ const WritingPage = (props: PropsWithChildren<Props>) => {
               </Text>
             </Box>
 
-            <Icons.ChevronRight size="2rem" />
+            <ChevronRightIcon size="2rem" />
           </Link>
         ) : (
           <Box />

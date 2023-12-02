@@ -1,7 +1,6 @@
 import { Box } from 'preshape';
-import React from 'react';
-import { useSnakeContext } from './SnakeProvider';
 import SnakeScoreTile from './SnakeScoreTile';
+import { useSnakeContext } from './useSnakeContext';
 import getAverage from './utils/getAverage';
 import getPoints from './utils/getPoints';
 import getScore from './utils/getScore';

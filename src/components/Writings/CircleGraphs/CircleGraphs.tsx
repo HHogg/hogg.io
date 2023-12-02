@@ -8,11 +8,10 @@ import {
   Text,
   useMatchMedia,
 } from 'preshape';
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import data from '../../../data';
-import IntersectionExplorer, {
-  sampleCircles,
-} from '../../Projects/IntersectionExplorer/IntersectionExplorer';
+import IntersectionExplorer from '../../Projects/IntersectionExplorer/IntersectionExplorer';
+import { sampleCircles } from '../../Projects/IntersectionExplorer/sampleCircles';
 import useGraph, {
   Traversal,
 } from '../../Projects/IntersectionExplorer/useGraph';
@@ -21,7 +20,7 @@ import WritingFigs from '../../WritingPage/WritingFigs';
 import WritingHeading from '../../WritingPage/WritingHeading';
 import WritingPage from '../../WritingPage/WritingPage';
 import WritingParagraph from '../../WritingPage/WritingParagraph';
-import WritingSection from '../../WritingPage/WritingSection';
+import { WritingSection } from '../../WritingPage/WritingSection';
 import RuleBox from './RuleBox';
 import {
   traversalConfig1,
@@ -29,6 +28,12 @@ import {
   traversalConfig3,
   traversalConfig4,
 } from './traversals.json';
+
+import image1 from './writings-circles-graph-1.svg';
+import image2 from './writings-circles-graph-2.svg';
+import image3 from './writings-circles-graph-3.svg';
+import image4 from './writings-circles-graph-4.svg';
+import image5 from './writings-circles-graph-5.svg';
 
 interface TraversalJSON {
   bitset: string;
@@ -54,7 +59,7 @@ const CircleGraphs = () => {
   });
 
   const match = useMatchMedia(['600px']);
-  const refVisualisation = useRef<HTMLElement>(null);
+  const refVisualisation = useRef<HTMLDivElement>(null);
   const resultUseGraphHook = useGraph(sampleCircles, { traversals });
 
   const handleSetTraversals = (
@@ -115,7 +120,7 @@ const CircleGraphs = () => {
             This is a rewrite of a previous article, which I didn't like as it
             didn't focus on the main concept of traversing the intersections
             with graphs. You can read the origin article{' '}
-            <Link to="/writings/circle-intersections" isTextLink>
+            <Link to="/writings/circle-intersections" underline>
               here
             </Link>
             .
@@ -140,7 +145,7 @@ const CircleGraphs = () => {
 
         <WritingFigs>
           <WritingFig description="Graph visual representation" number={1}>
-            <Image src={require('./writings-circles-graph-1.svg')} />
+            <Image src={image1} />
           </WritingFig>
         </WritingFigs>
 
@@ -164,7 +169,7 @@ const CircleGraphs = () => {
           <Link
             href="http://mathworld.wolfram.com/Circle-CircleIntersection.html"
             target="CircleIntersections"
-            isTextLink
+            underline
           >
             well solved problem
           </Link>
@@ -184,7 +189,7 @@ const CircleGraphs = () => {
             description="Arrangement of three intersecting circles. A graph in it's entirety"
             number={2}
           >
-            <Image src={require('./writings-circles-graph-2.svg')} />
+            <Image src={image2} />
           </WritingFig>
         </WritingFigs>
 
@@ -213,14 +218,14 @@ const CircleGraphs = () => {
           description="Arrangement of two intersecting circles."
           number={3}
         >
-          <Image src={require('./writings-circles-graph-3.svg')} />
+          <Image src={image3} />
         </WritingFig>
 
         <WritingFig
           description="Arrangement of two intersecting circles, with labelled edges."
           number={4}
         >
-          <Image src={require('./writings-circles-graph-4.svg')} />
+          <Image src={image4} />
         </WritingFig>
       </WritingFigs>
 
@@ -273,7 +278,7 @@ const CircleGraphs = () => {
             description="Bitsets of all the valid traversals in Fig 4"
             number={5}
           >
-            <Image src={require('./writings-circles-graph-5.svg')} />
+            <Image src={image5} />
           </WritingFig>
         </WritingFigs>
 
@@ -372,7 +377,7 @@ const CircleGraphs = () => {
             <Box borderSize="x1" height="16px" />
           </Box>
 
-          <Text align="middle" margin="x2" size="x2" strong uppercase>
+          <Text align="middle" margin="x2" size="x2" weight="x2" uppercase>
             Rule Example Configurations
           </Text>
         </Box>
@@ -396,7 +401,7 @@ const CircleGraphs = () => {
 
       <WritingSection>
         <Text margin="x6">
-          <Text strong>Harrison Hogg</Text>
+          <Text weight="x2">Harrison Hogg</Text>
           <Text>Software Engineer</Text>
         </Text>
       </WritingSection>

@@ -1,8 +1,9 @@
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { Box, useResizeObserver } from 'preshape';
-import React, { useContext, useMemo, useRef, PointerEvent } from 'react';
-import { IntersectionExplorerContext } from '../IntersectionExplorer';
+import { useMemo, useRef, PointerEvent } from 'react';
+import NodeTooltip from '../NodeTooltip/NodeTooltip';
+import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 import GraphVisualisationEdge from './GraphVisualisationEdge';
 import GraphVisualisationLabel from './GraphVisualisationLabel';
 import GraphVisualisationNode from './GraphVisualisationNode';
@@ -13,21 +14,20 @@ import getTraversalPath from './getTraversalPath';
 import useLabelPositionShifts from './useLabelPositionShifts';
 import './GraphVisualisation.css';
 
-interface Props {
-  onNodeOver: (index: number) => void;
-  onTraversalOver: (index: number) => void;
-}
-
-const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
-  const { activeNodeIndex, addToTraversal, graph } = useContext(
-    IntersectionExplorerContext
-  );
+const GraphVisualisation = () => {
+  const {
+    activeNodeIndex,
+    addToTraversal,
+    setActiveNodeIndex,
+    setActiveTraversalIndex,
+    graph,
+  } = useIntersectionExplorerContext();
   const [size, ref] = useResizeObserver();
   const min = size.width;
 
   const circles = useMemo(
     () => getScaledProps(graph.circles, ['radius', 'x', 'y'], min),
-    [min]
+    [graph, min]
   );
   const edges = useMemo(
     () => getScaledProps(graph.edges, ['radius', 'x', 'y'], min),
@@ -49,21 +49,15 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
     refObstacles.current
   );
 
-  const handleNodeClick = (index: number) => () => {
+  const handleNodeClick = (index: number) => {
     addToTraversal(index);
-    onNodeOver(-1);
+    setActiveNodeIndex(-1);
   };
 
-  const handleNodeOver = (index: number) => (event: PointerEvent) => {
+  const handleNodePointerOver = (index: number) => (event: PointerEvent) => {
     event.stopPropagation();
-    onTraversalOver(-1);
-    onNodeOver(index);
-  };
-
-  const handleTraversalOver = (index: number) => (event: PointerEvent) => {
-    event.stopPropagation();
-    onNodeOver(-1);
-    onTraversalOver(index);
+    setActiveTraversalIndex(-1);
+    setActiveNodeIndex(index);
   };
 
   return (
@@ -82,6 +76,7 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
             <GraphVisualisationEdge
               d={getArcPath(edge, nodes)}
               key={edge.index}
+              node={edge}
             />
           ))}
 
@@ -91,9 +86,6 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
               d={getTraversalPath(traversal, nodes, edges)}
               index={index}
               key={index}
-              onPointerOver={
-                traversal.isComplete ? handleTraversalOver(index) : undefined
-              }
               traversal={traversal}
             />
           ))}
@@ -124,17 +116,21 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
         </g>
 
         <g data-group-description="Obstacles" ref={refObstacles}>
-          {[...nodes, ...edges].map(({ index, state, x, y }, i) => (
-            <GraphVisualisationNode
-              {...state}
-              isFocused={activeNodeIndex === index}
-              key={index}
-              n={i}
-              onClick={state.isSelectable ? handleNodeClick(index) : undefined}
-              onPointerOver={handleNodeOver(index)}
-              x={x}
-              y={y}
-            />
+          {[...nodes, ...edges].map((node) => (
+            <NodeTooltip node={node} key={node.index}>
+              <GraphVisualisationNode
+                onClick={
+                  node.state.isSelectable
+                    ? () => handleNodeClick(node.index)
+                    : undefined
+                }
+                onPointerOver={handleNodePointerOver(node.index)}
+                node={node}
+                strokeWidth={2}
+                x={node.x}
+                y={node.y}
+              />
+            </NodeTooltip>
           ))}
         </g>
 
@@ -145,7 +141,6 @@ const GraphVisualisation = ({ onNodeOver, onTraversalOver }: Props) => {
         >
           {[...nodes, ...edges].map(({ index, state, x, y }, i) => (
             <GraphVisualisationLabel
-              {...state}
               isVisible={!labelPositionShifts.length || state.isVisible}
               key={index}
               x={x + (labelPositionShifts[i]?.x || 0)}

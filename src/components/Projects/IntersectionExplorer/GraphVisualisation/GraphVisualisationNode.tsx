@@ -1,27 +1,32 @@
 import classNames from 'classnames';
-import React, { SVGAttributes } from 'react';
-import { NodeState } from '../useGraph';
+import { SVGAttributes, forwardRef } from 'react';
+import { Edge, Node } from '../useGraph';
+import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 
-interface Props extends NodeState, SVGAttributes<SVGGElement> {
-  isFocused?: boolean;
-  n: number;
+type Props = SVGAttributes<SVGGElement> & {
+  node: Node | Edge;
+  strokeWidth?: number;
   x: number;
   y: number;
-}
+};
 
-const GraphVisualisationNode = (props: Props) => {
+export default forwardRef<SVGGElement, Props>(function GraphVisualisationNode(
+  props,
+  ref
+) {
+  const { node, strokeWidth = 1, x, y, ...rest } = props;
+  const { state } = node;
   const {
     isCurrent,
-    isFocused,
     isNext,
     isPrevious,
     isValid: [isValid] = [],
     isVisible,
     isSelectable,
-    x,
-    y,
-    ...rest
-  } = props;
+  } = state;
+
+  const { activeNodeIndex } = useIntersectionExplorerContext();
+  const isFocused = activeNodeIndex === node.index;
 
   const classes = classNames('Graph__node', {
     'Graph__node--connected': isNext,
@@ -34,7 +39,13 @@ const GraphVisualisationNode = (props: Props) => {
   });
 
   return (
-    <g {...rest} className={classes} data-visible={isVisible}>
+    <g
+      {...rest}
+      className={classes}
+      data-visible={isVisible}
+      ref={ref}
+      style={{ strokeWidth }}
+    >
       <circle
         className="Graph__node-point"
         cx={x}
@@ -50,6 +61,4 @@ const GraphVisualisationNode = (props: Props) => {
       />
     </g>
   );
-};
-
-export default GraphVisualisationNode;
+});

@@ -1,5 +1,4 @@
 import flatten from 'lodash.flatten';
-import React from 'react';
 import { TypeHistory } from '../../Projects/Snake/types';
 import getAverage from '../../Projects/Snake/utils/getAverage';
 import SnakeSolutionComparison from './SnakeSolutionComparison';

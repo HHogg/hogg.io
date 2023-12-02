@@ -1,3 +1,9 @@
+import tilingsImage from './assets/antwerp.svg';
+import circleGraphImage from './assets/circle-graph.png';
+import circleArtImage from './assets/circles.svg';
+import preshapeImage from './assets/preshape.svg';
+import snakeImage from './assets/snake.svg';
+import spiralImage from './assets/spiral.png';
 import { Data } from './types';
 
 const data: Data = {
@@ -46,8 +52,8 @@ const data: Data = {
     CircleGraph: {
       description:
         'An application, for describing and visualising an algorithm that calculates circle intersections with graphs.',
-      image: require('./assets/circle-graph.png'),
-      imageOG: require('./assets/circle-graph.png'),
+      image: circleGraphImage,
+      imageOG: circleGraphImage,
       tags: ['typescript', 'react', 'geometry', 'svg'],
       title: 'Circle Graph',
       to: '/projects/circle-graph',
@@ -55,16 +61,16 @@ const data: Data = {
     CircleArt: {
       description:
         'A web application for creating artwork by filling in the intersection areas of overlapping circles. Using an experimental way of calculating intersections areas with graphs.',
-      image: require('./assets/circles.svg'),
+      image: circleArtImage,
       tags: ['typescript', 'react', 'geometry'],
       title: 'Circle Art',
-      to: '/projects/circle-art'
+      to: '/projects/circle-art',
     },
     Antwerp: {
       description:
         'A web application for visualising the GomJau-Hogg notation for generating any regular polygon tessellations.',
       href: 'https://antwerp.hogg.io',
-      image: require('./assets/antwerp.svg'),
+      image: tilingsImage,
       tags: ['typescript', 'react', 'geometry'],
       title: 'Antwerp',
     },
@@ -72,23 +78,23 @@ const data: Data = {
       description:
         'A minimal design system and library of React components, that fit together just like LEGO. This exists mainly to facilitate my own personal projects.',
       href: 'https://preshape.hogg.io',
-      image: require('./assets/preshape.svg'),
+      image: preshapeImage,
       tags: ['typescript', 'react', 'css'],
       title: 'Preshape',
     },
     Snake: {
       description:
         'A project that was originally created as a game for developers to compete on writing a heuristic function to complete the game of snake in the most efficient way possible.',
-        to: '/projects/snakes',
-      image: require('./assets/snake.svg'),
+      to: '/projects/snakes',
+      image: snakeImage,
       tags: ['javascript', 'react', 'css'],
       title: 'Snake',
     },
     Spirals: {
       description:
         'An experiment for rendering and animating a variety of spirals and radial patterns using WebGL.',
-      image: require('./assets/spiral.png'),
-      imageOG: require('./assets/spiral.png'),
+      image: spiralImage,
+      imageOG: spiralImage,
       tags: ['typescript', 'react', 'webgl'],
       title: 'Spirals',
       to: '/projects/spirals',
@@ -101,7 +107,7 @@ const data: Data = {
       date: '2021-08-19',
       description:
         'An explanation in using graphs to find intersections of geometry by conditionally and dynamically creating connections that follow a set of rules.',
-      imageOG: require('./assets/circles.png'),
+      imageOG: circleArtImage,
       tags: [
         'svg',
         'visualisation',
@@ -118,7 +124,7 @@ const data: Data = {
       date: '2018-08-17',
       description:
         'An experiment into calculating all of the regions of intersecting circles using a computational geometric algorithm.',
-      imageOG: require('./assets/circles.png'),
+      imageOG: circleArtImage,
       tags: [
         'svg',
         'visualisation',
@@ -154,7 +160,7 @@ const data: Data = {
       date: '2020-04-13',
       description:
         'An exploration into finding the most optimal programmatic solution for completing the classic game of snake.',
-      imageOG: require('./assets/snake.png'),
+      imageOG: snakeImage,
       tags: [
         'svg',
         'visualisation',
@@ -171,13 +177,20 @@ const data: Data = {
 
   publications: {
     Tilings: {
-      title: 'GomJau-Hogg’s Notation for Automatic Generation of k-Uniform Tessellations with ANTWERP v3.0',
+      title:
+        'GomJau-Hogg’s Notation for Automatic Generation of k-Uniform Tessellations with ANTWERP v3.0',
       date: '2021-12-09',
-      authors: ['Valentin Gomez-Jauregui', 'Harrison Hogg', 'Cristina Manchado', 'Cesar Otero'],
+      authors: [
+        'Valentin Gomez-Jauregui',
+        'Harrison Hogg',
+        'Cristina Manchado',
+        'Cesar Otero',
+      ],
       journal: 'MDPI Symmetry',
-      description: 'Euclidean tilings are constantly applied to many fields of engineering (mechanical, civil, chemical, etc.). These tessellations are usually named after Cundy & Rollett’s notation. However, this notation has two main problems related to ambiguous conformation and uniqueness. This communication explains the GomJau-Hogg’s notation for generating all the regular, semi-regular (uniform) and demi-regular (k-uniform, up to at least k = 3) in a consistent, unique and unequivocal manner. Moreover, it presents Antwerp v3.0, a free online application, which is publicly shared to prove that all the basic tilings can be obtained directly from the GomJau-Hogg’s notation.',
+      description:
+        'Euclidean tilings are constantly applied to many fields of engineering (mechanical, civil, chemical, etc.). These tessellations are usually named after Cundy & Rollett’s notation. However, this notation has two main problems related to ambiguous conformation and uniqueness. This communication explains the GomJau-Hogg’s notation for generating all the regular, semi-regular (uniform) and demi-regular (k-uniform, up to at least k = 3) in a consistent, unique and unequivocal manner. Moreover, it presents Antwerp v3.0, a free online application, which is publicly shared to prove that all the basic tilings can be obtained directly from the GomJau-Hogg’s notation.',
       href: 'https://www.mdpi.com/2073-8994/13/12/2376',
-    }
+    },
   },
 };
 

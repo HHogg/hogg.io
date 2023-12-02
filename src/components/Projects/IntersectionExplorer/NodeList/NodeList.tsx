@@ -1,40 +1,31 @@
-import { AnimateSharedLayout, motion } from 'framer-motion';
+import { LayoutGroup, motion } from 'framer-motion';
 import { Box, Button, Grid } from 'preshape';
-import React, { useContext, PointerEvent } from 'react';
-import { IntersectionExplorerContext } from '../IntersectionExplorer';
-import { getCurrentTraversal } from '../useGraph/traversal';
+import { PointerEvent } from 'react';
+import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 import NodeListItem from './NodeListItem';
 import getSortedNodes from './getSortedNodes';
 import './NodeList.css';
 
-interface Props {
-  onNodeOver: (index: number) => void;
-}
-
-const NodeList = ({ onNodeOver }: Props) => {
-  const { activeNodeIndex, addToTraversal, cancelTraversal, graph } =
-    useContext(IntersectionExplorerContext);
-  const currentTraversal = getCurrentTraversal(graph.traversals);
-  const currentTraversalNode =
-    currentTraversal?.path[currentTraversal.path.length - 1];
-  const nodesSorted = getSortedNodes(graph, currentTraversal);
-
-  const handleNodeClick = (index: number) => {
-    addToTraversal(index);
-    onNodeOver(-1);
-  };
+const NodeList = () => {
+  const {
+    activeNodeIndex,
+    cancelTraversal,
+    currentTraversal,
+    graph,
+    setActiveNodeIndex,
+  } = useIntersectionExplorerContext();
 
   const handlePointerOver = (index: number) => (event: PointerEvent) => {
     event.stopPropagation();
-    onNodeOver(index);
+    setActiveNodeIndex(index);
   };
 
   return (
-    <Box>
-      <AnimateSharedLayout>
-        <motion.div className="NodeList" layout="position">
+    <Box theme="night">
+      <LayoutGroup>
+        <motion.div className="NodeList" layout>
           <Grid gap="x1" repeat={6} repeatWidthMin="0px">
-            {nodesSorted.map((node) => (
+            {getSortedNodes(graph, currentTraversal).map((node) => (
               <motion.div
                 animate={{
                   opacity:
@@ -66,17 +57,7 @@ const NodeList = ({ onNodeOver }: Props) => {
                   delay: 10 / 1000,
                 }}
               >
-                <NodeListItem
-                  currentNode={currentTraversalNode}
-                  isFocused={activeNodeIndex === node.index}
-                  isTraversing={!!currentTraversal}
-                  node={node}
-                  onClick={
-                    node.state.isSelectable
-                      ? () => handleNodeClick(node.index)
-                      : undefined
-                  }
-                />
+                <NodeListItem node={node} />
               </motion.div>
             ))}
 
@@ -114,7 +95,7 @@ const NodeList = ({ onNodeOver }: Props) => {
             </motion.div>
           </Grid>
         </motion.div>
-      </AnimateSharedLayout>
+      </LayoutGroup>
     </Box>
   );
 };

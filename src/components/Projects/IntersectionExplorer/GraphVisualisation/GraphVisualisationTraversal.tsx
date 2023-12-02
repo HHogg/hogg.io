@@ -5,21 +5,15 @@ import {
   transitionTimeSlow,
   transitionTimingFunction,
 } from 'preshape';
-import React, {
-  PointerEvent,
-  useContext,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
-import { IntersectionExplorerContext } from '../IntersectionExplorer';
+import { useLayoutEffect, useRef, useState, PointerEvent } from 'react';
+import TraversalTooltip from '../TraversalList/TraversalTooltip';
 import { NodeState, Traversal } from '../useGraph';
 import { getCurrentTraversal } from '../useGraph/traversal';
+import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 
 interface Props extends Partial<NodeState> {
-  index?: number;
+  index: number;
   d: string;
-  onPointerOver?: (event: PointerEvent) => void;
   traversal: Traversal;
 }
 
@@ -29,11 +23,16 @@ const transition = {
 };
 
 const GraphVisualisationTraversal = (props: Props) => {
-  const { d, index, onPointerOver, traversal } = props;
+  const { d, index, traversal } = props;
+  const {
+    activeNodeIndex,
+    activeTraversalIndex,
+    graph,
+    isTraversing,
+    setActiveNodeIndex,
+    setActiveTraversalIndex,
+  } = useIntersectionExplorerContext();
 
-  const { activeNodeIndex, activeTraversalIndex, graph } = useContext(
-    IntersectionExplorerContext
-  );
   const currentTraversal = getCurrentTraversal(graph.traversals);
   const refGlow = useRef<SVGPathElement>(null);
   const refPath = useRef<SVGPathElement>(null);
@@ -52,6 +51,12 @@ const GraphVisualisationTraversal = (props: Props) => {
 
   const [[dist, length], setLength] = useState([0, 0]);
   const previousLength = useRef(0);
+
+  const handlePointerOver = (event: PointerEvent) => {
+    event.stopPropagation();
+    setActiveNodeIndex(-1);
+    setActiveTraversalIndex(index);
+  };
 
   useLayoutEffect(() => {
     if (refPath.current && refGlow.current) {
@@ -75,27 +80,32 @@ const GraphVisualisationTraversal = (props: Props) => {
   };
 
   return (
-    <motion.g
-      className={classes}
-      key={length} /* 👀 ... you know what */
-      onPointerOver={onPointerOver}
-      strokeDasharray={`${length} ${length}`}
-      transition={{ ...transition, duration: transitionTimeFast / 1000 }}
+    <TraversalTooltip
+      traversal={traversal}
+      visible={isTraversing ? false : undefined}
     >
-      <motion.path
-        {...pathProps}
-        className="Graph__traversal-path"
-        d={d}
-        ref={refPath}
-      />
+      <motion.g
+        className={classes}
+        key={length} /* 👀 ... you know what */
+        onPointerOver={traversal.isComplete ? handlePointerOver : undefined}
+        strokeDasharray={`${length} ${length}`}
+        transition={{ ...transition, duration: transitionTimeFast / 1000 }}
+      >
+        <motion.path
+          {...pathProps}
+          className="Graph__traversal-path"
+          d={d}
+          ref={refPath}
+        />
 
-      <motion.path
-        {...pathProps}
-        className="Graph__traversal-hit"
-        d={d}
-        ref={refGlow}
-      />
-    </motion.g>
+        <motion.path
+          {...pathProps}
+          className="Graph__traversal-hit"
+          d={d}
+          ref={refGlow}
+        />
+      </motion.g>
+    </TraversalTooltip>
   );
 };
 

@@ -1,5 +1,5 @@
 import { Box, Image, Link, Text } from 'preshape';
-import React, { HTMLProps } from 'react';
+import { HTMLProps } from 'react';
 import { Project } from '../../types';
 
 interface Props extends Project {}
@@ -48,7 +48,7 @@ const ProjectComponent = (props: Props & HTMLProps<HTMLAnchorElement>) => {
           paddingHorizontal="x6"
           paddingVertical="x4"
         >
-          <Text size="x4" strong>
+          <Text size="x4" weight="x2">
             {title}
           </Text>
           <Text size="x3">{description}</Text>

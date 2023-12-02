@@ -1,17 +1,22 @@
 import { themes, TypeTheme } from 'preshape';
 
-const hexToRgb = (hex: string, int = parseInt(hex.replace('#', ''), 16)): [number, number, number] =>
-  [(int >> 16) & 255, (int >> 8) & 255, int & 255];
+const hexToRgb = (
+  hex: string,
+  int = parseInt(hex.replace('#', ''), 16)
+): [number, number, number] => [(int >> 16) & 255, (int >> 8) & 255, int & 255];
 
-const themeGradients = (Object.keys(themes) as TypeTheme[])
-  .reduce<{ [key in TypeTheme]?: [number, [number, number, number]][] }>((theme, key) => ({
+const themeGradients = (Object.keys(themes) as TypeTheme[]).reduce<{
+  [key in TypeTheme]?: [number, [number, number, number]][];
+}>(
+  (theme, key) => ({
     ...theme,
     [key]: [
-      [0, hexToRgb(themes[key].colorAccentShade4)],
-      [1, hexToRgb(themes[key].colorTextShade2)],
+      [0, hexToRgb(themes[key].colorAccentShade5)],
+      [1, hexToRgb(themes[key].colorAccentShade3)],
     ],
-  }), {});
-
+  }),
+  {}
+);
 
 export default (theme: TypeTheme, percent: number) => {
   const GRADIENT = themeGradients[theme];

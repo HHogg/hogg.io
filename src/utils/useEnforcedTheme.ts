@@ -1,18 +1,19 @@
-import { TypeTheme } from "preshape";
-import { useEffect, useRef } from "react";
-import { useLayoutContext } from "../components/Root";
+import { TypeTheme, useThemeContext } from 'preshape';
+import { useEffect, useRef } from 'react';
 
 const useEnforcedTheme = (theme: TypeTheme) => {
-  const { onChangeTheme, theme: currentTheme, } = useLayoutContext();
+  const { onChange, theme: currentTheme } = useThemeContext();
   const refPreviousTheme = useRef(currentTheme);
 
   useEffect(() => {
-    onChangeTheme(theme);
+    const previousTheme = refPreviousTheme.current;
+
+    onChange(theme);
 
     return () => {
-      onChangeTheme(refPreviousTheme.current);
+      onChange(previousTheme);
     };
-  }, []);
+  }, [onChange, theme]);
 };
 
 export default useEnforcedTheme;

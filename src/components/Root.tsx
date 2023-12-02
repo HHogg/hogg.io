@@ -1,34 +1,17 @@
 import {
   useWindowScrollTo,
-  useTheme,
-  TypeTheme,
   Box,
   useMatchMedia,
   Text,
+  ThemeProvider,
 } from 'preshape';
-import React, {
-  createContext,
-  lazy,
-  useContext,
-  useEffect,
-  useState,
-  Suspense,
-} from 'react';
+import { lazy, useEffect, Suspense } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import data from '../data';
 import Metas from './Metas/Metas';
 
-export const RootContext = createContext<{
-  layout: 's' | 'm' | 'l';
-  onChangeTheme: (theme: TypeTheme) => void;
-  theme: TypeTheme;
-}>({
-  layout: 'l',
-  onChangeTheme: () => undefined,
-  theme: 'day',
-});
-
-export const useLayoutContext = () => useContext(RootContext);
+import 'preshape/dist/style.css';
+import './Root.css';
 
 const Landing = lazy(() => import('./Landing/Landing'));
 const CircleArt = lazy(() => import('./Projects/CircleArt/CircleArt'));
@@ -44,12 +27,10 @@ const SnakeSolution = lazy(
 );
 
 const Site = () => {
-  const [theme, onChangeTheme] = useState<TypeTheme>('day');
   const location = useLocation();
   const match = useMatchMedia(['800px', '1200px']);
   const layout = match({ '480px': 'm', '1200px': 'l' }) || 's';
 
-  useTheme(theme);
   useWindowScrollTo();
 
   useEffect(() => {
@@ -57,7 +38,7 @@ const Site = () => {
   }, [location.pathname]);
 
   return (
-    <RootContext.Provider value={{ layout, onChangeTheme, theme }}>
+    <ThemeProvider>
       <Metas description="My personal projects and experience." />
 
       <Box
@@ -68,7 +49,7 @@ const Site = () => {
         <Suspense
           fallback={
             <Box alignChildren="middle" flex="horizontal" grow>
-              <Text size="x5" strong textColor="light-shade-1">
+              <Text size="x5" weight="x2" textColor="light-shade-1">
                 ;)
               </Text>
             </Box>
@@ -103,7 +84,7 @@ const Site = () => {
           </Routes>
         </Suspense>
       </Box>
-    </RootContext.Provider>
+    </ThemeProvider>
   );
 };
 

@@ -1,4 +1,3 @@
-import React from 'react';
 import WritingFig from '../../WritingPage/WritingFig';
 import WritingFigs from '../../WritingPage/WritingFigs';
 import SnakeSolutionComparisonAverage from './SnakeSolutionComparisonAverage';

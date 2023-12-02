@@ -1,10 +1,8 @@
 import { Box, Link, Text } from 'preshape';
-import React from 'react';
 import data from '../../../data';
 import ProjectPage from '../../ProjectPage/ProjectPage';
-import IntersectionExplorer, {
-  sampleCircles,
-} from '../IntersectionExplorer/IntersectionExplorer';
+import IntersectionExplorer from '../IntersectionExplorer/IntersectionExplorer';
+import { sampleCircles } from '../IntersectionExplorer/sampleCircles';
 import useGraph from '../IntersectionExplorer/useGraph';
 
 const CircleGraph = () => {
@@ -25,7 +23,7 @@ const CircleGraph = () => {
       <Box>
         <Text align="middle">
           This is a Circle Graph Intersection Explorer, please{' '}
-          <Link to="/writings/circle-graphs" isTextLink>
+          <Link to="/writings/circle-graphs" underline>
             see this article
           </Link>{' '}
           on how to use and interpret this visualisation.

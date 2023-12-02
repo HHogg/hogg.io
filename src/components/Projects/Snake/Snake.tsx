@@ -1,5 +1,5 @@
-import { Box, Editor, useLocalStorage, useMatchMedia } from 'preshape';
-import React, { useMemo } from 'react';
+import { Box, useLocalStorage, useMatchMedia } from 'preshape';
+import { useMemo } from 'react';
 import data from '../../../data';
 import useEnforcedTheme from '../../../utils/useEnforcedTheme';
 import ProjectPage from '../../ProjectPage/ProjectPage';
@@ -10,8 +10,6 @@ import SnakeViewer from './SnakeViewer';
 import { tailEscape } from './solutions';
 import { TypeSolution } from './types';
 
-import 'brace/mode/javascript';
-
 const Snake = () => {
   const match = useMatchMedia(['1000px']);
   const [editorState, setEditorState] = useLocalStorage<TypeSolution>(
@@ -19,19 +17,13 @@ const Snake = () => {
     tailEscape
   );
 
-  const worker = useMemo(() => {
-    return new Worker('./SnakeRunnerWorker.ts');
-  }, []);
-
-  useEnforcedTheme('night');
-
   const onChange = (content: string) => {
     setEditorState({ ...editorState, content });
   };
 
   return (
     <ProjectPage {...data.projects.Snake}>
-      <SnakeProvider solution={editorState.content} worker={worker}>
+      <SnakeProvider solution={editorState.content}>
         <Box
           flex={match('1000px') ? 'horizontal' : 'vertical'}
           gap="x6"
@@ -46,12 +38,12 @@ const Snake = () => {
             grow
             padding="x6"
           >
-            <Editor
+            {/* <Editor
               language="javascript"
               minHeight="30rem"
               onChange={onChange}
               value={editorState.content}
-            />
+            /> */}
           </Box>
 
           <Box

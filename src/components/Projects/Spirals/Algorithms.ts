@@ -110,3 +110,11 @@ export const getUlamSpiral: TypeAlgorithm = (n) => {
 export const getVogelSpiral: TypeAlgorithm = (n) => {
   return getFermatSpiral(n, 2.39998131);
 };
+
+export const algorithms: [string, TypeAlgorithm][] = [
+  ['Zero', ZeroSpiral],
+  ['Archimedes Spiral', getArchimedesSpiral],
+  ['Fermat Spiral', getFermatSpiral],
+  ['Ulam Spiral', getUlamSpiral],
+  ['Vogel Spiral', getVogelSpiral],
+];

@@ -1,15 +1,32 @@
 {
+  "include": [
+      "src",
+      "src/components/Writings/CircleGraphs/traversals.json",
+      "src/components/Projects/CircleArt/Gallery/configurations/*.json",
+    ],
+  "references": [
+    { "path": "./tsconfig.node.json" }
+  ],
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "jsx": "react",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "paths": {
-      "*": ["@types/*"]
-    },
+    "composite": true,
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+
+    /* Linting */
     "strict": true,
-    "target": "ES2017"
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
   }
 }

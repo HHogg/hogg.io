@@ -1,13 +1,14 @@
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { transitionTimeSlow, transitionTimingFunction } from 'preshape';
-import React, { useLayoutEffect, useRef, useState } from 'react';
-import { NodeState } from '../useGraph';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { Edge, Node } from '../useGraph';
 
-interface Props extends Partial<NodeState> {
+type Props = {
   animate?: boolean;
   d: string;
-}
+  node: Edge | Node;
+};
 
 const transition = {
   duration: transitionTimeSlow / 1000,
@@ -15,14 +16,14 @@ const transition = {
 };
 
 const GraphVisualisationEdge = (props: Props) => {
-  const { animate, d, isPrevious, isNext, isValid } = props;
+  const { animate, d, node } = props;
 
   const refPath = useRef<SVGPathElement>(null);
   const [length, setLength] = useState(0);
   const classes = classNames('Graph__edge', {
-    'Graph__edge--previous': isPrevious,
-    'Graph__edge--next': isNext,
-    'Graph__edge--valid': isValid && isValid[0] === true,
+    'Graph__edge--previous': node.state.isPrevious,
+    'Graph__edge--next': node.state.isNext,
+    'Graph__edge--valid': node.state.isValid && node.state.isValid[0] === true,
   });
 
   useLayoutEffect(() => {

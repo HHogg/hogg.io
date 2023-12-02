@@ -1,13 +1,7 @@
 import classNames from 'classnames';
-import FileSaver from 'file-saver';
-import {
-  Box,
-  themes,
-  TypeTheme,
-  useEventListener,
-  useResizeObserver,
-} from 'preshape';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { saveAs } from 'file-saver';
+import { Box, useResizeObserver } from 'preshape';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import useGraph, { Circle } from '../../IntersectionExplorer/useGraph';
 import { CircleArtData } from '../types';
@@ -61,17 +55,6 @@ const minimalEvent = (event: TouchEvent | React.TouchEvent): MinimalEvent => ({
   type: event.type,
 });
 
-export const getColors = (theme: TypeTheme, filled?: boolean) => {
-  return {
-    fill: filled
-      ? themes[theme].colorTextShade1
-      : themes[theme].colorBackgroundShade1,
-    stroke: filled
-      ? themes[theme].colorBackgroundShade1
-      : themes[theme].colorTextShade4,
-  };
-};
-
 const Editor = ({ data, onChange }: Props) => {
   const [{ width, height }, ref] = useResizeObserver();
 
@@ -99,31 +82,40 @@ const Editor = ({ data, onChange }: Props) => {
     findTraversalsOnUpdate: mode === 'fill' || mode === 'view',
   });
 
-  const handleSetCircles: typeof setCircles = (circles) => {
-    setCircles(circles);
-    refNotifyChange.current && onChange();
-  };
+  const handleSetCircles: typeof setCircles = useCallback(
+    (circles) => {
+      setCircles(circles);
+      refNotifyChange.current && onChange();
+    },
+    [setCircles, onChange]
+  );
 
-  const handleSetFills: typeof setFills = (fills) => {
-    setFills(fills);
-    refNotifyChange.current && onChange();
-  };
+  const handleSetFills: typeof setFills = useCallback(
+    (fills) => {
+      setFills(fills);
+      refNotifyChange.current && onChange();
+    },
+    [onChange]
+  );
 
-  const getScaledCircles = (data: CircleArtData) => {
-    const scale = Math.min(width / data.width, height / data.height);
-    const tx = (width - data.width * scale) * 0.5;
-    const ty = (height - data.height * scale) * 0.5;
+  const getScaledCircles = useCallback(
+    (data: CircleArtData) => {
+      const scale = Math.min(width / data.width, height / data.height);
+      const tx = (width - data.width * scale) * 0.5;
+      const ty = (height - data.height * scale) * 0.5;
 
-    return data.circles.map(({ id, radius, x, y }) => ({
-      id,
-      radius: radius * scale,
-      x: x * scale + tx,
-      y: y * scale + ty,
-    }));
-  };
+      return data.circles.map(({ id, radius, x, y }) => ({
+        id,
+        radius: radius * scale,
+        x: x * scale + tx,
+        y: y * scale + ty,
+      }));
+    },
+    [height, width]
+  );
 
   const handleSaveJSON = () => {
-    FileSaver.saveAs(
+    saveAs(
       new Blob(
         [
           JSON.stringify(
@@ -150,7 +142,7 @@ const Editor = ({ data, onChange }: Props) => {
       const serializer = new XMLSerializer();
       const svgString = serializer.serializeToString(refContainer.current);
 
-      FileSaver.saveAs(
+      saveAs(
         new Blob(
           [
             `<?xml version="1.0" encoding="UTF-8"?>
@@ -273,38 +265,47 @@ ${svgString}
     };
   };
 
-  const handleSetActiveCircle = (circle: Circle | null) => {
+  const handleSetActiveCircle = useCallback((circle: Circle | null) => {
     refActiveCircle.current = circle;
     setActiveCircle(circle);
-  };
+  }, []);
 
-  const handleAddCircle = (circle: Circle) => {
-    handleSetCircles((circles) => [...circles, circle]);
-    handleSetActiveCircle(circle);
-  };
+  const handleAddCircle = useCallback(
+    (circle: Circle) => {
+      handleSetCircles((circles) => [...circles, circle]);
+      handleSetActiveCircle(circle);
+    },
+    [handleSetCircles, handleSetActiveCircle]
+  );
 
-  const handleRemoveCircle = (circle: Circle) => {
-    editorHistory.push(
-      () => {
-        handleSetCircles((circles) =>
-          circles.filter(({ id }) => circle.id !== id)
-        );
-        handleSetActiveCircle(null);
-        handleSetToolbarRect(null);
-      },
-      {
-        undo: () => {
-          handleAddCircle(circle);
+  const handleRemoveCircle = useCallback(
+    (circle: Circle) => {
+      editorHistory.push(
+        () => {
+          handleSetCircles((circles) =>
+            circles.filter(({ id }) => circle.id !== id)
+          );
+          handleSetActiveCircle(null);
+          handleSetToolbarRect(null);
         },
-      }
-    );
-  };
+        {
+          undo: () => {
+            handleAddCircle(circle);
+          },
+        }
+      );
+    },
+    [editorHistory, handleAddCircle, handleSetCircles, handleSetActiveCircle]
+  );
 
-  const handleUpdateCircle = (update: Circle) => {
-    handleSetCircles((circles) =>
-      circles.map((circle) => (circle.id === update.id ? update : circle))
-    );
-  };
+  const handleUpdateCircle = useCallback(
+    (update: Circle) => {
+      handleSetCircles((circles) =>
+        circles.map((circle) => (circle.id === update.id ? update : circle))
+      );
+    },
+    [handleSetCircles]
+  );
 
   const handleCopyActiveCircle = () => {
     if (refActiveCircle.current) {
@@ -326,28 +327,31 @@ ${svgString}
     }
   };
 
-  const handleMoveActiveCircle = (deltaX: number, deltaY: number) => {
-    const circle = refActiveCircle.current;
-    const element = getActiveCircleElement();
+  const handleMoveActiveCircle = useCallback(
+    (deltaX: number, deltaY: number) => {
+      const circle = refActiveCircle.current;
+      const element = getActiveCircleElement();
 
-    if (circle && element) {
-      const x = circle.x + deltaX;
-      const y = circle.y + deltaY;
+      if (circle && element) {
+        const x = circle.x + deltaX;
+        const y = circle.y + deltaY;
 
-      element.setAttribute('cx', x.toString());
-      element.setAttribute('cy', y.toString());
+        element.setAttribute('cx', x.toString());
+        element.setAttribute('cy', y.toString());
 
-      refQueueActiveUpdate.current = true;
-    }
-  };
+        refQueueActiveUpdate.current = true;
+      }
+    },
+    []
+  );
 
-  const handleRemoveActiveCircle = () => {
+  const handleRemoveActiveCircle = useCallback(() => {
     if (refActiveCircle.current) {
       handleRemoveCircle(refActiveCircle.current);
     }
-  };
+  }, [handleRemoveCircle]);
 
-  const handleResizeActiveCircle = (x: number, y: number) => {
+  const handleResizeActiveCircle = useCallback((x: number, y: number) => {
     const circle = refActiveCircle.current;
     const element = getActiveCircleElement();
 
@@ -358,7 +362,7 @@ ${svgString}
 
       refQueueActiveUpdate.current = true;
     }
-  };
+  }, []);
 
   const handleToggleFilled = (id: string) => {
     editorHistory.push(
@@ -404,7 +408,7 @@ ${svgString}
         }
       }
     },
-    [getCircleAtCoordinates, mode]
+    [getCircleAtCoordinates, handleSetActiveCircle, mode]
   );
 
   const handleMouseUp = useCallback(() => {
@@ -456,7 +460,14 @@ ${svgString}
     refIsPointerDown.current = false;
     refIsMoving.current = false;
     refIsResizing.current = false;
-  }, [handleUpdateCircle, mode]);
+  }, [
+    editorHistory,
+    handleAddCircle,
+    handleUpdateCircle,
+    handleRemoveActiveCircle,
+    handleRemoveCircle,
+    handleSetActiveCircle,
+  ]);
 
   const handleTouchEnd = useCallback(
     (event: TouchEvent) => {
@@ -489,7 +500,7 @@ ${svgString}
         }
       }
     },
-    [mode]
+    [handleAddCircle, handleMoveActiveCircle, handleResizeActiveCircle, mode]
   );
 
   const handleMouseMoveDraw = useCallback(
@@ -552,11 +563,31 @@ ${svgString}
       handleSetFills(data.fills);
       refNotifyChange.current = true;
     }
-  }, [data, width, height]);
+  }, [data, width, height, handleSetCircles, getScaledCircles, handleSetFills]);
 
-  useEventListener(document, 'mouseup', handleMouseUp);
-  useEventListener(document, 'mousemove', handleMouseMove);
-  useEventListener(document, 'touchend', handleTouchEnd);
+  useEffect(() => {
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [handleMouseUp]);
+
+  useEffect(() => {
+    document.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [handleMouseMove]);
+
+  useEffect(() => {
+    document.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [handleTouchEnd]);
 
   const classes = classNames('CircleArt', `CircleArt--mode-${mode}`);
 

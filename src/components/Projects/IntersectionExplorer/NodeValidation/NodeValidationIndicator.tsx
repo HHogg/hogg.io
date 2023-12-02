@@ -1,5 +1,4 @@
 import { Box } from 'preshape';
-import React from 'react';
 import { ValidationRuleResult } from '../useGraph';
 
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 const NodeValidationIndicator = ({ validation }: Props) => {
   const { isValid } = validation;
   const backgroundColor =
-    (isValid === null && 'text-shade-3') ||
+    (isValid === null && 'dark-shade-3') ||
     (isValid === true && 'positive-shade-4') ||
     'negative-shade-4';
 

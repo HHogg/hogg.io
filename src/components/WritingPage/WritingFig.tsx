@@ -1,5 +1,5 @@
 import { Box, BoxProps, Text } from 'preshape';
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 
 interface Props extends BoxProps {
   description?: string;
@@ -16,7 +16,7 @@ const WritingFig = (props: PropsWithChildren<Props>) => {
       </Box>
 
       <Text align="middle" margin="x3">
-        <Text inline strong>
+        <Text tag="span" weight="x2">
           Fig {number}.
         </Text>{' '}
         {description}

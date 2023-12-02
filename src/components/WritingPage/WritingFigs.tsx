@@ -1,6 +1,6 @@
 import { useMatchMedia, Box } from 'preshape';
-import React, { PropsWithChildren } from 'react';
-import WritingSection, { Props as WritingSectionProps } from './WritingSection';
+import { PropsWithChildren } from 'react';
+import { WritingSection, Props as WritingSectionProps } from './WritingSection';
 
 interface Props extends WritingSectionProps {
   maxWidth?: string;

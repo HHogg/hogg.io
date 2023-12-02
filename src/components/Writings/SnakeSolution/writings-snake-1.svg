@@ -1,65 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="300px" height="200px" viewBox="0 0 300 200" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="300px" height="200px" viewBox="0 0 300 200" version="1.1"
+    xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
     <title>writings-snake-1</title>
     <desc>Created with Sketch.</desc>
     <g id="writings-snake-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect fill="#F8F9FA" x="0" y="0" width="300" height="200"></rect>
+        <rect fill="var(--color-background-shade-1)" x="0" y="0" width="300" height="200"></rect>
         <g id="Group-8" transform="translate(20.000000, 5.009259)">
-            <path d="M26.6028571,95.4907407 L236.397143,95.4907407" id="Line" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M95.5,166.390741 L95.5,23.5907407" id="Line-2" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M166.5,166.3899 L166.5,24.5915811" id="Line-3" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M26.6034483,93.3890458 L95.3965517,23.5924357" id="Line-4" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M24.6,96.5907407 L95.4,167.390741" id="Line-5" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M95.6,25.4907407 L166.4,25.4907407" id="Line-6" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M95.6,167.490741 L166.4,167.490741" id="Line-6-Copy" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M166.6,166.390741 L237.4,95.5907407" id="Line-7" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
-            <path d="M236.398305,95.3890458 L166.601695,25.5924357" id="Line-8" stroke="#1E1B18" stroke-width="2" stroke-linecap="square"></path>
+            <path d="M26.6028571,95.4907407 L236.397143,95.4907407" id="Line" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M95.5,166.390741 L95.5,23.5907407" id="Line-2" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M166.5,166.3899 L166.5,24.5915811" id="Line-3" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M26.6034483,93.3890458 L95.3965517,23.5924357" id="Line-4" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M24.6,96.5907407 L95.4,167.390741" id="Line-5" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M95.6,25.4907407 L166.4,25.4907407" id="Line-6" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M95.6,167.490741 L166.4,167.490741" id="Line-6-Copy" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M166.6,166.390741 L237.4,95.5907407" id="Line-7" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
+            <path d="M236.398305,95.3890458 L166.601695,25.5924357" id="Line-8" stroke="#1E1B18"
+                stroke-width="2" stroke-linecap="square"></path>
             <g id="Group" transform="translate(0.000000, 71.990741)">
                 <circle id="Oval" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="A" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="A" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="19.6773333" y="27.7833333">A</tspan>
                 </text>
             </g>
             <g id="Group-2" transform="translate(71.000000, 0.990741)">
                 <circle id="Oval-Copy" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="B" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="B" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="19.6213333" y="27.7833333">B</tspan>
                 </text>
             </g>
             <g id="Group-5" transform="translate(71.000000, 142.990741)">
                 <circle id="Oval-Copy-2" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="C" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="C" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="19.9153333" y="27.7833333">C</tspan>
                 </text>
             </g>
             <g id="Group-6" transform="translate(71.000000, 71.990741)">
                 <circle id="Oval-Copy-3" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="D" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="D" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="19.2293333" y="27.7833333">D</tspan>
                 </text>
             </g>
             <g id="Group-3" transform="translate(142.000000, 71.990741)">
                 <circle id="Oval-Copy-4" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="E" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="E" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="19.9153333" y="27.7833333">E</tspan>
                 </text>
             </g>
             <g id="Group-4" transform="translate(142.000000, 0.990741)">
                 <circle id="Oval-Copy-5" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="F" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="F" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="20.1813333" y="27.7833333">F</tspan>
                 </text>
             </g>
             <g id="Group-7" transform="translate(142.000000, 142.990741)">
                 <circle id="Oval-Copy-6" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="G" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="G" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="19.5303333" y="27.7833333">G</tspan>
                 </text>
             </g>
             <g id="Group-3-Copy" transform="translate(213.000000, 71.990741)">
                 <circle id="Oval-Copy-4" fill="#1E1B18" cx="23.5" cy="23.5" r="23.5"></circle>
-                <text id="H" font-family="Merriweather-BoldItalic, Merriweather" font-size="14" font-style="italic" font-weight="bold" fill="#FAFCFF">
+                <text id="H" font-family="Merriweather-BoldItalic, Merriweather" font-size="14"
+                    font-style="italic" font-weight="bold" fill="#FAFCFF">
                     <tspan x="18.7743333" y="27.7833333">H</tspan>
                 </text>
             </g>

@@ -1,20 +1,19 @@
+import { PauseIcon, PlayIcon, RefreshCwIcon } from 'lucide-react';
 import {
   Appear,
   Buttons,
   Button,
   CodeBlock,
   Box,
-  Icons,
   Link,
   List,
   ListItem,
   Text,
   useIntersectionObserver,
 } from 'preshape';
-import React, { useEffect, useState } from 'react';
-import 'brace/mode/javascript';
-import { useSnakeContext } from '../../Projects/Snake/SnakeProvider';
+import { useEffect, useState } from 'react';
 import SnakeViewer from '../../Projects/Snake/SnakeViewer';
+import { useSnakeContext } from '../../Projects/Snake/useSnakeContext';
 import getAverage from '../../Projects/Snake/utils/getAverage';
 import getScore from '../../Projects/Snake/utils/getScore';
 
@@ -29,12 +28,12 @@ const SnakeRunnerViewer = (props: Props) => {
   const [isCodeVisible, setCodeVisible] = useState(false);
   const [isInView, ref] = useIntersectionObserver();
 
-  useEffect(() => {
-    if (!isInView) {
-      onPause();
-      onReset();
-    }
-  }, [isInView]);
+  // useEffect(() => {
+  //   if (!isInView) {
+  //     onPause();
+  //     onReset();
+  //   }
+  // }, [isInView, onPause, onReset]);
 
   return (
     <Box flex="vertical" gap="x2" grow ref={ref} theme="night">
@@ -46,7 +45,7 @@ const SnakeRunnerViewer = (props: Props) => {
           style={{ pointerEvents: isCodeVisible ? undefined : 'none' }}
           visible={isCodeVisible}
         >
-          <CodeBlock language="javascript">{solution}</CodeBlock>
+          <CodeBlock language="typescript">{solution}</CodeBlock>
         </Appear>
 
         <Appear
@@ -62,21 +61,21 @@ const SnakeRunnerViewer = (props: Props) => {
             <Box>
               <List alignChildrenHorizontal="middle">
                 <ListItem separator="~">
-                  <Text inline strong>
+                  <Text tag="span" weight="x2">
                     Points:
                   </Text>{' '}
                   {history.length - 1}
                 </ListItem>
 
                 <ListItem separator="~">
-                  <Text inline strong>
+                  <Text tag="span" weight="x2">
                     Average:
                   </Text>{' '}
                   {Math.floor(getAverage(history.slice(0, -1)))}
                 </ListItem>
 
                 <ListItem separator="~">
-                  <Text inline strong>
+                  <Text tag="span" weight="x2">
                     Score:
                   </Text>{' '}
                   {Math.floor(getScore(xLength, yLength, history.slice(0, -1)))}
@@ -92,15 +91,15 @@ const SnakeRunnerViewer = (props: Props) => {
                     onPlay();
                   }}
                 >
-                  <Icons.Play size="1rem" />
+                  <PlayIcon size="1rem" />
                 </Button>
 
                 <Button onClick={() => onPause()}>
-                  <Icons.Pause size="1rem" />
+                  <PauseIcon size="1rem" />
                 </Button>
 
                 <Button onClick={() => onReset()}>
-                  <Icons.RefreshCw size="1rem" />
+                  <RefreshCwIcon size="1rem" />
                 </Button>
               </Buttons>
             </Box>
@@ -109,7 +108,11 @@ const SnakeRunnerViewer = (props: Props) => {
       </Box>
 
       <Box alignChildren="middle" flex="horizontal">
-        <Link onClick={() => setCodeVisible(!isCodeVisible)} strong isTextLink>
+        <Link
+          onClick={() => setCodeVisible(!isCodeVisible)}
+          weight="x2"
+          underline
+        >
           {isCodeVisible ? 'Back to Runner' : 'See solution code'}
         </Link>
       </Box>

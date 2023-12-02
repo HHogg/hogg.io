@@ -1,15 +1,14 @@
 import { motion } from 'framer-motion';
 import { Appear, Text } from 'preshape';
-import React, { FunctionComponent } from 'react';
-import { NodeState } from '../useGraph';
+import { PropsWithChildren } from 'react';
 
-interface Props extends NodeState {
+type Props = {
   isVisible: boolean;
   x: number;
   y: number;
-}
+};
 
-const GraphVisualisationLabel: FunctionComponent<Props> = (props) => {
+const GraphVisualisationLabel = (props: PropsWithChildren<Props>) => {
   const { children, isVisible, x, y } = props;
 
   return (
@@ -29,7 +28,7 @@ const GraphVisualisationLabel: FunctionComponent<Props> = (props) => {
             paddingHorizontal="x1"
             paddingVertical="x0"
             size="x3"
-            strong
+            weight="x2"
             style={{
               pointerEvents: 'none',
             }}

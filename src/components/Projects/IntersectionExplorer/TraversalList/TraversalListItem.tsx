@@ -1,28 +1,23 @@
 import { motion } from 'framer-motion';
-import { Appear, Box, Icons, Label, Link } from 'preshape';
-import React, {
-  Fragment,
-  FunctionComponent,
-  PointerEvent,
-  useContext,
-} from 'react';
-import { IntersectionExplorerContext } from '../IntersectionExplorer';
+import { XIcon } from 'lucide-react';
+import { Appear, Box, Label, Link } from 'preshape';
+import { Fragment, FunctionComponent, PointerEvent } from 'react';
 import { Traversal } from '../useGraph';
+import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 import TraversalTooltip from './TraversalTooltip';
 
 interface Props {
-  onPointerOver: () => void;
   traversal: Traversal;
 }
 
-const TraversalListItem: FunctionComponent<Props> = ({
-  onPointerOver,
-  traversal,
-}) => {
+const TraversalListItem: FunctionComponent<Props> = ({ traversal }) => {
   const { bitset, index, path } = traversal;
-  const { activeNodeIndex, activeTraversalIndex, removeTraversal } = useContext(
-    IntersectionExplorerContext
-  );
+  const {
+    activeNodeIndex,
+    activeTraversalIndex,
+    removeTraversal,
+    setActiveTraversalIndex,
+  } = useIntersectionExplorerContext();
   const isTraversalActive =
     activeTraversalIndex === index || bitset.get(activeNodeIndex) === 1;
   const nodesInPath = path.filter((_, i) => i % 2 === 0);
@@ -33,7 +28,7 @@ const TraversalListItem: FunctionComponent<Props> = ({
 
   const handlePointerOver = (event: PointerEvent) => {
     event.stopPropagation();
-    onPointerOver();
+    setActiveTraversalIndex(traversal.index);
   };
 
   return (
@@ -51,69 +46,62 @@ const TraversalListItem: FunctionComponent<Props> = ({
           delay: 10 / 1000,
         }}
       >
-        <TraversalTooltip
-          traversal={traversal}
-          visible={activeTraversalIndex === index}
-        >
-          {(props) => (
-            <Label
-              {...props}
-              alignChildrenVertical="middle"
-              flex="horizontal"
-              gap="x2"
-              onPointerOver={handlePointerOver}
-              size="x2"
-            >
-              <Box>
-                {nodesInPath.slice(0, -1).map((c, i, { length }) => (
-                  <Fragment key={i}>
-                    <motion.span
-                      animate={{
-                        opacity:
-                          !isFocused ||
-                          activeNodeIndex === -1 ||
-                          +c === activeNodeIndex
-                            ? 1
-                            : 0.25,
-                        scale:
-                          !isFocused ||
-                          activeNodeIndex === -1 ||
-                          +c === activeNodeIndex
-                            ? 1
-                            : 0.95,
-                      }}
-                      initial={{
-                        opacity: 0,
-                        scale: 1,
-                      }}
-                    >
-                      {c}
-                    </motion.span>
+        <TraversalTooltip traversal={traversal}>
+          <Label
+            alignChildrenVertical="middle"
+            flex="horizontal"
+            gap="x2"
+            onPointerOver={handlePointerOver}
+            size="x2"
+          >
+            <Box>
+              {nodesInPath.slice(0, -1).map((c, i, { length }) => (
+                <Fragment key={i}>
+                  <motion.span
+                    animate={{
+                      opacity:
+                        !isFocused ||
+                        activeNodeIndex === -1 ||
+                        +c === activeNodeIndex
+                          ? 1
+                          : 0.25,
+                      scale:
+                        !isFocused ||
+                        activeNodeIndex === -1 ||
+                        +c === activeNodeIndex
+                          ? 1
+                          : 0.95,
+                    }}
+                    initial={{
+                      opacity: 0,
+                      scale: 1,
+                    }}
+                  >
+                    {c}
+                  </motion.span>
 
-                    <motion.span
-                      animate={{
-                        opacity:
-                          !isFocused || activeNodeIndex === -1 ? 1 : 0.25,
-                        scale: !isFocused || activeNodeIndex === -1 ? 1 : 0.95,
-                      }}
-                      initial={{
-                        opacity: 0,
-                        scale: 1,
-                      }}
-                    >
-                      {i < length - 1 && ' > '}
-                    </motion.span>
-                  </Fragment>
-                ))}
-              </Box>
+                  <motion.span
+                    animate={{
+                      opacity: !isFocused || activeNodeIndex === -1 ? 1 : 0.25,
+                      scale: !isFocused || activeNodeIndex === -1 ? 1 : 0.95,
+                    }}
+                    initial={{
+                      opacity: 0,
+                      scale: 1,
+                    }}
+                  >
+                    {i < length - 1 && ' > '}
+                  </motion.span>
+                </Fragment>
+              ))}
+            </Box>
 
-              <Box>
-                <Link onClick={() => removeTraversal(traversal.index)}>
-                  <Icons.X size="1rem" />
-                </Link>
-              </Box>
-            </Label>
-          )}
+            <Box>
+              <Link onClick={() => removeTraversal(traversal.index)}>
+                <XIcon size="1rem" />
+              </Link>
+            </Box>
+          </Label>
         </TraversalTooltip>
       </motion.div>
     </Appear>

@@ -1,5 +1,4 @@
 import { Box } from 'preshape';
-import React from 'react';
 import { Edge, Node } from '../useGraph';
 import NodeValidationIndicator from './NodeValidationIndicator';
 import './NodeValidation.css';
@@ -15,11 +14,12 @@ const NodeValidation = ({ node }: Props) => {
 
   return (
     <Box
-      borderColor="background-shade-1"
+      borderColor="text-shade-1"
       borderRadius="x1"
       borderSize="x1"
       className="NodeValidation"
       flex="horizontal"
+      overflow="hidden"
     >
       {results.map((validation, index) => (
         <NodeValidationIndicator key={index} validation={validation} />

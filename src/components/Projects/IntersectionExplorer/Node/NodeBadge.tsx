@@ -1,16 +1,14 @@
 import { Text } from 'preshape';
-import React, { FunctionComponent } from 'react';
+import { PropsWithChildren } from 'react';
 
-interface Props {}
-
-const NodeBadge: FunctionComponent<Props> = ({ children }) => {
+const NodeBadge = ({ children }: PropsWithChildren<{}>) => {
   return (
     <Text
-      backgroundColor="background-shade-1"
+      backgroundColor="text-shade-1"
       className="NodeValidation__badge"
       size="x2"
-      strong
-      textColor="text-shade-1"
+      weight="x2"
+      textColor="background-shade-1"
     >
       {children}
     </Text>

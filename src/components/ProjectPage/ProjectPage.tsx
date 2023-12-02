@@ -1,5 +1,5 @@
 import { Box } from 'preshape';
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import Header from '../Header/Header';
 import Metas from '../Metas/Metas';
 

@@ -1,14 +1,19 @@
 import {
+  PauseIcon,
+  PlayIcon,
+  RefreshCwIcon,
+  SkipBackIcon,
+  SkipForwardIcon,
+} from 'lucide-react';
+import {
   useMatchMedia,
   Button,
   Buttons,
   Box,
-  Icons,
   Tooltip,
   BoxProps,
 } from 'preshape';
-import React from 'react';
-import { useSnakeContext } from './SnakeProvider';
+import { useSnakeContext } from './useSnakeContext';
 
 const SnakeControls = (props: BoxProps) => {
   const {
@@ -47,73 +52,58 @@ const SnakeControls = (props: BoxProps) => {
       <Box flex="horizontal" grow>
         <Buttons grow joined>
           <Tooltip content="Step Backward">
-            {(props) => (
-              <Button
-                {...props}
-                disabled={isAtBeginning || !isStarted || isRunning}
-                grow
-                onClick={() => onStepBackwards()}
-                size="x3"
-              >
-                <Icons.SkipBack size="1rem" />
-              </Button>
-            )}
+            <Button
+              disabled={isAtBeginning || !isStarted || isRunning}
+              grow
+              onClick={() => onStepBackwards()}
+              size="x3"
+            >
+              <SkipBackIcon size="1rem" />
+            </Button>
           </Tooltip>
 
           <Tooltip content="Play">
-            {(props) => (
-              <Button
-                {...props}
-                disabled={!isStarted || isRunning}
-                grow
-                onClick={() => onPlay()}
-                size="x3"
-              >
-                <Icons.Play size="1rem" />
-              </Button>
-            )}
+            <Button
+              disabled={!isStarted || isRunning}
+              grow
+              onClick={() => onPlay()}
+              size="x3"
+            >
+              <PlayIcon size="1rem" />
+            </Button>
           </Tooltip>
 
           <Tooltip content="Pause">
-            {(props) => (
-              <Button
-                {...props}
-                disabled={!isStarted || !isRunning}
-                grow
-                onClick={() => onPause()}
-                size="x3"
-              >
-                <Icons.Pause size="1rem" />
-              </Button>
-            )}
+            <Button
+              disabled={!isStarted || !isRunning}
+              grow
+              onClick={() => onPause()}
+              size="x3"
+            >
+              <PauseIcon size="1rem" />
+            </Button>
           </Tooltip>
 
           <Tooltip content="Step forward">
-            {(props) => (
-              <Button
-                {...props}
-                disabled={!isStarted || isRunning}
-                grow
-                onClick={() => onStepForwards()}
-                size="x3"
-              >
-                <Icons.SkipForward size="1rem" />
-              </Button>
-            )}
+            <Button
+              disabled={!isStarted || isRunning}
+              grow
+              onClick={() => onStepForwards()}
+              size="x3"
+            >
+              <SkipForwardIcon size="1rem" />
+            </Button>
           </Tooltip>
 
           <Tooltip content="Refresh values">
-            {(props) => (
-              <Button
-                {...props}
-                disabled={!isStarted || isRunning}
-                grow
-                onClick={() => onRefresh()}
-                size="x3"
-              >
-                <Icons.RefreshCw size="1rem" />
-              </Button>
-            )}
+            <Button
+              disabled={!isStarted || isRunning}
+              grow
+              onClick={() => onRefresh()}
+              size="x3"
+            >
+              <RefreshCwIcon size="1rem" />
+            </Button>
           </Tooltip>
         </Buttons>
       </Box>

@@ -1,136 +1,35 @@
-import classnames from 'classnames';
-import { Box, Text, useMatchMedia } from 'preshape';
-import React, { createContext, useEffect, useRef, useState } from 'react';
+import { Box, Text } from 'preshape';
 import GraphVisualisation from './GraphVisualisation/GraphVisualisation';
+import IntersectionExplorerProvider, {
+  IntersectionExplorerProviderProps,
+} from './IntersectionExplorerProvider';
 import NodeList from './NodeList/NodeList';
 import TraversalList from './TraversalList/TraversalList';
-import { Circle, HookResult } from './useGraph';
 import './IntersectionExplorer.css';
 
-interface Context extends HookResult {
-  activeNodeIndex: number;
-  activeTraversalIndex: number;
-}
-
-export const sampleCircles: Circle[] = [
-  { radius: 0.25, x: 0, y: 0 },
-
-  { radius: 0.25, x: -0.2, y: -0.2 },
-  { radius: 0.25, x: -0.2, y: +0.2 },
-  { radius: 0.25, x: +0.2, y: -0.2 },
-  { radius: 0.25, x: +0.2, y: +0.2 },
-
-  { radius: 0.15, x: -0.35, y: -0.35 },
-  { radius: 0.15, x: -0.35, y: +0.35 },
-  { radius: 0.15, x: +0.35, y: -0.35 },
-  { radius: 0.15, x: +0.35, y: +0.35 },
-];
-
-export const IntersectionExplorerContext = createContext<Context>({
-  activeNodeIndex: -1,
-  activeTraversalIndex: -1,
-  addToTraversal: () => {},
-  cancelTraversal: () => {},
-  removeTraversal: () => {},
-  graph: {
-    circles: [],
-    edges: [],
-    nodes: [],
-    traversals: [],
-  },
-});
-
-const IntersectionExplorer = ({
-  activeNodeIndex,
-  ...rest
-}: HookResult & { activeNodeIndex?: number }) => {
-  const [activeNodeIndexLocal, setActiveNodeIndex] = useState(-1);
-  const [activeTraversalIndex, setActiveTraversalIndex] = useState(-1);
-  const refContainer = useRef<HTMLElement>(null);
-  const match = useMatchMedia(['1000px', '1300px']);
-
-  const className = classnames(
-    'IntersectionExplorer',
-    match({
-      '1300px': 'IntersectionExplorer--300',
-      '1000px': 'IntersectionExplorer--120',
-    }) || 'IntersectionExplorer--111'
-  );
-
-  const context: Context = {
-    activeNodeIndex: activeNodeIndexLocal,
-    activeTraversalIndex: activeTraversalIndex,
-    ...rest,
-  };
-
-  const reset = () => {
-    setActiveNodeIndex(-1);
-    setActiveTraversalIndex(-1);
-  };
-
-  const disableInteractions = () => {
-    if (refContainer.current) {
-      refContainer.current.style.pointerEvents = 'none';
-    }
-  };
-
-  const enableInteractions = () => {
-    if (refContainer.current) {
-      refContainer.current.style.pointerEvents = '';
-    }
-  };
-
-  useEffect(() => {
-    disableInteractions();
-  }, [rest.graph]);
-
-  useEffect(() => {
-    setActiveNodeIndex(activeNodeIndex ?? -1);
-  }, [activeNodeIndex]);
-
+const IntersectionExplorer = (props: IntersectionExplorerProviderProps) => {
   return (
-    <IntersectionExplorerContext.Provider value={context}>
-      <Box
-        flex="vertical"
-        grow
-        minHeight="400px"
-        onPointerMove={() => enableInteractions()}
-      >
-        <Box
-          backgroundColor="background-shade-1"
-          className={className}
-          grow
-          onPointerLeave={reset}
-          onPointerOver={reset}
-          ref={refContainer}
-        >
-          <Box>
-            <Text margin="x2" size="x5" strong>
-              Nodes & Edges
-            </Text>
+    <IntersectionExplorerProvider {...props}>
+      <Box>
+        <Text margin="x4" size="x5" weight="x2">
+          Nodes & Edges
+        </Text>
 
-            <NodeList onNodeOver={(i) => setActiveNodeIndex(i)} />
-          </Box>
-
-          <Box alignChildrenVertical="start" flex="vertical" grow="2">
-            <GraphVisualisation
-              onNodeOver={(i) => setActiveNodeIndex(i)}
-              onTraversalOver={(i) => setActiveTraversalIndex(i)}
-            />
-          </Box>
-
-          <Box>
-            <Text margin="x2" size="x5" strong>
-              Traversals
-            </Text>
-
-            <TraversalList
-              onTraversalOver={(i) => setActiveTraversalIndex(i)}
-            />
-          </Box>
-        </Box>
+        <NodeList />
       </Box>
-    </IntersectionExplorerContext.Provider>
+
+      <Box alignChildrenVertical="start" flex="vertical" grow="2" padding="x8">
+        <GraphVisualisation />
+      </Box>
+
+      <Box>
+        <Text margin="x4" size="x5" weight="x2">
+          Traversals
+        </Text>
+
+        <TraversalList />
+      </Box>
+    </IntersectionExplorerProvider>
   );
 };
 

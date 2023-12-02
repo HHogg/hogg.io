@@ -196,9 +196,7 @@ const useLabelPositionShifts = (
 
       setShifts(shifts);
     }, 1000);
-  }, [circles]);
-
-  // console.log(shifts);
+  }, [circles, edges, labelsElement, nodes, obstaclesElement]);
 
   return shifts;
 };

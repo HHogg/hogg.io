@@ -1,18 +1,6 @@
 import { motion } from 'framer-motion';
-import {
-  themes,
-  Box,
-  Icons,
-  Link,
-  Placement,
-  PlacementArrow,
-  PlacementContent,
-  PlacementManager,
-  PlacementReference,
-  Text,
-} from 'preshape';
-import React, { useContext } from 'react';
-import { RootContext } from '../../../components/Root';
+import { ChevronDownIcon } from 'lucide-react';
+import { themes, Box, Link, Text, useThemeContext, Tooltip } from 'preshape';
 
 interface Props {
   asIcon?: boolean;
@@ -23,7 +11,7 @@ interface Props {
 }
 
 const RuleBox = ({ asIcon, description, onClick, number, title }: Props) => {
-  const { theme } = useContext(RootContext);
+  const { theme } = useThemeContext();
   const { colorBackgroundShade1, colorTextShade1 } = themes[theme];
 
   return (
@@ -41,70 +29,49 @@ const RuleBox = ({ asIcon, description, onClick, number, title }: Props) => {
         scale: 1.05,
       }}
     >
-      <PlacementManager trigger={asIcon ? 'hover' : undefined}>
-        <PlacementReference>
-          {(props) => (
-            <Text
-              {...props}
-              alignChildrenVertical="middle"
-              borderRadius="x3"
-              clickable
-              flex="horizontal"
-              gap="x6"
-              onClick={onClick}
-              paddingHorizontal="x6"
-              paddingVertical="x3"
-              size="x3"
-            >
-              <Box grow={asIcon}>
-                <Text align="middle" size="x5" strong>
-                  {number}
-                </Text>
+      <Tooltip
+        content={
+          <Text size="x3">
+            <Text tag="span" weight="x2">
+              {title}
+            </Text>{' '}
+            {description}
+          </Text>
+        }
+      >
+        <Text
+          alignChildrenVertical="middle"
+          borderRadius="x3"
+          clickable
+          flex="horizontal"
+          gap="x6"
+          onClick={onClick}
+          paddingHorizontal="x6"
+          paddingVertical="x3"
+          size="x3"
+        >
+          <Box grow={asIcon}>
+            <Text align="middle" size="x5" weight="x2">
+              {number}
+            </Text>
+          </Box>
+
+          {!asIcon && (
+            <>
+              <Box basis="0" grow>
+                <Text weight="x2">{title}</Text>
+                <Text>{description}</Text>
               </Box>
 
-              {!asIcon && (
-                <>
-                  <Box basis="0" grow>
-                    <Text strong>{title}</Text>
-                    <Text>{description}</Text>
-                  </Box>
-
-                  <Box>
-                    <Link borderRadius="x2" color="accent" padding="x4">
-                      <Icons.ChevronDown size="2rem" />
-                    </Link>
-                  </Box>
-                </>
-              )}
-            </Text>
+              <Box>
+                <Link borderRadius="x2" color="accent" padding="x4">
+                  <ChevronDownIcon size="2rem" />
+                </Link>
+              </Box>
+            </>
           )}
-        </PlacementReference>
-
-        <Placement
-          options={{
-            modifiers: { preventOverflow: { boundariesElement: 'window' } },
-          }}
-          placement="top"
-          unrender
-          visible={asIcon ? undefined : false}
-        >
-          <PlacementArrow backgroundColor="text-shade-1" />
-          <PlacementContent
-            backgroundColor="text-shade-1"
-            borderRadius="x1"
-            maxWidth="200px"
-            padding="x4"
-            textColor="background-shade-1"
-          >
-            <Text size="x3">
-              <Text inline strong>
-                {title}
-              </Text>{' '}
-              {description}
-            </Text>
-          </PlacementContent>
-        </Placement>
-      </PlacementManager>
+        </Text>
+      </Tooltip>
     </motion.div>
   );
 };

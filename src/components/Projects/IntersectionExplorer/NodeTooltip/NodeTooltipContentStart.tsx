@@ -1,5 +1,5 @@
 import { Box, Text } from 'preshape';
-import React, { FunctionComponent } from 'react';
+import { FunctionComponent } from 'react';
 import NodeValidationBadge from '../Node/NodeBadge';
 import { Node, Edge } from '../useGraph';
 
@@ -12,7 +12,7 @@ const NodeTooltipContentStart: FunctionComponent<Props> = (props) => {
 
   return (
     <Box alignChildrenVertical="middle" flex="vertical">
-      <Text size="x3" strong>
+      <Text size="x3" weight="x2">
         Start at <NodeValidationBadge>Node {node.index}</NodeValidationBadge>
       </Text>
     </Box>

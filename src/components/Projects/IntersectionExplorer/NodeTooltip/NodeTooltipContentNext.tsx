@@ -1,5 +1,6 @@
-import { Box, Icons, Text } from 'preshape';
-import React, { FunctionComponent } from 'react';
+import { CheckIcon, XIcon } from 'lucide-react';
+import { Box, Text } from 'preshape';
+import { FunctionComponent } from 'react';
 import NodeValidationMessage from '../NodeValidation/NodeValidationMessage';
 import { Node, Edge } from '../useGraph';
 
@@ -24,7 +25,7 @@ const NodeTooltipContentNext: FunctionComponent<Props> = (props) => {
       {validations.map((validation) => (
         <Box
           alignChildrenVertical="middle"
-          backgroundColor="dark-shade-2"
+          backgroundColor="background-shade-4"
           flex="horizontal"
           gap="x4"
           key={validation.number}
@@ -41,14 +42,14 @@ const NodeTooltipContentNext: FunctionComponent<Props> = (props) => {
             padding="x1"
           >
             {validation.isValid === false ? (
-              <Icons.X size="1rem" />
+              <XIcon size="1rem" />
             ) : (
-              <Icons.Check size="1rem" />
+              <CheckIcon size="1rem" />
             )}
           </Box>
 
           <Box shrink>
-            <Text size="x2" strong>
+            <Text size="x2" weight="x2">
               <NodeValidationMessage validation={validation} />
             </Text>
           </Box>
