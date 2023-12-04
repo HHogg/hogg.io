@@ -1,0 +1,18 @@
+---
+source: workspaces/tiling/src/./path_tests.rs
+expression: "Path::default().with_type_ahead(true).from_string(\"3-\")"
+---
+Ok(
+    Path {
+        option_type_ahead: true,
+        nodes: [
+            Shape(
+                Triangle,
+            ),
+            Separator(
+                Group,
+            ),
+        ],
+        index: 0,
+    },
+)

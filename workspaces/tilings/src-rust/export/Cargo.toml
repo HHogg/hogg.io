@@ -1,0 +1,28 @@
+[package]
+name = "tiling-export"
+version = "0.0.0"
+edition = "2021"
+authors = ["Harry Hogg <harry@hogg.io>"]
+description = "Export util for the valid and invalid notations from Postgres to CSV"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/hhogg/hogg.io"
+
+[[bin]]
+name = "tiling-export"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+tokio-util.workspace = true
+tracing-appender.workspace = true
+tracing-subscriber.workspace = true
+
+clap = { version = "4.1.8", features = ["derive"] }
+tiling-datastore = { path = "../datastore" }
+tiling = { path = "../tiling" }

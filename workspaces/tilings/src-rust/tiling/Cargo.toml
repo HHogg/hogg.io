@@ -1,0 +1,28 @@
+[package]
+name = "tiling"
+version = "0.0.0"
+edition = "2021"
+authors = ["Harry Hogg <harry@hogg.io>"]
+description = "Core code for parsing the GomJau-Hogg notation, rendering a tiling and traversing the tiling tree"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/hhogg/hogg.io"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+log.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_with.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+typeshare.workspace = true
+wasm-bindgen.workspace = true
+
+num-bigint = "0.4"
+
+[dev-dependencies]
+insta = { workspace = true }

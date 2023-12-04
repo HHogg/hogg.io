@@ -1,0 +1,104 @@
+/* stylelint-disable no-descending-specificity */
+
+:root {
+  /* Draw mode */
+  --circle-art-draw-mode-stroke-color: var(--color-text-shade-1);
+  --circle-art-draw-mode-stroke-color-hover: var(--color-accent-shade-3);
+  --circle-art-draw-mode-fill-color: transparent;
+
+  /* Fill mode */
+  --circle-art-fill-mode-stroke-color: var(--color-text-shade-1);
+  --circle-art-fill-mode-stroke-color-hover: var(--color-accent-shade-3);
+  --circle-art-fill-mode-fill-color: transparent;
+  --circle-art-fill-mode-fill-color-hover: var(--color-accent-shade-1);
+  --circle-art-fill-mode-filled-fg-stroke-color: var(--color-text-shade-4);
+  --circle-art-fill-mode-filled-fg-stroke-color-hover: var(--color-accent-shade-3);
+  --circle-art-fill-mode-filled-fg-fill-color: var(--color-text-shade-1);
+  --circle-art-fill-mode-filled-fg-fill-color-hover: var(--color-text-shade-4);
+  --circle-art-fill-mode-filled-bg-stroke-color: var(--color-background-shade-4);
+  --circle-art-fill-mode-filled-bg-stroke-color-hover: var(--color-accent-shade-3);
+  --circle-art-fill-mode-filled-bg-fill-color: var(--color-background-shade-1);
+  --circle-art-fill-mode-filled-bg-fill-color-hover: var(--color-background-shade-2);
+
+  /* View mode */
+  --circle-art-view-mode-stroke-color: transparent;
+  --circle-art-view-mode-fill-color: transparent;
+  --circle-art-view-mode-filled-fg-stroke-color: var(--color-text-shade-1);
+  --circle-art-view-mode-filled-fg-fill-color: var(--color-text-shade-1);
+  --circle-art-view-mode-filled-bg-stroke-color: var(--color-background-shade-2);
+  --circle-art-view-mode-filled-bg-fill-color: var(--color-background-shade-2);
+}
+
+.CircleArt__circle,
+.CircleArt__intersection {
+  stroke-width: 1;
+  transition-property: fill, stroke;
+  transition-duration: var(--transition-duration--fast);
+  transition-timing-function: var(--transition-timing-function);
+}
+
+.CircleArt--mode-draw {
+  & .CircleArt__circle {
+    stroke: var(--circle-art-draw-mode-stroke-color);
+    fill: var(--circle-art-draw-mode-fill-color);
+
+    &:hover {
+      stroke: var(--circle-art-draw-mode-stroke-color-hover);
+    }
+  }
+}
+
+.CircleArt--mode-fill {
+  & .CircleArt__circle,
+  & .CircleArt__intersection {
+    stroke: var(--circle-art-fill-mode-stroke-color);
+    fill: var(--circle-art-fill-mode-fill-color);
+
+    &:hover {
+      stroke: var(--circle-art-fill-mode-stroke-color-hover);
+      fill: var(--circle-art-fill-mode-fill-color-hover);
+    }
+  }
+
+  & .CircleArt__circle--filled-fg,
+  & .CircleArt__intersection--filled-fg {
+    stroke: var(--circle-art-fill-mode-filled-fg-stroke-color);
+    fill: var(--circle-art-fill-mode-filled-fg-fill-color);
+
+    &:hover {
+      stroke: var(--circle-art-fill-mode-filled-fg-stroke-color-hover);
+      fill: var(--circle-art-fill-mode-filled-fg-fill-color-hover);
+    }
+  }
+
+  & .CircleArt__circle--filled-bg,
+  & .CircleArt__intersection--filled-bg {
+    stroke: var(--circle-art-fill-mode-filled-bg-stroke-color);
+    fill: var(--circle-art-fill-mode-filled-bg-fill-color);
+
+    &:hover {
+      stroke: var(--circle-art-fill-mode-filled-bg-stroke-color-hover);
+      fill: var(--circle-art-fill-mode-filled-bg-fill-color-hover);
+    }
+  }
+}
+
+.CircleArt--mode-view {
+  & .CircleArt__circle,
+  & .CircleArt__intersection {
+    stroke: var(--circle-art-view-mode-stroke-color);
+    fill: var(--circle-art-view-mode-fill-color);
+  }
+
+  & .CircleArt__circle--filled-fg,
+  & .CircleArt__intersection--filled-fg {
+    stroke: var(--circle-art-view-mode-filled-fg-stroke-color);
+    fill: var(--circle-art-view-mode-filled-fg-fill-color);
+  }
+
+  & .CircleArt__circle--filled-bg,
+  & .CircleArt__intersection--filled-bg {
+    stroke: var(--circle-art-view-mode-filled-bg-stroke-color);
+    fill: var(--circle-art-view-mode-filled-bg-fill-color);
+  }
+}

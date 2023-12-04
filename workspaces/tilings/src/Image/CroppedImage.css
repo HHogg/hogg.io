@@ -1,0 +1,7 @@
+.CroppedImage--image {
+  transform: scale(var(--CroppedImage--scale));
+
+  &:hover {
+    transform: scale(calc(var(--CroppedImage--scale) * 1.05));
+  }
+}

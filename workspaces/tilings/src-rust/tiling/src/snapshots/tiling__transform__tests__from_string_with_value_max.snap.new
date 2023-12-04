@@ -1,0 +1,11 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/./transform_tests.rs
+assertion_line: 18
+expression: "Transform::from_string(\"r181\".into(), &Shape::Triangle.into())"
+---
+Err(
+    InvalidNotation {
+        notation: "",
+        reason: "no seed shape",
+    },
+)

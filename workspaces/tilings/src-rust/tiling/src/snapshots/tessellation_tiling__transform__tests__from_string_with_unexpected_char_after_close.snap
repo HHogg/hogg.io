@@ -1,0 +1,10 @@
+---
+source: workspaces/tiling/src/./transform_tests.rs
+expression: "Transform::from_string(\"r(h1)a\".into(), &Shape::Triangle.into())"
+---
+Err(
+    InvalidTransform {
+        transform: "r(h1)a",
+        reason: "unexpected character after closing parenthesis",
+    },
+)

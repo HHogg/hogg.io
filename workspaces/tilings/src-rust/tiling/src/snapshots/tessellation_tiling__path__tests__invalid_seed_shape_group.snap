@@ -1,0 +1,10 @@
+---
+source: workspaces/tiling/src/./path_tests.rs
+expression: "Path::default().from_string(\"2\")"
+---
+Err(
+    InvalidShapeGroup {
+        group: "2",
+        reason: "the first group must consist of a single valid shape",
+    },
+)

@@ -1,0 +1,10 @@
+---
+source: workspaces/tiling/src/./transform_tests.rs
+expression: "Transform::from_string(\"r0\".into(), &Shape::Triangle.into())"
+---
+Err(
+    InvalidTransformValue {
+        value: "0",
+        reason: "must be a multiple of 60 and less than or equal to 180",
+    },
+)

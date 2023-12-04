@@ -1,0 +1,11 @@
+---
+source: workspaces/tiling/src/./path_tests.rs
+expression: "Path::default().from_string(\"3-4,\")"
+---
+Err(
+    InvalidShapeInGroup {
+        shape: "",
+        group: "4,",
+        reason: "Invalid shape \"\" -> invalid",
+    },
+)

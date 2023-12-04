@@ -1,0 +1,10 @@
+---
+source: workspaces/tiling/src/./path_tests.rs
+expression: "Path::default().from_string(\"\")"
+---
+Err(
+    InvalidNotation {
+        notation: "",
+        reason: "path is empty",
+    },
+)

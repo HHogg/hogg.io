@@ -1,0 +1,1 @@
+ALTER TABLE DROP COLUMN d_key;

@@ -1,7 +1,7 @@
 {
   "hosting": {
     "target": "hoggio",
-    "public": "public",
+    "public": "./workspaces/website/dist/client",
     "cleanUrls": true,
     "headers": [
       {

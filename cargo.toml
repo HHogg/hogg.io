@@ -1,0 +1,43 @@
+[profile.dev.package.insta]
+opt-level = 3
+
+[profile.dev.package.similar]
+opt-level = 3
+
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true
+
+[workspace]
+members = ["workspaces/tilings/src-rust/*"]
+
+[workspace.dependencies]
+anyhow = "1.0"
+chrono = { version = "0.4.24", features = ["serde"] }
+console_error_panic_hook = "0.1.7"
+console_log = "1.0.0"
+derivative = "2.2.0"
+futures = "0.3.27"
+futures-util = "0.3.27"
+insta = { version = "1.26.0", features = ["json"] }
+log = "0.4.17"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.94"
+serde-wasm-bindgen = "0.5.0"
+serde_with = "2.3.1"
+sqlx = { version = "0.6.2", features = [
+  "chrono",
+  "macros",
+  "postgres",
+  "runtime-async-std-native-tls",
+] }
+thiserror = "1.0"
+tokio = { version = "1.26.0", features = ["full"] }
+tokio-util = "0.7.7"
+tracing = { version = "0.1.37" }
+tracing-appender = "0.2"
+tracing-subscriber = "0.3"
+typeshare = { version = "1.0.1" }
+wasm-bindgen = "0.2"
+web-sys = { version = "0.3.60" }

@@ -1,0 +1,14 @@
+{
+  "name": "@hogg/common",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "lucide-react": "^0.294.0",
+    "preshape": "^17.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

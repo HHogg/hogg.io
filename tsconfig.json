@@ -1,12 +1,4 @@
 {
-  "include": [
-      "src",
-      "src/components/Writings/CircleGraphs/traversals.json",
-      "src/components/Projects/CircleArt/Gallery/configurations/*.json",
-    ],
-  "references": [
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
     "composite": true,
     "target": "ESNext",

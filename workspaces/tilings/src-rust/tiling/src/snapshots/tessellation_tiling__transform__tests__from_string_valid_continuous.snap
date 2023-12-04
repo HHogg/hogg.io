@@ -1,0 +1,17 @@
+---
+source: workspaces/tiling/src/./transform_tests.rs
+expression: "Transform::from_string(\"r60\".into(), &Shape::Triangle.into())"
+---
+Ok(
+    Continuous(
+        TransformContinuous {
+            operation: Rotate,
+            value: TransformValue {
+                increment: 60,
+                operation: Rotate,
+                shape: Triangle,
+                value: 60,
+            },
+        },
+    ),
+)

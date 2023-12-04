@@ -1,0 +1,22 @@
+{
+  "name": "@hogg/snake",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@hogg/common": "workspace:^",
+    "lucide-react": "^0.294.0",
+    "preshape": "^17.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "caniuse-lite": "^1.0.30000697",
+    "typescript": "^5.0.4"
+  }
+}

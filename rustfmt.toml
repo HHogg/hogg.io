@@ -1,0 +1,11 @@
+# Unstable
+unstable_features = true
+
+combine_control_expr = false
+force_multiline_blocks = true
+group_imports = "StdExternalCrate"
+imports_granularity = "Module"
+imports_layout = "HorizontalVertical"
+normalize_comments = true
+reorder_impl_items = true
+tab_spaces = 2

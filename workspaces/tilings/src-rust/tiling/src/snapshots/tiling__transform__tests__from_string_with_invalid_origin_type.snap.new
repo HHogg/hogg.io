@@ -1,0 +1,11 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/./transform_tests.rs
+assertion_line: 34
+expression: "Transform::from_string(\"r(x1)\".into(), &Shape::Triangle.into())"
+---
+Err(
+    InvalidOriginType {
+        origin_type: "x",
+        reason: "failed to parse",
+    },
+)

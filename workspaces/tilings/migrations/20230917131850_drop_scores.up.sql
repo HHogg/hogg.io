@@ -1,0 +1,2 @@
+ALTER TABLE tilings DROP COLUMN score;
+ALTER TABLE visits DROP COLUMN score;

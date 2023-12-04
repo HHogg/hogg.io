@@ -1,0 +1,11 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/./path_tests.rs
+assertion_line: 12
+expression: "Path::default().with_type_ahead(true).from_string(\"\")"
+---
+Ok(
+    Path {
+        option_type_ahead: true,
+        nodes: [],
+    },
+)

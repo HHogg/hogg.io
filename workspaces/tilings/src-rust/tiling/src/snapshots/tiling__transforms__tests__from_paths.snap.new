@@ -1,0 +1,47 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/./transforms_tests.rs
+assertion_line: 16
+expression: "shapes.iter().map(|shape|\n            {\n                (*shape,\n                    Transforms::first(Path::from(*shape), &Polygons::default(),\n                            &Direction::FromStart).map(|transforms|\n                            transforms.to_string()))\n            }).collect::<Vec<(Shape, Result<String, TilingError>)>>()"
+---
+[
+    (
+        Triangle,
+        Err(
+            Application {
+                reason: "attempted to create a continuous transform without a path",
+            },
+        ),
+    ),
+    (
+        Square,
+        Err(
+            Application {
+                reason: "attempted to create a continuous transform without a path",
+            },
+        ),
+    ),
+    (
+        Hexagon,
+        Err(
+            Application {
+                reason: "attempted to create a continuous transform without a path",
+            },
+        ),
+    ),
+    (
+        Octagon,
+        Err(
+            Application {
+                reason: "attempted to create a continuous transform without a path",
+            },
+        ),
+    ),
+    (
+        Dodecagon,
+        Err(
+            Application {
+                reason: "attempted to create a continuous transform without a path",
+            },
+        ),
+    ),
+]

@@ -1,0 +1,13 @@
+{
+  "name": "@hogg/tiling-parser",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./pkg/tiling_parser",
+  "types": "./pkg/tiling_parser.d.ts",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "wasm-pack build --target web",
+    "dev": "cargo watch -w ../tiling -w ./ -q -s \"yarn workspace @hogg/tiling-parser run build\""
+  }
+}
