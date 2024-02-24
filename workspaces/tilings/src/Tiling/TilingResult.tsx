@@ -25,7 +25,7 @@ export default function TilingCard({
   ...rest
 }: LinkProps & Props) {
   const [filepath, setFilepath] = useState<string>('');
-  const [_, setError] = useState('');
+  const [, setError] = useState('');
   const withAnyInformation =
     withGomJauHogg || withCundyRollett || withUniform || withUniqueKey;
 

@@ -1,4 +1,4 @@
-import { Box, BoxProps, Label } from 'preshape';
+import { Box, BoxProps } from 'preshape';
 import ProjectPageHeader from './ProjectPageHeader';
 
 type ProjectPageProps = BoxProps & {

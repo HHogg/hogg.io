@@ -1,4 +1,4 @@
-import { Box, Input } from 'preshape';
+import { Box } from 'preshape';
 
 export default function LibraryFilters() {
   return (

@@ -1,5 +1,5 @@
 import { Box, useMatchMedia } from 'preshape';
-import AsciiTagGrid from '../../components/AsciiTagGrid/AsciiTagGrid';
+// import AsciiTagGrid from '../../components/AsciiTagGrid/AsciiTagGrid';
 import Header from '../../components/Header/Header';
 import Page from '../../components/Page/Page';
 import AboutMe from './AboutMe';

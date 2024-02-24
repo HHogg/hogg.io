@@ -1,4 +1,4 @@
-import { Snake } from '@hogg/snake';
+import { SnakeProjectWindow } from '@hogg/snake';
 import { useState } from 'react';
 import ProjectPage from '../../components/ProjectPage/ProjectPage';
 import ProjectPageProvider from '../../components/ProjectPage/ProjectPageProvider';
@@ -19,7 +19,9 @@ export default function SnakeOptimalSolution() {
     <ProjectPageProvider id={ProjectKey.SnakeOptimalSolution}>
       <ProjectPage
         article={<Article onSelectSolution={handleSelectSolution} />}
-        presentation={<Snake autoRun={autoRun} solution={solution} />}
+        presentation={
+          <SnakeProjectWindow autoRun={autoRun} solution={solution} />
+        }
       />
     </ProjectPageProvider>
   );
