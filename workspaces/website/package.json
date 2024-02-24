@@ -17,6 +17,7 @@
   "devDependencies": {
     "@svgr/cli": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
+    "@swc/core": "^1.4.2",
     "@types/lodash": "^4.14.202",
     "@types/luxon": "^3.4.1",
     "@types/react": "^18.0.28",

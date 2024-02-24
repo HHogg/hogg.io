@@ -9,21 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: 'Cache: node_modules'
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          path: ~/.yarn
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - name: 'Install Dependencies'
+          cache: true
+          cache-workspaces: true
+          components: clippy, rustfmt
+          toolchain: nightly
+      - name: 'Install dependencies: Node'
         run: yarn
-      - name: 'Test: Linting'
+      - name: 'Install dependencies: Rust'
+        run: cargo fetch
+      - name: 'Build'
+        run: yarn build
+      - name: 'Lint'
         run: yarn lint
-      - name: 'Deploy: Site'
+      - name: 'Test'
+        run: yarn test
+      - name: 'Deploy'
         run: 'yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}'
