@@ -3,6 +3,7 @@
 dist
 pkg
 lib
+logs
 node_modules
 public
 target

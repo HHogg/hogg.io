@@ -12,6 +12,7 @@
   ],
   "scripts": {
     "build": "yarn workspaces foreach -ptvR --from @hogg/website run build",
+    "clean": "yarn workspaces foreach -ptvR --from @hogg/website run clean",
     "deploy": "firebase deploy",
     "dev": "yarn workspaces foreach -pviR --from @hogg/website -j unlimited run dev",
     "format": "prettier --write .",

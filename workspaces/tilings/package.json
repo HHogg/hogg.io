@@ -7,6 +7,7 @@
   "main": "./src/index.ts",
   "scripts": {
     "build": "yarn generate:types",
+    "clean": "rm -rf ./logs",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file",

@@ -25,7 +25,5 @@ jobs:
         run: yarn
       - name: 'Test: Linting'
         run: yarn lint
-      - name: 'Build: Site'
-        run: yarn build
       - name: 'Deploy: Site'
         run: 'yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}'
