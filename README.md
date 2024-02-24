@@ -1,4 +1,4 @@
-<h2 align="center"  style="margin-bottom: 10px"><a href="https://antwerp.hogg.io">https://hogg.io</a></h2>
+<h2 align="center"  style="margin-bottom: 10px"><a href="https://hogg.io">https://hogg.io</a></h2>
 
 <p align="center"  style="margin-top: 0px">
   My personal website, which I use as a playground for my own learnings and experiments.
