@@ -1,0 +1,10 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/./origin_type_tests.rs
+expression: "OriginType::from_str(\"x\")"
+---
+Err(
+    InvalidOriginType {
+        origin_type: "x",
+        reason: "failed to parse",
+    },
+)

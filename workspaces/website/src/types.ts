@@ -5,6 +5,8 @@ export enum ProjectKey {
   Preshape = 'preshape',
   SnakeOptimalSolution = 'snake_optimal_solution',
   Spirals = 'spirals',
+  BidirectionalCircularSequences = 'bidirectional_circular_sequences',
+  ExtendingALineSegment = 'extending_a_line_segment',
 }
 
 export type Placement = {

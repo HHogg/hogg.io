@@ -18,12 +18,12 @@
     "format": "prettier --write .",
     "lint": "yarn lint:css & yarn lint:js && yarn lint:rust",
     "lint:css": "stylelint workspaces/**/*.css",
-    "lint:js": "eslint \"workspaces/**/*.tsx\" \"workspaces/**/*.ts\" --fix",
+    "lint:js": "eslint 'workspaces/**/*.tsx' 'workspaces/**/*.ts' --fix",
     "lint:rust": "yarn lint:rust:clippy && yarn lint:rust:fmt",
     "lint:rust:clippy": "cargo clippy --all-targets --all-features -- -D warnings",
     "lint:rust:fmt": "cargo fmt --all -- --check",
     "test": "yarn test:rust",
-    "test:rust": "cargo watch -x \"test -- --test-threads=1\"",
+    "test:rust": "cargo watch -x 'test -- --test-threads=1'",
     "test:rust:clean": "cargo insta test --unreferenced=delete",
     "test:rust:review": "cargo insta review --include-ignored",
     "ts:check": "tsc --noEmit --skipLibCheck"
@@ -48,5 +48,8 @@
     "stylelint-config-recommended": "^12.0.0",
     "stylelint-config-standard": "^33.0.0",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "preshape": "^17.1.2"
   }
 }

@@ -127,22 +127,17 @@ impl TransformValue {
 
   fn update_increment(&mut self) {
     self.increment = match (self.operation, self.seed.offset, self.seed.shape) {
-      // (Operation::Reflect, Offset::Center, Shape::Triangle) => 60,
+      (Operation::Reflect, Offset::Center, Shape::Triangle) => 30,
       (Operation::Reflect, Offset::Center, Shape::Square) => 45,
       (Operation::Reflect, Offset::Center, Shape::Hexagon) => 30,
       (Operation::Reflect, Offset::Center, Shape::Octagon) => 45,
       (Operation::Reflect, Offset::Center, Shape::Dodecagon) => 15,
 
-      (Operation::Reflect, Offset::Center, Shape::Triangle) => 30,
-      // (Operation::Reflect, Offset::Left, _) => 90,
-      // (Operation::Rotate, Offset::Center, Shape::Triangle) => 120,
+      (Operation::Rotate, Offset::Center, Shape::Triangle) => 60,
       (Operation::Rotate, Offset::Center, Shape::Square) => 90,
       (Operation::Rotate, Offset::Center, Shape::Hexagon) => 60,
       (Operation::Rotate, Offset::Center, Shape::Octagon) => 45,
       (Operation::Rotate, Offset::Center, Shape::Dodecagon) => 30,
-
-      (Operation::Rotate, Offset::Center, Shape::Triangle) => 60,
-      // (Operation::Rotate, Offset::Left, _) => 180,
       _ => 0,
     };
 

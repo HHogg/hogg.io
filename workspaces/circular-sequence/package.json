@@ -1,0 +1,22 @@
+{
+  "name": "@hogg/circular-sequence",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "wasm-pack build --target web",
+    "clean": "rm -rf ./pkg",
+    "dev": "cargo watch -w ./src-rust -q -s 'yarn workspace @hogg/circular-sequence run build'"
+  },
+  "dependencies": {
+    "@hogg/common": "workspace:^",
+    "preshape": "^17.1.2",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "typescript": "^5.0.4"
+  }
+}

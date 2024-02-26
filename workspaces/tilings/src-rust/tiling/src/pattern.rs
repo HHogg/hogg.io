@@ -6,23 +6,14 @@ use std::collections::HashSet;
 use std::fmt::Display;
 use std::hash::Hash;
 
-use serde::{Deserialize, Serialize};
+use circular_sequence::{self, Sequence};
+use serde::Serialize;
 
 use crate::r#match::Match;
-use crate::sequence::{
-  sequence_from_string,
-  sequence_length,
-  sequence_min_permutation,
-  sequence_reverse,
-  sequence_to_string,
-  sequences_to_sorted_strings,
-  sequences_to_string,
-  Sequence,
-};
 use crate::TilingError;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
-#[serde(into = "Vec<String>", from = "Vec<String>")]
+#[derive(Clone, Debug, Default, Serialize)]
+#[serde(into = "Vec<String>")]
 pub struct Patterns {
   patterns: Vec<Pattern>,
 }
@@ -71,15 +62,7 @@ impl Patterns {
 
 impl Display for Patterns {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{}", sequences_to_string(&self.clone().into()))
-  }
-}
-
-impl From<Vec<String>> for Patterns {
-  fn from(strings: Vec<String>) -> Self {
-    Self {
-      patterns: strings.into_iter().map(|s| s.into()).collect(),
-    }
+    write!(f, "{}", circular_sequence::to_string(self.clone().into()))
   }
 }
 
@@ -97,7 +80,10 @@ impl Into<Vec<Sequence>> for Patterns {
 
 impl Into<Vec<String>> for Patterns {
   fn into(self) -> Vec<String> {
-    sequences_to_sorted_strings(&self.clone().into())
+    circular_sequence::sort(self.into())
+      .iter()
+      .map(|s| circular_sequence::to_string(vec![*s]))
+      .collect()
   }
 }
 
@@ -107,7 +93,7 @@ impl Into<String> for Patterns {
   }
 }
 
-#[derive(Clone, Copy, Default, Debug, Deserialize, Serialize)]
+#[derive(Clone, Copy, Default, Debug, Serialize)]
 pub struct Pattern(Sequence);
 
 impl Pattern {
@@ -116,15 +102,15 @@ impl Pattern {
   }
 
   pub fn len(&self) -> usize {
-    sequence_length(self.sequence())
+    circular_sequence::length(self.sequence())
   }
 
   pub fn rev(&self) -> Self {
-    Self(sequence_reverse(&self.sequence()))
+    Self(circular_sequence::reverse(&self.sequence()))
   }
 
   pub fn insert(&mut self, value: u8) -> Result<(), TilingError> {
-    let next_index = sequence_length(self.sequence());
+    let next_index = circular_sequence::length(self.sequence());
 
     if next_index == 6 {
       return Err(TilingError::Application {
@@ -135,10 +121,6 @@ impl Pattern {
     self.0[next_index] = value;
 
     Ok(())
-  }
-
-  pub fn min_permutation(&self) -> Self {
-    Self(sequence_min_permutation(&self.sequence()))
   }
 }
 
@@ -160,12 +142,6 @@ impl From<Sequence> for Pattern {
   }
 }
 
-impl From<String> for Pattern {
-  fn from(string: String) -> Self {
-    sequence_from_string(&string).into()
-  }
-}
-
 impl Into<Sequence> for Pattern {
   fn into(self) -> Sequence {
     self.0
@@ -174,13 +150,13 @@ impl Into<Sequence> for Pattern {
 
 impl Into<String> for Pattern {
   fn into(self) -> String {
-    sequence_to_string(self.sequence())
+    circular_sequence::to_string(vec![self.sequence().clone()])
   }
 }
 
 impl Hash for Pattern {
   fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-    let min_sequence = sequence_min_permutation(&self.0);
+    let min_sequence = circular_sequence::min(self.0);
 
     min_sequence.hash(state);
   }
@@ -188,10 +164,10 @@ impl Hash for Pattern {
 
 impl PartialEq for Pattern {
   fn eq(&self, other: &Self) -> bool {
-    let min_self = sequence_min_permutation(&self.0);
-    let min_other = sequence_min_permutation(&other.0);
-
-    min_self == min_other
+    circular_sequence::compare(
+      &circular_sequence::min(self.0),
+      &circular_sequence::min(other.0),
+    ) == std::cmp::Ordering::Equal
   }
 }
 

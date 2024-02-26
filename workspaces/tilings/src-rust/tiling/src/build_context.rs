@@ -1,11 +1,11 @@
 use chrono::{NaiveDateTime, Utc};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use typeshare::typeshare;
 
 use crate::pattern::Patterns;
 use crate::{ApplicationError, Tiling};
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Serialize)]
 #[typeshare]
 pub struct BuildContext {
   pub application_errors: Vec<ApplicationError>,
@@ -29,7 +29,7 @@ impl BuildContext {
   }
 }
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct ValidTiling {

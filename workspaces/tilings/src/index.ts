@@ -1,20 +1,22 @@
-// Arrangement
-export { default as ArrangementProvider } from './Arrangement/ArrangementProvider';
-export { useArrangementContext } from './Arrangement/useArrangementContext';
-// Notation
-export { default as NotationProvider } from './Notation/NotationProvider';
-export { useNotationContext } from './Notation/useNotationContext';
-// Player
-export { default as Player } from './Player/Player';
-export { default as PlayerProvider } from './Player/PlayerProvider';
-export type { UsePlayerOptions } from './Player/usePlayer';
-// Renderer
-export { default as Renderer } from './Renderer/Renderer';
-// WasmLoader
-export { default as WasmProvider } from './WasmProvider/WasmProvider';
-export { useWasmContext } from './WasmProvider/useWasmContext';
-export type { WasmContextProps } from './WasmProvider/useWasmContext';
-// Utils
-export * from './utils/formatting';
-export * from './utils/results';
-export * from './types';
+import { type Project, ProjectKey } from '@hogg/common';
+import image from './euclidean-tilings.webp';
+
+export { default as Project } from './Project';
+
+export const meta: Project = {
+  id: ProjectKey.tilings,
+  image,
+  name: 'Searching and rendering Euclidean tilings with Rust and a multithreaded actor architecture',
+  description:
+    'Developing a notation used to reference unique regular polygon tilings, a searching algorithm to discover them and a renderer to display them for the web.',
+  wip: true,
+  tags: [
+    'data structures',
+    'geometry',
+    'react',
+    'rust',
+    'webassembly',
+    'typescript',
+    'actors',
+  ],
+};

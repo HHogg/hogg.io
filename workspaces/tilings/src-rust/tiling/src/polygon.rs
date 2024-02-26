@@ -99,11 +99,6 @@ impl Polygon {
           .rotate(PI / 2.0, None)
       }
       (_, Offset::Center) => polygon,
-      // (_, Offset::Left) => {
-      //   let max_x = polygon.bbox.max.x;
-      //   let max_y = polygon.bbox.max.y;
-      //   polygon.translate(Point::default().with_xy(max_x, 0.0))
-      // }
     }
   }
 

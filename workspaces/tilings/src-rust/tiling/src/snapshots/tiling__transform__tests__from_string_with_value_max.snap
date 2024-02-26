@@ -1,0 +1,10 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/./transform_tests.rs
+expression: "Transform::from_string(\"r181\".into(), &Shape::Triangle.into())"
+---
+Err(
+    InvalidTransformValue {
+        value: "181",
+        reason: "must be a multiple of 60 and less than or equal to 180",
+    },
+)

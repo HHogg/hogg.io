@@ -1,14 +1,12 @@
 use std::collections::hash_map::DefaultHasher;
 
+use pretty_assertions::assert_eq;
+
 use super::*;
 
 fn assert_eq_points_to_points(a: Polygon, b: Vec<Point>) {
   assert_eq!(a.points.len(), b.len());
-
-  for (index, point) in a.points.iter().enumerate() {
-    let point_expected = &b[index];
-    assert_eq!(point, point_expected)
-  }
+  assert_eq!(a.points, b);
 }
 
 fn assert_eq_points(a: Polygon, b: Vec<(f64, f64)>) {
@@ -46,12 +44,12 @@ fn at_center_hexagon() {
   assert_eq_points(
     Polygon::default().with_shape(Shape::Hexagon).at_center(1),
     vec![
-      (0.0, -1.0),
-      (0.86602545, -0.5),
-      (0.86602545, 0.5),
-      (0.0, 1.0),
-      (-0.86602545, 0.5),
-      (-0.86602545, -0.5),
+      (0.5, -0.86602545),
+      (1.0, 0.0),
+      (0.5, 0.86602545),
+      (-0.5, 0.86602545),
+      (-1.0, 0.0),
+      (-0.5, -0.86602545),
     ],
   );
 }

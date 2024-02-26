@@ -6,13 +6,15 @@ Ok(
     Path {
         option_type_ahead: true,
         nodes: [
-            Shape(
-                Triangle,
+            Seed(
+                Seed {
+                    shape: Triangle,
+                    offset: Center,
+                },
             ),
             Separator(
                 Group,
             ),
         ],
-        index: 0,
     },
 )

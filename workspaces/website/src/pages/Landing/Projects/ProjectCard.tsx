@@ -1,19 +1,16 @@
+import { Project, getProjectRoutePath } from '@hogg/common';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Box, Button, Label, Labels, Link, Text } from 'preshape';
 import { useState } from 'react';
 import ImageCover from '../../../components/ImageCover/ImageCover';
-import { Project } from '../../../types';
 
-export default function ProjectCard({
-  name,
-  description,
-  id,
-  image,
-  imageDark,
-  href,
-  tags,
-}: Project) {
+type Props = {
+  project: Project;
+};
+
+export default function ProjectCard({ project }: Props) {
+  const { name, description, image, imageDark, href, tags } = project;
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -23,7 +20,7 @@ export default function ProjectCard({
       gap="x4"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      to={href ? undefined : `/${id}`}
+      to={href ? undefined : getProjectRoutePath(project)}
       textColorActive="text-shade-1"
       textColorHover="text-shade-1"
     >

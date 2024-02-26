@@ -1,9 +1,9 @@
 use actix::prelude::*;
 use anyhow::Result;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use tiling::{BuildContext, Path};
 
-#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize)]
 pub struct VisitResult {
   pub path: Path,
   pub build_context: BuildContext,

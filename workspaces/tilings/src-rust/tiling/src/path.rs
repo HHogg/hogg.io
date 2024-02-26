@@ -304,7 +304,7 @@ impl Path {
 impl From<Shape> for Path {
   fn from(shape: Shape) -> Self {
     Self {
-      nodes: vec![shape.into()],
+      nodes: vec![Seed::default().with_shape(shape).into()],
       ..Self::default()
     }
   }

@@ -6,42 +6,32 @@ expression: "shapes.iter().map(|shape|\n            {\n                (*shape,\
 [
     (
         Triangle,
-        Err(
-            Application {
-                reason: "attempted to create a continuous transform without a path",
-            },
+        Ok(
+            "m30/m(c1)",
         ),
     ),
     (
         Square,
-        Err(
-            Application {
-                reason: "attempted to create a continuous transform without a path",
-            },
+        Ok(
+            "m45/m(c1)",
         ),
     ),
     (
         Hexagon,
-        Err(
-            Application {
-                reason: "attempted to create a continuous transform without a path",
-            },
+        Ok(
+            "m30/m(c1)",
         ),
     ),
     (
         Octagon,
-        Err(
-            Application {
-                reason: "attempted to create a continuous transform without a path",
-            },
+        Ok(
+            "m45/m(c1)",
         ),
     ),
     (
         Dodecagon,
-        Err(
-            Application {
-                reason: "attempted to create a continuous transform without a path",
-            },
+        Ok(
+            "m15/m(c1)",
         ),
     ),
 ]

@@ -1,0 +1,12 @@
+{
+  "name": "@hogg/preshape",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@hogg/common": "workspace:^",
+    "preshape": "^17.1.2"
+  }
+}

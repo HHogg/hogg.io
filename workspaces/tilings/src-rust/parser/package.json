@@ -10,5 +10,8 @@
     "build": "wasm-pack build --target web",
     "clean": "rm -rf ./pkg",
     "dev": "cargo watch -w ../tiling -w ./ -q -s \"yarn workspace @hogg/tiling-parser run build\""
+  },
+  "dependencies": {
+    "preshape": "^17.1.2"
   }
 }

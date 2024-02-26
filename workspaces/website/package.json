@@ -29,7 +29,11 @@
     "vite": "^4.3.2"
   },
   "dependencies": {
-    "@hogg/circles": "workspace:^",
+    "@hogg/circle-art": "workspace:^",
+    "@hogg/circle-intersections": "workspace:^",
+    "@hogg/circular-sequence": "workspace:^",
+    "@hogg/line-segment-extending": "workspace:^",
+    "@hogg/preshape": "workspace:^",
     "@hogg/snake": "workspace:^",
     "@hogg/spirals": "workspace:^",
     "@hogg/tilings": "workspace:^",
@@ -45,7 +49,7 @@
     "lucide-react": "^0.294.0",
     "luxon": "^3.4.4",
     "numbro": "^2.4.0",
-    "preshape": "^17.1.1",
+    "preshape": "^17.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.3",

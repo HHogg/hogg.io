@@ -4,9 +4,8 @@ mod tests;
 
 use std::collections::HashSet;
 
+use circular_sequence::{self, Sequence};
 use serde::Serialize;
-
-use crate::sequence::{sequence_is_bidirectional, sequence_length, sequence_reverse, Sequence};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 pub enum Match {
@@ -19,7 +18,9 @@ impl Match {
   pub fn from(source: &Sequence, targets: &HashSet<Sequence>) -> Self {
     let mut first_partial_match = Match::None;
 
-    for target in targets.iter() {
+    let ordered_targets = circular_sequence::sort(targets.iter().copied().collect());
+
+    for target in ordered_targets.iter() {
       match match_once(source, target) {
         Some(Match::Exact(numbers)) => {
           return Match::Exact(numbers);
@@ -52,8 +53,8 @@ impl Default for Match {
 
 fn match_once(source: &Sequence, target: &Sequence) -> Option<Match> {
   match_once_one_way(source, target, target).or_else(|| {
-    if !sequence_is_bidirectional(target) {
-      match_once_one_way(source, target, &sequence_reverse(target))
+    if !circular_sequence::is_bidirectional(target) {
+      match_once_one_way(source, target, &circular_sequence::reverse(target))
     } else {
       None
     }
@@ -65,8 +66,8 @@ fn match_once_one_way(
   target_forwards: &Sequence,
   target: &Sequence,
 ) -> Option<Match> {
-  let source_length = sequence_length(source);
-  let target_length = sequence_length(target);
+  let source_length = circular_sequence::length(source);
+  let target_length = circular_sequence::length(target);
 
   let mut source_index = 0;
   let mut target_start_index = 0;
