@@ -7,6 +7,7 @@ import * as Preshape from '@hogg/preshape';
 import * as Snake from '@hogg/snake';
 import * as Spirals from '@hogg/spirals';
 import * as Tilings from '@hogg/tilings';
+import * as WasmApi from '@hogg/wasm-api';
 import { ComponentType } from '@react-spring/web';
 
 export const projects: {
@@ -40,11 +41,19 @@ export const projects: {
     meta: CircularSequence.meta,
     Component: CircularSequence.Project,
   },
-  // {
-  //   meta: LineSegmentExtending.meta,
-  //   Component: LineSegmentExtending.Project,
-  // },
+  {
+    meta: LineSegmentExtending.meta,
+    Component: LineSegmentExtending.Project,
+  },
+  {
+    meta: WasmApi.meta,
+    Component: WasmApi.Project,
+  },
 ];
+
+export const shouldShowProject = (project: Project) => {
+  return !import.meta.env.PROD || project.deploy;
+};
 
 export const getNextProject = (id: ProjectKey): Project | undefined => {
   const index = projects.findIndex((project) => project?.meta.id === id);

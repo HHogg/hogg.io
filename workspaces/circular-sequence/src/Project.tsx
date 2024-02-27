@@ -1,13 +1,11 @@
 import { ProjectPage, ProjectPageProps } from '@hogg/common';
 import Article from './Article';
-import Presentation from './Presentation';
+import WasmApi from './Article/WasmApi/WasmApi';
 
 export default function Project(props: ProjectPageProps) {
   return (
-    <ProjectPage
-      {...props}
-      article={<Article />}
-      presentation={<Presentation />}
-    />
+    <WasmApi>
+      <ProjectPage {...props} article={<Article />} />
+    </WasmApi>
   );
 }

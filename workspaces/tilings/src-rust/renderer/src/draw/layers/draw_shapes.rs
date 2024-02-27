@@ -127,7 +127,13 @@ pub fn draw_shapes(
             }
             _ => shape_style.get_fill(),
           })
-          .set_opacity(shape.shape_type.map(|_| 1.0).or_else(|| Some(0.2))),
+          .set_opacity(
+            if options.fade_unmatched_shape_types.unwrap_or_default() {
+              shape.shape_type.map(|_| 1.0).or_else(|| Some(0.2))
+            } else {
+              None
+            },
+          ),
       }
       .into(),
     )?;

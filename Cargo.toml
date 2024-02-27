@@ -10,7 +10,12 @@ lto = true
 strip = true
 
 [workspace]
-members = ["workspaces/circular-sequence", "workspaces/tilings/src-rust/*"]
+members = [
+  "workspaces/canvas",
+  "workspaces/circular-sequence",
+  "workspaces/geometry",
+  "workspaces/tilings/src-rust/*",
+]
 resolver = "2"
 
 [workspace.dependencies]

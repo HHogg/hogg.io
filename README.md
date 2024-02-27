@@ -29,7 +29,7 @@
 yarn dev
 ```
 
-This will concurrently run a few development processes for watching for main website resources and dependencies. There are a couple of WASM packages that are built from rust and are also watched and built when the files change.
+This will concurrently run a few development processes for watching for main website resources and dependencies. There are a couple of Wasm packages that are built from rust and are also watched and built when the files change.
 
 ### Building & deploying
 
@@ -37,4 +37,4 @@ This will concurrently run a few development processes for watching for main web
 yarn build && yarn deploy
 ```
 
-This will create a SSG build of the website and production builds of the WASM packages, and will deploy it (Note: This will obviously not deploy to my site if you don't have the auth token).
+This will create a SSG build of the website and production builds of the Wasm packages, and will deploy it (Note: This will obviously not deploy to my site if you don't have the auth token).

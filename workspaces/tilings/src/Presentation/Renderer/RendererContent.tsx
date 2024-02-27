@@ -1,15 +1,12 @@
+import { Canvas } from '@hogg/canvas';
 import {
-  Box,
   BoxProps,
-  Text,
   colorBlack,
   colorNegativeShade4,
-  useResizeObserver,
   useThemeContext,
 } from 'preshape';
-import { memo, useEffect, useMemo, useState } from 'react';
-import { v4 } from 'uuid';
-import { ColorMode, Options } from '../../types';
+import { useCallback, useMemo } from 'react';
+import { ColorMode, Options, ValidationFlag } from '../../types';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
 import { usePlayerContext } from '../Player/usePlayerContext';
@@ -19,17 +16,17 @@ export type RendererProps = {
   options?: Partial<Options>;
   scale?: number;
   shadow?: boolean;
+  validations?: ValidationFlag[];
 };
 
-function RendererContent({
+export default function RendererContent({
   options: optionsProp,
-  scale = 1,
+  scale,
   shadow,
+  validations,
   ...rest
 }: BoxProps & RendererProps) {
-  const [canvasElement, refCanvasElement] = useState<Element | null>(null);
-  const [error, setError] = useState('');
-  const { colors: themeColors, theme } = useThemeContext();
+  const { colors: themeColors } = useThemeContext();
   const { renderNotation } = useWasmApi();
   const { notation } = useNotationContext();
   const { setTiling } = useArrangementContext();
@@ -43,8 +40,6 @@ function RendererContent({
     showAnnotations,
     showDebug,
   } = usePlayerContext();
-  const [size, ref] = useResizeObserver<HTMLDivElement>();
-  const canvasId = useMemo(() => v4(), []);
 
   const options = useMemo<Options>(
     () => ({
@@ -75,7 +70,7 @@ function RendererContent({
         shape: {
           fill: themeColors.colorTextShade1,
           strokeColor:
-            colorMode === ColorMode.None
+            (optionsProp?.colorMode ?? colorMode) === ColorMode.None
               ? themeColors.colorBackgroundShade1
               : colorBlack,
           strokeWidth: 3,
@@ -123,79 +118,14 @@ function RendererContent({
     ]
   );
 
-  useEffect(() => {
-    if (canvasElement) {
-      const { width, height } = size;
-
-      (canvasElement as HTMLCanvasElement).width =
-        width * window.devicePixelRatio * scale;
-      (canvasElement as HTMLCanvasElement).height =
-        height * window.devicePixelRatio * scale;
-      (canvasElement as HTMLCanvasElement).style.width = `${width * scale}px`;
-      (canvasElement as HTMLCanvasElement).style.height = `${height * scale}px`;
-      (canvasElement as HTMLCanvasElement).style.transform = `scale(${
-        1 / scale
-      })`;
-      try {
-        const tiling = renderNotation(notation, canvasId, options);
-
-        setTiling(tiling);
-        setError('');
-      } catch (error) {
-        console.error(error);
-        setError((error as Error).message);
-      }
-    }
-  }, [
-    setTiling,
-    canvasElement,
-    canvasId,
-    notation,
-    options,
-    scale,
-    size,
-    renderNotation,
-  ]);
+  const canvasRender = useCallback(
+    (id: string) => {
+      setTiling(renderNotation(notation, id, options, validations));
+    },
+    [setTiling, notation, options, validations, renderNotation]
+  );
 
   return (
-    <Box {...rest} flex="vertical" grow>
-      <Box basis="0" container grow ref={ref}>
-        <Box
-          absolute="edge-to-edge"
-          id={canvasId}
-          ref={refCanvasElement}
-          tag="canvas"
-          style={{
-            transformOrigin: 'top left',
-            filter: shadow
-              ? `drop-shadow(5px 5px ${
-                  Math.max(size.width, size.height) / 7
-                }px rgba(20, 0, 20, ${
-                  theme === 'night' ? 0.8 : 0.2
-                })) drop-shadow(1px 3px ${2}px rgba(20, 0, 20, ${
-                  theme === 'night' ? 0.8 : 0.4
-                }))`
-              : undefined,
-          }}
-        ></Box>
-
-        {error && (
-          <Box absolute="center" maxWidth="300px">
-            <Text
-              align="middle"
-              size="x3"
-              textColor="negative-shade-4"
-              weight="x2"
-            >
-              {error}
-            </Text>
-          </Box>
-        )}
-      </Box>
-    </Box>
+    <Canvas {...rest} scale={scale} shadow={shadow} render={canvasRender} />
   );
 }
-
-const RendererContentMemo = memo(RendererContent);
-
-export default RendererContentMemo;

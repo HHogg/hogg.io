@@ -1,5 +1,5 @@
+import { Lines } from '@hogg/common';
 import { Box, BoxProps, useMatchMedia } from 'preshape';
-import Lines from '../Lines/Lines';
 import PageChangeButton, { PageChangeButtonProps } from './PageChangeButton';
 
 type Props = BoxProps & {
@@ -37,7 +37,7 @@ export default function PageChangeButtons({ previous, next, ...rest }: Props) {
               direction="previous"
               title={previous.title}
               description={previous.description}
-              to={`/${previous.to}`}
+              to={previous.to}
             />
           </Box>
         )}
@@ -59,7 +59,7 @@ export default function PageChangeButtons({ previous, next, ...rest }: Props) {
               direction="next"
               title={next.title}
               description={next.description}
-              to={`/${next.to}`}
+              to={next.to}
             />
           </Box>
         )}

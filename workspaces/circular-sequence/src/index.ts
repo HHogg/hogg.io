@@ -1,12 +1,14 @@
 import { type Project, ProjectKey } from '@hogg/common';
+import image from './image.webp';
 
 export { default as Project } from './Project';
 
 export const meta: Project = {
   id: ProjectKey.circular_sequence,
-  name: 'Symmetrical circular sequences',
+  name: 'Symmetric circular sequences',
   description:
-    'Comparing sequences of numbers that have no defined start or end, and some that can be traversed in both directions to produce the same paths.',
-  image: '',
+    'Matching sequences of numbers that have no defined start or end, and some that have symmetry in their structure.',
+  image,
   tags: ['algorithms', 'data structures', 'sequences', 'rust'],
+  deploy: true,
 };

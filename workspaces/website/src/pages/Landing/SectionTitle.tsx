@@ -1,5 +1,5 @@
+import { Lines } from '@hogg/common';
 import { Box, BoxProps, Text } from 'preshape';
-import Lines from '../../components/Lines/Lines';
 
 type Props = BoxProps & {
   maxWidthTop?: number;

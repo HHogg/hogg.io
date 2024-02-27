@@ -761,6 +761,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hogg/canvas@workspace:^, @hogg/canvas@workspace:workspaces/canvas":
+  version: 0.0.0-use.local
+  resolution: "@hogg/canvas@workspace:workspaces/canvas"
+  dependencies:
+    "@types/react": ^18.0.28
+    "@types/react-dom": ^18.0.11
+    preshape: ^17.2.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+    uuid: ^9.0.1
+  languageName: unknown
+  linkType: soft
+
 "@hogg/circle-art@workspace:^, @hogg/circle-art@workspace:workspaces/circle-art":
   version: 0.0.0-use.local
   resolution: "@hogg/circle-art@workspace:workspaces/circle-art"
@@ -769,7 +782,7 @@ __metadata:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
   languageName: unknown
@@ -793,7 +806,7 @@ __metadata:
     file-saver: ^2.0.5
     framer-motion: ^10.16.16
     lucide-react: ^0.294.0
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
     sat: ^0.9.0
@@ -806,10 +819,15 @@ __metadata:
   resolution: "@hogg/circular-sequence@workspace:workspaces/circular-sequence"
   dependencies:
     "@hogg/common": "workspace:^"
+    "@hogg/wasm-api": "workspace:^"
+    "@svgr/cli": ^8.1.0
+    "@svgr/plugin-jsx": ^8.1.0
     "@types/react": ^18.0.28
-    preshape: ^17.1.2
+    lucide-react: ^0.294.0
+    preshape: ^17.2.0
     react: ^18.2.0
     typescript: ^5.0.4
+    uuid: ^9.0.1
   languageName: unknown
   linkType: soft
 
@@ -817,10 +835,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/common@workspace:workspaces/common"
   dependencies:
+    framer-motion: ^10.16.16
     lucide-react: ^0.294.0
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-router-dom: ^6.20.1
     sat: ^0.9.0
   languageName: unknown
   linkType: soft
@@ -832,7 +852,7 @@ __metadata:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
   languageName: unknown
@@ -843,7 +863,7 @@ __metadata:
   resolution: "@hogg/preshape@workspace:workspaces/preshape"
   dependencies:
     "@hogg/common": "workspace:^"
-    preshape: ^17.1.2
+    preshape: ^17.2.0
   languageName: unknown
   linkType: soft
 
@@ -856,7 +876,7 @@ __metadata:
     "@types/react-dom": ^18.0.11
     caniuse-lite: ^1.0.30000697
     lucide-react: ^0.294.0
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
@@ -875,7 +895,7 @@ __metadata:
     caniuse-lite: ^1.0.30000697
     gl-matrix: ^3.4.3
     lodash: ^4.17.21
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
@@ -888,7 +908,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/tiling-parser@workspace:workspaces/tilings/src-rust/parser"
   dependencies:
-    preshape: ^17.1.2
+    preshape: ^17.2.0
   languageName: unknown
   linkType: soft
 
@@ -896,7 +916,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/tiling-renderer@workspace:workspaces/tilings/src-rust/renderer"
   dependencies:
-    preshape: ^17.1.2
+    preshape: ^17.2.0
   languageName: unknown
   linkType: soft
 
@@ -904,6 +924,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/tilings@workspace:workspaces/tilings"
   dependencies:
+    "@hogg/canvas": "workspace:^"
     "@hogg/common": "workspace:^"
     "@hogg/tiling-parser": "workspace:^"
     "@hogg/tiling-renderer": "workspace:^"
@@ -912,12 +933,26 @@ __metadata:
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     lucide-react: ^0.294.0
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     puppeteer: ^21.4.1
     react: ^18.2.0
     react-dom: ^18.2.0
     sharp: ^0.32.6
     typescript: ^5.0.4
+    uuid: ^9.0.1
+  languageName: unknown
+  linkType: soft
+
+"@hogg/wasm-api@workspace:^, @hogg/wasm-api@workspace:workspaces/wasm-api":
+  version: 0.0.0-use.local
+  resolution: "@hogg/wasm-api@workspace:workspaces/wasm-api"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@types/react": ^18.0.28
+    "@types/react-dom": ^18.0.11
+    preshape: ^17.2.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
   languageName: unknown
   linkType: soft
 
@@ -933,6 +968,7 @@ __metadata:
     "@hogg/snake": "workspace:^"
     "@hogg/spirals": "workspace:^"
     "@hogg/tilings": "workspace:^"
+    "@hogg/wasm-api": "workspace:^"
     "@react-spring/web": ^9.7.3
     "@svgr/cli": ^8.1.0
     "@svgr/plugin-jsx": ^8.1.0
@@ -954,7 +990,7 @@ __metadata:
     lucide-react: ^0.294.0
     luxon: ^3.4.4
     numbro: ^2.4.0
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-helmet-async: ^2.0.3
@@ -7699,7 +7735,7 @@ __metadata:
     eslint-plugin-react-refresh: ^0.4.1
     firebase-tools: ^13.3.0
     knip: ^5.0.1
-    preshape: ^17.1.2
+    preshape: ^17.2.0
     prettier: ^2.8.8
     stylelint: ^15.6.1
     stylelint-config-prettier: ^8.0.2
@@ -11563,9 +11599,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preshape@npm:^17.1.2":
-  version: 17.1.2
-  resolution: "preshape@npm:17.1.2"
+"preshape@npm:^17.2.0":
+  version: 17.2.0
+  resolution: "preshape@npm:17.2.0"
   dependencies:
     "@floating-ui/react": ^0.24.0
     classnames: ^2.2.5
@@ -11585,7 +11621,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.11.1
-  checksum: fb24438809bc2709ae851b5ba4c2f55089b660aafea44c455d0214951a835eebca2788dacbaa1155b1564cc9ba3fafd38c218fa16eb306bea3d108bb223519d7
+  checksum: 6aff4c3908fda795a32f80b671093a556f4f6bb2a2e80a76fc82b4c670529ed7658d8635259533dc4282814eada3b72f9b7653f67d7512fa386b055c4a405f58
   languageName: node
   linkType: hard
 

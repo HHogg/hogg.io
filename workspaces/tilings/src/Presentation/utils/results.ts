@@ -16,7 +16,7 @@ export const groupResultsByUniform = (
   results: TilingResult[]
 ): Record<string, TilingResult[]> => groupBy(results, 'uniform');
 
-const indexResultsBy = (key: keyof Pick<TilingResult, 'notation' | 'd_key'>) =>
+const indexResultsBy = (key: keyof Pick<TilingResult, 'notation'>) =>
   results.reduce<Record<string, TilingResult>>((acc, tiling) => {
     acc[tiling[key]] = tiling;
     return acc;
@@ -24,4 +24,3 @@ const indexResultsBy = (key: keyof Pick<TilingResult, 'notation' | 'd_key'>) =>
 
 export const resultsByUniform = groupResultsByUniform(results);
 export const resultsByNotation = indexResultsBy('notation');
-export const resultsByUniqueKey = indexResultsBy('d_key');

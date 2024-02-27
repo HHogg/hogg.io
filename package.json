@@ -22,6 +22,7 @@
     "lint:rust": "yarn lint:rust:clippy && yarn lint:rust:fmt",
     "lint:rust:clippy": "cargo clippy --all-targets --all-features -- -D warnings",
     "lint:rust:fmt": "cargo fmt --all -- --check",
+    "preview": "yarn workspace @hogg/website preview",
     "test": "yarn test:rust",
     "test:rust": "cargo watch -x 'test -- --test-threads=1'",
     "test:rust:clean": "cargo insta test --unreferenced=delete",
@@ -50,6 +51,6 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "preshape": "^17.1.2"
+    "preshape": "^17.2.0"
   }
 }

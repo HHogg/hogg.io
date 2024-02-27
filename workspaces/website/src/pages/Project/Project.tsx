@@ -1,4 +1,9 @@
-import { Project, ProjectPageProps, ProjectPageProvider } from '@hogg/common';
+import {
+  Project,
+  ProjectPageProps,
+  ProjectPageProvider,
+  getProjectRoutePath,
+} from '@hogg/common';
 import { useMatchMedia } from 'preshape';
 import { ComponentType, useEffect } from 'react';
 import Header from '../../components/Header/Header';
@@ -38,18 +43,19 @@ export default function Project({ Component, meta }: Props) {
         />
 
         <PageChangeButtons
+          margin="x32"
           previous={
             previousProject && {
               title: previousProject.name,
               description: previousProject.description,
-              to: previousProject.id,
+              to: getProjectRoutePath(previousProject),
             }
           }
           next={
             nextProject && {
               title: nextProject.name,
               description: nextProject.description,
-              to: nextProject.id,
+              to: getProjectRoutePath(nextProject),
             }
           }
         />

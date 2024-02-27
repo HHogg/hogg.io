@@ -1,5 +1,6 @@
 import {
   ArticleFig,
+  ArticleFigLink,
   ArticleFigs,
   ArticleHeading,
   ArticlePage,
@@ -76,11 +77,12 @@ const Article = ({ onRuleSelect }: Props) => {
         <ArticleParagraph>
           Graphs are a data structure made up of nodes, which can be connected
           to one or more nodes with edges. You can then use these edges to
-          traverse from node to node (visual representation below).
+          traverse from node to node (<ArticleFigLink fig="graph" />
+          ).
         </ArticleParagraph>
 
         <ArticleFigs>
-          <ArticleFig description="Graph visual representation">
+          <ArticleFig id="graph" description="Graph visual representation">
             <SvgCirclesGraph1 />
           </ArticleFig>
         </ArticleFigs>
@@ -121,7 +123,10 @@ const Article = ({ onRuleSelect }: Props) => {
         </ArticleParagraph>
 
         <ArticleFigs>
-          <ArticleFig description="Arrangement of three intersecting circles. A graph in it's entirety">
+          <ArticleFig
+            id="arrangement"
+            description="Arrangement of three intersecting circles. A graph in it's entirety"
+          >
             <SvgCirclesGraph2 />
           </ArticleFig>
         </ArticleFigs>
@@ -139,19 +144,27 @@ const Article = ({ onRuleSelect }: Props) => {
         <ArticleParagraph>
           Before we start looking at how to traverse this graph to find the
           intersection areas, consider this edge case. With the circle
-          arrangement in Fig 2, we can easily describe the path of every single
-          one of those intersection areas by using the node identifiers. Now
-          consider Fig 3, where there are just 2 overlapping circles, giving us
-          just 2 nodes on our graph, but 4 edges.
+          arrangement (<ArticleFigLink fig="arrangement" />
+          ), we can easily describe the path of every single one of those
+          intersection areas by using the node identifiers. Now consider where
+          there are just 2 overlapping circles (
+          <ArticleFigLink fig="arrangement-2-intersecting" />
+          ), giving us just 2 nodes on our graph, but 4 edges.
         </ArticleParagraph>
       </ArticleSection>
 
       <ArticleFigs maxWidth="800px">
-        <ArticleFig description="Arrangement of two intersecting circles.">
+        <ArticleFig
+          id="arrangement-2-intersecting"
+          description="Arrangement of two intersecting circles."
+        >
           <SvgCirclesGraph3 />
         </ArticleFig>
 
-        <ArticleFig description="Arrangement of two intersecting circles, with labelled edges.">
+        <ArticleFig
+          id="arrangement-2-intersecting-labelled"
+          description="Arrangement of two intersecting circles, with labelled edges."
+        >
           <SvgCirclesGraph4 />
         </ArticleFig>
       </ArticleFigs>
@@ -166,7 +179,9 @@ const Article = ({ onRuleSelect }: Props) => {
 
         <ArticleParagraph>
           We also need to be able to identify the edges, so we can specify which
-          one we want to traverse (Fig 4). Now we can describe traversals like{' '}
+          one we want to traverse (
+          <ArticleFigLink fig="arrangement-2-intersecting-labelled" />
+          ). Now we can describe traversals like{' '}
           <Code>[0.2.1 -&gt; 1.3.0]</Code>, in other words "Traverse from node 0
           to node 1 via edge 2, then traverse from node 1 to node 0 via edge 3",
           to get us the left most intersection are.
@@ -185,9 +200,9 @@ const Article = ({ onRuleSelect }: Props) => {
         </ArticleParagraph>
 
         <ArticleParagraph>
-          Using Fig 4 as an example, the intersection described as{' '}
-          <Code>[0.2.1 -&gt; 1.3.0]</Code>, we could have traversed in the
-          opposite direction, giving us a path of{' '}
+          As an example (<ArticleFigLink fig="bitset" />
+          ), the intersection described as <Code>[0.2.1 -&gt; 1.3.0]</Code>, we
+          could have traversed in the opposite direction, giving us a path of{' '}
           <Code>[0.3.1 -&gt; 1.2.0]</Code>. We could have also started at Node
           1, giving us another 2 possible paths of{' '}
           <Code>[1.3.0 -&gt; 0.2.1]</Code> and <Code>[1.2.0 -&gt; 0.3.1]</Code>.
@@ -201,7 +216,10 @@ const Article = ({ onRuleSelect }: Props) => {
         </ArticleParagraph>
 
         <ArticleFigs>
-          <ArticleFig description="Bitsets of all the valid traversals in Fig 4">
+          <ArticleFig
+            id="bitset"
+            description="Bitsets of all the valid traversals"
+          >
             <SvgCirclesGraph5 />
           </ArticleFig>
         </ArticleFigs>

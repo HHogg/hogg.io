@@ -5,7 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
 import Landing from './pages/Landing/Landing';
 import ProjectPage from './pages/Project/Project';
-import { projects } from './projects';
+import { projects, shouldShowProject } from './projects';
 import 'preshape/dist/style.css';
 import './App.css';
 
@@ -19,7 +19,9 @@ export default function App() {
               <Route index element={<Landing />} />
 
               {projects
-                .filter(({ Component }) => Component)
+                .filter(
+                  ({ Component, meta }) => Component && shouldShowProject(meta)
+                )
                 .map(({ Component, meta }) => (
                   <Route
                     key={meta.id}

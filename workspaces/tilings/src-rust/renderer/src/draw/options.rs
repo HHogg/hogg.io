@@ -12,6 +12,7 @@ pub struct Options {
   pub active_transform_index: Option<u32>,
   pub auto_rotate: Option<bool>,
   pub color_mode: Option<ColorMode>,
+  pub fade_unmatched_shape_types: Option<bool>,
   pub expansion_phases: Option<u8>,
   pub is_valid: Option<bool>,
   pub max_stage: Option<u16>,

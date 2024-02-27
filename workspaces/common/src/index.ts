@@ -1,16 +1,22 @@
+export { default as ArticleCallout } from './Article/ArticleCallout';
 export {
   default as ArticleFig,
   type ArticleFigProps,
 } from './Article/ArticleFig';
+export { default as ArticleFigCodeBlock } from './Article/ArticleFigCodeBlock';
 export { default as ArticleFigs } from './Article/ArticleFigs';
+export { default as ArticleFigLink } from './Article/ArticleFigLink';
 export { default as ArticleHeading } from './Article/ArticleHeading';
 export { default as ArticlePage } from './Article/ArticlePage';
 export { default as ArticleParagraph } from './Article/ArticleParagraph';
 export { default as ArticleProvider } from './Article/ArticleProvider';
 export { default as ArticleSection } from './Article/ArticleSection';
+export { getCodeSnippetFromFile } from './Article/getCodeSnippetFromFile';
 export { useArticleFigNumber } from './Article/useArticleContext';
 
 export { default as InView } from './InView/InView';
+
+export { default as Lines } from './Lines/Lines';
 
 export { default as SvgLabel } from './SvgLabels/SvgLabel';
 export { default as SvgLabelsProvider } from './SvgLabels/SvgLabelsProvider';

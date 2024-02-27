@@ -11,7 +11,7 @@
     "build:svgs": "yarn svgr -d ./src/components/SvgImages ./src/assets/svgs --ext tsx --config-file .svgrrc.images.cjs",
     "clean": "rm -rf ./dist",
     "dev": "vite --host localhost --port 4001",
-    "serve": "superstatic dist/client --port 8080 --host 127.0.0.1",
+    "preview": "superstatic dist/client --port 8080 --host 127.0.0.1",
     "ssg": "node prerender"
   },
   "devDependencies": {
@@ -37,6 +37,7 @@
     "@hogg/snake": "workspace:^",
     "@hogg/spirals": "workspace:^",
     "@hogg/tilings": "workspace:^",
+    "@hogg/wasm-api": "workspace:^",
     "@react-spring/web": "^9.7.3",
     "@visx/axis": "^3.5.0",
     "@visx/curve": "^3.3.0",
@@ -49,7 +50,7 @@
     "lucide-react": "^0.294.0",
     "luxon": "^3.4.4",
     "numbro": "^2.4.0",
-    "preshape": "^17.1.2",
+    "preshape": "^17.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.3",

@@ -4,6 +4,7 @@ import {
 } from '@hogg/circle-intersections';
 import {
   ArticleFig,
+  ArticleFigLink,
   ArticleFigs,
   ArticleHeading,
   ArticlePage,
@@ -12,14 +13,12 @@ import {
   ProjectPageLink,
 } from '@hogg/common';
 import { BulletPoint, BulletPoints, Link } from 'preshape';
-import { useState } from 'react';
 import EditorViewer from './Presentation/EditorViewer';
 import { configurationsByName } from './Presentation/configurations';
 
 const twitterConfig = configurationsByName.Twitter.config;
 
 export default function Article() {
-  const [twitterFigNumber, setTwitterFigNumber] = useState(0);
   const { graph } = useGraph(twitterConfig.circles, {
     findTraversalsOnUpdate: true,
   });
@@ -53,14 +52,11 @@ export default function Article() {
             animals made from 13 circles
           </Link>{' '}
           that was originally inspired from the Twitter logo that was made from
-          13 circles (Fig. {twitterFigNumber})
+          13 circles (<ArticleFigLink fig="twitter" />)
         </ArticleParagraph>
 
         <ArticleFigs>
-          <ArticleFig
-            description="Twitter logo made from circles"
-            onNumberChange={setTwitterFigNumber}
-          >
+          <ArticleFig id="twitter" description="Twitter logo made from circles">
             <EditorViewer
               fills={twitterConfig.fills}
               graph={graph}

@@ -1,4 +1,4 @@
-import { ArticleFig, ArticleFigProps, ArticleFigs } from '@hogg/common';
+import { ArticleFig, ArticleFigs } from '@hogg/common';
 import { CodeBlock } from 'preshape';
 import { useCallback, useRef } from 'react';
 import { PointAlgorithm, useSpiralsContext } from '../../Presentation';
@@ -8,6 +8,7 @@ type Props = {
   dashed?: boolean;
   dashedGap?: number;
   flip?: boolean;
+  id: string;
   pointCount?: number;
   rotate?: boolean;
   r: (t: number, x: number) => number;
@@ -15,20 +16,19 @@ type Props = {
   withChart?: boolean;
   withCode?: boolean;
   withCodeXY?: boolean;
-  onNumberChange?: ArticleFigProps['onNumberChange'];
 };
 
 const ArticleFigYPlot = ({
   dashed,
   dashedGap,
   flip,
+  id,
   rotate = false,
   r,
   t = (r) => r,
   withChart,
   withCode,
   withCodeXY,
-  onNumberChange,
 }: Props) => {
   const { setPointAlgorithm, setRotate } = useSpiralsContext();
 
@@ -103,9 +103,9 @@ const y = r * Math.sin(t);`;
     <ArticleFigs theme="night">
       <ArticleFig
         description={figDescription}
+        id={id}
         padding="x0"
         onEnter={handleSetAlgorithm}
-        onNumberChange={onNumberChange}
         maxWidth="100%"
       >
         {withChart && (

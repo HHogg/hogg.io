@@ -7,7 +7,6 @@
   "project": ["workspaces/**/*.ts", "workspaces/**/*.tsx"],
   "ignore": [
     "workspaces/snake/src/SolutionRunnerWorker.ts",
-    "workspaces/website/.svgrrc.images.cjs",
-    "workspaces/website/src/components/SvgImages/index.tsx"
+    "workspaces/website/.svgrrc.images.cjs"
   ]
 }

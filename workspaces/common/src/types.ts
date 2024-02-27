@@ -9,6 +9,7 @@ export enum ProjectKey {
   snake = 'snake',
   spirals = 'spirals',
   tilings = 'tilings',
+  wasm_api = 'wasm-api',
 }
 
 export type Project = {
@@ -19,5 +20,6 @@ export type Project = {
   image: string;
   imageDark?: string;
   tags: string[];
+  deploy?: boolean;
   wip?: boolean;
 };

@@ -102,7 +102,7 @@ impl Pattern {
   }
 
   pub fn len(&self) -> usize {
-    circular_sequence::length(self.sequence())
+    circular_sequence::get_length(self.sequence())
   }
 
   pub fn rev(&self) -> Self {
@@ -110,7 +110,7 @@ impl Pattern {
   }
 
   pub fn insert(&mut self, value: u8) -> Result<(), TilingError> {
-    let next_index = circular_sequence::length(self.sequence());
+    let next_index = circular_sequence::get_length(self.sequence());
 
     if next_index == 6 {
       return Err(TilingError::Application {
@@ -156,7 +156,7 @@ impl Into<String> for Pattern {
 
 impl Hash for Pattern {
   fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-    let min_sequence = circular_sequence::min(self.0);
+    let min_sequence = circular_sequence::get_min_permutation(&self.0);
 
     min_sequence.hash(state);
   }
@@ -165,8 +165,8 @@ impl Hash for Pattern {
 impl PartialEq for Pattern {
   fn eq(&self, other: &Self) -> bool {
     circular_sequence::compare(
-      &circular_sequence::min(self.0),
-      &circular_sequence::min(other.0),
+      &circular_sequence::get_min_permutation(&self.0),
+      &circular_sequence::get_min_permutation(&other.0),
     ) == std::cmp::Ordering::Equal
   }
 }

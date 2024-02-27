@@ -1,7 +1,7 @@
 import { Project, getProjectRoutePath } from '@hogg/common';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
-import { Box, Button, Label, Labels, Link, Text } from 'preshape';
+import { Box, Button, Link, Text } from 'preshape';
 import { useState } from 'react';
 import ImageCover from '../../../components/ImageCover/ImageCover';
 
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function ProjectCard({ project }: Props) {
-  const { name, description, image, imageDark, href, tags } = project;
+  const { name, description, image, imageDark, href } = project;
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -25,7 +25,34 @@ export default function ProjectCard({ project }: Props) {
       textColorHover="text-shade-1"
     >
       <Box>
-        <ImageCover margin="x4" src={image} srcDark={imageDark} />
+        {image || imageDark ? (
+          <ImageCover
+            backgroundColor="text-shade-1"
+            borderRadius="x2"
+            borderSize="x1"
+            borderColor="text-shade-4"
+            height="140px"
+            margin="x4"
+            src={image}
+            srcDark={imageDark}
+          />
+        ) : (
+          <Box
+            flex="vertical"
+            alignChildren="middle"
+            backgroundColor="background-shade-4"
+            height="156px"
+            margin="x4"
+            borderRadius="x1"
+            borderSize="x1"
+            borderColor="background-shade-4"
+            padding="x2"
+          >
+            <Text size="x4" weight="x5">
+              WIP
+            </Text>
+          </Box>
+        )}
 
         <Text size="x4" weight="x4" margin="x1">
           {name}
@@ -34,23 +61,20 @@ export default function ProjectCard({ project }: Props) {
         <Text size="x3">{description}</Text>
       </Box>
 
-      <Box alignChildrenVertical="end" flex="horizontal" gap="x3" grow>
-        <Labels basis="0" grow>
-          {tags.map((tag) => (
-            <Label borderRadius="3px" key={tag} size="x1">
-              {tag}
-            </Label>
-          ))}
-        </Labels>
-
+      <Box alignChildren="start" flex="horizontal" gap="x3" grow>
         <Button
           active={isHovered}
           borderSize="x1"
           borderRadius="20px"
           backgroundColor="background-shade-1"
-          backgroundColorActive="background-shade-1"
-          backgroundColorHover="background-shade-1"
+          backgroundColorActive="text-shade-1"
+          backgroundColorHover="text-shade-1"
           textColor="text-shade-2"
+          textColorHover="background-shade-1"
+          textColorActive="background-shade-1"
+          borderColor="text-shade-1"
+          borderColorActive="text-shade-1"
+          borderColorHover="text-shade-1"
           paddingHorizontal="x3"
           flex="horizontal"
           alignChildrenHorizontal="end"
@@ -66,7 +90,7 @@ export default function ProjectCard({ project }: Props) {
             animate={{ rotate: isHovered ? 0 : 45 }}
             initial={{ rotate: 0 }}
           >
-            <ArrowRight />
+            <ArrowRight size="1.25rem" />
           </motion.div>
         </Button>
       </Box>

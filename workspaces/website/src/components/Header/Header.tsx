@@ -1,7 +1,7 @@
+import { Lines } from '@hogg/common';
 import { GithubIcon, LinkedinIcon } from 'lucide-react';
 import { Box, BoxProps, Link, useMatchMedia } from 'preshape';
 import { PropsWithChildren } from 'react';
-import Lines from '../Lines/Lines';
 import { ThemeSwitcher } from '../ThemeSwitcher/ThemeSwitcher';
 import Ascii from './Ascii';
 

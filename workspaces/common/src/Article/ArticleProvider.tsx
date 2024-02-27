@@ -2,33 +2,41 @@ import { PropsWithChildren, useCallback, useState } from 'react';
 import { ArticleContext, ArticleContextProps } from './useArticleContext';
 
 export default function ArticleProvider({ children }: PropsWithChildren) {
-  const [figures, setFigures] = useState<[HTMLElement, DOMRect][]>([]);
+  const [figures, setFigures] = useState<
+    {
+      element: HTMLElement;
+      id: string;
+      rect: DOMRect;
+    }[]
+  >([]);
 
-  const insertIntoFigures = useCallback((element: HTMLElement) => {
+  const insertIntoFigures = useCallback((id: string, element: HTMLElement) => {
     setFigures((figures) => {
       const nextFigures: typeof figures = [
         ...figures,
-        [element, element.getBoundingClientRect()],
+        { element, id, rect: element.getBoundingClientRect() },
       ];
 
-      nextFigures.sort((a, b) => a[1].top - b[1].top || a[1].left - b[1].left);
+      nextFigures.sort(
+        (a, b) => a.rect.top - b.rect.top || a.rect.left - b.rect.left
+      );
 
       return nextFigures;
     });
   }, []);
 
-  const removeFromFigures = useCallback((element: HTMLElement) => {
-    setFigures((figures) => figures.filter(([figure]) => figure !== element));
+  const removeFromFigures = useCallback((id: string) => {
+    setFigures((figures) => figures.filter((fig) => fig.id !== id));
   }, []);
 
   const registerFigure: ArticleContextProps['registerFigure'] = useCallback(
-    (ref) => {
+    (id, ref) => {
       if (ref.current !== null) {
-        insertIntoFigures(ref.current);
+        insertIntoFigures(id, ref.current);
       }
       return () => {
         if (ref.current !== null) {
-          removeFromFigures(ref.current);
+          removeFromFigures(id);
         }
       };
     },
@@ -36,15 +44,11 @@ export default function ArticleProvider({ children }: PropsWithChildren) {
   );
 
   const getFigureNumber: ArticleContextProps['getFigureNumber'] = useCallback(
-    (ref) => {
-      if (ref.current === null) {
-        return -1;
-      }
-
-      const index = figures.findIndex(([figure]) => figure === ref.current);
+    (id) => {
+      const index = figures.findIndex((fig) => fig.id === id);
 
       if (index === -1) {
-        return -1;
+        return null;
       }
 
       return index + 1;

@@ -16,7 +16,7 @@ pub fn draw(tiling: &Tiling, canvas_id: &str, options: Options) -> Result<(), Er
     .with_padding(options.padding)
     .with_mode(options.scale_mode);
 
-  let mut canvas = Canvas::<Layer>::new(canvas_id, scale);
+  let mut canvas = Canvas::<Layer>::new(canvas_id, scale)?;
 
   let show_annotations = options.show_annotations.clone().unwrap_or_default();
   let show_debug = options.show_debug.unwrap_or(false);

@@ -1,5 +1,3 @@
-use crate::super_script;
-
 #[path = "./sequence_tests.rs"]
 #[cfg(test)]
 mod tests;
@@ -7,155 +5,65 @@ mod tests;
 pub type Sequence = [u8; 12];
 
 /// Returns the length of a sequence.
-pub fn length(sequence: &Sequence) -> usize {
-  sequence.iter().position(|&x| x == 0).unwrap_or(12)
-}
+///
+/// Space: O(1)
+/// Time:  O(n)
+pub fn get_length(sequence: &Sequence) -> usize {
+  let mut length = 0;
 
-/// Rotates a sequence from the start index in the given direction.
-fn rotate(sequence: &Sequence, start_index: usize, forwards: bool) -> Sequence {
-  let mut reordered = Sequence::default();
-  let sequence_length = length(sequence);
-  let mut index: usize = start_index;
-  let mut count: usize = 0;
-
-  while count < sequence_length {
-    reordered[count] = sequence[index];
-
-    if forwards {
-      index = (index + 1) % sequence_length;
-    } else {
-      index = (index + sequence_length - 1) % sequence_length;
+  for value in sequence {
+    if *value == 0 {
+      return length;
     }
 
-    count += 1;
+    length = length + 1;
   }
 
-  reordered
+  length
 }
 
-/// Reverses a sequence.
-pub fn reverse(sequence: &Sequence) -> Sequence {
-  rotate(sequence, length(sequence) - 1, false)
-}
-
-/// A bidirectional pattern is one that starting
+/// A symmetrical sequence is one that starting
 /// at any point and going in one direction.
 /// Whatever path has been taken, can be taken
 /// in the opposite direction.
-pub fn is_bidirectional(sequence: &Sequence) -> bool {
-  for i in 0..length(sequence) {
-    if &rotate(sequence, i, false) == sequence {
-      return true;
-    }
-  }
-
-  false
-}
-
-/// Returns the minimum rotational permutation of a sequence.
-pub fn min(sequence: Sequence) -> Sequence {
-  let mut min_sequence = sequence.clone();
-
-  for direction in [true, false] {
-    for index in 0..length(&sequence) {
-      let rotated_sequence = rotate(&sequence, index, direction);
-
-      if compare(&min_sequence, &rotated_sequence) == std::cmp::Ordering::Greater {
-        min_sequence = rotated_sequence;
-      }
-    }
-  }
-
-  min_sequence
-}
-
-/// Compares two sequences.
-pub fn compare(a: &Sequence, b: &Sequence) -> std::cmp::Ordering {
-  for i in 0..12 {
-    let a = a[i];
-    let b = b[i];
-
-    if a == b {
-      continue;
-    }
-
-    if a > b || b == 0 {
-      return std::cmp::Ordering::Greater;
-    } else if a < b || a == 0 {
-      return std::cmp::Ordering::Less;
-    }
-  }
-
-  std::cmp::Ordering::Equal
-}
-
-/// Sorts a list of sequences.
-pub fn sort(mut sequences: Vec<Sequence>) -> Vec<Sequence> {
-  sequences.sort_by(compare);
-  sequences
-}
-
-/// Converts a sequence to a string.
-pub fn to_string(sequences: Vec<Sequence>) -> String {
-  flatten_duplicates(
-    sort(sequences.clone())
-      .iter()
-      .copied()
-      .map(to_string_one)
-      .collect(),
-    Some(("(", ")")),
-  )
-  .join("; ")
-}
-
 ///
-fn to_string_one(sequence: Sequence) -> String {
-  flatten_duplicates(
-    min(sequence)
-      .iter()
-      .map(|&x| x.to_string())
-      .collect::<Vec<String>>(),
-    None,
-  )
-  .join(".")
-}
-
+/// The approach we'll take here it to loop through
+/// the sequence twice, and while doing so, checking
+/// if there is the appearance of the sequence in
+/// it's reversed form.
 ///
-fn flatten_duplicates(content: Vec<String>, wrapper: Option<(&str, &str)>) -> Vec<String> {
-  let (prefix, suffix) = wrapper.unwrap_or(("", ""));
-  let mut flattened_content: Vec<String> = Vec::new();
-  let mut index = 0;
-  let mut count = 1;
+/// Space: O(1)
+/// Time:  O(n)
+pub fn get_symmetry_index(sequence: &Sequence) -> Option<usize> {
+  let length = get_length(sequence);
+  let mut c = 0;
+  let mut i = None;
 
-  if content.len() == 0 {
-    return vec![];
-  }
+  for _ in 0..2 {
+    for j in 0..length {
+      if sequence[j] == sequence[length - 1 - c] {
+        if c == length - 1 {
+          return i;
+        }
 
-  loop {
-    let current = &content[index];
-    let next = content.get(index + 1);
+        if i.is_none() {
+          i = Some(j);
+        }
 
-    if next.is_none() || current != next.unwrap() {
-      if count > 1 {
-        flattened_content.push(format!(
-          "{prefix}{current}{suffix}{}",
-          super_script::get(count)
-        ));
+        c = c + 1;
       } else {
-        flattened_content.push(current.to_string());
+        c = 0;
       }
-
-      count = 1;
-    } else {
-      count += 1;
-    }
-
-    index += 1;
-
-    if next.is_none() || next.unwrap() == "0" {
-      break;
     }
   }
 
-  flattened_content
+  None
+}
+
+/// Returns whether a sequence is symmetrical.
+///
+/// Space: O(1)
+/// Time:  O(n)
+pub fn is_symmetrical(sequence: &Sequence) -> bool {
+  get_symmetry_index(sequence).is_some()
 }

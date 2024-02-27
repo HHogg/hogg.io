@@ -12,6 +12,6 @@
     "dev": "cargo watch  -w ../tiling -w ./ -q -s \"yarn workspace @hogg/tiling-renderer run build\""
   },
   "dependencies": {
-    "preshape": "^17.1.2"
+    "preshape": "^17.2.0"
   }
 }

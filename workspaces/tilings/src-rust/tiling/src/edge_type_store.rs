@@ -4,7 +4,7 @@ use serde::Serialize;
 use typeshare::typeshare;
 
 use crate::pattern_radial::PatternRadial;
-use crate::{LineSegment, Polygon, TilingError};
+use crate::{LineSegment, Polygon};
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[typeshare]
@@ -87,9 +87,5 @@ impl EdgeTypeStore {
         .get_mut(line_segment)
         .map(|pattern| pattern.add_polygon(&polygon));
     }
-  }
-
-  pub fn validate(&self) -> Result<(), TilingError> {
-    Ok(())
   }
 }

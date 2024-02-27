@@ -31,5 +31,4 @@ export type Project = {
 
 export type Data = {
   placements: Placement[];
-  projects: Project[];
 };

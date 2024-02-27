@@ -1,8 +1,8 @@
 import { RefObject, createContext, useContext, useEffect } from 'react';
 
 export type ArticleContextProps = {
-  getFigureNumber: (ref: RefObject<HTMLElement>) => number;
-  registerFigure: (ref: RefObject<HTMLElement>) => void;
+  getFigureNumber: (id: string) => number | null;
+  registerFigure: (id: string, ref: RefObject<HTMLElement>) => void;
 };
 
 export const ArticleContext = createContext<ArticleContextProps>({
@@ -10,14 +10,17 @@ export const ArticleContext = createContext<ArticleContextProps>({
   registerFigure: () => () => {},
 });
 
-function useArticleContext() {
+export function useArticleContext() {
   return useContext(ArticleContext);
 }
 
-export function useArticleFigNumber(ref: RefObject<HTMLElement>): number {
+export function useArticleFigNumber(
+  id: string,
+  ref: RefObject<HTMLElement>
+): number | null {
   const { registerFigure, getFigureNumber } = useArticleContext();
 
-  useEffect(() => registerFigure(ref), [ref, registerFigure]);
+  useEffect(() => registerFigure(id, ref), [id, ref, registerFigure]);
 
-  return getFigureNumber(ref);
+  return getFigureNumber(id);
 }

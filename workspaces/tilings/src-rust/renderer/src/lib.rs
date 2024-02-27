@@ -20,14 +20,16 @@ fn main() -> Result<(), JsError> {
 
 #[wasm_bindgen]
 pub fn render_notation(
-  notation: &str,
   canvas_id: &str,
+  notation: &str,
   options: &JsValue,
+  validations: &JsValue,
 ) -> Result<JsValue, JsError> {
   let options = serde_wasm_bindgen::from_value::<Options>(options.to_owned())?;
+  let validations = serde_wasm_bindgen::from_value::<Vec<ValidationFlag>>(validations.to_owned())?;
 
   let tiling = Tiling::default()
-    .with_validations(Some(ValidationFlag::all()))
+    .with_validations(Some(validations))
     .with_scale(options.scale_size.unwrap_or(1))
     .with_type_ahead(true)
     .with_expansion_phases(options.expansion_phases.unwrap_or_default())

@@ -41,29 +41,11 @@ export default function TilingInformation(props: BoxProps & Props) {
           </Text>
         )}
 
-        {withCundyRollett && (
-          <Text shrink>
-            {withLabels && 'Cundy & Rollett '}
-            <Text weight="x2" tag="span" breakOn="all">
-              {information.vertex}
-            </Text>
-          </Text>
-        )}
-
         {withUniform && (
           <Text shrink>
             {withLabels && 'Uniform '}
             <Text weight="x2" tag="span" breakOn="all">
               {formatUniform(information.uniform)}
-            </Text>
-          </Text>
-        )}
-
-        {withUniqueKey && (
-          <Text shrink>
-            {withLabels && 'Unique Key '}
-            <Text weight="x2" tag="span" breakOn="all">
-              {information.d_key}
             </Text>
           </Text>
         )}

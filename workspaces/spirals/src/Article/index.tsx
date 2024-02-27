@@ -1,5 +1,6 @@
 import {
   ArticleFig,
+  ArticleFigLink,
   ArticleFigs,
   ArticleHeading,
   ArticlePage,
@@ -8,26 +9,13 @@ import {
   InView,
 } from '@hogg/common';
 import { Code, CodeBlock, Link } from 'preshape';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { getUlamSpiral, useSpiralsContext } from '../Presentation';
 import SineWavesCirclePlot from './figs/SineWavesCirclePlot';
 import SineWaves from './figs/SineWavesPlot';
 import ArticleFigYPlot from './figs/YPlotFig';
 
 const Article = () => {
-  const [linearEquationFigure, setLinearEquationFigure] = useState(0);
-  const [squaredEquationFigure, setSquaredEquationFigure] = useState(0);
-  const [bitShiftEquationFigure, setBitShiftEquationFigure] = useState(0);
-  const [bitAndEquationFigure, setBitAndEquationFigure] = useState(0);
-  const [bitAndSquareRootEquationFigure, setBitAndSquareRootEquationFigure] =
-    useState(0);
-  const [squareRootEquationFigure, setSquareRootEquationFigure] = useState(0);
-  const [archimedesEquationFigure, setArchimedesEquationFigure] = useState(0);
-  const [fermatEquationFigure, setFermatEquationFigure] = useState(0);
-  const [onePointFiveEquationFigure, setOnePointFiveEquationFigure] =
-    useState(0);
-  const [piSnappingEquationFigure, setPiSnappingEquationFigure] = useState(0);
-
   const { setRotate, setPointAlgorithm, setPointsAlgorithm, pointCount } =
     useSpiralsContext();
 
@@ -87,7 +75,11 @@ const Article = () => {
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
-          <ArticleFig description="Math.cos and Math.sin" padding="x0">
+          <ArticleFig
+            id="math.cos"
+            description="Math.cos and Math.sin"
+            padding="x0"
+          >
             <CodeBlock
               language={'typescript'}
               padding="x6"
@@ -118,7 +110,11 @@ Math.sin(Math.PI) // 0
         </ArticleParagraph>
 
         <ArticleFigs>
-          <ArticleFig description="Sine and Cosine" padding="x12">
+          <ArticleFig
+            id="sine-waves"
+            description="Sine and Cosine"
+            padding="x12"
+          >
             <SineWaves />
           </ArticleFig>
         </ArticleFigs>
@@ -133,7 +129,11 @@ Math.sin(Math.PI) // 0
         </ArticleParagraph>
 
         <ArticleFigs>
-          <ArticleFig description="Sine and Cosine" padding="x12">
+          <ArticleFig
+            id="sine-waves-circle-plot"
+            description="Sine and Cosine"
+            padding="x12"
+          >
             <InView onEnter={handleSetAlgorithmCircle}>
               <SineWavesCirclePlot />
             </InView>
@@ -152,6 +152,7 @@ Math.sin(Math.PI) // 0
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral"
           rotate
           r={(x) => x}
           t={(x) => x * 0.01}
@@ -166,7 +167,13 @@ Math.sin(Math.PI) // 0
           before placing the next point.
         </ArticleParagraph>
 
-        <ArticleFigYPlot rotate r={(x) => x} t={(x) => x * 0.01 * 2} withCode />
+        <ArticleFigYPlot
+          id="spiral-spaced"
+          rotate
+          r={(x) => x}
+          t={(x) => x * 0.01 * 2}
+          withCode
+        />
 
         <ArticleParagraph>
           That's kind of worked on the outside but the center of the spiral is
@@ -177,36 +184,37 @@ Math.sin(Math.PI) // 0
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-linear-equation"
           dashed
           rotate
           r={(x) => x}
           t={(x) => x * 0.01}
           withChart
-          onNumberChange={setLinearEquationFigure}
         />
 
         <ArticleParagraph>
-          Figure {linearEquationFigure} shows our linear equation{' '}
-          <Code>y = x</Code>. Where the x axis is the index of the point and the
-          y axis is the corresponding radius/theta values. What it shows is that
-          while the index increases, the radius/theta increases at the same
-          rate, and this is exactly what we don't want.
+          <ArticleFigLink fig="spiral-linear-equation" /> shows our linear
+          equation <Code>y = x</Code>. Where the x axis is the index of the
+          point and the y axis is the corresponding radius/theta values. What it
+          shows is that while the index increases, the radius/theta increases at
+          the same rate, and this is exactly what we don't want.
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-squared-equation"
           dashed
           rotate
           r={(x) => x ** 2}
           t={(_r, x) => x * 0.01}
           withChart
-          onNumberChange={setSquaredEquationFigure}
         />
 
         <ArticleParagraph>
           Using the many mathematical functions available to us, we can create
           equations that cause values to scale at different rates, and use those
           to inform our rate of change for both our variables. For example,
-          using <Code>y = x²</Code> for the radius (Fig. {squaredEquationFigure}
+          using <Code>y = x²</Code> for the radius (
+          <ArticleFigLink fig="spiral-squared-equation" />
           ), starts off slow and gradually increases over time. This is called a
           logarithmic spiral.
         </ArticleParagraph>
@@ -216,103 +224,108 @@ Math.sin(Math.PI) // 0
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-bit-shift-equation"
           dashed
           rotate
           r={(x) => x >> 4}
           t={(_r, x) => Math.floor(x / 16)}
           withChart
-          onNumberChange={setBitShiftEquationFigure}
         />
 
         <ArticleParagraph>
           Graphing equations can even be useful to help understand the bitwise
           operators. Like shifting a number to the right by 4 bits is the same
           as dividing it by 16 and flooring the result, which creates a step
-          scale (Fig. {bitShiftEquationFigure}). This creates some more
-          definitive points that a whole bunch of our coloured particles can be
-          grouped around.
+          scale (<ArticleFigLink fig="spiral-bit-shift-equation" />
+          ). This creates some more definitive points that a whole bunch of our
+          coloured particles can be grouped around.
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-bit-and-equation"
           dashed
           rotate
           r={(x) => x * (x & 4)}
           t={(r) => r * 0.01}
           withChart
-          onNumberChange={setBitAndEquationFigure}
         />
 
         <ArticleParagraph>
           Using the & operator to get the remainder of a division by 4, which
           combined with multiplying by the index creates an oscillation between
-          0 and linear growth (Fig. {bitAndEquationFigure}), and causes our
-          points on the spiral to form groups of 4. However, we're not fixing
-          the issue of the center of the spiral being too dense. We're after the
-          rate of change to be faster at the beginning and then slow down as the
-          index increases.
+          0 and linear growth (<ArticleFigLink fig="spiral-bit-and-equation" />
+          ), and causes our points on the spiral to form groups of 4. However,
+          we're not fixing the issue of the center of the spiral being too
+          dense. We're after the rate of change to be faster at the beginning
+          and then slow down as the index increases.
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-square-root-equation"
           dashed
           rotate
           r={(x) => Math.sqrt(x)}
           t={(r) => r}
           withChart
-          onNumberChange={setSquareRootEquationFigure}
         />
 
         <ArticleParagraph>
-          Using the square root of the index (Fig. {squareRootEquationFigure})
-          might not look any different at first, but at the center of spiral the
-          spacing between the particles is less dense, but the rest are still
-          too close together.
+          Using the square root of the index (
+          <ArticleFigLink fig="spiral-square-root-equation" />) might not look
+          any different at first, but at the center of spiral the spacing
+          between the particles is less dense, but the rest are still too close
+          together.
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-archimedes-equation"
           dashed
           rotate
           r={(x) => Math.sqrt(x)}
           t={(r) => r * Math.PI}
           withCode
-          onNumberChange={setArchimedesEquationFigure}
         />
 
         <ArticleParagraph>
           Remember earlier we scaled our value by multiplying it by 2 and the
           effect it had on the spacing of particles? We can do the same again
           and scale up our theta value. We'll also scale it up by π so that the
-          dots all align (Fig. {archimedesEquationFigure}).
+          dots all align (<ArticleFigLink fig="spiral-archimedes-equation" />
+          ).
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-bit-and-square-root-equation"
           dashed
           rotate
           r={(x) => Math.sqrt(x * (x & 4))}
           t={(r) => r}
           withCode
-          onNumberChange={setBitAndSquareRootEquationFigure}
         />
 
         <ArticleParagraph>
           We can also apply this same square root technique to the bitwise
-          operator equation (Fig. {bitAndEquationFigure}) to get the same
-          oscillation effect, but with the added benefit of the center of the
-          spiral being less dense (Fig. {bitAndSquareRootEquationFigure}).
+          operator equation (<ArticleFigLink fig="spiral-bit-and-equation" />)
+          to get the same oscillation effect, but with the added benefit of the
+          center of the spiral being less dense (
+          <ArticleFigLink fig="spiral-bit-and-square-root-equation" />
+          ).
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-pi-snapping-equation"
           dashed
           rotate={false}
           r={(x) => x}
           t={(_, x) => x * Math.PI}
           withCode
-          onNumberChange={setPiSnappingEquationFigure}
         />
 
         <ArticleParagraph>
           Finally for this section, just one more pattern I came across which I
           found interesting is to increase the radius linearly and the theta
-          value by π (Fig. {piSnappingEquationFigure}).
+          value by π (<ArticleFigLink fig="spiral-pi-snapping-equation" />
+          ).
         </ArticleParagraph>
       </ArticleSection>
 
@@ -332,25 +345,26 @@ Math.sin(Math.PI) // 0
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-fermat-equation"
           dashed
           rotate
           r={(x) => Math.sqrt(x)}
           t={(_, x) => x * 2.39998131}
           withChart
           withCode
-          onNumberChange={setFermatEquationFigure}
         />
 
         <ArticleParagraph>
-          Notice we're still using the square root of the index for the radius
-          (Fig. {fermatEquationFigure}), but we're multiplying the theta value
-          by a number that appears to be a random number, but this is actually
-          produces something called the Golden Angle , which is linked to the
-          ratio of consecutive Fibonacci numbers.
+          Notice we're still using the square root of the index for the radius (
+          <ArticleFigLink fig="spiral-fermat-equation" />
+          ), but we're multiplying the theta value by a number that appears to
+          be a random number, but this is actually produces something called the
+          Golden Angle , which is linked to the ratio of consecutive Fibonacci
+          numbers.
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
-          <ArticleFig description="Golden angle calculation">
+          <ArticleFig id="golden-angle" description="Golden angle calculation">
             <CodeBlock language="typescript">{`
               Math.PI * (3 - Math.sqrt(5));
             `}</CodeBlock>
@@ -359,16 +373,17 @@ Math.sin(Math.PI) // 0
 
         <ArticleParagraph>
           We can play around with this multiplier to get slightly different
-          results (Fig. {onePointFiveEquationFigure}).
+          results (<ArticleFigLink fig="spiral-one-point-five-equation" />
+          ).
         </ArticleParagraph>
 
         <ArticleFigYPlot
+          id="spiral-one-point-five-equation"
           dashed
           rotate
           r={(x) => Math.sqrt(x)}
           t={(_, x) => x * 1.5}
           withCode
-          onNumberChange={setOnePointFiveEquationFigure}
         />
       </ArticleSection>
 
@@ -385,6 +400,7 @@ Math.sin(Math.PI) // 0
 
         <ArticleFigs theme="night">
           <ArticleFig
+            id="ulam-spiral"
             description="Ulam spiral implementation"
             padding="x0"
             onEnter={handleSetAlgorithmUlam}

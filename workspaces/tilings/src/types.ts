@@ -175,6 +175,7 @@ export interface Options {
 	activeTransformIndex?: number;
 	autoRotate?: boolean;
 	colorMode?: ColorMode;
+	fadeUnmatchedShapeTypes?: boolean;
 	expansionPhases?: number;
 	isValid?: boolean;
 	maxStage?: number;
@@ -362,4 +363,13 @@ export type ValidationError =
 	| { type: "Expansion", content?: undefined }
 	| { type: "Gaps", content?: undefined }
 	| { type: "Overlaps", content?: undefined };
+
+export enum ValidationFlag {
+	Overlaps = "Overlaps",
+	Gaps = "Gaps",
+	Expansion = "Expansion",
+	VertexTypes = "VertexTypes",
+	EdgeTypes = "EdgeTypes",
+	ShapeTypes = "ShapeTypes",
+}
 

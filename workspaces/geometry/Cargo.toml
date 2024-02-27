@@ -1,0 +1,26 @@
+[package]
+name = "geometry"
+version = "0.0.0"
+edition = "2021"
+authors = ["Harry Hogg <harry@hogg.io>"]
+description = "Geometry utilties for Rust"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/hhogg/hogg.io"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+log.workspace = true
+pretty_assertions.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_with.workspace = true
+thiserror.workspace = true
+typeshare.workspace = true
+wasm-bindgen.workspace = true
+
+[dev-dependencies]
+insta = { workspace = true }

@@ -153,12 +153,11 @@ impl Polygons {
           })
           .collect();
 
-        self.vertex_type_store.validate()?;
-        // self.shape_type_store.validate()?;
-        // self.edge_type_store.validate()?;
-
-        self.validate_gaps()?;
-        self.validate_expanded()?;
+        self.validator.validate_vertex_types(self)?;
+        self.validator.validate_edge_types(self)?;
+        self.validator.validate_gaps(self)?;
+        self.validator.validate_gaps(self)?;
+        self.validator.validate_expanded(self)?;
       }
     }
 
@@ -385,7 +384,11 @@ impl Polygons {
     }
 
     // Add the polygon to the vertex type store
-    self.vertex_type_store.add_polygon(&mut polygon)?;
+    if let Err(err) = self.vertex_type_store.add_polygon(&mut polygon) {
+      if self.validator.is_validating_vertex_types() {
+        return Err(err);
+      }
+    }
 
     // Add the polygon to the edge type store
     self.edge_type_store.add_polygon(&mut polygon);
