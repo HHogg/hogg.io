@@ -2,7 +2,7 @@ use crate::super_script;
 
 #[path = "./sequence_tests.rs"]
 #[cfg(test)]
-mod tests;
+mod sequence_tests;
 
 pub type Sequence = [u8; 12];
 

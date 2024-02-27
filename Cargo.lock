@@ -461,6 +461,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2bd12c1caf447e69cd4528f47f94d203fd2582878ecb9e9465484c4148a8223"
 
 [[package]]
+name = "canvas"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "colorgrad",
+ "console_error_panic_hook",
+ "console_log",
+ "geometry",
+ "getrandom",
+ "log",
+ "rand",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "thiserror",
+ "typeshare",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "cc"
 version = "1.0.83"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -494,6 +515,8 @@ dependencies = [
 name = "circular-sequence"
 version = "0.0.0"
 dependencies = [
+ "canvas",
+ "geometry",
  "pretty_assertions",
  "serde",
  "serde-wasm-bindgen",
@@ -1028,6 +1051,23 @@ checksum = "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a"
 dependencies = [
  "typenum",
  "version_check",
+]
+
+[[package]]
+name = "geometry"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "insta",
+ "log",
+ "pretty_assertions",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "thiserror",
+ "typeshare",
+ "wasm-bindgen",
 ]
 
 [[package]]

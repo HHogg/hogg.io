@@ -36,10 +36,10 @@ export const projects: {
     meta: Tilings.meta,
     Component: Tilings.Project,
   },
-  {
-    meta: CircularSequence.meta,
-    Component: CircularSequence.Project,
-  },
+  // {
+  //   meta: CircularSequence.meta,
+  //   Component: CircularSequence.Project,
+  // },
   // {
   //   meta: LineSegmentExtending.meta,
   //   Component: LineSegmentExtending.Project,
