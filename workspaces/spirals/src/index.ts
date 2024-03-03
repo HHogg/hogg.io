@@ -13,4 +13,5 @@ export const meta: Project = {
   description:
     'A WebGL experiment to render and animate spirals and radial patterns with particles, involving some trigonometry and graphing equations.',
   tags: ['algorithms', 'geometry', 'react', 'typescript', 'webgl'],
+  deploy: true,
 };

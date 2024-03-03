@@ -1,17 +1,17 @@
 import { BoxProps } from 'preshape';
 import { useEffect } from 'react';
-import ProjectPageWithArticle, {
-  ProjectPageWithArticleProps,
-} from './ProjectPageWithArticle';
-import ProjectPageWithoutArticle from './ProjectPageWithoutArticle';
+import ProjectPageDualView, {
+  ProjectPageDualViewProps,
+} from './ProjectPageDualView';
+import ProjectPageSingleView from './ProjectPageSingleView';
 
 export type ProjectPageProps = BoxProps & {
-  layout: ProjectPageWithArticleProps['layout'];
+  layout: ProjectPageDualViewProps['layout'];
 };
 
 type ProjectPageInnerProps = ProjectPageProps & {
   article?: JSX.Element;
-  presentation: JSX.Element;
+  presentation?: JSX.Element;
 };
 
 export default function ProjectPage({
@@ -24,9 +24,9 @@ export default function ProjectPage({
     window.scrollTo(0, 0);
   }, []);
 
-  if (article) {
+  if (article && presentation) {
     return (
-      <ProjectPageWithArticle
+      <ProjectPageDualView
         {...rest}
         article={article}
         layout={layout}
@@ -35,5 +35,13 @@ export default function ProjectPage({
     );
   }
 
-  return <ProjectPageWithoutArticle {...rest} presentation={presentation} />;
+  if (article) {
+    return <ProjectPageSingleView {...rest} content={article} />;
+  }
+
+  if (presentation) {
+    return <ProjectPageSingleView {...rest} content={presentation} />;
+  }
+
+  throw new Error('ProjectPage requires either an article or a presentation.');
 }

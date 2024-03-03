@@ -14,13 +14,15 @@
     "generate:types": "typeshare ./src-rust --lang=typescript --output-file=./src/types.ts"
   },
   "dependencies": {
+    "@hogg/canvas": "workspace:^",
     "@hogg/common": "workspace:^",
     "@hogg/tiling-parser": "workspace:^",
     "@hogg/tiling-renderer": "workspace:^",
     "lucide-react": "^0.294.0",
-    "preshape": "^17.1.2",
+    "preshape": "^17.2.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@swc-node/register": "^1.8.0",

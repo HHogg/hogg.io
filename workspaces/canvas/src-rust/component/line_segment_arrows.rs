@@ -78,15 +78,30 @@ impl Draw for LineSegmentArrows {
     self.clone().into()
   }
 
-  fn bbox(&self, canvas_bbox: &BBox, content_bbox: &BBox, scale: &Scale) -> BBox {
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    context: &CanvasRenderingContext2d,
+    canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
     let mut bbox = self
       .get_arrows(canvas_bbox, content_bbox, scale)
       .iter()
-      .map(|arrow| arrow.bbox(canvas_bbox, content_bbox, scale))
+      .map(|arrow| {
+        arrow
+          .bbox(context, canvas_bbox, content_bbox, scale)
+          .unwrap_or_default()
+      })
       .reduce(|a, b| a.union(&b))
       .unwrap_or_default();
+
     bbox = bbox.union(&self.get_extended_line_segment(canvas_bbox).bbox());
-    bbox
+    Ok(bbox)
   }
 
   fn draw_bbox(

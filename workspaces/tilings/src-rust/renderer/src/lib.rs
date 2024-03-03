@@ -20,8 +20,8 @@ fn main() -> Result<(), JsError> {
 
 #[wasm_bindgen]
 pub fn render_notation(
-  notation: &str,
   canvas_id: &str,
+  notation: &str,
   options: &JsValue,
 ) -> Result<JsValue, JsError> {
   let options = serde_wasm_bindgen::from_value::<Options>(options.to_owned())?;

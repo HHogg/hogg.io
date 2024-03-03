@@ -28,8 +28,8 @@ const ArticleFig = ({
   }, [onNumberChange, number]);
 
   return (
-    <Box {...rest} basis="0" grow minWidth="0" ref={ref}>
-      <Box padding={padding}>
+    <Box {...rest} basis="0" flex="vertical" grow minWidth="0" ref={ref}>
+      <Box grow padding={padding}>
         <InView
           alignChildren={alignChildren}
           flex={flex}

@@ -7,17 +7,11 @@ export default function Renderer(props: BoxProps) {
 
   return (
     <Box {...props} grow flex="vertical">
-      <Grid
-        grow
-        repeatWidthMin="140px"
-        repeatWidthMax="300px"
-        gap="x6"
-        alignChildren="middle"
-      >
-        {sequences.map((sequence, index) => (
-          <RendererSequence key={index} sequence={sequence} />
-        ))}
-      </Grid>
+      {sequences.map((sequence, index) => (
+        <Box key={index}>
+          <RendererSequence sequence={sequence} />
+        </Box>
+      ))}
     </Box>
   );
 }

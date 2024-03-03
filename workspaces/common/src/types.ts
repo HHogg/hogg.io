@@ -19,5 +19,6 @@ export type Project = {
   image: string;
   imageDark?: string;
   tags: string[];
+  deploy?: boolean;
   wip?: boolean;
 };

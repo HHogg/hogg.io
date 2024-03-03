@@ -12,8 +12,8 @@ function parseTransform(transform: string, path: string): Transform {
 }
 
 function renderNotation(
-  notation: string,
   canvasId: string,
+  notation: string,
   options?: Options
 ): Tiling {
   return tilingRenderer.render_notation(notation, canvasId, options);

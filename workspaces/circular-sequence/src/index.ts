@@ -4,9 +4,9 @@ export { default as Project } from './Project';
 
 export const meta: Project = {
   id: ProjectKey.circular_sequence,
-  name: 'Symmetrical circular sequences',
+  name: 'Symmetric circular sequences',
   description:
-    'Comparing sequences of numbers that have no defined start or end, and some that can be traversed in both directions to produce the same paths.',
+    'Matching sequences of numbers that have no defined start or end, and some that could considered symmetric by producing the same path in both directions.',
   image: '',
   tags: ['algorithms', 'data structures', 'sequences', 'rust'],
 };

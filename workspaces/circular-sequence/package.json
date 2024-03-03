@@ -8,12 +8,15 @@
   "scripts": {
     "build": "wasm-pack build --target web",
     "clean": "rm -rf ./pkg",
-    "dev": "cargo watch -w ./src-rust -q -s 'yarn workspace @hogg/circular-sequence run build'"
+    "dev": "cargo watch -w ./src-rust -w ../canvas/src-rust -q -s 'yarn workspace @hogg/circular-sequence run build'",
+    "generate:types": "typeshare ./src-rust ../canvas/src-rust --lang=typescript --output-file=./src/types.ts"
   },
   "dependencies": {
+    "@hogg/canvas": "workspace:^",
     "@hogg/common": "workspace:^",
-    "preshape": "^17.1.2",
-    "react": "^18.2.0"
+    "preshape": "^17.2.0",
+    "react": "^18.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

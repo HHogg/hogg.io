@@ -12,4 +12,5 @@ export const meta: Project = {
   description:
     'Using a circle intersection graph to create a simple illustration app that can be used to create art from circles.',
   tags: ['data structures', 'geometry', 'react', 'svg', 'typescript'],
+  deploy: true,
 };

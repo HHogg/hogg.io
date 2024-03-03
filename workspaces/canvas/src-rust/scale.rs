@@ -112,6 +112,11 @@ impl Scale {
       .translate(-0.5, -0.5)
   }
 
+  pub fn radius(&self) -> f64 {
+    let min = self.canvas_bbox.width().min(self.canvas_bbox.height());
+    self.scale_value_to_content(min * 0.5)
+  }
+
   fn invert(&self) -> Self {
     Self {
       canvas_bbox: self.canvas_bbox,

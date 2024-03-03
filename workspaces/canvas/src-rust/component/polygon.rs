@@ -16,8 +16,18 @@ impl Draw for Polygon {
     self.clone().into()
   }
 
-  fn bbox(&self, _canvas_bbox: &BBox, _content_bbox: &BBox, _scale: &Scale) -> BBox {
-    self.polygon.bbox
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    _context: &web_sys::CanvasRenderingContext2d,
+    _canvas_bbox: &BBox,
+    _content_bbox: &BBox,
+    _scale: &Scale,
+  ) -> Result<BBox, Error> {
+    Ok(self.polygon.bbox)
   }
 
   fn draw(

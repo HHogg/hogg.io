@@ -20,4 +20,5 @@ export const meta: Project = {
     'react',
     'typescript',
   ],
+  deploy: true,
 };

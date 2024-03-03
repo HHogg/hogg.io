@@ -17,7 +17,6 @@ pub enum Match {
 impl Match {
   pub fn from(source: &Sequence, targets: &HashSet<Sequence>) -> Self {
     let mut first_partial_match = Match::None;
-
     let ordered_targets = circular_sequence::sort(targets.iter().copied().collect());
 
     for target in ordered_targets.iter() {
@@ -53,7 +52,7 @@ impl Default for Match {
 
 fn match_once(source: &Sequence, target: &Sequence) -> Option<Match> {
   match_once_one_way(source, target, target).or_else(|| {
-    if !circular_sequence::is_bidirectional(target) {
+    if !circular_sequence::is_symmetrical(target) {
       match_once_one_way(source, target, &circular_sequence::reverse(target))
     } else {
       None
@@ -66,8 +65,8 @@ fn match_once_one_way(
   target_forwards: &Sequence,
   target: &Sequence,
 ) -> Option<Match> {
-  let source_length = circular_sequence::length(source);
-  let target_length = circular_sequence::length(target);
+  let source_length = circular_sequence::get_length(source);
+  let target_length = circular_sequence::get_length(target);
 
   let mut source_index = 0;
   let mut target_start_index = 0;

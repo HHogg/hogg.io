@@ -21,8 +21,8 @@ use crate::Error;
 pub struct Canvas<TLayer> {
   pub scale: Scale,
 
-  context: CanvasRenderingContext2d,
   content_bbox: BBox,
+  context: CanvasRenderingContext2d,
 
   show_debug_layer: bool,
   debug_style: Style,
@@ -35,7 +35,7 @@ impl<TLayer> Canvas<TLayer>
 where
   TLayer: Eq + Hash + Ord,
 {
-  pub fn new(canvas_id: &str, scale: Scale) -> Self {
+  pub fn new(canvas_id: &str, scale: Scale) -> Result<Self, Error> {
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
     let canvas = document.get_element_by_id(canvas_id).unwrap();
@@ -56,7 +56,11 @@ where
 
     let canvas_bbox = BBox::default().with_width(width).with_height(height);
 
-    Self {
+    // Clear canvas ready for drawing
+    context.set_transform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)?;
+    context.clear_rect(0.0, 0.0, width, height);
+
+    Ok(Self {
       content_bbox: BBox::default(),
       context,
       scale: scale.with_canvas_bbox(canvas_bbox),
@@ -66,7 +70,7 @@ where
 
       layers: None,
       theia: Theia::new(),
-    }
+    })
   }
 
   pub fn content_bbox(&self) -> &BBox {
@@ -133,6 +137,7 @@ where
       &self.scale,
       &mut self.theia,
     )?;
+
     self.context.restore();
 
     Ok(())

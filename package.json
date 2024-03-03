@@ -50,6 +50,6 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "preshape": "^17.1.2"
+    "preshape": "^17.2.0"
   }
 }

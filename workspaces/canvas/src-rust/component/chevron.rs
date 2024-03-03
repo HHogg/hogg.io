@@ -44,10 +44,20 @@ impl Draw for Chevron {
     self.clone().into()
   }
 
-  fn bbox(&self, canvas_bbox: &BBox, content_bbox: &BBox, scale: &Scale) -> BBox {
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    context: &web_sys::CanvasRenderingContext2d,
+    canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
     self
       .get_line_segment(scale)
-      .bbox(canvas_bbox, content_bbox, scale)
+      .bbox(context, canvas_bbox, content_bbox, scale)
   }
 
   fn draw(

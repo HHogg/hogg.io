@@ -1,5 +1,6 @@
 import { useWasmContext } from '@hogg/common';
 import * as wasm from '../../../pkg';
+import { Options } from '../../types';
 
 export type Sequence = [
   number,
@@ -36,12 +37,17 @@ function sort(sequences: Sequence[]): Sequence[] {
   return wasm.sort(sequences);
 }
 
+function render(canvasId: string, sequence: Sequence, options: Options) {
+  return wasm.render(canvasId, sequence, options);
+}
+
 export const wasmApi = {
   isBidirectional,
   length,
   min,
   toString,
   sort,
+  render,
 };
 
 export type WasmApi = typeof wasmApi;

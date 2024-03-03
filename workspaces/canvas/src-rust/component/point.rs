@@ -42,7 +42,17 @@ impl Draw for Point {
     self.clone().into()
   }
 
-  fn bbox(&self, _canvas_bbox: &BBox, _content_bbox: &BBox, scale: &Scale) -> BBox {
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    _context: &web_sys::CanvasRenderingContext2d,
+    _canvas_bbox: &BBox,
+    _content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
     let radius = self.style.get_point_radius(scale);
 
     let min = self
@@ -55,7 +65,7 @@ impl Draw for Point {
       .clone()
       .translate(&geometry::Point::default().with_xy(radius, radius));
 
-    BBox { min, max }
+    Ok(BBox { min, max })
   }
 
   fn draw(

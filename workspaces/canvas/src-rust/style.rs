@@ -3,7 +3,7 @@ use typeshare::typeshare;
 use wasm_bindgen::JsValue;
 use web_sys::CanvasRenderingContext2d;
 
-use crate::Scale;
+use crate::{Canvas, Scale};
 
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -11,12 +11,17 @@ use crate::Scale;
 pub struct Style {
   chevron_size: Option<f64>,
   fill: Option<String>,
+  font_family: Option<String>,
+  font_size: Option<f64>,
+  font_weight: Option<String>,
   line_dash: Option<Vec<f64>>,
   line_thickness: Option<f64>,
+  opacity: Option<f64>,
   point_radius: Option<f64>,
   stroke_color: Option<String>,
   stroke_width: Option<f64>,
-  opacity: Option<f64>,
+  text_align_horizontal: Option<String>,
+  text_align_vertical: Option<String>,
 }
 
 impl Style {
@@ -29,6 +34,21 @@ impl Style {
 
   pub fn get_fill(&self) -> Option<String> {
     self.fill.clone()
+  }
+
+  pub fn get_font_family(&self) -> Option<String> {
+    self.font_family.clone()
+  }
+
+  pub fn get_font_size(&self, scale: &Scale) -> Option<f64> {
+    self
+      .font_size
+      .clone()
+      .map(|v| scale.scale_value_to_content(v))
+  }
+
+  pub fn get_font_weight(&self) -> Option<String> {
+    self.font_weight.clone()
   }
 
   pub fn get_line_dash(&self, scale: &Scale) -> Option<Vec<f64>> {
@@ -64,6 +84,14 @@ impl Style {
       .stroke_width
       .map(|v| scale.scale_value_to_content(v))
       .unwrap_or(0.0)
+  }
+
+  pub fn get_text_align_horizontal(&self) -> Option<String> {
+    self.text_align_horizontal.clone()
+  }
+
+  pub fn get_text_align_vertical(&self) -> Option<String> {
+    self.text_align_vertical.clone()
   }
 
   pub fn set_fill(&self, fill: Option<String>) -> Self {
@@ -113,6 +141,9 @@ impl Style {
     self.apply_line_dash(context, scale)?;
     self.apply_fill(context);
     self.apply_stroke(context, scale);
+    self.apply_font(context, scale);
+    self.apply_text_align_horizontal(context);
+    self.apply_text_align_vertical(context);
 
     Ok(())
   }
@@ -158,5 +189,25 @@ impl Style {
     }
 
     Ok(())
+  }
+
+  fn apply_font(&self, context: &CanvasRenderingContext2d, scale: &Scale) {
+    let font_family = self.get_font_family().unwrap_or("sans serif".to_string());
+    let font_size = self.get_font_size(scale).unwrap_or(16.0);
+    let font_weight = self.get_font_weight().unwrap_or("400".to_string());
+
+    context.set_font(format!("{font_weight} {font_size}px {font_family}").as_str());
+  }
+
+  fn apply_text_align_horizontal(&self, context: &CanvasRenderingContext2d) {
+    if let Some(text_align) = self.get_text_align_horizontal() {
+      context.set_text_align(text_align.as_str());
+    }
+  }
+
+  fn apply_text_align_vertical(&self, context: &CanvasRenderingContext2d) {
+    if let Some(text_align) = self.get_text_align_vertical() {
+      context.set_text_baseline(&text_align.as_str());
+    }
   }
 }

@@ -1,19 +1,19 @@
 import { Box, BoxProps } from 'preshape';
 import ProjectPageHeader from './ProjectPageHeader';
 
-export type ProjectPageWithArticleProps = BoxProps & {
+export type ProjectPageDualViewProps = BoxProps & {
   article: JSX.Element;
   layout: 'vertical' | 'horizontal';
   presentation: JSX.Element;
 };
 
-export default function ProjectPageWithArticle({
+export default function ProjectPageDualView({
   article,
   layout,
   presentation,
   gap,
   ...rest
-}: ProjectPageWithArticleProps) {
+}: ProjectPageDualViewProps) {
   return (
     <Box {...rest} flex="horizontal" gap={gap}>
       <Box flex="vertical" basis="0" minWidth={0} grow gap={gap}>

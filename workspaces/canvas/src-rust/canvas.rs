@@ -11,7 +11,7 @@ pub use crate::component::{Arc, Arrow, Chevron, LineSegment, LineSegmentArrows, 
 use crate::component::{Component, Draw};
 pub use crate::scale::{Scale, ScaleMode};
 pub use crate::style::Style;
-use crate::Error;
+use crate::{Error, Rect};
 
 pub struct Canvas<TLayer> {
   pub scale: Scale,
@@ -30,7 +30,7 @@ impl<TLayer> Canvas<TLayer>
 where
   TLayer: Eq + Hash + Ord,
 {
-  pub fn new(canvas_id: &str, scale: Scale) -> Self {
+  pub fn new(canvas_id: &str, scale: Scale) -> Result<Self, Error> {
     let window = web_sys::window().unwrap();
     let document = window.document().unwrap();
     let canvas = document.get_element_by_id(canvas_id).unwrap();
@@ -51,7 +51,11 @@ where
 
     let canvas_bbox = BBox::default().with_width(width).with_height(height);
 
-    Self {
+    // Clear canvas ready for drawing
+    context.set_transform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)?;
+    context.clear_rect(0.0, 0.0, width, height);
+
+    Ok(Self {
       content_bbox: BBox::default(),
       context,
       scale: scale.with_canvas_bbox(canvas_bbox),
@@ -61,7 +65,7 @@ where
 
       layers: None,
       theia: Theia::new(),
-    }
+    })
   }
 
   pub fn content_bbox(&self) -> &BBox {
@@ -77,7 +81,9 @@ where
     let layers = self.layers.get_or_insert(BTreeMap::new());
     let layer = layers.entry(layer).or_insert_with(Vec::new);
     let canvas_bbox = &self.scale.scaled_canvas_bbox();
-    let component_bbox = component.bbox(&canvas_bbox, &self.content_bbox, &self.scale);
+
+    let component_bbox =
+      component.bbox(&self.context, &canvas_bbox, &self.content_bbox, &self.scale)?;
 
     layer.push(component);
 
@@ -97,6 +103,23 @@ where
   pub fn render(&mut self) -> Result<(), Error> {
     let layers = self.layers.take().unwrap_or_default();
 
+    if self.show_debug_layer {
+      let canvas_bbox = self.scale.scaled_canvas_bbox();
+
+      Rect {
+        min: canvas_bbox.min.clone(),
+        max: canvas_bbox.max.clone(),
+        style: self.debug_style.clone(),
+      }
+      .draw_bbox(
+        &self.context,
+        &canvas_bbox,
+        &self.content_bbox,
+        &self.scale,
+        &self.debug_style,
+      )?;
+    }
+
     for (_, layer) in layers.iter() {
       for component in layer.iter() {
         self.render_component(component)?;
@@ -111,6 +134,14 @@ where
 
     self.context.save();
 
+    component.draw(
+      &self.context,
+      &canvas_bbox,
+      &self.content_bbox,
+      &self.scale,
+      &mut self.theia,
+    )?;
+
     if self.show_debug_layer {
       component.draw_bbox(
         &self.context,
@@ -121,13 +152,6 @@ where
       )?;
     }
 
-    component.draw(
-      &self.context,
-      &canvas_bbox,
-      &self.content_bbox,
-      &self.scale,
-      &mut self.theia,
-    )?;
     self.context.restore();
 
     Ok(())

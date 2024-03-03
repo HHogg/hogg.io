@@ -1,4 +1,5 @@
 use geometry::BBox;
+use web_sys::CanvasRenderingContext2d;
 
 use super::{Component, Draw, Style};
 use crate::canvas::Scale;
@@ -59,8 +60,48 @@ impl Draw for LineSegment {
     self.clone().into()
   }
 
-  fn bbox(&self, _canvas_bbox: &BBox, content_bbox: &BBox, _scale: &Scale) -> BBox {
-    BBox::from(self.get_points(content_bbox))
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    _context: &CanvasRenderingContext2d,
+    _canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
+    let mut min = geometry::Point::default().with_xy(std::f64::INFINITY, std::f64::INFINITY);
+    let mut max =
+      geometry::Point::default().with_xy(std::f64::NEG_INFINITY, std::f64::NEG_INFINITY);
+
+    for point in self.get_points(content_bbox) {
+      if point.x < min.x {
+        min.x = point.x
+      }
+
+      if point.x > max.x {
+        max.x = point.x
+      }
+
+      if point.y < min.y {
+        min.y = point.y
+      }
+
+      if point.y > max.y {
+        max.y = point.y
+      }
+    }
+
+    let line_thickness = self.style.get_line_thickness(scale) * 0.5;
+    let stroke_width = self.style.get_stroke_width(scale) * 0.5;
+    let offset = line_thickness + stroke_width;
+
+    Ok(
+      BBox::default()
+        .with_min(min.translate(&geometry::Point::default().with_xy(-offset, -offset)))
+        .with_max(max.translate(&geometry::Point::default().with_xy(offset, offset))),
+    )
   }
 
   fn draw(

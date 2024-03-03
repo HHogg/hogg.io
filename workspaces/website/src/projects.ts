@@ -36,15 +36,19 @@ export const projects: {
     meta: Tilings.meta,
     Component: Tilings.Project,
   },
-  // {
-  //   meta: CircularSequence.meta,
-  //   Component: CircularSequence.Project,
-  // },
-  // {
-  //   meta: LineSegmentExtending.meta,
-  //   Component: LineSegmentExtending.Project,
-  // },
+  {
+    meta: CircularSequence.meta,
+    Component: CircularSequence.Project,
+  },
+  {
+    meta: LineSegmentExtending.meta,
+    Component: LineSegmentExtending.Project,
+  },
 ];
+
+export const shouldShowProject = (project: Project) => {
+  return !import.meta.env.PROD || project.deploy;
+};
 
 export const getNextProject = (id: ProjectKey): Project | undefined => {
   const index = projects.findIndex((project) => project?.meta.id === id);

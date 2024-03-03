@@ -25,7 +25,35 @@ export default function ProjectCard({ project }: Props) {
       textColorHover="text-shade-1"
     >
       <Box>
-        <ImageCover margin="x4" src={image} srcDark={imageDark} />
+        {image || imageDark ? (
+          <ImageCover
+            backgroundColor="text-shade-1"
+            borderRadius="x1"
+            borderSize="x1"
+            borderColor="background-shade-4"
+            height="140px"
+            margin="x4"
+            padding="x2"
+            src={image}
+            srcDark={imageDark}
+          />
+        ) : (
+          <Box
+            flex="vertical"
+            alignChildren="middle"
+            backgroundColor="background-shade-4"
+            height="156px"
+            margin="x4"
+            borderRadius="x1"
+            borderSize="x1"
+            borderColor="background-shade-4"
+            padding="x2"
+          >
+            <Text size="x4" weight="x5">
+              WIP
+            </Text>
+          </Box>
+        )}
 
         <Text size="x4" weight="x4" margin="x1">
           {name}
