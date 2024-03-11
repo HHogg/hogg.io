@@ -1,4 +1,5 @@
 import { Box, BoxProps } from 'preshape';
+import { Lines } from '..';
 import ProjectPageHeader from './ProjectPageHeader';
 
 export type ProjectPageDualViewProps = BoxProps & {
@@ -18,6 +19,16 @@ export default function ProjectPageDualView({
     <Box {...rest} flex="horizontal" gap={gap}>
       <Box flex="vertical" basis="0" minWidth={0} grow gap={gap}>
         <ProjectPageHeader />
+
+        {layout === 'horizontal' && (
+          <Lines
+            count={3}
+            gap="x1"
+            paddingOffsetLeft="x32"
+            size={(index) => 3 - index}
+            style={{ maxWidth: 400 }}
+          />
+        )}
 
         {layout === 'vertical' && (
           <Box flex="vertical" minHeight="600px">

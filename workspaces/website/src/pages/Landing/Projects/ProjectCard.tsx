@@ -62,23 +62,25 @@ export default function ProjectCard({ project }: Props) {
         <Text size="x3">{description}</Text>
       </Box>
 
-      <Box alignChildrenVertical="end" flex="horizontal" gap="x3" grow>
-        <Labels basis="0" grow>
+      <Box alignChildren="end" flex="horizontal" gap="x3" grow>
+        {/* <Labels basis="0" grow>
           {tags.map((tag) => (
             <Label borderRadius="3px" key={tag} size="x1">
               {tag}
             </Label>
           ))}
-        </Labels>
+        </Labels> */}
 
         <Button
           active={isHovered}
           borderSize="x1"
           borderRadius="20px"
           backgroundColor="background-shade-1"
-          backgroundColorActive="background-shade-1"
-          backgroundColorHover="background-shade-1"
+          backgroundColorActive="text-shade-1"
+          backgroundColorHover="text-shade-1"
           textColor="text-shade-2"
+          textColorHover="background-shade-1"
+          textColorActive="background-shade-1"
           paddingHorizontal="x3"
           flex="horizontal"
           alignChildrenHorizontal="end"
@@ -94,7 +96,7 @@ export default function ProjectCard({ project }: Props) {
             animate={{ rotate: isHovered ? 0 : 45 }}
             initial={{ rotate: 0 }}
           >
-            <ArrowRight />
+            <ArrowRight size="1.25rem" />
           </motion.div>
         </Button>
       </Box>

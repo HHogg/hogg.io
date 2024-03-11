@@ -22,7 +22,7 @@ export default function Landing() {
       </Header>
 
       <Box flex="horizontal">
-        <Box basis="0" grow style={{ maxWidth: 800 }}>
+        <Box basis="0" grow style={{ maxWidth: 600 }}>
           <AboutMe />
         </Box>
 

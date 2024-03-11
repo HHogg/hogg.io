@@ -14,7 +14,7 @@ export default function TimelineEntry({
 }: Props) {
   return (
     <Box {...rest} basis="0" grow>
-      <Box flex="vertical" gap="x6">
+      <Box flex="vertical" gap="x8">
         <Box
           alignChildrenHorizontal="start"
           alignChildrenVertical="middle"
@@ -38,7 +38,15 @@ export default function TimelineEntry({
 
       <Labels>
         {tags.map((tag) => (
-          <Label borderRadius="3px" key={tag} size="x1">
+          <Label
+            key={tag}
+            size="x2"
+            backgroundColor="background-shade-3"
+            textColor="text-shade-1"
+            borderRadius="3px"
+            borderSize="x1"
+            borderColor="background-shade-4"
+          >
             {tag}
           </Label>
         ))}

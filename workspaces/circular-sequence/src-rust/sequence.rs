@@ -32,29 +32,38 @@ pub fn get_length(sequence: &Sequence) -> usize {
 /// The approach we'll take here it to loop through
 /// the sequence twice, and while doing so, checking
 /// if there is the appearance of the sequence in
-/// it's reversed form.  
+/// it's reversed form.
 ///
 /// Space: O(1)
 /// Time:  O(n)
-pub fn is_symmetrical(sequence: &Sequence) -> bool {
+pub fn get_symmetry_index(sequence: &Sequence) -> Option<usize> {
   let length = get_length(sequence);
-  let mut i = 0;
+  let mut c = 0;
+  let mut i = None;
 
   for _ in 0..2 {
     for j in 0..length {
-      if sequence[j] == sequence[length - 1 - i] {
-        if i == length - 1 {
-          return true;
+      if sequence[j] == sequence[length - 1 - c] {
+        if c == length - 1 {
+          return i;
         }
 
-        i = i + 1;
+        if i.is_none() {
+          i = Some(j);
+        }
+
+        c = c + 1;
       } else {
-        i = 0;
+        c = 0;
       }
     }
   }
 
-  false
+  None
+}
+
+pub fn is_symmetrical(sequence: &Sequence) -> bool {
+  get_symmetry_index(sequence).is_some()
 }
 
 /// Reverses a sequence

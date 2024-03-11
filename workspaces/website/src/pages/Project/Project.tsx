@@ -43,6 +43,7 @@ export default function Project({ Component, meta }: Props) {
         />
 
         <PageChangeButtons
+          margin="x32"
           previous={
             previousProject && {
               title: previousProject.name,

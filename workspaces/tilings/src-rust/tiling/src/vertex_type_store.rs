@@ -50,19 +50,6 @@ impl VertexTypeStore {
 
     Ok(())
   }
-
-  pub fn validate(&self) -> Result<(), TilingError> {
-    if self.vertex_types.is_empty() {
-      return Err(
-        ValidationError::PatternRadial {
-          reason: "No vertex types found".into(),
-        }
-        .into(),
-      );
-    }
-
-    Ok(())
-  }
 }
 
 impl Default for VertexTypeStore {

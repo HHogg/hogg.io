@@ -1,8 +1,8 @@
+import { Lines } from '@hogg/common';
 import { motion } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { Box, BoxProps, Text } from 'preshape';
-import Lines from '../../../components/Lines/Lines';
 
 const formatDate = (date: string) =>
   DateTime.fromISO(date).toFormat('MMM yyyy');

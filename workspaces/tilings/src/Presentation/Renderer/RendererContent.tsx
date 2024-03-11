@@ -6,7 +6,7 @@ import {
   useThemeContext,
 } from 'preshape';
 import { useCallback, useMemo } from 'react';
-import { ColorMode, Options } from '../../types';
+import { ColorMode, Options, ValidationFlag } from '../../types';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
 import { usePlayerContext } from '../Player/usePlayerContext';
@@ -16,12 +16,14 @@ export type RendererProps = {
   options?: Partial<Options>;
   scale?: number;
   shadow?: boolean;
+  validations?: ValidationFlag[];
 };
 
 export default function RendererContent({
   options: optionsProp,
   scale,
   shadow,
+  validations,
   ...rest
 }: BoxProps & RendererProps) {
   const { colors: themeColors } = useThemeContext();
@@ -118,9 +120,9 @@ export default function RendererContent({
 
   const canvasRender = useCallback(
     (id: string) => {
-      setTiling(renderNotation(notation, id, options));
+      setTiling(renderNotation(notation, id, options, validations));
     },
-    [setTiling, notation, options, renderNotation]
+    [setTiling, notation, options, validations, renderNotation]
   );
 
   return (

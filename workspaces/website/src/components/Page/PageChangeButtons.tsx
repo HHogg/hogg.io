@@ -1,5 +1,5 @@
+import { Lines } from '@hogg/common';
 import { Box, BoxProps, useMatchMedia } from 'preshape';
-import Lines from '../Lines/Lines';
 import PageChangeButton, { PageChangeButtonProps } from './PageChangeButton';
 
 type Props = BoxProps & {

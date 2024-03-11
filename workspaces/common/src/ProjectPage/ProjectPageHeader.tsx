@@ -6,24 +6,32 @@ export default function ProjectPageHeader(props: BoxProps) {
 
   return (
     <Box {...props}>
-      <Text margin="x4" size="x7" weight="x5">
+      <Text margin="x8" size="x7" weight="x5">
         {name}
       </Text>
 
-      <Text margin="x4" size="x5" weight="x2">
+      <Text margin="x8" size="x5" weight="x2">
         {description}
       </Text>
 
-      <Labels margin="x4">
+      <Labels margin="x8">
         {tags.map((tag) => (
-          <Label borderRadius="3px" key={tag}>
+          <Label
+            key={tag}
+            size="x3"
+            backgroundColor="background-shade-3"
+            textColor="text-shade-1"
+            borderRadius="3px"
+            borderSize="x1"
+            borderColor="background-shade-4"
+          >
             {tag}
           </Label>
         ))}
       </Labels>
 
       {wip && (
-        <Text margin="x6" weight="x2">
+        <Text margin="x16" weight="x2">
           This project is a{' '}
           <Text
             backgroundColor="accent-shade-1"

@@ -820,7 +820,10 @@ __metadata:
   dependencies:
     "@hogg/canvas": "workspace:^"
     "@hogg/common": "workspace:^"
+    "@svgr/cli": ^8.1.0
+    "@svgr/plugin-jsx": ^8.1.0
     "@types/react": ^18.0.28
+    lucide-react: ^0.294.0
     preshape: ^17.2.0
     react: ^18.2.0
     typescript: ^5.0.4
@@ -837,6 +840,7 @@ __metadata:
     preshape: ^17.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-router-dom: ^6.20.1
     sat: ^0.9.0
   languageName: unknown
   linkType: soft

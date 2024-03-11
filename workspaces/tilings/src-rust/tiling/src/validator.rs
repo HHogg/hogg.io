@@ -12,9 +12,30 @@ pub struct Validator {
   option_validate_expansion: bool,
   option_validate_gaps: bool,
   option_validate_overlap: bool,
+  option_validate_vertex_types: bool,
+  option_validate_edge_types: bool,
+  option_validate_shape_types: bool,
 }
 
 impl Validator {
+  /// Returns whether or not the validator is set to
+  /// validate vertex types.
+  pub fn is_validating_vertex_types(&self) -> bool {
+    self.option_validate_vertex_types
+  }
+
+  /// Returns whether or not the validator is set to
+  /// validate edge types.
+  pub fn is_validating_edge_types(&self) -> bool {
+    self.option_validate_edge_types
+  }
+
+  /// Returns whether or not the validator is set to
+  /// validate shape types.
+  pub fn is_validating_shape_types(&self) -> bool {
+    self.option_validate_shape_types
+  }
+
   /// Checks that none of the polygons intersect
   /// with each other. See the polygon implementation
   /// for more details on how this is done.
@@ -116,6 +137,39 @@ impl Validator {
       Err(ValidationError::Gaps)
     }
   }
+
+  pub fn validate_vertex_types(&self, polygons: &Polygons) -> Result<(), ValidationError> {
+    if !self.option_validate_vertex_types {
+      return Ok(());
+    }
+
+    if polygons.vertex_type_store.vertex_types.is_empty() {
+      return Err(
+        ValidationError::PatternRadial {
+          reason: "No vertex types found".into(),
+        }
+        .into(),
+      );
+    }
+
+    Ok(())
+  }
+
+  pub fn validate_edge_types(&self, _polygons: &Polygons) -> Result<(), ValidationError> {
+    if !self.option_validate_edge_types {
+      return Ok(());
+    }
+
+    Ok(())
+  }
+
+  pub fn validate_shape_types(&self, _polygons: &Polygons) -> Result<(), ValidationError> {
+    if !self.option_validate_shape_types {
+      return Ok(());
+    }
+
+    Ok(())
+  }
 }
 
 impl From<Option<Vec<ValidationFlag>>> for Validator {
@@ -123,6 +177,9 @@ impl From<Option<Vec<ValidationFlag>>> for Validator {
     let mut option_validate_expansion = false;
     let mut option_validate_gaps = false;
     let mut option_validate_overlap = false;
+    let mut option_validate_vertex_types = false;
+    let mut option_validate_edge_types = false;
+    let mut option_validate_shape_types = false;
 
     if let Some(flags) = flags {
       for flag in flags {
@@ -130,6 +187,9 @@ impl From<Option<Vec<ValidationFlag>>> for Validator {
           ValidationFlag::Expansion => option_validate_expansion = true,
           ValidationFlag::Gaps => option_validate_gaps = true,
           ValidationFlag::Overlaps => option_validate_overlap = true,
+          ValidationFlag::VertexTypes => option_validate_vertex_types = true,
+          ValidationFlag::EdgeTypes => option_validate_edge_types = true,
+          ValidationFlag::ShapeTypes => option_validate_shape_types = true,
         }
       }
     }
@@ -138,6 +198,9 @@ impl From<Option<Vec<ValidationFlag>>> for Validator {
       option_validate_expansion,
       option_validate_gaps,
       option_validate_overlap,
+      option_validate_vertex_types,
+      option_validate_edge_types,
+      option_validate_shape_types,
     }
   }
 }
@@ -159,14 +222,26 @@ pub enum ValidationError {
   Overlaps,
 }
 
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[typeshare]
 pub enum ValidationFlag {
   Overlaps,
   Gaps,
   Expansion,
+  VertexTypes,
+  EdgeTypes,
+  ShapeTypes,
 }
 
 impl ValidationFlag {
   pub fn all() -> Vec<Self> {
-    vec![Self::Overlaps, Self::Gaps, Self::Expansion]
+    vec![
+      Self::Overlaps,
+      Self::Gaps,
+      Self::Expansion,
+      Self::VertexTypes,
+      Self::EdgeTypes,
+      Self::ShapeTypes,
+    ]
   }
 }

@@ -6,19 +6,23 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "wasm-pack build --target web",
+    "build": "yarn build:wasm",
+    "build:wasm": "wasm-pack build --target web",
     "clean": "rm -rf ./pkg",
-    "dev": "cargo watch -w ./src-rust -w ../canvas/src-rust -q -s 'yarn workspace @hogg/circular-sequence run build'",
+    "dev": "cargo watch -w ./src-rust -q -s 'yarn workspace @hogg/circular-sequence run build'",
     "generate:types": "typeshare ./src-rust ../canvas/src-rust --lang=typescript --output-file=./src/types.ts"
   },
   "dependencies": {
     "@hogg/canvas": "workspace:^",
     "@hogg/common": "workspace:^",
+    "lucide-react": "^0.294.0",
     "preshape": "^17.2.0",
     "react": "^18.2.0",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@svgr/cli": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
     "@types/react": "^18.0.28",
     "typescript": "^5.0.4"
   }

@@ -5,6 +5,9 @@ use crate::Sequence;
 mod tests;
 
 /// Compares two sequences.
+///
+/// Space: O(1)
+/// Time:  O(n)
 pub fn compare(a: &Sequence, b: &Sequence) -> std::cmp::Ordering {
   for i in 0..12 {
     let a = a[i];

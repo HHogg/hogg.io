@@ -5,7 +5,7 @@ use typeshare::typeshare;
 
 use crate::edge_type_store::EdgeTypeStore;
 use crate::pattern_radial::{Location, PatternRadial};
-use crate::{Patterns, Point, Polygon, TilingError, ValidationError};
+use crate::{Patterns, Point, Polygon, TilingError};
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -18,19 +18,6 @@ pub struct ShapeTypeStore {
 }
 
 impl ShapeTypeStore {
-  pub fn validate(&mut self) -> Result<(), TilingError> {
-    if self.shape_types.is_empty() {
-      return Err(
-        ValidationError::PatternRadial {
-          reason: "No shapes types found".into(),
-        }
-        .into(),
-      );
-    }
-
-    Ok(())
-  }
-
   ///
   pub fn annotate_polygon(&mut self, polygon: &mut Polygon) {
     self
