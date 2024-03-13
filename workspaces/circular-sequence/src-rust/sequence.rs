@@ -1,4 +1,5 @@
 use crate::compare;
+use crate::search::Direction;
 
 #[path = "./sequence_tests.rs"]
 #[cfg(test)]
@@ -62,6 +63,10 @@ pub fn get_symmetry_index(sequence: &Sequence) -> Option<usize> {
   None
 }
 
+/// Returns whether a sequence is symmetrical.
+///
+/// Space: O(1)
+/// Time:  O(n)
 pub fn is_symmetrical(sequence: &Sequence) -> bool {
   get_symmetry_index(sequence).is_some()
 }
@@ -86,7 +91,7 @@ pub fn reverse(sequence: &Sequence) -> Sequence {
 /// Space: O(1)
 /// Time: O(n^2)
 pub fn get_min_permutation(sequence: &Sequence) -> Sequence {
-  get_min_permutation_directional(sequence, false)
+  get_min_permutation_directional(sequence, Direction::Forward)
 }
 
 /// Returns the minimum permutation of a sequence with
@@ -94,20 +99,20 @@ pub fn get_min_permutation(sequence: &Sequence) -> Sequence {
 ///
 /// Space: O(1)
 /// Time: O(n^2)
-fn get_min_permutation_directional(sequence: &Sequence, reversed: bool) -> Sequence {
+fn get_min_permutation_directional(sequence: &Sequence, direction: Direction) -> Sequence {
   let length = get_length(sequence);
   let mut a = sequence.clone();
 
   for i in 0..length {
-    let b = shift_left_and_insert(&sequence, i);
+    let b = shift_left(&sequence, i);
 
     if compare(&a, &b) == std::cmp::Ordering::Greater {
       a = b;
     }
   }
 
-  if !reversed && !is_symmetrical(sequence) {
-    let b = get_min_permutation_directional(&reverse(sequence), true);
+  if direction == Direction::Forward && !is_symmetrical(sequence) {
+    let b = get_min_permutation_directional(&reverse(sequence), Direction::Backward);
 
     if compare(&a, &b) == std::cmp::Ordering::Greater {
       a = b;
@@ -122,7 +127,7 @@ fn get_min_permutation_directional(sequence: &Sequence, reversed: bool) -> Seque
 ///
 /// Space: O(1)
 /// Time:  O(n)
-fn shift_left_and_insert(sequence: &Sequence, shift: usize) -> Sequence {
+fn shift_left(sequence: &Sequence, shift: usize) -> Sequence {
   let length = get_length(sequence);
   let mut shifted_sequence = Sequence::default();
 

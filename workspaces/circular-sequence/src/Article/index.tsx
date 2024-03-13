@@ -16,8 +16,9 @@ import {
   Renderer,
   meta as tilingsMeta,
 } from '@hogg/tilings';
-import { Code, Link, sizeX12Px } from 'preshape';
-import { useState } from 'react';
+import { Code, Link, Text, sizeX12Px } from 'preshape';
+import fileContentsSearch from '@hogg/circular-sequence/src-rust/search.rs?raw';
+import fileContentsSequence from '@hogg/circular-sequence/src-rust/sequence.rs?raw';
 import SequenceView from './SequenceView/SequenceView';
 import { Sequence } from './WasmApi/useWasmApi';
 
@@ -27,14 +28,6 @@ const symmetricSequence: Sequence = [3, 4, 3, 12, 0, 0, 0, 0, 0, 0, 0, 0];
 const asymmetricSequence: Sequence = [3, 3, 4, 12, 0, 0, 0, 0, 0, 0, 0, 0];
 
 const Article = ({}: Props) => {
-  const [figExampleDodecagon, setFigExampleDodecagon] = useState(0);
-  const [figExampleSequences, setFigExampleSequences] = useState(0);
-  const [figSequence34312, setFigSequence34312] = useState(0);
-  const [figSequence33412, setFigSequence33412] = useState(0);
-  const [figGetLength, setFigGetLength] = useState(0);
-  const [figIsSymmetrical, setFigIsSymmetrical] = useState(0);
-  const [figConcatenatedSequence, setFigConcatenatedSequence] = useState(0);
-
   return (
     <ArticlePage>
       <ArticleSection>
@@ -43,7 +36,7 @@ const Article = ({}: Props) => {
         <ArticleParagraph>
           While working on my <ProjectPageLink project={tilingsMeta} /> project,
           I was needing to build up a list of distinct shape arrangements (
-          <ArticleFigLink fig={figExampleDodecagon} />
+          <ArticleFigLink fig="dodecagon-shape-arrangement" />
           ). This of course needed a way to check an arrangement against a list
           of previously seen arrangements.
         </ArticleParagraph>
@@ -59,8 +52,8 @@ const Article = ({}: Props) => {
 
         <ArticleFigs>
           <ArticleFig
+            id="dodecagon-shape-arrangement"
             description="Shape arrangement of a dodecagon at the center, with alternating triangles, squares and hexagons on it's edges."
-            onNumberChange={setFigExampleDodecagon}
           >
             <ArrangementProvider>
               <NotationProvider notation="12-3,4,6,4,3,4,6,4,3,4,6,4">
@@ -82,9 +75,9 @@ const Article = ({}: Props) => {
         <ArticleParagraph>
           The intuitive way to start comparing these shape arrangements is going
           to be representing them as some sort of sequence , so given the shape
-          arrangement from <ArticleFigLink fig={figExampleDodecagon} />, we can
-          represent this using Rust's fixed length arrays (
-          <ArticleFigLink fig={figExampleSequences} />
+          arrangement from <ArticleFigLink fig="dodecagon-shape-arrangement" />,
+          we can represent this using Rust's fixed length arrays (
+          <ArticleFigLink fig="example-sequences" />
           ).
         </ArticleParagraph>
 
@@ -109,8 +102,8 @@ const Article = ({}: Props) => {
 
         <ArticleFigs theme="night">
           <ArticleFigCodeBlock
+            id="example-sequences"
             description="A couple of example sequences represented as Rust fixed length arrays. "
-            onNumberChange={setFigExampleSequences}
             language="rust"
           >
             {`
@@ -141,33 +134,19 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           sides so the sequence is of length 12. The one downside of using a
           fixed length array is that we'll need a simple utility function to get
           the actual length of the sequence for a lot of the operations we'll be
-          doing (<ArticleFigLink fig={figGetLength} />
+          doing (<ArticleFigLink fig="get-length" />
           ).
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
           <ArticleFigCodeBlock
+            id="get-length"
+            description="Implementation to return the actual length of a sequence"
             language="rust"
-            description="A function that returns the actual length of a sequence"
-            onNumberChange={setFigGetLength}
+            startLineNumber={9}
+            endLineNumber={26}
           >
-            {`
-pub fn get_length(sequence: &Sequence) -> usize {
-  let mut length = 0;
-
-  for value in sequence {
-    // If we find an empty space, we can
-    // stop and return the length
-    if *value == 0 {
-      return length;
-    }
-
-    length = length + 1;
-  }
-
-  length
-}
-                `}
+            {fileContentsSequence}
           </ArticleFigCodeBlock>
         </ArticleFigs>
       </ArticleSection>
@@ -190,15 +169,15 @@ pub fn get_length(sequence: &Sequence) -> usize {
 
         <ArticleParagraph>
           If we take the sequence <Code>[3, 4, 3, 12]</Code> (
-          <ArticleFigLink fig={figSequence34312} />) , we can iterate through
-          the starting point and which ever direction we traverse we produce
-          these same set of paths.
+          <ArticleFigLink fig="sequence-34312" />) , we can iterate through the
+          starting point and which ever direction we traverse we produce these
+          same set of paths.
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
           <ArticleFigCodeBlock
-            description="A couple of example sequences represented as Rust fixed length arrays. "
-            onNumberChange={setFigSequence34312}
+            id="sequence-34312"
+            description="A symmetrical sequence, the same traversal is produced regardless of the direction."
             presentation={
               <ArrangementProvider>
                 <NotationProvider notation="4-3,4,3,12">
@@ -227,15 +206,15 @@ pub fn get_length(sequence: &Sequence) -> usize {
 
         <ArticleParagraph>
           However if we take a very similar sequence of{' '}
-          <Code>[3, 3, 4, 12]</Code> (<ArticleFigLink fig={figSequence33412} />)
+          <Code>[3, 3, 4, 12]</Code> (<ArticleFigLink fig="sequence-33412" />)
           and do the same thing, then we get different traversal results when we
           traverse in both directions.
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
           <ArticleFigCodeBlock
-            description="Differing sequences from traversing both directions"
-            onNumberChange={setFigSequence33412}
+            id="sequence-33412"
+            description="An asymmetrical sequence, and it's differing traversals in either direction"
             presentation={
               <ArrangementProvider>
                 <NotationProvider notation="4-3,3,4,12">
@@ -285,16 +264,16 @@ pub fn get_length(sequence: &Sequence) -> usize {
         <ArticleParagraph>
           It's fairly simple to check if a sequence is symmetrical. We can
           simply concatenate the sequence and check for the inverted sequence
-          within itself (<ArticleFigLink fig={figConcatenatedSequence} />
+          within itself (<ArticleFigLink fig="concatenated-sequence" />
           ).
         </ArticleParagraph>
 
         <ArticleFigs>
           <ArticleFig
+            id="concatenated-sequence"
             description="Concatenated symmetrical and asymmetrical sequences"
             flex="vertical"
             gap="x12"
-            onNumberChange={setFigConcatenatedSequence}
           >
             <SequenceView sequence={symmetricSequence} />
             <SequenceView sequence={asymmetricSequence} />
@@ -302,39 +281,21 @@ pub fn get_length(sequence: &Sequence) -> usize {
         </ArticleFigs>
 
         <ArticleParagraph>
-          This <Code>is_symmetrical</Code> utility function (Fig.{' '}
-          {figIsSymmetrical}) is going to give us a way to check which sequences
-          we need to run any reverse functions on, in <Code>O(n)</Code> time.
+          This <Code>is_symmetrical</Code> utility function (
+          <ArticleFigLink fig="is-symmetrical" />) is going to give us a way to
+          check which sequences we need to run any reverse functions on, in{' '}
+          <Code>O(n)</Code> time.
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
           <ArticleFigCodeBlock
+            id="is-symmetrical"
+            description="Implementation to retrieve the starting index of the reverse sequence if it exists"
             language="rust"
-            description="Implementation to check for symmetrical sequences"
-            onNumberChange={setFigIsSymmetrical}
+            startLineNumber={27}
+            endLineNumber={72}
           >
-            {`
-fn is_symmetrical(sequence: &Sequence) -> bool {
-  let length = get_length(sequence);
-  let mut i = 0;
-
-  for _ in 0..2 {
-    for j in 0..length {
-      if sequence[j] == sequence[length - 1 - i] {
-        if i == length - 1 {
-          return true;
-        }
-
-        i = i + 1;
-      } else {
-        i = 0;
-      }
-    }
-  }
-
-  false
-}
-          `}
+            {fileContentsSequence}
           </ArticleFigCodeBlock>
         </ArticleFigs>
       </ArticleSection>
@@ -359,50 +320,19 @@ fn is_symmetrical(sequence: &Sequence) -> bool {
           sequences, as soon as there is a full match immediately return it,
           otherwise the first partial match we keep note of and continue to
           iterate through the rest of the sequences, returning the first partial
-          match at the end.
+          match at the end (<ArticleFigLink fig="get-match" />
+          ).
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
           <ArticleFigCodeBlock
-            language="rust"
+            id="get-match"
             description="Implementation to search through the sequences"
+            language="rust"
+            startLineNumber={8}
+            endLineNumber={47}
           >
-            {`
-enum Match {
-  Exact(Sequence),
-  Partial(Sequence),
-  None,
-}
-
-enum Direction {
-  Forward,
-  Backward,
-}
-
-fn get_match(
-  sequence: &Sequence,
-  targets: &Vec<Sequence>
-) -> Match {
-  let mut first_partial_match = Match::None;
-
-  for target in targets.iter() {
-    match compare_sequences(sequence, target, Direction::Forward) {
-      Match::Exact(sequence) => {
-        return Match::Exact(sequence);
-      }
-      Match::Partial(sequence) => {
-        if first_partial_match == Match::None {
-          first_partial_match = Match::Partial(sequence);
-        }
-      }
-      _ => {}
-    }
-  }
-
-  first_partial_match
-}
-
-          `}
+            {fileContentsSearch}
           </ArticleFigCodeBlock>
         </ArticleFigs>
 
@@ -410,64 +340,55 @@ fn get_match(
           Our comparing logic for two sequences is going to be somewhat similar
           to the symmetrical check. We're going to concatenate the sequence with
           itself and then check for the target sequence within the concatenated
-          sequence, forwards and backwards (when asymmetrical).
+          sequence, forwards and backwards (when asymmetrical) (
+          <ArticleFigLink fig="compare-sequences" />
+          ).
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
           <ArticleFigCodeBlock
-            language="rust"
+            id="compare-sequences"
             description="Implementation to search through the sequences"
+            language="rust"
+            startLineNumber={48}
+            endLineNumber={84}
           >
-            {`
-fn compare_sequences(
-  source: &Sequence,
-  target: &Sequence,
-  direction: Direction
-) -> Match {
-  let source_length = get_length(source);
-  let target_length = get_length(target);
-
-  if source_length > target_length {
-    return Match::None;
-  }
-
-  let mut i = 0;
-
-  for _ in 0..2 {
-    for j in 0..target_length {
-      if source[i] == target[j] {
-        if i == target_length - 1 {
-          return Match::Exact(target.clone());
-        }
-
-        if i == source_length - 1 {
-          return Match::Partial(target.clone());
-        }
-
-        i = i + 1;
-      } else if source[0] == target[j] {
-        i = 1;
-      } else {
-        i = 0;
-      }
-    }
-  }
-
-  if direction == Direction::Forward && !is_symmetrical(target) {
-    return compare_sequences(&reverse(source), target, Direction::Backward);
-  }
-
-  Match::None
-}
-
-
-          `}
+            {fileContentsSearch}
           </ArticleFigCodeBlock>
         </ArticleFigs>
       </ArticleSection>
 
       <ArticleSection>
-        <ArticleHeading>Normalizing to the min permutation</ArticleHeading>
+        <ArticleHeading>Normalizing sequences</ArticleHeading>
+
+        <ArticleParagraph>
+          We now have a way to compare sequences to build up a distinct
+          collection, however depending on what sequence we start with, we could
+          end up with a collection that <Text emphasis>looks</Text> different.
+          It might pass our comparison logic, but when outputted to a UI for
+          debugging purposes, it could be confusing to see the same arrangement
+          in different forms. It'll be useful to have a way to normalize the
+          sequences so that they are all in the same form.
+        </ArticleParagraph>
+
+        <ArticleParagraph>
+          The logic we pick here isn't particularly important, as long as it's
+          consistent. I chose to normalize them by finding the smallest
+          permutation of the sequence, whether it's forwards or backwards
+          (another use for the symmetrical checking).
+        </ArticleParagraph>
+
+        <ArticleFigs theme="night">
+          <ArticleFigCodeBlock
+            id="normalize-sequence"
+            description="Implementation to search through the sequences"
+            language="rust"
+            startLineNumber={84}
+            endLineNumber={119}
+          >
+            {fileContentsSequence}
+          </ArticleFigCodeBlock>
+        </ArticleFigs>
       </ArticleSection>
 
       <ArticleSection>

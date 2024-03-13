@@ -14,7 +14,7 @@ pub enum Match {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
-enum Direction {
+pub enum Direction {
   Forward,
   Backward,
 }
@@ -30,7 +30,7 @@ pub fn get_match(sequence: &Sequence, targets: &Vec<Sequence>) -> Match {
   let mut first_partial_match = Match::None;
 
   for target in targets.iter() {
-    match compare_sequences(sequence, target, Direction::Forward) {
+    match get_match_directional(sequence, target, Direction::Forward) {
       Match::Exact(sequence) => {
         return Match::Exact(sequence);
       }
@@ -46,7 +46,7 @@ pub fn get_match(sequence: &Sequence, targets: &Vec<Sequence>) -> Match {
   first_partial_match
 }
 
-fn compare_sequences(source: &Sequence, target: &Sequence, direction: Direction) -> Match {
+fn get_match_directional(source: &Sequence, target: &Sequence, direction: Direction) -> Match {
   let source_length = get_length(source);
   let target_length = get_length(target);
 
@@ -77,7 +77,7 @@ fn compare_sequences(source: &Sequence, target: &Sequence, direction: Direction)
   }
 
   if direction == Direction::Forward && !is_symmetrical(target) {
-    return compare_sequences(&reverse(source), target, Direction::Backward);
+    return get_match_directional(&reverse(source), target, Direction::Backward);
   }
 
   Match::None

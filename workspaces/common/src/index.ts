@@ -9,6 +9,7 @@ export { default as ArticlePage } from './Article/ArticlePage';
 export { default as ArticleParagraph } from './Article/ArticleParagraph';
 export { default as ArticleProvider } from './Article/ArticleProvider';
 export { default as ArticleSection } from './Article/ArticleSection';
+export { getCodeSnippetFromFile } from './Article/getCodeSnippetFromFile';
 export { useArticleFigNumber } from './Article/useArticleContext';
 
 export { default as InView } from './InView/InView';

@@ -5,6 +5,6 @@ export default function getSequenceColor(
   index = 3
 ): TypeColor {
   return (
-    isSymmetrical ? `positive-shade-${index}` : `negative-shade-${index}`
+    isSymmetrical ? `positive-shade-${index}` : `accent-shade-${index}`
   ) as TypeColor;
 }

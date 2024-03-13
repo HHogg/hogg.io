@@ -6,6 +6,7 @@ import { useArticleFigNumber } from './useArticleContext';
 
 export type ArticleFigProps = InViewProps & {
   description: string;
+  id: string;
   isActive?: boolean;
   onNumberChange?: (number: number) => void;
 };
@@ -16,22 +17,24 @@ const ArticleFig = ({
   description,
   flex,
   gap,
+  id,
   padding = 'x6',
   onEnter,
   onNumberChange,
   ...rest
 }: PropsWithChildren<ArticleFigProps & BoxProps>) => {
   const ref = useRef<HTMLElement>(null);
-  const number = useArticleFigNumber(ref);
+  const number = useArticleFigNumber(id, ref);
   const location = useLocation();
-  const id = `Fig${number}`;
 
   useEffect(() => {
-    onNumberChange?.(number);
+    if (number !== null) {
+      onNumberChange?.(number);
+    }
   }, [onNumberChange, number]);
 
   useEffect(() => {
-    if (location.hash === `#${id}`) {
+    if (location.hash === `#Fig-${id}`) {
       ref.current?.scrollIntoView({
         behavior: 'smooth',
         block: 'center',
@@ -46,7 +49,7 @@ const ArticleFig = ({
       basis="0"
       flex="vertical"
       grow
-      id={id}
+      id={`Fig-${id}`}
       minWidth="0"
       ref={ref}
     >

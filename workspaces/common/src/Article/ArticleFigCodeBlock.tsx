@@ -1,24 +1,14 @@
-import { ChevronDownIcon, ChevronUpIcon, GripIcon } from 'lucide-react';
-import {
-  Appear,
-  Box,
-  Button,
-  CodeBlock,
-  CodeBlockProps,
-  Motion,
-} from 'preshape';
-import {
-  useRef,
-  useState,
-  PointerEvent as ReactPointerEvent,
-  useEffect,
-} from 'react';
+import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { Box, Button, CodeBlock, CodeBlockProps, Motion } from 'preshape';
+import { useRef, useState, useEffect } from 'react';
 import ArticleFig, { ArticleFigProps } from './ArticleFig';
 
 type Props = ArticleFigProps & {
   children: string;
   language: CodeBlockProps['language'];
   presentation?: JSX.Element;
+  startLineNumber?: number;
+  endLineNumber?: number;
 };
 
 function hasOverflown(element: HTMLElement) {
@@ -32,6 +22,8 @@ export default function ArticleFigCodeBlock({
   children,
   language,
   presentation,
+  startLineNumber,
+  endLineNumber,
   ...rest
 }: Props) {
   const refCodeBlock = useRef<HTMLElement | null>(null);
@@ -43,6 +35,11 @@ export default function ArticleFigCodeBlock({
       setShowExpandButton(true);
     }
   }, []);
+
+  const contents = children
+    .split('\n')
+    .slice(startLineNumber, endLineNumber)
+    .join('\n');
 
   return (
     <ArticleFig {...rest} flex="horizontal" padding="x0">
@@ -79,7 +76,7 @@ export default function ArticleFigCodeBlock({
             ref={refCodeBlock}
           >
             <CodeBlock grow language={language} padding="x6">
-              {children}
+              {contents}
             </CodeBlock>
           </Motion>
         </Box>

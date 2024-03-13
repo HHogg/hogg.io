@@ -63,6 +63,18 @@ export default function SequenceView({ sequence, ...rest }: Props & BoxProps) {
           </Box>
         </Box>
 
+        {isSymmetrical && (
+          <Text
+            align="middle"
+            margin="x2"
+            textColor={getSequenceColor(isSymmetrical)}
+            size="x2"
+            weight="x3"
+          >
+            Reverse found ({[...sequenceWithoutZeroes].reverse().join(',')})
+          </Text>
+        )}
+
         {!isSymmetrical && (
           <Text
             align="middle"
@@ -71,8 +83,7 @@ export default function SequenceView({ sequence, ...rest }: Props & BoxProps) {
             size="x2"
             weight="x3"
           >
-            <Text>{[...sequenceWithoutZeroes].reverse().join(',')}</Text>
-            <Text>Reverse not found</Text>
+            Reverse not found ({[...sequenceWithoutZeroes].reverse().join(',')})
           </Text>
         )}
       </Box>
