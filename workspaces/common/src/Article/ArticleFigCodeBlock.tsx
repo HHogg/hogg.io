@@ -38,7 +38,7 @@ export default function ArticleFigCodeBlock({
 
   const contents = children
     .split('\n')
-    .slice(startLineNumber, endLineNumber)
+    .slice((startLineNumber ?? 1) - 1, endLineNumber)
     .join('\n');
 
   return (

@@ -1,6 +1,8 @@
 import {
+  ArticleCallout,
   ArticleFig,
   ArticleFigCodeBlock,
+  ArticleFigLink,
   ArticleFigs,
   ArticleHeading,
   ArticlePage,
@@ -8,7 +10,6 @@ import {
   ArticleSection,
   ProjectPageLink,
 } from '@hogg/common';
-import ArticleFigLink from '@hogg/common/src/Article/ArticleFigLink';
 import {
   ArrangementProvider,
   ColorMode,
@@ -16,11 +17,13 @@ import {
   Renderer,
   meta as tilingsMeta,
 } from '@hogg/tilings';
+import { meta as wasmApiMeta } from '@hogg/wasm-api';
 import { Code, Link, Text, sizeX12Px } from 'preshape';
-import fileContentsSearch from '@hogg/circular-sequence/src-rust/search.rs?raw';
+import fileContentsGetMatch from '@hogg/circular-sequence/src-rust/get_match.rs?raw';
+import fileContentsMinPermutation from '@hogg/circular-sequence/src-rust/min_permutation.rs?raw';
 import fileContentsSequence from '@hogg/circular-sequence/src-rust/sequence.rs?raw';
 import SequenceView from './SequenceView/SequenceView';
-import { Sequence } from './WasmApi/useWasmApi';
+import useWasmApi, { Sequence } from './WasmApi/useWasmApi';
 
 type Props = {};
 
@@ -28,6 +31,8 @@ const symmetricSequence: Sequence = [3, 4, 3, 12, 0, 0, 0, 0, 0, 0, 0, 0];
 const asymmetricSequence: Sequence = [3, 3, 4, 12, 0, 0, 0, 0, 0, 0, 0, 0];
 
 const Article = ({}: Props) => {
+  const wasmApi = useWasmApi();
+
   return (
     <ArticlePage>
       <ArticleSection>
@@ -143,8 +148,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="get-length"
             description="Implementation to return the actual length of a sequence"
             language="rust"
-            startLineNumber={9}
-            endLineNumber={26}
+            startLineNumber={7}
+            endLineNumber={23}
           >
             {fileContentsSequence}
           </ArticleFigCodeBlock>
@@ -281,7 +286,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         </ArticleFigs>
 
         <ArticleParagraph>
-          This <Code>is_symmetrical</Code> utility function (
+          This <Code>get_symmetry_index</Code> function (
           <ArticleFigLink fig="is-symmetrical" />) is going to give us a way to
           check which sequences we need to run any reverse functions on, in{' '}
           <Code>O(n)</Code> time.
@@ -292,8 +297,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="is-symmetrical"
             description="Implementation to retrieve the starting index of the reverse sequence if it exists"
             language="rust"
-            startLineNumber={27}
-            endLineNumber={72}
+            startLineNumber={25}
+            endLineNumber={61}
           >
             {fileContentsSequence}
           </ArticleFigCodeBlock>
@@ -329,10 +334,10 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="get-match"
             description="Implementation to search through the sequences"
             language="rust"
-            startLineNumber={8}
+            startLineNumber={9}
             endLineNumber={47}
           >
-            {fileContentsSearch}
+            {fileContentsGetMatch}
           </ArticleFigCodeBlock>
         </ArticleFigs>
 
@@ -350,10 +355,9 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="compare-sequences"
             description="Implementation to search through the sequences"
             language="rust"
-            startLineNumber={48}
-            endLineNumber={84}
+            startLineNumber={49}
           >
-            {fileContentsSearch}
+            {fileContentsGetMatch}
           </ArticleFigCodeBlock>
         </ArticleFigs>
       </ArticleSection>
@@ -364,18 +368,24 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         <ArticleParagraph>
           We now have a way to compare sequences to build up a distinct
           collection, however depending on what sequence we start with, we could
-          end up with a collection that <Text emphasis>looks</Text> different.
-          It might pass our comparison logic, but when outputted to a UI for
-          debugging purposes, it could be confusing to see the same arrangement
-          in different forms. It'll be useful to have a way to normalize the
-          sequences so that they are all in the same form.
+          end up with a collection that{' '}
+          <Text emphasis tag="em">
+            looks
+          </Text>{' '}
+          different. It might pass our comparison logic, but when outputted to a
+          UI for debugging purposes, it could be confusing to see the same
+          arrangement in different forms. It'll be useful to have a way to
+          normalize the sequences so that they are all in the same form.
         </ArticleParagraph>
 
         <ArticleParagraph>
           The logic we pick here isn't particularly important, as long as it's
           consistent. I chose to normalize them by finding the smallest
           permutation of the sequence, whether it's forwards or backwards
-          (another use for the symmetrical checking).
+          (another use for the symmetrical checking). By "smallest permutation"
+          I mean, if we were to join the sequence into a single continuous
+          number we can easily compare 2 sequences to find the smallest/largest
+          of the 2.
         </ArticleParagraph>
 
         <ArticleFigs theme="night">
@@ -383,16 +393,54 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="normalize-sequence"
             description="Implementation to search through the sequences"
             language="rust"
-            startLineNumber={84}
-            endLineNumber={119}
+            startLineNumber={8}
           >
-            {fileContentsSequence}
+            {fileContentsMinPermutation}
+          </ArticleFigCodeBlock>
+        </ArticleFigs>
+
+        <ArticleParagraph>
+          Let's take a look at some examples by using the Wasm API of this rust
+          code.
+        </ArticleParagraph>
+
+        <ArticleCallout title="How does the Wasm API work? ">
+          If you're interested in reading about how the Wasm API for this
+          project works you can take a look at my{' '}
+          <ProjectPageLink project={wasmApiMeta} />
+        </ArticleCallout>
+
+        <ArticleFigs theme="night">
+          <ArticleFigCodeBlock
+            id="min-permutations"
+            description=""
+            language="rust"
+          >
+            {`
+// Symmetrical sequence
+get_min_permutation([4, 6, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0]),
+// outputs >> [${wasmApi.getMinPermutation([
+              4, 6, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+            ])}]
+
+// Asymmetrical sequence - forwards
+get_min_permutation([6, 12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+// outputs >> [${wasmApi.getMinPermutation([
+              6, 12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ])}]
+
+// Asymmetrical sequence - backwards
+get_min_permutation([4, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+// outputs >> [${wasmApi.getMinPermutation([
+              4, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ])}]
+`}
           </ArticleFigCodeBlock>
         </ArticleFigs>
       </ArticleSection>
 
       <ArticleSection>
-        <ArticleHeading>Flattening</ArticleHeading>
+        <ArticleHeading>Summary</ArticleHeading>
       </ArticleSection>
     </ArticlePage>
   );

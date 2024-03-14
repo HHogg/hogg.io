@@ -943,6 +943,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@hogg/wasm-api@workspace:^, @hogg/wasm-api@workspace:workspaces/wasm-api":
+  version: 0.0.0-use.local
+  resolution: "@hogg/wasm-api@workspace:workspaces/wasm-api"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@types/react": ^18.0.28
+    "@types/react-dom": ^18.0.11
+    preshape: ^17.2.0
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  languageName: unknown
+  linkType: soft
+
 "@hogg/website@workspace:workspaces/website":
   version: 0.0.0-use.local
   resolution: "@hogg/website@workspace:workspaces/website"
@@ -955,6 +968,7 @@ __metadata:
     "@hogg/snake": "workspace:^"
     "@hogg/spirals": "workspace:^"
     "@hogg/tilings": "workspace:^"
+    "@hogg/wasm-api": "workspace:^"
     "@react-spring/web": ^9.7.3
     "@svgr/cli": ^8.1.0
     "@svgr/plugin-jsx": ^8.1.0

@@ -18,6 +18,7 @@ const ArticleFig = ({
   flex,
   gap,
   id,
+  isActive,
   padding = 'x6',
   onEnter,
   onNumberChange,
@@ -52,6 +53,13 @@ const ArticleFig = ({
       id={`Fig-${id}`}
       minWidth="0"
       ref={ref}
+      style={
+        {
+          // filter: isActive
+          //   ? 'drop-shadow(0 0 8px rgba(0, 0, 0, 0.1))'
+          //   : undefined,
+        }
+      }
     >
       <Text
         align="middle"

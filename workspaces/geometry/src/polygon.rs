@@ -148,7 +148,6 @@ impl Polygon {
   }
 }
 
-// Shape + Points
 impl Hash for Polygon {
   fn hash<H: Hasher>(&self, state: &mut H) {
     for point in self.points.iter() {

@@ -1,6 +1,6 @@
-#[path = "./search_tests.rs"]
+#[path = "./get_match_tests.rs"]
 #[cfg(test)]
-mod tests;
+mod get_match_tests;
 
 use serde::Serialize;
 

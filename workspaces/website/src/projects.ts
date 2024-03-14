@@ -7,6 +7,7 @@ import * as Preshape from '@hogg/preshape';
 import * as Snake from '@hogg/snake';
 import * as Spirals from '@hogg/spirals';
 import * as Tilings from '@hogg/tilings';
+import * as WasmApi from '@hogg/wasm-api';
 import { ComponentType } from '@react-spring/web';
 
 export const projects: {
@@ -43,6 +44,10 @@ export const projects: {
   {
     meta: LineSegmentExtending.meta,
     Component: LineSegmentExtending.Project,
+  },
+  {
+    meta: WasmApi.meta,
+    Component: WasmApi.Project,
   },
 ];
 

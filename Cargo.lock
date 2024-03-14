@@ -515,8 +515,6 @@ dependencies = [
 name = "circular-sequence"
 version = "0.0.0"
 dependencies = [
- "canvas",
- "geometry",
  "pretty_assertions",
  "serde",
  "serde-wasm-bindgen",

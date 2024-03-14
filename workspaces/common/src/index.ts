@@ -1,9 +1,11 @@
+export { default as ArticleCallout } from './Article/ArticleCallout';
 export {
   default as ArticleFig,
   type ArticleFigProps,
 } from './Article/ArticleFig';
 export { default as ArticleFigCodeBlock } from './Article/ArticleFigCodeBlock';
 export { default as ArticleFigs } from './Article/ArticleFigs';
+export { default as ArticleFigLink } from './Article/ArticleFigLink';
 export { default as ArticleHeading } from './Article/ArticleHeading';
 export { default as ArticlePage } from './Article/ArticlePage';
 export { default as ArticleParagraph } from './Article/ArticleParagraph';

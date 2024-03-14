@@ -9,6 +9,7 @@ export enum ProjectKey {
   snake = 'snake',
   spirals = 'spirals',
   tilings = 'tilings',
+  wasm_api = 'wasm-api',
 }
 
 export type Project = {

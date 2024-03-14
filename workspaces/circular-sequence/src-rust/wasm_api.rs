@@ -1,7 +1,6 @@
 use wasm_bindgen::prelude::*;
 
 use crate::{
-  draw,
   get_length as get_length_internal,
   get_min_permutation as get_min_permutation_internal,
   get_symmetry_index as get_symmetry_index_internal,
@@ -10,6 +9,8 @@ use crate::{
   to_string as to_string_internal,
   Sequence,
 };
+
+use super::sequence
 
 #[wasm_bindgen]
 pub fn get_symmetry_index(sequence: &JsValue) -> Result<Option<usize>, JsError> {
@@ -53,14 +54,4 @@ pub fn sort(sequences: &JsValue) -> Result<JsValue, JsError> {
   Ok(serde_wasm_bindgen::to_value(&sort_internal(
     serde_wasm_bindgen::from_value::<Vec<Sequence>>(sequences.to_owned())?,
   ))?)
-}
-
-#[wasm_bindgen]
-pub fn render(canvas_id: &str, sequence: &JsValue, options: &JsValue) -> Result<(), JsError> {
-  let options = serde_wasm_bindgen::from_value::<draw::Options>(options.to_owned())?;
-  let sequence = serde_wasm_bindgen::from_value::<Sequence>(sequence.to_owned())?;
-
-  draw(canvas_id, sequence, options)?;
-
-  Ok(())
 }

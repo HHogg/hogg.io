@@ -6,7 +6,11 @@ const SpiralsProjectWindow = () => {
   const [size, ref] = useResizeObserver();
 
   return (
-    <ProjectWindow backgroundPattern="grid" backgroundPatternGap={25}>
+    <ProjectWindow
+      backgroundPattern="grid"
+      backgroundPatternGap={25}
+      theme="night"
+    >
       <Box flex="vertical" grow>
         <Box container grow>
           <Box absolute="edge-to-edge" ref={ref}>
