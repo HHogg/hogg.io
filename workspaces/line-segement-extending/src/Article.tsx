@@ -420,9 +420,15 @@ if intercepts_min_y {
       <ArticleSection>
         <ArticleHeading>Summary</ArticleHeading>
         <ArticleParagraph>
-          That's it! The full implementation can be found <Link>here</Link>, and
-          you can play around with the example on this page that uses that Rust
-          implementation through Wasm.
+          That's it! The full implementation can be found{' '}
+          <Link
+            href="https://github.com/HHogg/hogg.io/blob/master/workspaces/geometry/src-rust/line_segment.rs#L150-L278"
+            target="_blank"
+          >
+            here
+          </Link>
+          , and you can play around with the example on this page that uses that
+          Rust implementation through Wasm.
         </ArticleParagraph>
       </ArticleSection>
     </ArticlePage>
