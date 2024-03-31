@@ -12,7 +12,7 @@ import './App.css';
 export default function App() {
   return (
     <HelmetProvider>
-      <ThemeProvider theme="night">
+      <ThemeProvider theme="night" disableSystemTheme>
         <Suspense fallback={null}>
           <Routes>
             <Route path="/">

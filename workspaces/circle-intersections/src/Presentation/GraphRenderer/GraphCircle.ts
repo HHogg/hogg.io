@@ -1,5 +1,5 @@
 import { useSvgLabelsContext } from '@hogg/common';
-import { sizeX2Px } from 'preshape';
+import { sizeX1Px } from 'preshape';
 import { useEffect } from 'react';
 import { Circle } from '../../useGraph';
 
@@ -12,10 +12,10 @@ export default function GraphCircle({ circle }: Props) {
 
   useEffect(() => {
     return registerObstacle({
-      id: circle.id,
-      geometry: circle,
-      padding: sizeX2Px,
+      id: `circle-${circle.id}`,
       type: 'outline',
+      padding: sizeX1Px,
+      geometry: circle,
     });
   }, [circle, registerObstacle]);
 

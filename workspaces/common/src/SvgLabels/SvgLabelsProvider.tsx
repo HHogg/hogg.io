@@ -8,28 +8,30 @@ import {
 import { Label, Obstacle, Point } from './types';
 import { SvgLabelsContext } from './useSvgLabelsContext';
 import { getArchimedesSpiral } from './utils/algorithms';
-import { getLabelShifts } from './utils/getLabelShifts';
+import {
+  LabelShiftResult,
+  createDefaultShiftResult,
+  getLabelShifts,
+} from './utils/getLabelShifts';
 
 type SvgLabelsProviderProps = {
-  maxSearchRadius: number;
+  width: number;
+  height: number;
 };
 
 export default function SvgLabelsProvider({
-  maxSearchRadius,
+  width,
+  height,
   ...props
 }: PropsWithChildren<SvgLabelsProviderProps>) {
   const refTimeout = useRef<NodeJS.Timeout | null>(null);
   const refLabels = useRef<Label[]>([]);
   const refObstacles = useRef<Obstacle[]>([]);
-  const [shifts, setShifts] = useState<(Point | null)[]>([]);
+  const [shifts, setShifts] = useState<LabelShiftResult[]>([]);
 
   const points = useMemo<Point[]>(
-    () =>
-      getArchimedesSpiral(2000).map(([x, y]) => [
-        x * maxSearchRadius,
-        y * maxSearchRadius,
-      ]),
-    [maxSearchRadius]
+    () => getArchimedesSpiral(1000, [width * -1, width], [height * -1, height]),
+    [height, width]
   );
 
   const refreshLabelShifts = useCallback(() => {
@@ -54,6 +56,7 @@ export default function SvgLabelsProvider({
 
       return () => {
         refLabels.current = refLabels.current.filter((l) => l !== label);
+        queueReposition();
       };
     },
     [queueReposition]
@@ -74,8 +77,11 @@ export default function SvgLabelsProvider({
   );
 
   const getLabelShift = useCallback(
-    (label: Label) => {
-      return shifts[refLabels.current.indexOf(label)] ?? [0, 0];
+    (label: Label): LabelShiftResult => {
+      return (
+        shifts[refLabels.current.indexOf(label)] ??
+        createDefaultShiftResult(label)
+      );
     },
     [shifts]
   );

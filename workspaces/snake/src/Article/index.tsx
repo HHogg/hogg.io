@@ -1,12 +1,20 @@
 import {
   ArticleFig,
+  ArticleFigLink,
   ArticleFigs,
-  ArticleHeading,
   ArticlePage,
+} from '@hogg/common';
+import {
+  ArticleHeading,
   ArticleParagraph,
   ArticleSection,
-} from '@hogg/common';
-import { BulletPoint, BulletPoints, Code, Image, Link, Text } from 'preshape';
+  BulletPoint,
+  BulletPoints,
+  Code,
+  Image,
+  Link,
+  Text,
+} from 'preshape';
 import SnakeSolution from './SnakeSolution';
 import SnakeSolutionComparisonAverage from './SnakeSolutionComparisonAverage';
 import SnakeSolutionComparisonScore from './SnakeSolutionComparisonScore';
@@ -30,12 +38,14 @@ const Article = ({ onSelectSolution }: Props) => {
         <ArticleParagraph>
           The classic game of Snake is a simple concept but it has some
           interesting problems when it comes to creating a programmatic
-          solution. When I came across this gif of 'the perfect game' it made me
-          curious how a programmatic solution would work.
+          solution. When I came across this gif (<ArticleFigLink fig="gif" />)
+          of 'the perfect game' it made me curious how a programmatic solution
+          would work.
         </ArticleParagraph>
 
         <ArticleFigs>
           <ArticleFig
+            id="gif"
             alignChildren="middle"
             flex="vertical"
             description="A gif from the internet showing a full complete game of snake."
@@ -155,8 +165,12 @@ const Article = ({ onSelectSolution }: Props) => {
         </ArticleParagraph>
       </ArticleSection>
 
-      <ArticleFigs theme="night">
-        <ArticleFig description="Manhattan Distance." padding="x0">
+      <ArticleFigs>
+        <ArticleFig
+          id="manhattan-distance"
+          description="Manhattan Distance."
+          padding="x0"
+        >
           <SnakeSolution
             onSelect={onSelectSolution}
             solution={manhattanDistance}
@@ -174,8 +188,12 @@ const Article = ({ onSelectSolution }: Props) => {
         </ArticleParagraph>
       </ArticleSection>
 
-      <ArticleFigs theme="night">
-        <ArticleFig description="Euclidean Distance." padding="x0">
+      <ArticleFigs>
+        <ArticleFig
+          id="euclidean-distance"
+          description="Euclidean Distance."
+          padding="x0"
+        >
           <SnakeSolution
             onSelect={onSelectSolution}
             solution={euclideanDistance}
@@ -187,9 +205,9 @@ const Article = ({ onSelectSolution }: Props) => {
         <ArticleParagraph>
           This ultimately leads to just an alternative path of the Manhattan
           Distance, but a more diagonal route. The analysis is almost identical
-          to the solution shown in Fig 2, because likewise it does nothing to
-          handle the environment, and simply just knows about moving towards the
-          point.
+          to the solution shown in <ArticleFigLink fig="manhattan-distance" />,
+          because likewise it does nothing to handle the environment, and simply
+          just knows about moving towards the point.
         </ArticleParagraph>
       </ArticleSection>
 
@@ -211,8 +229,12 @@ const Article = ({ onSelectSolution }: Props) => {
         </ArticleParagraph>
       </ArticleSection>
 
-      <ArticleFigs theme="night">
-        <ArticleFig description="Hamiltonian Cycle." padding="x0">
+      <ArticleFigs>
+        <ArticleFig
+          id="hamiltonian-cycle"
+          description="Hamiltonian Cycle."
+          padding="x0"
+        >
           <SnakeSolution
             onSelect={onSelectSolution}
             solution={hamiltonianCycle}
@@ -230,8 +252,9 @@ const Article = ({ onSelectSolution }: Props) => {
         <ArticleParagraph>
           On an even sided grid this has the consistent behaviour of getting
           100% completion, however on an odd sided grid it is almost impossible
-          due to the cycle needing to alternate it's direction (see Fig 5) and
-          ultimately crashing into itself.
+          due to the cycle needing to alternate it's direction (see{' '}
+          <ArticleFigLink fig="hamiltonian-cycle" />) and ultimately crashing
+          into itself.
         </ArticleParagraph>
 
         <ArticleParagraph emphasis>
@@ -259,8 +282,8 @@ const Article = ({ onSelectSolution }: Props) => {
         </ArticleParagraph>
       </ArticleSection>
 
-      <ArticleFigs theme="night">
-        <ArticleFig description="Tail Escape." padding="x0">
+      <ArticleFigs>
+        <ArticleFig id="tail-escape" description="Tail Escape." padding="x0">
           <SnakeSolution onSelect={onSelectSolution} solution={tailEscape} />
         </ArticleFig>
       </ArticleFigs>
@@ -306,18 +329,24 @@ const Article = ({ onSelectSolution }: Props) => {
 
         <ArticleParagraph>
           However this is the approach that seems to best resemble the behaviour
-          in 'the perfect game' gif in Fig 1.
+          in 'the perfect game' gif in <ArticleFigLink fig="gif" />.
         </ArticleParagraph>
       </ArticleSection>
 
       <ArticleFigs>
-        <ArticleFig description="Solutions Moving Average comparison, with number of points along the X axis and average number of moves along the Y axis.">
+        <ArticleFig
+          id="moving-average"
+          description="Solutions Moving Average comparison, with number of points along the X axis and average number of moves along the Y axis."
+        >
           <SnakeSolutionComparisonAverage />
         </ArticleFig>
       </ArticleFigs>
 
       <ArticleFigs>
-        <ArticleFig description="Solutions Score comparison, with number of points along the X axis and score at that point along the Y axis.">
+        <ArticleFig
+          id="score"
+          description="Solutions Score comparison, with number of points along the X axis and score at that point along the Y axis."
+        >
           <SnakeSolutionComparisonScore />
         </ArticleFig>
       </ArticleFigs>

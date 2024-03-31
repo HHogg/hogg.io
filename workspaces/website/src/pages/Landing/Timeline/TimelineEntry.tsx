@@ -27,7 +27,7 @@ export default function TimelineEntry({
 
           <Box basis="0" grow>
             <Text weight="x2">{company}</Text>
-            <Text>{role}</Text>
+            <Text textColor="text-shade-1">{role}</Text>
           </Box>
         </Box>
       </Box>

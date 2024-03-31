@@ -5,6 +5,6 @@
   ],
   "include": [
     "src",
-    "src/**/*.json",
+    "src/**/*.json", "../common/src/ImageCover",
   ]
 }

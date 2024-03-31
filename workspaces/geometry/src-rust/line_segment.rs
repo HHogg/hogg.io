@@ -211,10 +211,10 @@ impl LineSegment {
         .with_end(Point::default().with_xy(x2, y2));
     }
 
-    let m = dy / dx; // Slope = rise / run = dy / dx = (y2 - y1) / (x2 - x1)
-    let b = y1 - m * x1; // b = y - mx (y-intercept)
-    let x = |y: f64| (y - b) / m; // x = (y - b) / m
-    let y = |x: f64| m * x + b; // y = mx + b
+    let m = dy / dx;
+    let b = y1 - m * x1;
+    let x = |y: f64| (y - b) / m;
+    let y = |x: f64| m * x + b;
 
     let x_for_min_y = x(min_y);
     let x_for_max_y = x(max_y);

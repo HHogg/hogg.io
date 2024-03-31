@@ -1,5 +1,5 @@
 import { useSvgLabelsContext } from '@hogg/common';
-import { sizeX2Px } from 'preshape';
+import { sizeX1Px } from 'preshape';
 import { useEffect } from 'react';
 
 type Props = {
@@ -14,10 +14,10 @@ export default function GraphBounds({ height, width }: Props) {
     return registerObstacle({
       id: 'bounds',
       type: 'bounds',
-      padding: sizeX2Px,
+      padding: sizeX1Px,
       geometry: {
-        x: 0,
-        y: 0,
+        x: width * -0.5,
+        y: height * -0.5,
         height,
         width,
       },

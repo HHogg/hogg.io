@@ -52,7 +52,7 @@ const data: Data = {
       logo: BrandwatchLogo,
       date: '2015-11-01',
       description:
-        "My time at Brandwatch was spent building the frontend to the [Audiences](https://www.brandwatch.com/products/audiences/content-marketing/) (Twitter advertising) product, leading the development of [Axiom](https://axiom.brandwatch.com/) (the company's component library and design system) and helping out with various other development projects including a data labeling tool for entity recognition.",
+        "My time at Brandwatch was spent building the frontend to the [Audiences](https://www.brandwatch.com/products/influence/) product, leading the development of [Axiom](https://axiom.brandwatch.com/) (the company's component library and design system) and helping out with various other development projects including a data labeling tool for entity recognition.",
       tags: [
         'css',
         'design system',

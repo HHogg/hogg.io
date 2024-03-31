@@ -68,7 +68,7 @@ const ArticleFig = ({
         padding="x6"
       >
         <Text tag="span" weight="x2">
-          Fig {number}.
+          Fig. {number} -
         </Text>{' '}
         {description}
       </Text>

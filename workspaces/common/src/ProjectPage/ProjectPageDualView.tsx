@@ -1,5 +1,5 @@
 import { Box, BoxProps } from 'preshape';
-import { Lines } from '..';
+import { ImageCover, Lines, useProjectPageContext } from '..';
 import ProjectPageHeader from './ProjectPageHeader';
 
 export type ProjectPageDualViewProps = BoxProps & {
@@ -15,6 +15,8 @@ export default function ProjectPageDualView({
   gap,
   ...rest
 }: ProjectPageDualViewProps) {
+  const { image } = useProjectPageContext();
+
   return (
     <Box {...rest} flex="horizontal" gap={gap}>
       <Box flex="vertical" basis="0" minWidth={0} grow gap={gap}>
@@ -36,7 +38,20 @@ export default function ProjectPageDualView({
           </Box>
         )}
 
-        <Box>{article}</Box>
+        <Box>
+          <Box>{article}</Box>
+
+          <ImageCover
+            backgroundColor="text-shade-1"
+            borderRadius="x2"
+            borderSize="x1"
+            borderColor="background-shade-4"
+            height="200px"
+            margin="x16"
+            maxWidth="800px"
+            src={image}
+          />
+        </Box>
       </Box>
 
       {layout === 'horizontal' && (

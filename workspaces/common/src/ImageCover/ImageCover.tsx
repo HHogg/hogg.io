@@ -26,8 +26,7 @@ export default function ImageCover({
           backgroundPosition: 'center',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
-          filter:
-            'grayscale(0.6) sepia(0.15) saturate(1) brightness(1) contrast(1)',
+          filter: 'saturate(0) brightness(1) contrast(1)',
           ...style,
         }}
       />

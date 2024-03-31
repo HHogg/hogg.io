@@ -73,7 +73,6 @@ export default function ProjectWindow({
           grow
           onClick={onClick}
           theme={theme}
-          textColor="text-shade-1"
         >
           {controls && controlsPosition === 'top' && (
             <Appear

@@ -45,7 +45,6 @@ export default function Page({
         grow
         padding={match('1000px') ? 'x16' : 'x8'}
         maxWidth="1600px"
-        textColor="text-shade-1"
       >
         <Box flex="vertical" {...rest} gap={gap} grow>
           {children}

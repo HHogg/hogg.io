@@ -36,7 +36,7 @@ export default function ArticleCallout({
       </Box>
 
       <Box>
-        <Text size="x5" weight="x2" margin="x4">
+        <Text size="x4" weight="x2" margin="x2">
           {title}
         </Text>
 

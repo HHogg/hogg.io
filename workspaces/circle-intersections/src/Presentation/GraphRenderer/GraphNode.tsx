@@ -1,5 +1,7 @@
+import { useSvgLabelsContext } from '@hogg/common';
 import classNames from 'classnames';
-import { SVGAttributes, forwardRef } from 'react';
+import { sizeX1Px } from 'preshape';
+import { SVGAttributes, forwardRef, useEffect } from 'react';
 import { Edge, Node } from '../../useGraph';
 import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 
@@ -25,6 +27,7 @@ const GraphNode = forwardRef<SVGGElement, Props>(function GraphNodeInner(
     isSelectable,
   } = state;
 
+  const { registerObstacle } = useSvgLabelsContext();
   const { activeNodeIndex } = useIntersectionExplorerContext();
   const isFocused = activeNodeIndex === node.index;
 
@@ -37,6 +40,19 @@ const GraphNode = forwardRef<SVGGElement, Props>(function GraphNodeInner(
     'Graph__node--traversed': isPrevious,
     'Graph__node--valid': isValid === true,
   });
+
+  useEffect(() => {
+    return registerObstacle({
+      id: `node-${node.index}`,
+      type: 'solid',
+      padding: sizeX1Px,
+      geometry: {
+        radius: 6,
+        x,
+        y,
+      },
+    });
+  }, [registerObstacle, node, x, y]);
 
   return (
     <g

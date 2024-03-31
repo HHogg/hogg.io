@@ -1,7 +1,7 @@
-import { Node, Edge } from '@hogg/circle-intersections';
 import { CheckIcon, XIcon } from 'lucide-react';
 import { Box, Text } from 'preshape';
 import { FunctionComponent } from 'react';
+import { Node, Edge } from '@hogg/circle-intersections';
 import NodeValidationMessage from './NodeValidationMessage';
 
 type Props = {

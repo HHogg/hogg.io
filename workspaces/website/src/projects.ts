@@ -49,6 +49,7 @@ export const projects: {
     meta: WasmApi.meta,
     Component: WasmApi.Project,
   },
+  // Next: Performance benchmark difference between atan2 and hypot.
 ];
 
 export const shouldShowProject = (project: Project) => {
@@ -56,21 +57,29 @@ export const shouldShowProject = (project: Project) => {
 };
 
 export const getNextProject = (id: ProjectKey): Project | undefined => {
-  const index = projects.findIndex((project) => project?.meta.id === id);
+  for (let i = 0; i < projects.length; i++) {
+    if (projects[i].meta.id === id) {
+      for (let j = i + 1; j < projects.length; j++) {
+        if (shouldShowProject(projects[j].meta) && !projects[j].meta.href) {
+          return projects[j].meta;
+        }
+      }
 
-  if (projects[index + 1]?.meta.href) {
-    return getNextProject(projects[index + 1]?.meta.id);
+      return;
+    }
   }
-
-  return projects[index + 1]?.meta;
 };
 
 export const getPreviousProject = (id: ProjectKey): Project | undefined => {
-  const index = projects.findIndex((project) => project?.meta.id === id);
+  for (let i = 0; i < projects.length; i++) {
+    if (projects[i].meta.id === id) {
+      for (let j = i - 1; j >= 0; j--) {
+        if (shouldShowProject(projects[j].meta) && !projects[j].meta.href) {
+          return projects[j].meta;
+        }
+      }
 
-  if (projects[index - 1]?.meta.href) {
-    return getPreviousProject(projects[index - 1]?.meta.id);
+      return;
+    }
   }
-
-  return projects[index - 1]?.meta;
 };

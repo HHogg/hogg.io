@@ -1,62 +1,80 @@
-import { Label, Obstacles, Point } from '../types';
+import { Label, Line, Obstacle, Obstacles, Point, Rect } from '../types';
 import { hasCollided } from './hasCollided';
 
-function shiftLabel(label: Label, shift: Point): Label {
-  return {
-    ...label,
-    geometry: {
-      ...label.geometry,
-      x: label.geometry.x + shift[0],
-      y: label.geometry.y + shift[1],
-    },
-  };
-}
+export type LabelShiftResult = {
+  labelObstacle: Obstacle<Rect>;
+  labelLineObstacle: Obstacle<Line>;
+};
+
+const createLabelObstacle = (label: Label, x = 0, y = 0): Obstacle<Rect> => ({
+  id: `label-${label.id}`,
+  type: 'solid',
+  padding: label.padding,
+  geometry: {
+    x: label.targetX - label.width * 0.5 + label.offsetX + x,
+    y: label.targetY - label.height * 0.5 + label.offsetY + y,
+    width: label.width,
+    height: label.height,
+  },
+});
+
+const createLabelLineObstacle = (
+  label: Label,
+  labelObstacle = createLabelObstacle(label)
+): Obstacle<Line> => ({
+  id: `label-line-${label.id}`,
+  type: 'solid',
+  padding: label.padding,
+  geometry: {
+    x1: labelObstacle.geometry.x + labelObstacle.geometry.width * 0.5,
+    y1: labelObstacle.geometry.y + labelObstacle.geometry.height * 0.5,
+    x2: label.targetX,
+    y2: label.targetY,
+  },
+});
+
+export const createDefaultShiftResult = (label: Label): LabelShiftResult => ({
+  labelObstacle: createLabelObstacle(label),
+  labelLineObstacle: createLabelLineObstacle(label),
+});
 
 export const getLabelShifts = (
-  points: Point[],
+  shiftPoints: Point[],
   labels: Label[],
   obstacles: Obstacles
-): (Point | null)[] => {
+): LabelShiftResult[] => {
   const shifts: ReturnType<typeof getLabelShifts> = [];
-  const labelObstacles = [];
+  const labelObstacles: Obstacle[] = [];
 
   nextLabel: for (const label of labels) {
     const allObstacles = [...obstacles, ...labelObstacles];
 
-    for (const shift of points) {
-      const shiftedLabel = shiftLabel(label, shift);
+    for (const shift of [undefined, ...shiftPoints]) {
+      const [shiftX, shiftY] = shift ?? [0, 0];
 
-      // The line that connects the label to
-      // it's originally placed point as an obstacle
-      const cx = shiftedLabel.geometry.width * 0.5;
-      const cy = shiftedLabel.geometry.height * 0.5;
-      const shiftedLabelLine = {
-        id: `${label.id}-line`,
-        padding: label.padding,
-        geometry: {
-          x1: shiftedLabel.geometry.x + cx,
-          y1: shiftedLabel.geometry.y + cy,
-          x2: label.geometry.x + cx,
-          y2: label.geometry.y + cy,
-        },
-      };
+      const labelObstacle = createLabelObstacle(label, shiftX, shiftY);
+      const labelLineObstacle = createLabelLineObstacle(label, labelObstacle);
 
       if (
-        !hasCollided(shiftedLabel.geometry, allObstacles) &&
-        !hasCollided(shiftedLabelLine.geometry, labelObstacles)
+        !hasCollided(labelObstacle.geometry, allObstacles) &&
+        !hasCollided(labelLineObstacle.geometry, labelObstacles)
       ) {
-        shifts.push(shift);
+        shifts.push({
+          labelObstacle,
+          labelLineObstacle,
+        });
 
         // Add the placed label and it's line as an obstacle
         // to the following labels
-        labelObstacles.push(shiftedLabel);
-        labelObstacles.push(shiftedLabelLine);
+        labelObstacles.push(labelObstacle);
+        labelObstacles.push(labelLineObstacle);
 
         continue nextLabel;
       }
     }
 
-    shifts.push(null);
+    // If no shift was found, add the target
+    shifts.push(createDefaultShiftResult(label));
   }
 
   return shifts;

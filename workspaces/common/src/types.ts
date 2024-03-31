@@ -16,10 +16,12 @@ export type Project = {
   id: ProjectKey;
   name: string;
   description: string;
-  href?: string;
+  created: string;
+  updated: string;
   image: string;
   imageDark?: string;
   tags: string[];
+  href?: string;
   deploy?: boolean;
   wip?: boolean;
 };

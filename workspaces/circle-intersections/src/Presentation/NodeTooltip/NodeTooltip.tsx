@@ -1,6 +1,6 @@
-import { Node, Edge } from '@hogg/circle-intersections';
 import { Text, Tooltip } from 'preshape';
 import { PropsWithChildren } from 'react';
+import { Node, Edge } from '@hogg/circle-intersections';
 import NodeTooltipContent from './NodeTooltipContent';
 
 type Props = {
@@ -9,6 +9,10 @@ type Props = {
 
 const NodeTooltip = (props: PropsWithChildren<Props>) => {
   const { children, node } = props;
+
+  if (!node.state.isSelectable) {
+    return children;
+  }
 
   return (
     <Tooltip

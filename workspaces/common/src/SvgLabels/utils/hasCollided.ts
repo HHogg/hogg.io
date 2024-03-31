@@ -62,15 +62,18 @@ const hasCollidedGeometry = (
   if (obstacle.type === 'bounds') {
     const response = new SAT.Response();
     const collision = test(-padding, response);
-    return collision && response.bInA === false;
+
+    return !collision || response.bInA === false;
   }
 
   // With 'outline' the polygon must not touch the obstacle
   // edges. If the polygon is completely within the obstacle (minus the padding)
-  // then it can't be touching the edges.
+  // then it can't be touching the edges, and likewise if it's completely
+  // outside the obstacle.
   if (obstacle.type === 'outline') {
     const response = new SAT.Response();
     const collision = test(-padding, response);
+
     if (collision && response.bInA) {
       return false;
     }

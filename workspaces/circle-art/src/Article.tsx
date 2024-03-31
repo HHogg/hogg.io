@@ -6,13 +6,17 @@ import {
   ArticleFig,
   ArticleFigLink,
   ArticleFigs,
-  ArticleHeading,
   ArticlePage,
-  ArticleParagraph,
-  ArticleSection,
   ProjectPageLink,
 } from '@hogg/common';
-import { BulletPoint, BulletPoints, Link } from 'preshape';
+import {
+  ArticleHeading,
+  ArticleParagraph,
+  ArticleSection,
+  BulletPoint,
+  BulletPoints,
+  Link,
+} from 'preshape';
 import EditorViewer from './Presentation/EditorViewer';
 import { configurationsByName } from './Presentation/configurations';
 

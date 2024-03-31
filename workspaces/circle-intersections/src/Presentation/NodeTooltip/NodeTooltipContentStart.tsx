@@ -1,6 +1,6 @@
-import { Edge, Node } from '@hogg/circle-intersections';
 import { Box, Text } from 'preshape';
 import { FunctionComponent } from 'react';
+import { Edge, Node } from '@hogg/circle-intersections';
 import NodeValidationBadge from '../Node/NodeBadge';
 
 type Props = {

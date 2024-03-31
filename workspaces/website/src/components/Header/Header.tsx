@@ -35,14 +35,15 @@ export default function Header({
             flex="horizontal"
             gap={isSmall ? 'x4' : 'x8'}
             paddingHorizontal={isSmall ? 'x2' : 'x8'}
+            textColor="text-shade-1"
           >
-            <Box backgroundColor="background-shade-1" style={{ padding: 2 }}>
+            <Box backgroundColor="background-shade-1">
               <Link href="https://github.com/HHogg" target="Github">
                 <GithubIcon size={28} />
               </Link>
             </Box>
 
-            <Box backgroundColor="background-shade-1" style={{ padding: 2 }}>
+            <Box backgroundColor="background-shade-1">
               <Link
                 href="https://linkedin.com/in/harrison-hogg"
                 target="LinkedIn"
@@ -51,7 +52,7 @@ export default function Header({
               </Link>
             </Box>
 
-            <Box backgroundColor="background-shade-1" style={{ padding: 2 }}>
+            <Box backgroundColor="background-shade-1">
               <ThemeSwitcher size={28} />
             </Box>
           </Box>

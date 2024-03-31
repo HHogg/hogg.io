@@ -1,30 +1,50 @@
-import { motion } from 'framer-motion';
-import { Text, TextProps, sizeX2Px, useResizeObserver } from 'preshape';
-import { useMemo, useRef } from 'react';
-import { Label, Rect } from './types';
+import { motion, useSpring } from 'framer-motion';
+import {
+  Box,
+  Text,
+  TextProps,
+  TypeColor,
+  sizeX3Px,
+  useResizeObserver,
+} from 'preshape';
+import { useEffect, useMemo, useRef } from 'react';
+import { Label } from './types';
 import { useLabelShift } from './useLabelShift';
 
 type SvgLabelProps = Omit<
   TextProps,
-  'paddingHorizontal' | 'paddingVertical'
+  'paddingHorizontal' | 'paddingVertical' | 'margin'
 > & {
+  id: string;
   isVisible?: boolean;
-  x: number;
-  y: number;
   paddingHorizontal?: number;
   paddingVertical?: number;
+  margin?: number;
   text: string;
+  offsetX?: number;
+  offsetY?: number;
+  targetX: number;
+  targetY: number;
+  onDimensionsChange?: (size: { height: number; width: number }) => void;
+  lineColor?: TypeColor;
 };
 
 export default function SvgLabel({
-  x: xProps,
-  y: yProps,
+  id,
   isVisible,
   backgroundColor,
   borderRadius,
+  margin = sizeX3Px,
   paddingHorizontal = 0,
   paddingVertical = 0,
+  stroke,
+  offsetX = 0,
+  offsetY = 0,
+  targetX,
+  targetY,
   text,
+  onDimensionsChange,
+  lineColor = 'text-shade-1',
   ...rest
 }: SvgLabelProps) {
   const ref = useRef<SVGRectElement>(null);
@@ -32,72 +52,104 @@ export default function SvgLabel({
 
   const height = size?.height + paddingVertical * 2;
   const width = size?.width + paddingHorizontal * 2;
-  const x = xProps - width / 2;
-  const y = yProps - height / 2;
 
-  const cx = width / 2;
-  const cy = height / 2;
-
-  const rect = useMemo<Rect>(
-    () => ({
-      height,
-      width,
-      x,
-      y,
-    }),
-    [height, width, x, y]
-  );
+  const dx = width * 0.5;
+  const dy = height * 0.5;
 
   const label = useMemo<Label>(
     () => ({
-      id: text,
-      geometry: rect,
-      padding: sizeX2Px,
+      id,
+      width,
+      height,
+      padding: margin,
+      offsetX,
+      offsetY,
+      targetX,
+      targetY,
     }),
-    [rect, text]
+    [id, margin, offsetX, offsetY, targetX, targetY, width, height]
   );
 
-  const [shiftX, shiftY] = useLabelShift(label);
+  const { labelObstacle, labelLineObstacle } = useLabelShift(label, {
+    isVisible,
+  });
+
+  const shiftedXSpring = useSpring(labelObstacle.geometry.x);
+  const shiftedYSpring = useSpring(labelObstacle.geometry.y);
+
+  const lineXSpring = useSpring(labelLineObstacle.geometry.x1);
+  const lineYSpring = useSpring(labelLineObstacle.geometry.y1);
+
+  useEffect(() => {
+    shiftedXSpring.set(labelObstacle.geometry.x);
+    shiftedYSpring.set(labelObstacle.geometry.y);
+    lineXSpring.set(labelLineObstacle.geometry.x1);
+    lineYSpring.set(labelLineObstacle.geometry.y1);
+  }, [
+    shiftedXSpring,
+    labelObstacle,
+    shiftedYSpring,
+    lineXSpring,
+    labelLineObstacle.geometry.x1,
+    labelLineObstacle.geometry.y1,
+    lineYSpring,
+    dx,
+    dy,
+  ]);
+
+  useEffect(() => {
+    onDimensionsChange?.({ width, height });
+  }, [height, onDimensionsChange, width]);
 
   return (
-    <motion.g
-      animate={{ opacity: isVisible ? 1 : 0 }}
-      transition={{ ease: 'easeOut' }}
-      transform={`translate(${x + shiftX},${y + shiftY})`}
-    >
-      <line
-        stroke="currentColor"
-        strokeDasharray="4 4"
-        strokeWidth="1"
-        x1={cx}
-        y1={cy}
-        x2={-shiftX + cx}
-        y2={-shiftY + cy}
-      />
+    <motion.g animate={{ opacity: isVisible ? 1 : 0 }} initial={{ opacity: 0 }}>
+      <Box tag="g" textColor={lineColor}>
+        <motion.line
+          stroke="currentColor"
+          strokeDasharray="4 4"
+          strokeWidth="1"
+          x1={lineXSpring}
+          y1={lineYSpring}
+          x2={label.targetX}
+          y2={label.targetY}
+        />
+      </Box>
 
-      <rect
-        ref={ref}
-        x={0}
-        y={0}
-        width={width}
-        height={height}
-        fill={`var(--color-${backgroundColor}`}
-        rx={borderRadius}
-        ry={borderRadius}
-      />
+      <g>
+        <motion.g
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          initial={{ opacity: 0 }}
+          style={{ x: shiftedXSpring, y: shiftedYSpring }}
+        >
+          <rect
+            ref={ref}
+            x={0}
+            y={-1}
+            width={width}
+            height={height}
+            fill={`var(--color-${backgroundColor}`}
+            stroke={stroke}
+            strokeDasharray="4 4"
+            strokeWidth="1"
+            rx={borderRadius}
+            ry={borderRadius}
+          />
 
-      <Text
-        {...rest}
-        tag="text"
-        alignmentBaseline="middle"
-        fill="currentColor"
-        style={{ lineHeight: 1 }}
-        ref={setSize}
-        textAnchor="middle"
-        transform={`translate(${cx},${cy})`}
-      >
-        {text}
-      </Text>
+          <Text
+            {...rest}
+            alignmentBaseline="middle"
+            textAnchor="middle"
+            tag="text"
+            fill="currentColor"
+            style={{ userSelect: 'none' }}
+            ref={setSize}
+            x={width * 0.5}
+            y={height * 0.5}
+          >
+            {text}
+          </Text>
+        </motion.g>
+      </g>
     </motion.g>
   );
 }

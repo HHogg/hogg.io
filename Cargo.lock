@@ -1305,6 +1305,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "line_segment_extending"
+version = "0.0.0"
+dependencies = [
+ "console_error_panic_hook",
+ "console_log",
+ "geometry",
+ "log",
+ "pretty_assertions",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "wasm-bindgen",
+]
+
+[[package]]
 name = "linked-hash-map"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"

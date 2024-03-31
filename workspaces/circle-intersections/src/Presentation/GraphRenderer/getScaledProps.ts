@@ -1,18 +1,24 @@
+import { Circle, Edge, Node } from '../..';
+
 const scale = (v: number, m: number) => m * (v / 1);
 
-const getScaledProps = <T extends {}>(
+const getScaledProps = <T extends Circle | Edge | Node>(
   entities: T[],
-  props: (keyof T)[],
   range: number
 ): T[] => {
   return entities.map((entity) => {
     const entityScaled: T = { ...entity };
 
-    for (const prop of props) {
-      entityScaled[prop] = scale(
-        entityScaled[prop] as unknown as number,
-        range
-      ) as any;
+    if ('x' in entityScaled) {
+      entityScaled.x = scale(entityScaled.x, range);
+    }
+
+    if ('y' in entityScaled) {
+      entityScaled.y = scale(entityScaled.y, range);
+    }
+
+    if ('radius' in entityScaled) {
+      entityScaled.radius = scale(entityScaled.radius, range);
     }
 
     return entityScaled;

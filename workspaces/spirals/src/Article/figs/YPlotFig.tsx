@@ -82,9 +82,8 @@ const t = ${tString};`;
     codeBlockString += `
 
 
-/** This will be the same for all code snippets going
- * forward, so it will be omitted going forward.
- */
+// This will be the same for all code snippets going
+// forward, so it will be omitted going forward.
 const x = r * Math.cos(t);
 const y = r * Math.sin(t);`;
   }
@@ -100,7 +99,7 @@ const y = r * Math.sin(t);`;
   )} for the equation ${mathItems.join(' and ')}.`;
 
   return (
-    <ArticleFigs theme="night">
+    <ArticleFigs>
       <ArticleFig
         description={figDescription}
         id={id}

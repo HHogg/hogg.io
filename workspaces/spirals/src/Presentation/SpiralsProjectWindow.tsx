@@ -9,6 +9,7 @@ const SpiralsProjectWindow = () => {
     <ProjectWindow
       backgroundPattern="grid"
       backgroundPatternGap={25}
+      shadow
       theme="night"
     >
       <Box flex="vertical" grow>

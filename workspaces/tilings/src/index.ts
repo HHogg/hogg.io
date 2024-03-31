@@ -3,9 +3,9 @@ import image from './image.webp';
 
 export { default as Project } from './Project';
 
-export { default as ArrangementProvider } from './Presentation/Arrangement/ArrangementProvider';
-export { default as NotationProvider } from './Presentation/Notation/NotationProvider';
-export { default as Renderer } from './Presentation/Renderer/Renderer';
+export { default as TilingArrangementProvider } from './Presentation/Arrangement/ArrangementProvider';
+export { default as TilingNotationProvider } from './Presentation/Notation/NotationProvider';
+export { default as TilingRenderer } from './Presentation/Renderer/Renderer';
 export * from './types';
 
 export const meta: Project = {
@@ -25,4 +25,6 @@ export const meta: Project = {
     'typescript',
     'actors',
   ],
+  created: '2024-04-01',
+  updated: '2024-04-01',
 };

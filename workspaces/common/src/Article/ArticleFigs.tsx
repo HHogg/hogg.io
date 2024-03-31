@@ -1,6 +1,10 @@
-import { useMatchMedia, ThemeProvider } from 'preshape';
+import {
+  useMatchMedia,
+  ThemeProvider,
+  ArticleSectionProps,
+  ArticleSection,
+} from 'preshape';
 import { PropsWithChildren } from 'react';
-import ArticleSection, { Props as ArticleSectionProps } from './ArticleSection';
 
 type Props = ArticleSectionProps & {
   maxWidth?: string;
@@ -10,7 +14,7 @@ const ArticleFigs = (props: PropsWithChildren<Props>) => {
   const {
     backgroundColor = 'background-shade-2',
     children,
-    maxWidth = '600px',
+    maxWidth = '800px',
     textColor = 'text-shade-1',
     theme,
     ...rest

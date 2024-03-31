@@ -22,19 +22,24 @@ export type Line = {
 
 export type Geometry = Circle | Rect | Line;
 
-export type ObstacleType = 'bounds' | 'outline';
+export type ObstacleType = 'solid' | 'bounds' | 'outline';
 
 export type Obstacle<TGeometry = Geometry> = {
   id: string;
   geometry: TGeometry;
   padding?: number;
-  type?: ObstacleType;
+  type: ObstacleType;
 };
 
 export type Obstacles = Obstacle[];
 
 export type Label = {
   id: string;
-  geometry: Rect;
+  height: number;
+  width: number;
   padding?: number;
+  offsetX: number;
+  offsetY: number;
+  targetX: number;
+  targetY: number;
 };

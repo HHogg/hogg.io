@@ -2,12 +2,17 @@ import {
   ArticleFigCodeBlock,
   ArticleFigLink,
   ArticleFigs,
-  ArticleHeading,
   ArticlePage,
+} from '@hogg/common';
+import {
+  ArticleHeading,
   ArticleParagraph,
   ArticleSection,
-} from '@hogg/common';
-import { Code, Link } from 'preshape';
+  BulletPoint,
+  BulletPoints,
+  Code,
+  Link,
+} from 'preshape';
 
 type Props = {};
 
@@ -17,20 +22,43 @@ const Article = ({}: Props) => {
       <ArticleSection>
         <ArticleHeading>Introduction</ArticleHeading>
         <ArticleParagraph>
-          I'm a cliche and I've started using Rust but this isn't an article
-          about how great it is. This is an article about how I've been using
-          Rust in my web projects, the workflow to compile Rust to WebAssembly,
-          and the setup for loading and using the compiled WebAssembly in a
-          React app.
+          This isn't an article about how great Rust is. This is an article
+          about my end to end workflow of using Rust in a monorepo for my web
+          projects.
         </ArticleParagraph>
 
         <ArticleParagraph>
+          I've been using Rust for about 1 and a half years now and I'm mostly
+          happy with the setup, which involves:
+        </ArticleParagraph>
+
+        <BulletPoints>
+          <BulletPoint>
+            Writing Rust in a pretty standard way with standard tooling.
+          </BulletPoint>
+
+          <BulletPoint>
+            A mono repo with a variety of Rust, WebAssembly and TypeScript
+            libraries, Rust CLIs and React WebApps.
+          </BulletPoint>
+
+          <BulletPoint>
+            A fully typed integration between Rust, WebAssembly and TypeScript.
+          </BulletPoint>
+
+          <BulletPoint>
+            Live/HMR reloading of WebAssembly and TypeScript in development when
+            files change.
+          </BulletPoint>
+        </BulletPoints>
+
+        {/* <ArticleParagraph>
           At the heart of this workflow are these two tools,{' '}
           <Link underline>wasm-bindgen</Link> and{' '}
           <Link underline>wasm-pack</Link>. Both of these tools have great
           documentation so I won't go into too much detail here, but I'll give a
           brief overview.
-        </ArticleParagraph>
+        </ArticleParagraph> */}
       </ArticleSection>
 
       {/* https://github.com/rustwasm/wasm-bindgen */}
@@ -62,7 +90,7 @@ const Article = ({}: Props) => {
           the rest of the codebase.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="rust-example"
             description="Rust code that defines a Sequence type as a fixed length array of length 12, and a function that returns the length of the sequence."
@@ -101,7 +129,7 @@ pub fn get_length(sequence: &Sequence) -> usize {
           called anything) and adding the following contents:
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="wasm-api"
             description="Rust code that exports the Sequence type and get_length function to JavaScript."

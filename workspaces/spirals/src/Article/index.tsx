@@ -2,13 +2,17 @@ import {
   ArticleFig,
   ArticleFigLink,
   ArticleFigs,
-  ArticleHeading,
   ArticlePage,
-  ArticleParagraph,
-  ArticleSection,
   InView,
 } from '@hogg/common';
-import { Code, CodeBlock, Link } from 'preshape';
+import {
+  ArticleHeading,
+  ArticleParagraph,
+  ArticleSection,
+  Code,
+  CodeBlock,
+  Link,
+} from 'preshape';
 import { useCallback } from 'react';
 import { getUlamSpiral, useSpiralsContext } from '../Presentation';
 import SineWavesCirclePlot from './figs/SineWavesCirclePlot';
@@ -74,7 +78,7 @@ const Article = () => {
           Theta is just the named variable for a value that represents an angle.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFig
             id="math.cos"
             description="Math.cos and Math.sin"
@@ -363,7 +367,7 @@ Math.sin(Math.PI) // 0
           numbers.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFig id="golden-angle" description="Golden angle calculation">
             <CodeBlock language="typescript">{`
               Math.PI * (3 - Math.sqrt(5));
@@ -398,7 +402,7 @@ Math.sin(Math.PI) // 0
           prime number, we're going to plot a point at that position.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFig
             id="ulam-spiral"
             description="Ulam spiral implementation"

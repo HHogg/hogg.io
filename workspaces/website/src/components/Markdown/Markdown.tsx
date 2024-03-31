@@ -7,14 +7,7 @@ type Props = {
 
 const customComponents: Components = {
   a: ({ children, href }) => (
-    <Link
-      href={href}
-      onClick={(e) => e.stopPropagation()}
-      underline
-      underlineSize="x1"
-      target="_blank"
-      weight="x2"
-    >
+    <Link href={href} onClick={(e) => e.stopPropagation()} target="_blank">
       {children}
     </Link>
   ),

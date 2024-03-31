@@ -4,21 +4,26 @@ import {
   ArticleFigCodeBlock,
   ArticleFigLink,
   ArticleFigs,
-  ArticleHeading,
   ArticlePage,
-  ArticleParagraph,
-  ArticleSection,
   ProjectPageLink,
 } from '@hogg/common';
 import {
-  ArrangementProvider,
+  TilingArrangementProvider,
   ColorMode,
-  NotationProvider,
-  Renderer,
+  TilingNotationProvider,
+  TilingRenderer,
   meta as tilingsMeta,
 } from '@hogg/tilings';
 import { meta as wasmApiMeta } from '@hogg/wasm-api';
-import { Code, Link, Text, sizeX12Px } from 'preshape';
+import {
+  ArticleHeading,
+  ArticleParagraph,
+  ArticleSection,
+  Code,
+  Link,
+  Text,
+  sizeX12Px,
+} from 'preshape';
 import fileContentsGetMatch from '@hogg/circular-sequence/src-rust/get_match.rs?raw';
 import fileContentsMinPermutation from '@hogg/circular-sequence/src-rust/min_permutation.rs?raw';
 import fileContentsSequence from '@hogg/circular-sequence/src-rust/sequence.rs?raw';
@@ -60,16 +65,16 @@ const Article = ({}: Props) => {
             id="dodecagon-shape-arrangement"
             description="Shape arrangement of a dodecagon at the center, with alternating triangles, squares and hexagons on it's edges."
           >
-            <ArrangementProvider>
-              <NotationProvider notation="12-3,4,6,4,3,4,6,4,3,4,6,4">
-                <Renderer
+            <TilingArrangementProvider>
+              <TilingNotationProvider notation="12-3,4,6,4,3,4,6,4,3,4,6,4">
+                <TilingRenderer
                   height="200px"
                   options={{
                     colorMode: ColorMode.None,
                   }}
                 />
-              </NotationProvider>
-            </ArrangementProvider>
+              </TilingNotationProvider>
+            </TilingArrangementProvider>
           </ArticleFig>
         </ArticleFigs>
       </ArticleSection>
@@ -105,7 +110,7 @@ const Article = ({}: Props) => {
           heap and use the stack where possible.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="example-sequences"
             description="A couple of example sequences represented as Rust fixed length arrays. "
@@ -143,7 +148,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           ).
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="get-length"
             description="Implementation to return the actual length of a sequence"
@@ -179,14 +184,14 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           same set of paths.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="sequence-34312"
             description="A symmetrical sequence, the same traversal is produced regardless of the direction."
             presentation={
-              <ArrangementProvider>
-                <NotationProvider notation="4-3,4,3,12">
-                  <Renderer
+              <TilingArrangementProvider>
+                <TilingNotationProvider notation="4-3,4,3,12">
+                  <TilingRenderer
                     height="200px"
                     validations={[]}
                     options={{
@@ -194,8 +199,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                       padding: sizeX12Px,
                     }}
                   />
-                </NotationProvider>
-              </ArrangementProvider>
+                </TilingNotationProvider>
+              </TilingArrangementProvider>
             }
             language="rust"
           >
@@ -216,14 +221,14 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           traverse in both directions.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="sequence-33412"
             description="An asymmetrical sequence, and it's differing traversals in either direction"
             presentation={
-              <ArrangementProvider>
-                <NotationProvider notation="4-3,3,4,12">
-                  <Renderer
+              <TilingArrangementProvider>
+                <TilingNotationProvider notation="4-3,3,4,12">
+                  <TilingRenderer
                     height="200px"
                     validations={[]}
                     options={{
@@ -232,8 +237,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                       isValid: true,
                     }}
                   />
-                </NotationProvider>
-              </ArrangementProvider>
+                </TilingNotationProvider>
+              </TilingArrangementProvider>
             }
             language="rust"
           >
@@ -292,7 +297,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           <Code>O(n)</Code> time.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="is-symmetrical"
             description="Implementation to retrieve the starting index of the reverse sequence if it exists"
@@ -329,7 +334,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           ).
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="get-match"
             description="Implementation to search through the sequences"
@@ -350,7 +355,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           ).
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="compare-sequences"
             description="Implementation to search through the sequences"
@@ -388,7 +393,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           of the 2.
         </ArticleParagraph>
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="normalize-sequence"
             description="Implementation to search through the sequences"
@@ -400,7 +405,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         </ArticleFigs>
 
         <ArticleParagraph>
-          Let's take a look at some examples by using the Wasm API of this rust
+          Let's take a look at some examples using the Wasm API of this rust
           code.
         </ArticleParagraph>
 
@@ -412,10 +417,10 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           </ArticleCallout>
         )}
 
-        <ArticleFigs theme="night">
+        <ArticleFigs>
           <ArticleFigCodeBlock
             id="min-permutations"
-            description=""
+            description="Outputs of the get_min_permutation function"
             language="rust"
           >
             {`

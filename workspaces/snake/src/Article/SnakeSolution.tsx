@@ -34,6 +34,8 @@ const SnakeSolution = ({ onSelect, solution }: Props) => {
           language="typescript"
           overflow="auto"
           size="x2"
+          wrapLines={false}
+          wrapLongLines={false}
         >
           {solution.content}
         </CodeBlock>

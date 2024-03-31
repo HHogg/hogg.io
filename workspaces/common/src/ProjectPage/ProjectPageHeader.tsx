@@ -1,8 +1,8 @@
-import { Box, BoxProps, Label, Labels, Text } from 'preshape';
+import { Box, BoxProps, Text } from 'preshape';
 import { useProjectPageContext } from './useProjectPageContext';
 
 export default function ProjectPageHeader(props: BoxProps) {
-  const { name, description, tags, wip } = useProjectPageContext();
+  const { name, description, wip } = useProjectPageContext();
 
   return (
     <Box {...props}>
@@ -13,22 +13,6 @@ export default function ProjectPageHeader(props: BoxProps) {
       <Text margin="x8" size="x5" weight="x2">
         {description}
       </Text>
-
-      <Labels margin="x8">
-        {tags.map((tag) => (
-          <Label
-            key={tag}
-            size="x3"
-            backgroundColor="background-shade-3"
-            textColor="text-shade-1"
-            borderRadius="3px"
-            borderSize="x1"
-            borderColor="background-shade-4"
-          >
-            {tag}
-          </Label>
-        ))}
-      </Labels>
 
       {wip && (
         <Text margin="x16" weight="x2">

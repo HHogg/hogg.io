@@ -2,7 +2,9 @@ import { SvgLabelsProvider } from '@hogg/common';
 import classNames from 'classnames';
 import { Box, Motion, MotionsProps, useResizeObserver } from 'preshape';
 import { useMemo, PointerEvent } from 'react';
-import { getArcPath, getTraversalPath } from '@hogg/circle-intersections';
+import { Circle, Edge, Node } from '../..';
+import getArcPath from '../../utils/getArcPath';
+import getTraversalPath from '../../utils/getTraversalPath';
 import NodeTooltip from '../NodeTooltip/NodeTooltip';
 import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 import GraphBounds from './GraphBounds';
@@ -14,6 +16,28 @@ import GraphTraversal from './GraphTraversal';
 import getScaledProps from './getScaledProps';
 import './GraphRenderer.css';
 
+const getOppositeX = (circles: Circle[], node: Node | Edge) => {
+  if ('circle' in node) {
+    return circles[node.circle].x;
+  }
+
+  const c1 = circles[node.circles[0]];
+  const c2 = circles[node.circles[1]];
+
+  return c1.x + (c2.x - c1.x) / 2;
+};
+
+const getOppositeY = (circles: Circle[], node: Node | Edge) => {
+  if ('circle' in node) {
+    return circles[node.circle].y;
+  }
+
+  const c1 = circles[node.circles[0]];
+  const c2 = circles[node.circles[1]];
+
+  return c1.y + (c2.y - c1.y) / 2;
+};
+
 const GraphRenderer = (props: MotionsProps) => {
   const {
     activeNodeIndex,
@@ -23,20 +47,25 @@ const GraphRenderer = (props: MotionsProps) => {
     graph,
   } = useIntersectionExplorerContext();
   const [size, ref] = useResizeObserver();
-  const min = Math.min(size.height, size.width);
+
+  const padding = 30;
+  const minDimension = Math.min(size.height, size.width);
+  const width = minDimension + padding * 2;
+  const height = minDimension + padding * 2;
 
   const circles = useMemo(
-    () => getScaledProps(graph.circles, ['radius', 'x', 'y'], min),
-    [graph, min]
+    () => getScaledProps(graph.circles, minDimension),
+    [graph, minDimension]
   );
   const edges = useMemo(
-    () => getScaledProps(graph.edges, ['radius', 'x', 'y'], min),
-    [graph, min]
+    () => getScaledProps(graph.edges, minDimension),
+    [graph, minDimension]
   );
   const nodes = useMemo(
-    () => getScaledProps(graph.nodes, ['x', 'y'], min),
-    [graph, min]
+    () => getScaledProps(graph.nodes, minDimension),
+    [graph, minDimension]
   );
+
   const classes = classNames('GraphVisualisation', {
     'GraphVisualisation--has-active-node': activeNodeIndex > -1,
   });
@@ -55,16 +84,19 @@ const GraphRenderer = (props: MotionsProps) => {
   return (
     <Motion {...props} layout flex="vertical" grow>
       <Box container grow ref={ref}>
-        <SvgLabelsProvider maxSearchRadius={200}>
+        <SvgLabelsProvider width={width} height={height}>
           <Box
+            tag="svg"
             absolute="center"
             className={classes}
-            height={min}
-            tag="svg"
-            viewBox={`${-min / 2} ${-min / 2} ${min} ${min}`}
-            width={min}
+            height={minDimension}
+            width={minDimension}
+            viewBox={`${width * -0.5} ${height * -0.5} ${width} ${height}`}
+            style={{
+              shapeRendering: 'geometricPrecision',
+            }}
           >
-            <GraphBounds height={size.height} width={size.width} />
+            <GraphBounds height={height} width={width} />
 
             <g>
               {circles.map((circle, index) => (
@@ -94,13 +126,15 @@ const GraphRenderer = (props: MotionsProps) => {
             </g>
 
             <g>
-              {[...nodes, ...edges].map(({ index, state, x, y }) => (
+              {[...nodes, ...edges].map((node) => (
                 <GraphLabel
-                  isVisible={state.isVisible}
-                  key={index}
-                  text={index.toString()}
-                  x={x}
-                  y={y}
+                  isVisible={node.state.isVisible}
+                  key={node.index}
+                  text={node.index.toString()}
+                  x={node.x}
+                  y={node.y}
+                  oppositeX={getOppositeX(circles, node)}
+                  oppositeY={getOppositeY(circles, node)}
                 />
               ))}
             </g>

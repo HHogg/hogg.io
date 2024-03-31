@@ -15,7 +15,7 @@
     "@hogg/common": "workspace:^",
     "@hogg/wasm-api": "workspace:^",
     "lucide-react": "^0.294.0",
-    "preshape": "^17.2.0",
+    "preshape": "^18.1.2",
     "react": "^18.2.0",
     "uuid": "^9.0.1"
   },

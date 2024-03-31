@@ -8,7 +8,7 @@
   "dependencies": {
     "@hogg/circle-intersections": "workspace:^",
     "@hogg/common": "workspace:^",
-    "preshape": "^17.2.0",
+    "preshape": "^18.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

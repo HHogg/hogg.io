@@ -1,14 +1,18 @@
 import { createContext, useContext } from 'react';
-import { Label, Obstacle, Point } from './types';
+import { Label, Obstacle } from './types';
+import {
+  LabelShiftResult,
+  createDefaultShiftResult,
+} from './utils/getLabelShifts';
 
 export type SvgLabelsContextProps = {
-  getLabelShift: (label: Label) => Point;
+  getLabelShift: (label: Label) => LabelShiftResult;
   registerLabel: (label: Label) => () => void;
   registerObstacle: (obstacle: Obstacle) => () => void;
 };
 
 export const SvgLabelsContext = createContext<SvgLabelsContextProps>({
-  getLabelShift: () => [0, 0],
+  getLabelShift: createDefaultShiftResult,
   registerLabel: () => () => {},
   registerObstacle: () => () => {},
 });

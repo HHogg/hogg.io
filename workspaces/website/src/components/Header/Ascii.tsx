@@ -22,7 +22,7 @@ export default function Ascii(props: TextProps) {
   }, []);
 
   return (
-    <Text {...props} absolute="left" zIndex={-1}>
+    <Text {...props} absolute="left" textColor="text-shade-1" zIndex={-1}>
       <pre>{texts[textIndex]}</pre>
     </Text>
   );

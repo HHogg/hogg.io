@@ -2,12 +2,16 @@ import {
   ArticleFig,
   ArticleFigLink,
   ArticleFigs,
-  ArticleHeading,
   ArticlePage,
+} from '@hogg/common';
+import {
+  ArticleHeading,
   ArticleParagraph,
   ArticleSection,
-} from '@hogg/common';
-import { Box, Code, Link } from 'preshape';
+  Box,
+  Code,
+  Link,
+} from 'preshape';
 import { TraversalJSON } from '../Project';
 import RuleBox from './RuleBox';
 import SvgCirclesGraph1 from './images/CirclesGraph1';

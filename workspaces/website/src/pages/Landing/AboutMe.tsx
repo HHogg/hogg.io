@@ -10,34 +10,36 @@ const Strong = (props: TextProps) => (
 export default function AboutMe() {
   return (
     <Box flex="vertical" gap="x3">
-      <Text size="x6" weight="x5">
+      <Text size="x7">
         <Text tag="span">Hi, I'm </Text>
-        <Text tag="span">Harrison Hogg</Text>
+        <Text tag="span" weight="x5">
+          Harrison Hogg
+        </Text>
         <Text tag="span">.</Text>
       </Text>
 
-      <Text size="x6">
+      <Text weight="x2">
         A <Strong>fullstack engineer</Strong>, with {currentYear - startedYear}{' '}
         years experience building software
       </Text>
 
       <Text>
-        The first 2 years was hacking jQuery and PHP over FTP (it still counts),
-        the following 7 years were spent working at different startups in
-        Brighton and London in various industries. The last ~3 years I've been
-        working at <Strong>Spotify</Strong>.
+        The last ~3 years I've been working at <Strong>Spotify</Strong>. The
+        previous 7 years were spent working at <Strong>startups</Strong> in
+        Brighton and London within various industries. Before that, for 2 years
+        I was shipping jQuery and PHP over FTP (it still counts).
       </Text>
 
       <Text>
-        I've worked all parts of the stack, product, design and engineering.
+        I've worked all parts of the stack; product, design and engineering.
         I've lead 5 <Strong>design system</Strong> projects,{' '}
         <Strong>Scala dataflow</Strong> pipelines, a <Strong>Rust</Strong>{' '}
         network euclidean tiling search and renderer, a{' '}
-        <Strong>realtime collaborative</Strong> book editor,
+        <Strong>realtime collaborative</Strong> book editor,{' '}
         <Strong>GIS</Strong> infrastructure management, a{' '}
         <Strong>drag and drop</Strong> email editor, <Strong>WebGL</Strong>,{' '}
-        <Strong>Canvas</Strong> and <Strong>SVG</Strong>{' '}
-        <Strong>network visualisations</Strong> used by Netflix, internal{' '}
+        <Strong>Canvas</Strong> and <Strong>SVG</Strong> infrastructure
+        visualisations used by Netflix, internal{' '}
         <Strong>engineering platforms</Strong>, and the <Strong>desktop</Strong>{' '}
         application at Spotify.
       </Text>

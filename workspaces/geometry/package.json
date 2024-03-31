@@ -1,0 +1,17 @@
+{
+  "name": "@hogg/geometry",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "yarn generate:types",
+    "clean": "rm -rf ./src/types.ts",
+    "dev": "cargo watch -w ./src-rust -q -s 'yarn workspace @hogg/geometry run build'",
+    "generate:types": "typeshare ./src-rust --lang=typescript --output-file=./src/types.ts"
+  },
+  "dependencies": {
+    "preshape": "^18.1.2"
+  }
+}

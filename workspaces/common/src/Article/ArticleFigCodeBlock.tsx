@@ -24,6 +24,7 @@ export default function ArticleFigCodeBlock({
   presentation,
   startLineNumber,
   endLineNumber,
+  maxHeight,
   ...rest
 }: Props) {
   const refCodeBlock = useRef<HTMLElement | null>(null);
@@ -67,13 +68,14 @@ export default function ArticleFigCodeBlock({
       >
         <Text basis="0" flex="horizontal" grow minWidth={0} size="x3">
           <Motion
-            animate={{ height: isExpanded ? 'auto' : '300px' }}
             basis="0"
-            initial={{ height: '300px' }}
+            // animate={{ height: isExpanded ? 'auto' : '300px' }}
+            // initial={{ height: '300px' }}
             flex="vertical"
             grow
             overflow="auto"
             ref={refCodeBlock}
+            // maxHeight="300px"
           >
             <CodeBlock grow language={language} padding="x6">
               {contents}
@@ -92,14 +94,13 @@ export default function ArticleFigCodeBlock({
               borderColorHover="accent-shade-1"
               borderColorActive="accent-shade-1"
               flex="vertical"
-              textColor="text-shade-4"
-              textColorHover="text-shade-4"
-              textColorActive="text-shade-4"
+              textColor="text-shade-1"
+              textColorHover="text-shade-1"
+              textColorActive="text-shade-1"
               onClick={() => setIsExpanded((isExpanded) => !isExpanded)}
               padding="x2"
               style={{
                 backdropFilter: 'blur(2px)',
-                filter: 'drop-shadow(0px 0px 4px black)',
               }}
             >
               {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}

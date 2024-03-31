@@ -39,11 +39,10 @@ export default function Project({ Component, meta }: Props) {
 
         <Component
           layout={match('1000px') ? 'horizontal' : 'vertical'}
-          gap={match('1000px') ? 'x24' : 'x8'}
+          gap={match('1000px') ? 'x16' : 'x8'}
         />
 
         <PageChangeButtons
-          margin="x32"
           previous={
             previousProject && {
               title: previousProject.name,

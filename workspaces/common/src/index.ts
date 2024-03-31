@@ -6,13 +6,12 @@ export {
 export { default as ArticleFigCodeBlock } from './Article/ArticleFigCodeBlock';
 export { default as ArticleFigs } from './Article/ArticleFigs';
 export { default as ArticleFigLink } from './Article/ArticleFigLink';
-export { default as ArticleHeading } from './Article/ArticleHeading';
 export { default as ArticlePage } from './Article/ArticlePage';
-export { default as ArticleParagraph } from './Article/ArticleParagraph';
 export { default as ArticleProvider } from './Article/ArticleProvider';
-export { default as ArticleSection } from './Article/ArticleSection';
 export { getCodeSnippetFromFile } from './Article/getCodeSnippetFromFile';
 export { useArticleFigNumber } from './Article/useArticleContext';
+
+export { default as ImageCover } from './ImageCover/ImageCover';
 
 export { default as InView } from './InView/InView';
 
