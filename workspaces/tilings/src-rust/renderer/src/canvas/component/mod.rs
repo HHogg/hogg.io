@@ -6,6 +6,7 @@ mod line_segment;
 mod line_segment_arrows;
 mod point;
 mod polygon;
+mod rect;
 
 use tiling::BBox;
 
@@ -17,6 +18,7 @@ pub use self::line_segment::LineSegment;
 pub use self::line_segment_arrows::LineSegmentArrows;
 pub use self::point::Point;
 pub use self::polygon::Polygon;
+pub use self::rect::Rect;
 use super::collision::Theia;
 use super::Scale;
 pub use super::Style;
@@ -30,7 +32,8 @@ pub enum Component {
   LineSegment(LineSegment),
   LineSegmentArrows(LineSegmentArrows),
   Point(Point),
-  Shape(Polygon),
+  Polygon(Polygon),
+  Rect(Rect),
 }
 
 impl Component {
@@ -42,7 +45,8 @@ impl Component {
       Self::LineSegment(d) => d,
       Self::LineSegmentArrows(d) => d,
       Self::Point(d) => d,
-      Self::Shape(d) => d,
+      Self::Polygon(d) => d,
+      Self::Rect(d) => d,
     }
   }
 }
@@ -50,22 +54,33 @@ impl Component {
 impl Draw for Component {
   fn collides_with(
     &self,
+    context: &web_sys::CanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
     other: &Component,
-  ) -> bool {
+  ) -> Result<bool, Error> {
     self
       .inner()
-      .collides_with(canvas_bbox, content_bbox, scale, other)
+      .collides_with(context, canvas_bbox, content_bbox, scale, other)
   }
 
   fn component(&self) -> Component {
     self.clone()
   }
 
-  fn bbox(&self, canvas_bbox: &BBox, content_bbox: &BBox, scale: &Scale) -> BBox {
-    self.inner().bbox(canvas_bbox, content_bbox, scale)
+  fn style(&self) -> &Style {
+    self.inner().style()
+  }
+
+  fn bbox(
+    &self,
+    context: &web_sys::CanvasRenderingContext2d,
+    canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
+    self.inner().bbox(context, canvas_bbox, content_bbox, scale)
   }
 
   fn draw(
@@ -76,7 +91,7 @@ impl Draw for Component {
     scale: &Scale,
     theia: &mut Theia,
   ) -> Result<(), Error> {
-    if !theia.has_collision(canvas_bbox, content_bbox, scale, self) {
+    if !theia.has_collision(context, canvas_bbox, content_bbox, scale, self)? {
       self
         .inner()
         .draw(context, canvas_bbox, content_bbox, scale, theia)?;
@@ -137,15 +152,12 @@ impl From<Point> for Component {
 
 impl From<Polygon> for Component {
   fn from(shape: Polygon) -> Self {
-    Self::Shape(shape)
+    Self::Polygon(shape)
   }
 }
 
-impl Eq for Component {}
-
-impl PartialEq for Component {
-  fn eq(&self, other: &Self) -> bool {
-    self.bbox(&BBox::default(), &BBox::default(), &Scale::default())
-      == other.bbox(&BBox::default(), &BBox::default(), &Scale::default())
+impl From<Rect> for Component {
+  fn from(shape: Rect) -> Self {
+    Self::Rect(shape)
   }
 }

@@ -1,5 +1,4 @@
 import {
-  ArticleCallout,
   ArticleFig,
   ArticleFigCodeBlock,
   ArticleFigLink,
@@ -14,7 +13,6 @@ import {
   TilingRenderer,
   meta as tilingsMeta,
 } from '@hogg/tilings';
-import { meta as wasmApiMeta } from '@hogg/wasm-api';
 import {
   ArticleHeading,
   ArticleParagraph,
@@ -390,14 +388,6 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         </ArticleFigs>
 
         <ArticleParagraph>Let's take a look at some examples.</ArticleParagraph>
-
-        {wasmApiMeta.deploy && (
-          <ArticleCallout title="How does the Wasm API work? ">
-            If you're interested in reading about how the Wasm API for this
-            project works you can take a look at my{' '}
-            <ProjectPageLink project={wasmApiMeta} />
-          </ArticleCallout>
-        )}
 
         <ArticleFigs>
           <MinPermutationFigWithWasApi />

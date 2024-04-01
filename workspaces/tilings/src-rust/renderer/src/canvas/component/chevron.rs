@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use tiling::BBox;
+use tiling::{BBox, Point};
 
 use super::{Component, Draw, LineSegment, Style};
 use crate::canvas::collision::Theia;
@@ -9,20 +9,20 @@ use crate::Error;
 
 #[derive(Clone)]
 pub struct Chevron {
-  pub point: tiling::Point,
+  pub point: Point,
   pub direction: f64,
   pub style: Style,
 }
 
 impl Chevron {
-  fn get_points(&self, scale: &Scale) -> Vec<tiling::Point> {
+  fn get_points(&self, scale: &Scale) -> Vec<Point> {
     let size = self.style.get_chevron_size(scale);
 
-    let point_1 = tiling::Point::default()
+    let point_1 = Point::default()
       .with_xy(self.point.x - size, self.point.y - size)
       .rotate(self.direction - PI * 0.5, Some(&self.point));
-    let point_2 = tiling::Point::default().with_xy(self.point.x, self.point.y);
-    let point_3 = tiling::Point::default()
+    let point_2 = Point::default().with_xy(self.point.x, self.point.y);
+    let point_3 = Point::default()
       .with_xy(self.point.x + size, self.point.y - size)
       .rotate(self.direction - PI * 0.5, Some(&self.point));
 
@@ -44,10 +44,20 @@ impl Draw for Chevron {
     self.clone().into()
   }
 
-  fn bbox(&self, canvas_bbox: &BBox, content_bbox: &BBox, scale: &Scale) -> BBox {
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    context: &web_sys::CanvasRenderingContext2d,
+    canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
     self
       .get_line_segment(scale)
-      .bbox(canvas_bbox, content_bbox, scale)
+      .bbox(context, canvas_bbox, content_bbox, scale)
   }
 
   fn draw(

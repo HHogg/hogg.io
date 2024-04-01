@@ -1,4 +1,3 @@
-import { Canvas } from '@hogg/canvas';
 import {
   BoxProps,
   colorBlack,
@@ -11,6 +10,7 @@ import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
 import { usePlayerContext } from '../Player/usePlayerContext';
 import useWasmApi from '../WasmApi/useWasmApi';
+import Canvas from './Canvas';
 
 export type RendererProps = {
   options?: Partial<Options>;

@@ -7,20 +7,29 @@ use crate::canvas::Scale;
 use crate::Error;
 
 pub trait Draw {
-  fn bbox(&self, _canvas_bbox: &BBox, _content_bbox: &BBox, _scale: &Scale) -> BBox {
-    BBox::default()
+  fn bbox(
+    &self,
+    _context: &CanvasRenderingContext2d,
+    _canvas_bbox: &BBox,
+    _content_bbox: &BBox,
+    _scale: &Scale,
+  ) -> Result<BBox, Error> {
+    Ok(BBox::default())
   }
 
   fn component(&self) -> Component;
 
+  fn style(&self) -> &Style;
+
   fn collides_with(
     &self,
+    _context: &CanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,
     _other: &Component,
-  ) -> bool {
-    false
+  ) -> Result<bool, Error> {
+    Ok(false)
   }
 
   fn draw_start(
@@ -49,7 +58,7 @@ pub trait Draw {
     scale: &Scale,
     style: &Style,
   ) -> Result<(), Error> {
-    let bbox = self.bbox(canvas_bbox, content_bbox, scale);
+    let bbox = self.bbox(context, canvas_bbox, content_bbox, scale)?;
 
     style.apply(context, scale)?;
     context.begin_path();

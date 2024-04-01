@@ -1,17 +1,17 @@
-use tiling::BBox;
+use tiling::{BBox, Point};
 
-use super::{Component, Draw, Style};
-use crate::canvas::collision::Theia;
+use super::{Component, Draw, Style, Theia};
 use crate::canvas::Scale;
 use crate::Error;
 
 #[derive(Clone)]
-pub struct Polygon {
-  pub polygon: tiling::Polygon,
+pub struct Rect {
+  pub min: Point,
+  pub max: Point,
   pub style: Style,
 }
 
-impl Draw for Polygon {
+impl Draw for Rect {
   fn component(&self) -> Component {
     self.clone().into()
   }
@@ -27,7 +27,7 @@ impl Draw for Polygon {
     _content_bbox: &BBox,
     _scale: &Scale,
   ) -> Result<BBox, Error> {
-    Ok(self.polygon.bbox)
+    Ok(BBox::default().with_min(self.min).with_max(self.max))
   }
 
   fn draw(
@@ -38,17 +38,10 @@ impl Draw for Polygon {
     scale: &Scale,
     _theia: &mut Theia,
   ) -> Result<(), Error> {
+    let bbox = BBox::default().with_min(self.min).with_max(self.max);
+
     self.draw_start(context, scale, &self.style)?;
-
-    for (index, point) in self.polygon.points.iter().enumerate() {
-      match index {
-        0 => context.move_to(point.x, point.y),
-        _ => context.line_to(point.x, point.y),
-      }
-    }
-
-    context.line_to(self.polygon.points[0].x, self.polygon.points[0].y);
-
+    context.rect(bbox.min.x, bbox.min.y, bbox.width(), bbox.height());
     self.draw_end(context);
 
     Ok(())

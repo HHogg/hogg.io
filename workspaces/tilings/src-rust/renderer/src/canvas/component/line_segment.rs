@@ -1,4 +1,4 @@
-use tiling::BBox;
+use tiling::{BBox, Point};
 
 use super::{Component, Draw, Style};
 use crate::canvas::collision::Theia;
@@ -7,14 +7,14 @@ use crate::Error;
 
 #[derive(Clone)]
 pub struct LineSegment {
-  pub points: Vec<tiling::Point>,
+  pub points: Vec<Point>,
   pub extend_start: bool,
   pub extend_end: bool,
   pub style: Style,
 }
 
 impl LineSegment {
-  fn get_points(&self, bbox: &BBox) -> Vec<tiling::Point> {
+  fn get_points(&self, bbox: &BBox) -> Vec<Point> {
     get_extended_points_to_bbox(&self.points, bbox, self.extend_start, self.extend_end)
   }
 
@@ -59,8 +59,47 @@ impl Draw for LineSegment {
     self.clone().into()
   }
 
-  fn bbox(&self, _canvas_bbox: &BBox, content_bbox: &BBox, _scale: &Scale) -> BBox {
-    BBox::from(self.get_points(content_bbox))
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    _context: &web_sys::CanvasRenderingContext2d,
+    _canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
+    let mut min = Point::default().with_xy(std::f64::INFINITY, std::f64::INFINITY);
+    let mut max = Point::default().with_xy(std::f64::NEG_INFINITY, std::f64::NEG_INFINITY);
+
+    for point in self.get_points(content_bbox) {
+      if point.x < min.x {
+        min.x = point.x
+      }
+
+      if point.x > max.x {
+        max.x = point.x
+      }
+
+      if point.y < min.y {
+        min.y = point.y
+      }
+
+      if point.y > max.y {
+        max.y = point.y
+      }
+    }
+
+    let line_thickness = self.style.get_line_thickness(scale) * 0.5;
+    let stroke_width = self.style.get_stroke_width(scale) * 0.5;
+    let offset = line_thickness + stroke_width;
+
+    Ok(
+      BBox::default()
+        .with_min(min.translate(&Point::default().with_xy(-offset, -offset)))
+        .with_max(max.translate(&Point::default().with_xy(offset, offset))),
+    )
   }
 
   fn draw(
@@ -103,11 +142,11 @@ impl Draw for LineSegment {
 
 ///
 pub fn get_extended_points_to_bbox(
-  points: &Vec<tiling::Point>,
+  points: &Vec<Point>,
   bbox: &BBox,
   extend_start: bool,
   extend_end: bool,
-) -> Vec<tiling::Point> {
+) -> Vec<Point> {
   let mut extended_points = vec![];
 
   for (index, point) in points.iter().enumerate() {

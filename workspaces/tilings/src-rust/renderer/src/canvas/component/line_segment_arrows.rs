@@ -1,4 +1,5 @@
-use tiling::BBox;
+use tiling::line_segment::Origin;
+use tiling::{BBox, LineSegment};
 use web_sys::CanvasRenderingContext2d;
 
 use super::{Arrow, Component, Draw, Style};
@@ -12,7 +13,7 @@ const ARROW_LENGTH: f64 = 2.5;
 
 #[derive(Clone)]
 pub struct LineSegmentArrows {
-  pub line_segment: tiling::LineSegment,
+  pub line_segment: LineSegment,
   pub extend_start: bool,
   pub extend_end: bool,
   pub direction: f64,
@@ -20,7 +21,7 @@ pub struct LineSegmentArrows {
 }
 
 impl LineSegmentArrows {
-  fn get_extended_line_segment(&self, bbox: &BBox) -> tiling::LineSegment {
+  fn get_extended_line_segment(&self, bbox: &BBox) -> LineSegment {
     self
       .line_segment
       .extend_to_bbox(bbox, self.extend_start, self.extend_end)
@@ -43,24 +44,21 @@ impl LineSegmentArrows {
 
     while shift < line_segment.length() {
       let p1 = line_segment
-        .set_length(
-          line_segment.length() - shift,
-          tiling::line_segment::Origin::End,
-        )
+        .set_length(line_segment.length() - shift, Origin::End)
         .p1;
 
       let p2 = line_segment
         .set_length(
           line_segment.length() - shift - length - gap_from_line_segment,
-          tiling::line_segment::Origin::End,
+          Origin::End,
         )
         .p1;
 
-      let mut arrow_line_segment = tiling::LineSegment { p1, p2 }.rotate(self.direction, Some(&p1));
+      let mut arrow_line_segment = LineSegment { p1, p2 }.rotate(self.direction, Some(&p1));
 
       arrow_line_segment = arrow_line_segment.set_length(
         arrow_line_segment.length() - gap_from_line_segment,
-        tiling::line_segment::Origin::End,
+        Origin::End,
       );
 
       arrows.push(Arrow {
@@ -80,15 +78,30 @@ impl Draw for LineSegmentArrows {
     self.clone().into()
   }
 
-  fn bbox(&self, canvas_bbox: &BBox, content_bbox: &BBox, scale: &Scale) -> BBox {
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    context: &CanvasRenderingContext2d,
+    canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
     let mut bbox = self
       .get_arrows(canvas_bbox, content_bbox, scale)
       .iter()
-      .map(|arrow| arrow.bbox(canvas_bbox, content_bbox, scale))
+      .map(|arrow| {
+        arrow
+          .bbox(context, canvas_bbox, content_bbox, scale)
+          .unwrap_or_default()
+      })
       .reduce(|a, b| a.union(&b))
       .unwrap_or_default();
+
     bbox = bbox.union(&self.get_extended_line_segment(canvas_bbox).bbox());
-    bbox
+    Ok(bbox)
   }
 
   fn draw_bbox(

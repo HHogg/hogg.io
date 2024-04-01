@@ -11,10 +11,10 @@ strip = true
 
 [workspace]
 members = [
-  "workspaces/canvas",
+  # "workspaces/canvas",
   "workspaces/circular-sequence",
-  "workspaces/geometry",
-  "workspaces/line-segement-extending",
+  # "workspaces/geometry",
+  "workspaces/line-segment-extending",
   "workspaces/tilings/src-rust/*",
 ]
 resolver = "2"

@@ -13,7 +13,7 @@ use web_sys::CanvasRenderingContext2d;
 
 use self::collision::Theia;
 pub use self::component::{Arc, Arrow, Chevron, LineSegment, LineSegmentArrows, Point, Polygon};
-use self::component::{Component, Draw};
+use self::component::{Component, Draw, Rect};
 pub use self::scale::{Scale, ScaleMode};
 pub use self::style::Style;
 use crate::Error;
@@ -21,14 +21,14 @@ use crate::Error;
 pub struct Canvas<TLayer> {
   pub scale: Scale,
 
-  content_bbox: BBox,
   context: CanvasRenderingContext2d,
+  content_bbox: BBox,
 
   show_debug_layer: bool,
   debug_style: Style,
 
   layers: Option<BTreeMap<TLayer, Vec<Component>>>,
-  theia: collision::Theia,
+  theia: Theia,
 }
 
 impl<TLayer> Canvas<TLayer>
@@ -86,7 +86,9 @@ where
     let layers = self.layers.get_or_insert(BTreeMap::new());
     let layer = layers.entry(layer).or_insert_with(Vec::new);
     let canvas_bbox = &self.scale.scaled_canvas_bbox();
-    let component_bbox = component.bbox(&canvas_bbox, &self.content_bbox, &self.scale);
+
+    let component_bbox =
+      component.bbox(&self.context, &canvas_bbox, &self.content_bbox, &self.scale)?;
 
     layer.push(component);
 
@@ -106,6 +108,23 @@ where
   pub fn render(&mut self) -> Result<(), Error> {
     let layers = self.layers.take().unwrap_or_default();
 
+    if self.show_debug_layer {
+      let canvas_bbox = self.scale.scaled_canvas_bbox();
+
+      Rect {
+        min: canvas_bbox.min.clone(),
+        max: canvas_bbox.max.clone(),
+        style: self.debug_style.clone(),
+      }
+      .draw_bbox(
+        &self.context,
+        &canvas_bbox,
+        &self.content_bbox,
+        &self.scale,
+        &self.debug_style,
+      )?;
+    }
+
     for (_, layer) in layers.iter() {
       for component in layer.iter() {
         self.render_component(component)?;
@@ -120,6 +139,14 @@ where
 
     self.context.save();
 
+    component.draw(
+      &self.context,
+      &canvas_bbox,
+      &self.content_bbox,
+      &self.scale,
+      &mut self.theia,
+    )?;
+
     if self.show_debug_layer {
       component.draw_bbox(
         &self.context,
@@ -129,14 +156,6 @@ where
         &self.debug_style,
       )?;
     }
-
-    component.draw(
-      &self.context,
-      &canvas_bbox,
-      &self.content_bbox,
-      &self.scale,
-      &mut self.theia,
-    )?;
 
     self.context.restore();
 

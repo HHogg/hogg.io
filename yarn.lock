@@ -861,9 +861,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hogg/line-segment-extending@workspace:^, @hogg/line-segment-extending@workspace:workspaces/line-segement-extending":
+"@hogg/line-segment-extending@workspace:^, @hogg/line-segment-extending@workspace:workspaces/line-segment-extending":
   version: 0.0.0-use.local
-  resolution: "@hogg/line-segment-extending@workspace:workspaces/line-segement-extending"
+  resolution: "@hogg/line-segment-extending@workspace:workspaces/line-segment-extending"
   dependencies:
     "@hogg/common": "workspace:^"
     "@hogg/geometry": "workspace:^"

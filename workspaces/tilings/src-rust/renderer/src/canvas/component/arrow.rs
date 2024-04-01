@@ -40,45 +40,61 @@ impl Draw for Arrow {
     self.clone().into()
   }
 
-  fn bbox(&self, canvas_bbox: &BBox, content_bbox: &BBox, scale: &Scale) -> BBox {
+  fn style(&self) -> &Style {
+    &self.style
+  }
+
+  fn bbox(
+    &self,
+    context: &web_sys::CanvasRenderingContext2d,
+    canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Result<BBox, Error> {
     let chevron = self
       .get_chevron(scale)
-      .bbox(canvas_bbox, content_bbox, scale);
+      .bbox(context, canvas_bbox, content_bbox, scale)?;
 
-    let line_segment = self
-      .get_line_segment(scale)
-      .bbox(canvas_bbox, content_bbox, scale);
+    let line_segment =
+      self
+        .get_line_segment(scale)
+        .bbox(context, canvas_bbox, content_bbox, scale)?;
 
-    chevron.union(&line_segment).pad(0.15)
+    // TODO: Is this 0.15 pad legit?
+    Ok(chevron.union(&line_segment).pad(0.15))
   }
 
   fn collides_with(
     &self,
+    context: &web_sys::CanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
     other: &Component,
-  ) -> bool {
+  ) -> Result<bool, Error> {
     if match other {
       Component::Arrow(arrow) => {
         arrow
-          .bbox(canvas_bbox, content_bbox, scale)
-          .intersects_bbox(&self.bbox(canvas_bbox, content_bbox, scale))
+          .bbox(context, canvas_bbox, content_bbox, scale)?
+          .intersects_bbox(&self.bbox(context, canvas_bbox, content_bbox, scale)?)
       }
       Component::Point(point) => {
         point
-          .bbox(canvas_bbox, content_bbox, scale)
-          .intersects_bbox(&self.bbox(canvas_bbox, content_bbox, scale))
+          .bbox(context, canvas_bbox, content_bbox, scale)?
+          .intersects_bbox(&self.bbox(context, canvas_bbox, content_bbox, scale)?)
       }
       Component::LineSegment(line_segment) => {
-        line_segment.intersects_bbox(content_bbox, &self.bbox(canvas_bbox, content_bbox, scale))
+        line_segment.intersects_bbox(
+          content_bbox,
+          &self.bbox(context, canvas_bbox, content_bbox, scale)?,
+        )
       }
       _ => false,
     } {
-      return true;
+      return Ok(true);
     }
 
-    false
+    Ok(false)
   }
 
   fn draw(
@@ -89,7 +105,7 @@ impl Draw for Arrow {
     scale: &Scale,
     theia: &mut Theia,
   ) -> Result<(), Error> {
-    if !theia.has_collision(canvas_bbox, content_bbox, scale, &self.component()) {
+    if !theia.has_collision(context, canvas_bbox, content_bbox, scale, &self.component())? {
       self
         .get_line_segment(scale)
         .draw(context, canvas_bbox, content_bbox, scale, theia)?;
