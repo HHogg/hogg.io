@@ -25,7 +25,7 @@ export default function Page({
 
   return (
     <>
-      <Helmet>
+      <Helmet prioritizeSeoTags>
         <title>{title}</title>
         <meta property="og:site_name" content="Harrison Hogg Portfolio" />
         <meta property="og:title" content={title} />

@@ -20,13 +20,18 @@ const routesToPrerender = [
 
 // pre-render each route...
 for (const url of routesToPrerender) {
-  const appHtml = render(url);
-  const html = template.replace(`<!--app-html-->`, appHtml);
+  const { html: htmlContent, helmetContext } = render(url);
+  const metaContent = helmetContext.helmet.priority.toString();
+
+  const contents = template
+    .replace(`<!--meta-tags-->`, metaContent)
+    .replace(`<!--app-html-->`, htmlContent);
+
   const filePath = toAbsolute(
     `dist/client${url === '/' ? '/index' : url}.html`
   );
   const fileDir = path.dirname(filePath);
 
   fs.mkdirSync(fileDir, { recursive: true });
-  fs.writeFileSync(filePath, html);
+  fs.writeFileSync(filePath, contents);
 }

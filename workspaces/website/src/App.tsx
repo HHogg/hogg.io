@@ -9,9 +9,13 @@ import ProjectPage from './pages/Project/Project';
 import { projects, shouldShowProject } from './projects';
 import 'preshape/dist/style.css';
 
-export default function App() {
+type Props = {
+  helmetContext?: any;
+};
+
+export default function App({ helmetContext = {} }: Props) {
   return (
-    <HelmetProvider>
+    <HelmetProvider context={helmetContext}>
       <ThemeProvider theme="night" disableSystemTheme>
         <Suspense fallback={null}>
           <Routes>
