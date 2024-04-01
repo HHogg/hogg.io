@@ -1,5 +1,4 @@
-import classnames from 'classnames';
-import { Box, useMatchMedia } from 'preshape';
+import { Box } from 'preshape';
 import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { UseGraphResult, getCurrentTraversal } from '../useGraph';
 import {
@@ -16,7 +15,6 @@ export default function IntersectionExplorerProvider({
   children,
   ...rest
 }: PropsWithChildren<IntersectionExplorerProviderProps>) {
-  const match = useMatchMedia(['1000px', '1300px']);
   const refContainer = useRef<HTMLElement>(null);
   const [activeNodeIndexLocal, setActiveNodeIndex] = useState(-1);
   const [activeTraversalIndex, setActiveTraversalIndex] = useState(-1);
@@ -25,14 +23,6 @@ export default function IntersectionExplorerProvider({
   const currentTraversal = getCurrentTraversal(rest.graph.traversals);
   const currentTraversalNode =
     currentTraversal?.path[currentTraversal.path.length - 1];
-
-  const className = classnames(
-    'IntersectionExplorer',
-    match({
-      '1300px': 'IntersectionExplorer--300',
-      '1000px': 'IntersectionExplorer--120',
-    }) || 'IntersectionExplorer--111'
-  );
 
   const reset = () => {
     setActiveNodeIndex(-1);
@@ -78,7 +68,6 @@ export default function IntersectionExplorerProvider({
     <IntersectionExplorerContext.Provider value={context}>
       <Box flex="vertical" grow onPointerMove={() => enableInteractions()}>
         <Box
-          className={className}
           flex="vertical"
           grow
           onPointerLeave={reset}

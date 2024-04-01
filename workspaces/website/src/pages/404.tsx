@@ -8,7 +8,10 @@ import Me from './Landing/Me/Me';
 
 export default function Page404() {
   return (
-    <Page title="404" description="Page not found">
+    <Page
+      title="404 - Page not found"
+      description="The page you are looking for does not exist"
+    >
       <Header alignChildrenVertical="middle">
         <PageBackButton title="Home" path="/" />
       </Header>

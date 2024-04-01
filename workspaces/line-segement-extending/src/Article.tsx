@@ -131,6 +131,15 @@ const Article = ({}: Props) => {
           ).
         </ArticleParagraph>
 
+        <ArticleParagraph>
+          It's useful to also take the time to understand what this equation is
+          doing. <Code>m</Code> represents the rate of change, it's simply a
+          scalar value that for every 1 unit of <Code>x</Code> changes, how many
+          units of <Code>y</Code> change. However, this assumes that the line is
+          flat. The <Code>b</Code> part of the equation is the offset of the
+          line from the origin.
+        </ArticleParagraph>
+
         <ArticleFigs>
           <ArticleFigCodeBlock
             id="line-components"

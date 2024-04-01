@@ -72,6 +72,7 @@ export default function ProjectWindow({
           flex="vertical"
           grow
           onClick={onClick}
+          style={{ userSelect: 'none' }}
           theme={theme}
         >
           {controls && controlsPosition === 'top' && (

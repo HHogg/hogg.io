@@ -17,7 +17,6 @@ pub struct Polygon {
   pub centroid: Point,
   pub line_segments: Vec<LineSegment>,
   pub points: Vec<Point>,
-  pub stage_index: u16,
 }
 
 impl Polygon {

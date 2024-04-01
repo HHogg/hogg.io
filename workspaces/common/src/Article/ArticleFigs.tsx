@@ -7,11 +7,13 @@ import {
 import { PropsWithChildren } from 'react';
 
 type Props = ArticleSectionProps & {
+  active?: boolean;
   maxWidth?: string;
 };
 
 const ArticleFigs = (props: PropsWithChildren<Props>) => {
   const {
+    active,
     backgroundColor = 'background-shade-2',
     children,
     maxWidth = '800px',
@@ -34,6 +36,12 @@ const ArticleFigs = (props: PropsWithChildren<Props>) => {
         size="x3"
         textColor={textColor}
         theme={theme}
+        transitionProperty="filter"
+        style={{
+          filter: active
+            ? 'drop-shadow(0 0 32px rgba(var(--rgb-accent-shade-4), 0.25)'
+            : undefined,
+        }}
       >
         {children}
       </ArticleSection>

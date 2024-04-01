@@ -22,6 +22,5 @@ export interface Polygon {
 	centroid: Point;
 	line_segments: LineSegment[];
 	points: Point[];
-	stage_index: number;
 }
 

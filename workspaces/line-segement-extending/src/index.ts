@@ -5,7 +5,7 @@ export { default as Project } from './Project';
 
 export const meta: Project = {
   id: ProjectKey.line_segment_extending,
-  name: 'Extending a line segment to the edges of a box',
+  name: 'Extending a line segment to the edges of a bounded area',
   description:
     'Extending line segments to annotate transformation lines using Rust, focusing on mathematical concepts and line intersection techniques to accurately represent these transforms in a bounded area.',
   image,
