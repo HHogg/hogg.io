@@ -19,7 +19,6 @@ export type Project = {
   created: string;
   updated: string;
   image: string;
-  imageDark?: string;
   tags: string[];
   href?: string;
   deploy?: boolean;

@@ -1,6 +1,6 @@
 import { mat3 } from 'gl-matrix';
 import { Box, useThemeContext } from 'preshape';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import regl from 'regl';
 import frag from './shader.frag?raw';
 import vert from './shader.vert?raw';
@@ -34,7 +34,7 @@ const SpiralsVisual = ({ height, width }: Props) => {
 
   const refBuffers = useRef<Record<string, regl.Buffer | undefined>>({});
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (refCanvas.current && !refRegl.current) {
       refRegl.current = regl({ canvas: refCanvas.current });
 

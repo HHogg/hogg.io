@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'url';
-import { SSRRender as render } from '../../dist/server/entry-server.js';
+import { SSRRender as render } from './dist/server/entry-server.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const toAbsolute = (p) => path.resolve(__dirname, p);
@@ -9,6 +9,13 @@ const template = fs.readFileSync(toAbsolute('dist/client/index.html'), 'utf-8');
 
 const routesToPrerender = [
   '/',
+  '/projects/circle-intersections',
+  '/projects/circle-art',
+  '/projects/snake',
+  '/projects/spirals',
+  '/projects/tilings',
+  '/projects/circular-sequence',
+  '/projects/line-segment-extending',
 ];
 
 // pre-render each route...

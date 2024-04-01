@@ -27,16 +27,16 @@ export default function Page({
     <>
       <Helmet>
         <title>{title}</title>
-        <meta content="HHogg Portfolio" property="og:site_name" />
-        <meta content={title} property="og:title" />
-        <meta content={description} property="og:description" />
-        <meta content="website" property="og:type" />
-        <meta content="en_GB" property="og:locale" />
+        <meta property="og:site_name" content="Harrison Hogg Portfolio" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:locale" content="en_GB" />
         <meta
-          content={`https://hogg.io${location.pathname}`}
           property="og:url"
+          content={`https://hogg.io${location.pathname}`}
         />
-        <meta content={image || DEFAULT_IMAGE} property="og:image" />
+        <meta property="og:image" content={image || DEFAULT_IMAGE} />
       </Helmet>
 
       <Box

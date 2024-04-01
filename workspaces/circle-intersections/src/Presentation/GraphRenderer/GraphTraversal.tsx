@@ -5,7 +5,7 @@ import {
   transitionTimeSlow,
   transitionTimingFunction,
 } from 'preshape';
-import { useLayoutEffect, useRef, useState, PointerEvent } from 'react';
+import { useRef, useState, PointerEvent, useEffect } from 'react';
 import { getCurrentTraversal, NodeState, Traversal } from '../../useGraph';
 import BitSetTooltip from '../TraversalList/BitSetTooltip';
 import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
@@ -57,7 +57,7 @@ const GraphTraversal = (props: Props) => {
     setActiveTraversalIndex(index);
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (refPath.current && refGlow.current) {
       const length = refPath.current.getTotalLength();
       const dist = length - previousLength.current;

@@ -31,6 +31,7 @@ export default function Project({ Component, meta }: Props) {
       <Page
         title={meta.name}
         description={meta.description}
+        image={meta.image}
         gap={match('1000px') ? 'x24' : 'x16'}
       >
         <Header>

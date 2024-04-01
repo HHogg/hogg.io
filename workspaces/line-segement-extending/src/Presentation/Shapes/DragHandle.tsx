@@ -1,6 +1,6 @@
 import { SvgLabel, extendPointFromOrigin } from '@hogg/common';
 import { sizeX8Px, useThemeContext } from 'preshape';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useLineSegmentContext } from '../useLineSegmentContext';
 import Rect from './Rect';
 import pickupSound from './pickup-sound.wav';
@@ -15,16 +15,6 @@ type Props = {
   oppositeX: number;
   oppositeY: number;
 };
-
-const audioPickup = new Audio();
-const audioPutdown = new Audio();
-
-audioPickup.src = pickupSound;
-audioPutdown.src = pickupSound;
-
-audioPickup.volume = 0.5;
-audioPutdown.volume = 0.5;
-
 export default function DragHandle({
   id,
   x,
@@ -38,6 +28,17 @@ export default function DragHandle({
   const [size, setSize] = useState({ width: 0, height: 0 });
   const { colors } = useThemeContext();
 
+  const audio = useMemo(() => {
+    if ('Audio' in window === false) {
+      return null;
+    }
+
+    const audio = new Audio();
+    audio.src = pickupSound;
+
+    return audio;
+  }, []);
+
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<SVGCircleElement>) => {
       const { clientX: downX, clientY: downY } = event;
@@ -49,7 +50,7 @@ export default function DragHandle({
 
       window.document.body.style.cursor = 'grabbing';
       window.document.body.style.userSelect = 'none';
-      audioPickup.play();
+      audio?.play();
 
       setAnimate(false);
 
@@ -71,8 +72,8 @@ export default function DragHandle({
       const handlePointerUp = () => {
         window.document.body.style.cursor = '';
         window.document.body.style.userSelect = '';
-        audioPutdown.play();
-
+        audio?.play();
+        audio;
         setAnimate(true);
 
         window.removeEventListener('pointermove', handlePointerMove);
@@ -82,7 +83,7 @@ export default function DragHandle({
       window.addEventListener('pointermove', handlePointerMove);
       window.addEventListener('pointerup', handlePointerUp);
     },
-    [onChange, setAnimate, refSvgContainer]
+    [audio, onChange, setAnimate, refSvgContainer]
   );
 
   const [offsetX, offsetY] = extendPointFromOrigin(

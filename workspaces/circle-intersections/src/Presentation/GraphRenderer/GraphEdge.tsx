@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { motion } from 'framer-motion';
 import { transitionTimingFunction } from 'preshape';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Edge, Node } from '../../useGraph';
 import useIntersectionExplorerContext from '../useIntersectionExplorerContext';
 import { getGraphEdgeTransitionDurationMs } from './getGraphEdgeTransitionDurationMs';
@@ -27,7 +27,7 @@ const GraphEdge = ({ animate, d, node }: Props) => {
     timingFunction: transitionTimingFunction,
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (refPath.current) {
       setLength(refPath.current.getTotalLength());
     }

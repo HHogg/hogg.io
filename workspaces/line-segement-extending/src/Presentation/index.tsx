@@ -1,12 +1,14 @@
 import { ProjectWindow } from '@hogg/common';
 import Controls from './Controls';
+import LineSegmentProvider from './LineSegmentProvider';
 import Renderer from './Renderer';
 import Settings from './Settings';
+import WasmApi from './WasmApi/WasmApi';
 import { useLineSegmentContext } from './useLineSegmentContext';
 
 type Props = {};
 
-export default function Presentation({}: Props) {
+function Presentation({}: Props) {
   const { setShowSettings } = useLineSegmentContext();
 
   return (
@@ -20,3 +22,15 @@ export default function Presentation({}: Props) {
     </ProjectWindow>
   );
 }
+
+function PresentationWithContext() {
+  return (
+    <WasmApi>
+      <LineSegmentProvider>
+        <Presentation />
+      </LineSegmentProvider>
+    </WasmApi>
+  );
+}
+
+export default PresentationWithContext;

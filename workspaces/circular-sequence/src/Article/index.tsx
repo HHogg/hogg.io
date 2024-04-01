@@ -27,17 +27,10 @@ import {
 import fileContentsGetMatch from '@hogg/circular-sequence/src-rust/get_match.rs?raw';
 import fileContentsMinPermutation from '@hogg/circular-sequence/src-rust/min_permutation.rs?raw';
 import fileContentsSequence from '@hogg/circular-sequence/src-rust/sequence.rs?raw';
-import SequenceView from './SequenceView/SequenceView';
-import useWasmApi, { Sequence } from './WasmApi/useWasmApi';
+import ConcatenatedSequencesFig from './Figs/ConcatenatedSequencesFig';
+import MinPermutationFigWithWasApi from './Figs/MinPermutationFig';
 
-type Props = {};
-
-const symmetricSequence: Sequence = [3, 4, 3, 12, 0, 0, 0, 0, 0, 0, 0, 0];
-const asymmetricSequence: Sequence = [3, 3, 4, 12, 0, 0, 0, 0, 0, 0, 0, 0];
-
-const Article = ({}: Props) => {
-  const wasmApi = useWasmApi();
-
+const Article = () => {
   return (
     <ArticlePage>
       <ArticleSection>
@@ -279,15 +272,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         </ArticleParagraph>
 
         <ArticleFigs>
-          <ArticleFig
-            id="concatenated-sequence"
-            description="Concatenated symmetrical and asymmetrical sequences"
-            flex="vertical"
-            gap="x12"
-          >
-            <SequenceView sequence={symmetricSequence} />
-            <SequenceView sequence={asymmetricSequence} />
-          </ArticleFig>
+          <ConcatenatedSequencesFig />
         </ArticleFigs>
 
         <ArticleParagraph>
@@ -404,10 +389,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           </ArticleFigCodeBlock>
         </ArticleFigs>
 
-        <ArticleParagraph>
-          Let's take a look at some examples using the Wasm API of this rust
-          code.
-        </ArticleParagraph>
+        <ArticleParagraph>Let's take a look at some examples.</ArticleParagraph>
 
         {wasmApiMeta.deploy && (
           <ArticleCallout title="How does the Wasm API work? ">
@@ -418,31 +400,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         )}
 
         <ArticleFigs>
-          <ArticleFigCodeBlock
-            id="min-permutations"
-            description="Outputs of the get_min_permutation function"
-            language="rust"
-          >
-            {`
-// Symmetrical sequence
-get_min_permutation([4, 6, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0]),
-// outputs >> [${wasmApi.getMinPermutation([
-              4, 6, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
-            ])}]
-
-// Asymmetrical sequence - forwards
-get_min_permutation([6, 12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-// outputs >> [${wasmApi.getMinPermutation([
-              6, 12, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            ])}]
-
-// Asymmetrical sequence - backwards
-get_min_permutation([4, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-// outputs >> [${wasmApi.getMinPermutation([
-              4, 12, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            ])}]
-`}
-          </ArticleFigCodeBlock>
+          <MinPermutationFigWithWasApi />
         </ArticleFigs>
       </ArticleSection>
 

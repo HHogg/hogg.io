@@ -29,20 +29,20 @@ export default function TilingCard({
   const withAnyInformation =
     withGomJauHogg || withCundyRollett || withUniform || withUniqueKey;
 
-  useEffect(() => {
-    const filename = notation.replace(/\//g, ':');
-    const filepath = import(`../../results/images/${filename}.png`);
+  // useEffect(() => {
+  //   const filename = notation.replace(/\//g, ':');
+  //   const filepath = import(`../../results/images/${filename}.png`);
 
-    filepath
-      .then((filepath) => {
-        setError('');
-        setFilepath(filepath.default);
-      })
-      .catch((error) => {
-        setError(error.message);
-        setFilepath('');
-      });
-  }, [notation]);
+  //   filepath
+  //     .then((filepath) => {
+  //       setError('');
+  //       setFilepath(filepath.default);
+  //     })
+  //     .catch((error) => {
+  //       setError(error.message);
+  //       setFilepath('');
+  //     });
+  // }, [notation]);
 
   return (
     <Link {...rest}>

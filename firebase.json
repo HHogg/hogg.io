@@ -28,6 +28,13 @@
         "source": "**",
         "destination": "/index.html"
       }
+    ],
+    "redirects": [
+      {
+        "source": "/writings/snake-solution",
+        "destination": "/projects/snake",
+        "type": 301
+      }
     ]
   }
 }

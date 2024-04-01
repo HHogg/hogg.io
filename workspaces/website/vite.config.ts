@@ -5,7 +5,7 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   plugins: [react()],
   ssr: {
-    noExternal: ['react-helmet-async'],
+    noExternal: ['react-helmet-async', 'react-use'],
   },
   server: {
     fs: {

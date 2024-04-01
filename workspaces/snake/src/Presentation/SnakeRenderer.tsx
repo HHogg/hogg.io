@@ -6,7 +6,7 @@ import {
   BoxProps,
   useThemeContext,
 } from 'preshape';
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useSnakeContext } from './useSnakeContext';
 import getGradientColor from './utils/getGradientColor';
 
@@ -118,7 +118,7 @@ const SnakeRenderer = (props: Props) => {
 
   useEffect(redraw, [redraw]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (refCanvas.current) {
       refCanvas.current.width = size * window.devicePixelRatio;
       refCanvas.current.height = size * window.devicePixelRatio;

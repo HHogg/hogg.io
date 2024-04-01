@@ -20,6 +20,7 @@ export default function Page404() {
             absolute="bottom"
             monospace
             weight="x2"
+            textColor="light-shade-1"
             style={{
               fontSize: '80px',
               top: 0,

@@ -4,7 +4,7 @@ import {
   isPointWithinCircle,
   isPointOverCircleEdge,
 } from '@hogg/circle-intersections';
-import { saveAs } from 'file-saver';
+import * as fileSaver from 'file-saver';
 import { useResizeObserver } from 'preshape';
 import {
   PropsWithChildren,
@@ -134,7 +134,7 @@ export default function EditorProvider({
   );
 
   const handleSaveAsJson = () => {
-    saveAs(
+    fileSaver.saveAs(
       new Blob(
         [
           JSON.stringify(
@@ -161,7 +161,7 @@ export default function EditorProvider({
       const serializer = new XMLSerializer();
       const svgString = serializer.serializeToString(refSvgContainer.current);
 
-      saveAs(
+      fileSaver.saveAs(
         new Blob(
           [
             `<?xml version="1.0" encoding="UTF-8"?>

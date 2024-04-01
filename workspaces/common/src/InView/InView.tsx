@@ -1,6 +1,6 @@
 import { Box, BoxProps } from 'preshape';
 import { useEffect, useRef } from 'react';
-import { useIntersection } from 'react-use';
+import useIntersection from 'react-use/lib/useIntersection';
 
 export type InViewProps = BoxProps & {
   onEnter?: () => void;

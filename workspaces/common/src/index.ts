@@ -39,6 +39,8 @@ export { default as ProjectTabs } from './ProjectWindow/ProjectTabs';
 export { default as ProjectWindow } from './ProjectWindow/ProjectWindow';
 export { default as useProjectWindowContext } from './ProjectWindow/useProjectWindowContext';
 
+export { default as Spinner } from './Spinner/Spinner';
+
 export { default as WasmProvider } from './WasmProvider/WasmProvider';
 export { useWasmContext } from './WasmProvider/useWasmContext';
 

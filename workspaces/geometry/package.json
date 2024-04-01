@@ -12,6 +12,6 @@
     "generate:types": "typeshare ./src-rust --lang=typescript --output-file=./src/types.ts"
   },
   "dependencies": {
-    "preshape": "^18.1.2"
+    "preshape": "^18.1.3"
   }
 }
