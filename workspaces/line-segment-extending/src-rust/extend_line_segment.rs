@@ -1,18 +1,17 @@
 use std::f64::consts::PI;
 use std::f64::EPSILON;
 
+pub type X1Y1X2Y2 = (f64, f64, f64, f64);
+
 pub fn extend_line_segment(
-  mut x1: f64,
-  mut y1: f64,
-  mut x2: f64,
-  mut y2: f64,
-  min_x: f64,
-  min_y: f64,
-  max_x: f64,
-  max_y: f64,
+  line_segment: X1Y1X2Y2,
+  bbox: X1Y1X2Y2,
   extend_start: bool,
   extend_end: bool,
-) -> (f64, f64, f64, f64) {
+) -> X1Y1X2Y2 {
+  let (mut x1, mut y1, mut x2, mut y2) = line_segment;
+  let (min_x, min_y, max_x, max_y) = bbox;
+
   let dx = x2 - x1;
   let dy = y2 - y1;
   let is_horizontal = dx.abs() < EPSILON;
@@ -126,5 +125,5 @@ pub fn extend_line_segment(
     }
   }
 
-  return (x1, y1, x2, y2);
+  (x1, y1, x2, y2)
 }

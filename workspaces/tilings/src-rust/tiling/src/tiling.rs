@@ -129,7 +129,7 @@ impl Tiling {
     self
   }
 
-  pub fn previous(&mut self) -> Option<Self> {
+  pub fn find_previous_tiling(&mut self) -> Option<Self> {
     match self.go_to_previous() {
       Ok(previous_tiling) => previous_tiling,
       Err(err) => {
@@ -139,7 +139,7 @@ impl Tiling {
     }
   }
 
-  pub fn next(&mut self) -> Option<Self> {
+  pub fn find_next_tiling(&mut self) -> Option<Self> {
     match self.go_to_next() {
       Ok(next_tiling) => next_tiling,
       Err(err) => {
@@ -193,7 +193,7 @@ impl Tiling {
     // tiling.
     let mut transforms = Transforms::default().with_path(path);
 
-    while let Some(transform_string) = sections.next() {
+    for transform_string in sections {
       if transform_string.is_empty() {
         return Err(TilingError::InvalidNotation {
           notation: notation.to_owned(),
@@ -243,12 +243,12 @@ impl Tiling {
       }
     }
 
-    if let Some(previous_path) = self.path.previous() {
+    if let Some(previous_path) = self.path.previous_path() {
       self.set_path(previous_path, &Direction::FromEnd)?;
       return Ok(Some(()));
     }
 
-    return Ok(None);
+    Ok(None)
   }
 
   fn go_to_next(&mut self) -> Result<Option<Self>, TilingError> {
@@ -270,7 +270,7 @@ impl Tiling {
   fn go_to_next_notation(&mut self) -> Result<Option<()>, TilingError> {
     if !self.transforms.list.is_empty() || self.option_with_first_transform {
       if self.path.is_empty() {
-        let next_path = self.path.next();
+        let next_path = self.path.next_path();
         self.set_path(next_path, &Direction::FromStart)?;
       }
 
@@ -284,7 +284,7 @@ impl Tiling {
       }
     }
 
-    let next_path = self.path.next();
+    let next_path = self.path.next_path();
     self.set_path(next_path, &Direction::FromStart)?;
 
     Ok(Some(()))
@@ -300,7 +300,7 @@ impl Tiling {
     let notation = self.to_string();
     let valid_tiling = ValidTiling::from_tiling(self);
 
-    self.build_context.as_mut().map(|build_context| {
+    if let Some(build_context) = self.build_context.as_mut() {
       build_context.incr();
 
       match build_result {
@@ -310,7 +310,7 @@ impl Tiling {
         Ok(()) => build_context.add_valid_tiling(valid_tiling),
         _ => {}
       }
-    });
+    }
   }
 
   pub fn get_bbox(&self) -> &BBox {
@@ -328,7 +328,7 @@ impl Tiling {
 
 impl Display for Tiling {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    if self.transforms.list.len() > 0 {
+    if !self.transforms.list.is_empty() {
       return write!(
         f,
         "{}{}{}",
@@ -338,6 +338,6 @@ impl Display for Tiling {
       );
     }
 
-    return write!(f, "{}", self.path);
+    write!(f, "{}", self.path)
   }
 }

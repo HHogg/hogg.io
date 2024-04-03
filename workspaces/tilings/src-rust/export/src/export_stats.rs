@@ -24,7 +24,7 @@ pub async fn export_stats(pool: &Pool<Postgres>, mut file: File) -> Result<()> {
 
   loop {
     let response = visits::get_paged(
-      &pool,
+      pool,
       &VisitsRequest {
         page,
         page_direction: Direction::Ascending,
@@ -51,7 +51,7 @@ pub async fn export_stats(pool: &Pool<Postgres>, mut file: File) -> Result<()> {
     }
   }
 
-  let session_response = sessions::get_all(&pool).await?;
+  let session_response = sessions::get_all(pool).await?;
 
   for session in session_response.results.iter() {
     let started = session.timestamp_start;

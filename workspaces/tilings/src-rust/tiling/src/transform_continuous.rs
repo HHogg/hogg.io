@@ -42,8 +42,8 @@ impl TransformContinuous {
     })
   }
 
-  pub fn previous(&mut self) -> Option<Self> {
-    if let Some(value) = self.value.previous() {
+  pub fn previous_transform(&mut self) -> Option<Self> {
+    if let Some(value) = self.value.previous_value() {
       self.value = value;
       return Some(self.clone());
     }
@@ -54,11 +54,11 @@ impl TransformContinuous {
       return Some(self.clone());
     }
 
-    return None;
+    None
   }
 
-  pub fn next(&mut self) -> Option<Self> {
-    if let Some(value) = self.value.next() {
+  pub fn next_transform(&mut self) -> Option<Self> {
+    if let Some(value) = self.value.next_value() {
       self.value = value;
       return Some(self.clone());
     }
@@ -69,7 +69,7 @@ impl TransformContinuous {
       return Some(self.clone());
     }
 
-    return None;
+    None
   }
 }
 

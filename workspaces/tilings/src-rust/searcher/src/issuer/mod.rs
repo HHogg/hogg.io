@@ -96,7 +96,7 @@ impl Actor for Issuer {
 
         if buffer_rx.len() < buffer_size {
           let mut state = state.lock().await;
-          state.path.next();
+          state.path.next_path();
           state.path_index += 1;
           leases
             .lock()

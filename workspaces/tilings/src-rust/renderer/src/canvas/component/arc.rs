@@ -101,34 +101,10 @@ impl Draw for Arc {
     let abw = (ax * (by - wy) + bx * (wy - ay) + wx * (ay - by)) / 2.0;
     let abs = (ax * (by - sy) + bx * (sy - ay) + sx * (ay - by)) / 2.0;
 
-    let x_min;
-    let y_min;
-    let x_max;
-    let y_max;
-
-    if abm * abw > 0.0 {
-      x_min = wx;
-    } else {
-      x_min = ax.min(bx);
-    }
-
-    if abm * abs > 0.0 {
-      y_min = sy;
-    } else {
-      y_min = ay.min(by);
-    }
-
-    if abm * abe > 0.0 {
-      x_max = ex;
-    } else {
-      x_max = ax.max(bx);
-    }
-
-    if abm * abn > 0.0 {
-      y_max = ny
-    } else {
-      y_max = ay.max(by)
-    }
+    let x_min = if abm * abw > 0.0 { wx } else { ax.min(bx) };
+    let y_min = if abm * abs > 0.0 { sy } else { ay.min(by) };
+    let x_max = if abm * abe > 0.0 { ex } else { ax.max(bx) };
+    let y_max = if abm * abn > 0.0 { ny } else { ay.max(by) };
 
     let min = Point::default().with_xy(x_min, y_min);
     let max = Point::default().with_xy(x_max, y_max);

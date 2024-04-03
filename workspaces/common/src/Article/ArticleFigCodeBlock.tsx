@@ -24,7 +24,7 @@ export default function ArticleFigCodeBlock({
   presentation,
   startLineNumber,
   endLineNumber,
-  maxHeight,
+  // maxHeight,
   ...rest
 }: Props) {
   const refCodeBlock = useRef<HTMLElement | null>(null);

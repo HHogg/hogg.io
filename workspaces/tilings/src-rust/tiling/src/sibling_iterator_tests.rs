@@ -2,7 +2,7 @@ use super::*;
 
 #[test]
 fn handles_1_element() {
-  let list = vec!["A"];
+  let list = ["A"];
   let mut scanner: SiblingIterator<_> = list.iter().cloned().into();
 
   assert_eq!(scanner.next(), Some((None, "A", None)));
@@ -11,7 +11,7 @@ fn handles_1_element() {
 
 #[test]
 fn handles_2_elements() {
-  let list = vec!["A", "B"];
+  let list = ["A", "B"];
   let mut scanner: SiblingIterator<_> = list.iter().cloned().into();
 
   assert_eq!(scanner.next(), Some((None, "A", Some("B"))));
@@ -21,7 +21,7 @@ fn handles_2_elements() {
 
 #[test]
 fn handles_3_elements() {
-  let list = vec!["A", "B", "C"];
+  let list = ["A", "B", "C"];
   let mut scanner: SiblingIterator<_> = list.iter().cloned().into();
 
   assert_eq!(scanner.next(), Some((None, "A", Some("B"))));
@@ -32,7 +32,7 @@ fn handles_3_elements() {
 
 #[test]
 fn handles_4_elements() {
-  let list = vec!["A", "B", "C", "D"];
+  let list = ["A", "B", "C", "D"];
   let mut scanner: SiblingIterator<_> = list.iter().cloned().into();
 
   assert_eq!(scanner.next(), Some((None, "A", Some("B"))));

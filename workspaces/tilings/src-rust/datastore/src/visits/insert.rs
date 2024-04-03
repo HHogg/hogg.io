@@ -90,7 +90,7 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
   .bind(has_8)
   .bind(has_12)
   .bind(session_id)
-  .bind(path_index as i32)
+  .bind(path_index)
   .execute(pool)
   .await?;
 

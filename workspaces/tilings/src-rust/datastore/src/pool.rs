@@ -40,7 +40,7 @@ async fn reset(pg_pool: PgPool) -> Result<()> {
     DROP TYPE IF EXISTS sys_info;
   ";
 
-  for line in reset_query.split("\n") {
+  for line in reset_query.split('\n') {
     if !line.is_empty() {
       sqlx::query(line).execute(&pg_pool).await?;
     }

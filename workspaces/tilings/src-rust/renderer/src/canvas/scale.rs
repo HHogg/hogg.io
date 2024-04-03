@@ -56,7 +56,7 @@ impl Scale {
   }
 
   pub fn with_mode(mut self, mode: Option<ScaleMode>) -> Self {
-    self.mode = mode.unwrap_or(ScaleMode::default());
+    self.mode = mode.unwrap_or_default();
     self.update();
     self
   }
@@ -78,10 +78,7 @@ impl Scale {
     self
   }
 
-  pub fn scale_canvas_context(
-    &self,
-    ctx: &mut web_sys::CanvasRenderingContext2d,
-  ) -> Result<(), Error> {
+  pub fn scale_canvas_context(&self, ctx: &web_sys::CanvasRenderingContext2d) -> Result<(), Error> {
     ctx.reset_transform()?;
 
     // Move the origin to the center of the canvas.

@@ -26,7 +26,7 @@ pub enum Direction {
 /// Space: O(1)
 /// Time:  O(n * m) where n is the number of targets and m is the length of the
 ///        longest target.
-pub fn get_match(sequence: &Sequence, targets: &Vec<Sequence>) -> Match {
+pub fn get_match(sequence: &Sequence, targets: &[Sequence]) -> Match {
   let mut first_partial_match = Match::None;
 
   for target in targets.iter() {
@@ -60,14 +60,14 @@ fn get_match_directional(source: &Sequence, target: &Sequence, direction: Direct
     for j in 0..target_length {
       if source[i] == target[j] {
         if i == target_length - 1 {
-          return Match::Exact(target.clone());
+          return Match::Exact(*target);
         }
 
         if i == source_length - 1 {
-          return Match::Partial(target.clone());
+          return Match::Partial(*target);
         }
 
-        i = i + 1;
+        i += 1;
       } else if source[0] == target[j] {
         i = 1;
       } else {

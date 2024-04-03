@@ -28,7 +28,7 @@ impl Handler<GetPaged> for Store {
         results: response
           .results
           .into_iter()
-          .map(|visit| Tree::from_visit(visit))
+          .map(Tree::from_visit)
           .try_collect::<Vec<_>>()?,
       })
     })

@@ -6,11 +6,11 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "yarn build:types && yarn build:wasm",
-    "build:types": "typeshare ./src-rust --lang=typescript --output-file=./src/types.ts",
-    "build:wasm": "wasm-pack build ./src-rust/wasm --target web --out-dir ../../pkg",
+    "build": "yarn clean && yarn build:types && yarn build:wasm",
+    "build:types": "typeshare src-rust --lang=typescript --output-file=./src/types.ts",
+    "build:wasm": "wasm-pack build src-rust/wasm --target web --out-dir ../../pkg",
     "clean": "rm -rf ./logs ./pkg",
-    "dev": "cargo watch -w ./src-rust -q -s \"yarn workspace @hogg/tilings run build\"",
+    "dev": "cargo watch -w workspaces/tilings/src-rust -q -s \"yarn workspace @hogg/tilings run build\"",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file"

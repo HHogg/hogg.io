@@ -22,13 +22,14 @@ impl TransformEccentric {
     transform.operation = Operation::first(direction);
     transform.origin_type = OriginType::first(direction);
     transform.origin_index = OriginIndex::first(polygons, &transform.origin_type, direction);
-    return transform;
+    transform
   }
 
   pub fn previous(&mut self, polygons: &Polygons) -> Option<Self> {
-    if let Some(previous_origin_index) = self.origin_index.previous() {
-      if let Some(_) =
-        polygons.get_point_by_index_and_type(&self.origin_type, &previous_origin_index)
+    if let Some(previous_origin_index) = self.origin_index.previous_index() {
+      if polygons
+        .get_point_by_index_and_type(&self.origin_type, &previous_origin_index)
+        .is_some()
       {
         self.origin_index = previous_origin_index;
         return Some(self.clone());
@@ -52,9 +53,12 @@ impl TransformEccentric {
   }
 
   pub fn next(&mut self, polygons: &Polygons) -> Option<Self> {
-    let next_origin_index = self.origin_index.next();
+    let next_origin_index = self.origin_index.next_index();
 
-    if let Some(_) = polygons.get_point_by_index_and_type(&self.origin_type, &next_origin_index) {
+    if polygons
+      .get_point_by_index_and_type(&self.origin_type, &next_origin_index)
+      .is_some()
+    {
       self.origin_index = next_origin_index;
       return Some(self.clone());
     }

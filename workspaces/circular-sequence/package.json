@@ -6,7 +6,7 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "yarn build:wasm",
+    "build": "yarn clean && yarn build:wasm",
     "build:wasm": "wasm-pack build --target web",
     "clean": "rm -rf ./pkg",
     "dev": "cargo watch -w ./src-rust -q -s 'yarn workspace @hogg/circular-sequence run build'"

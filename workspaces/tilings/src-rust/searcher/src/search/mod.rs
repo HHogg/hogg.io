@@ -32,7 +32,7 @@ impl Client {
     }
   }
 
-  fn handle_start_client(&self, ctx: &mut Context<Self>) -> Result<()> {
+  fn handle_start_client(&self, ctx: &Context<Self>) -> Result<()> {
     let session = Session::default()
       .with_id(self.id.clone())
       .with_worker_count(self.worker_count)

@@ -129,7 +129,7 @@ pub fn draw_shapes(
           })
           .set_opacity(
             if options.fade_unmatched_shape_types.unwrap_or_default() {
-              shape.shape_type.map(|_| 1.0).or_else(|| Some(0.2))
+              shape.shape_type.map(|_| 1.0).or(Some(0.2))
             } else {
               None
             },

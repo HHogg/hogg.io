@@ -1,5 +1,5 @@
 import { Link, LinkProps } from 'preshape';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CroppedImage from '../Image/CroppedImage';
 import TilingInformation from './TilingInformation';
 
@@ -24,8 +24,8 @@ export default function TilingCard({
   withUniqueKey,
   ...rest
 }: LinkProps & Props) {
-  const [filepath, setFilepath] = useState<string>('');
-  const [, setError] = useState('');
+  const [filepath] = useState<string>('');
+  // const [, setError] = useState('');
   const withAnyInformation =
     withGomJauHogg || withCundyRollett || withUniform || withUniqueKey;
 

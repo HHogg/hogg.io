@@ -16,7 +16,7 @@ pub async fn export_unique_tilings(pool: &Pool<Postgres>, mut file: File) -> Res
 
   loop {
     let response = tilings::get_paged(
-      &pool,
+      pool,
       &TilingsRequest {
         page,
         page_direction: Direction::Ascending,

@@ -23,7 +23,7 @@ impl OriginIndex {
     .into()
   }
 
-  pub fn previous(&mut self) -> Option<Self> {
+  pub fn previous_index(&mut self) -> Option<Self> {
     if self.value == 0 {
       None
     } else {
@@ -32,7 +32,7 @@ impl OriginIndex {
     }
   }
 
-  pub fn next(&mut self) -> Self {
+  pub fn next_index(&mut self) -> Self {
     self.value += 1;
     *self
   }

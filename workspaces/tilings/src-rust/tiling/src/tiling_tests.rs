@@ -24,11 +24,11 @@ pub fn before_each() {
       .with_first_transform();
 
     for _ in 0..SEQ_COUNT {
-      if let Some(next_tiling) = tiling_without_transforms.next() {
+      if let Some(next_tiling) = tiling_without_transforms.find_next_tiling() {
         NEXT_WITHOUT_TRANSFORMS.push(next_tiling.to_string());
       }
 
-      if let Some(next_tiling) = tiling_with_transforms.next() {
+      if let Some(next_tiling) = tiling_with_transforms.find_next_tiling() {
         NEXT_WITH_TRANSFORMS.push(next_tiling.to_string());
       }
     }
@@ -37,11 +37,11 @@ pub fn before_each() {
     PREVIOUS_WITH_TRANSFORMS.push(tiling_with_transforms.to_string());
 
     for _ in 0..SEQ_COUNT + 1 {
-      if let Some(previous_tiling) = tiling_without_transforms.previous() {
+      if let Some(previous_tiling) = tiling_without_transforms.find_previous_tiling() {
         PREVIOUS_WITHOUT_TRANSFORMS.push(previous_tiling.to_string());
       }
 
-      if let Some(previous_tiling) = tiling_with_transforms.previous() {
+      if let Some(previous_tiling) = tiling_with_transforms.find_previous_tiling() {
         PREVIOUS_WITH_TRANSFORMS.push(previous_tiling.to_string());
       }
     }
@@ -128,7 +128,7 @@ fn build_context_contains_valid_path() {
     .with_first_transform();
 
   for _ in 0..seq_count {
-    tiling.next();
+    tiling.find_next_tiling();
   }
 
   let build_context = tiling.build_context.unwrap();

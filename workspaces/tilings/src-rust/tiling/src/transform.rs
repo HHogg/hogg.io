@@ -117,7 +117,11 @@ impl Transform {
 
   pub fn previous(&mut self, polygons: &Polygons) -> Option<Self> {
     match self {
-      Self::Continuous(transform) => transform.previous().map(|transform| transform.into()),
+      Self::Continuous(transform) => {
+        transform
+          .previous_transform()
+          .map(|transform| transform.into())
+      }
       Self::Eccentric(transform) => {
         transform
           .previous(polygons)
@@ -128,7 +132,7 @@ impl Transform {
 
   pub fn next(&mut self, polygons: &Polygons) -> Option<Self> {
     match self {
-      Self::Continuous(transform) => transform.next().map(|transform| transform.into()),
+      Self::Continuous(transform) => transform.next_transform().map(|transform| transform.into()),
       Self::Eccentric(transform) => transform.next(polygons).map(|transform| transform.into()),
     }
   }

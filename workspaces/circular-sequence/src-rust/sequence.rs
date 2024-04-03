@@ -16,7 +16,7 @@ pub fn get_length(sequence: &Sequence) -> usize {
       return length;
     }
 
-    length = length + 1;
+    length += 1;
   }
 
   length
@@ -50,7 +50,7 @@ pub fn get_symmetry_index(sequence: &Sequence) -> Option<usize> {
           i = Some(j);
         }
 
-        c = c + 1;
+        c += 1;
       } else {
         c = 0;
       }

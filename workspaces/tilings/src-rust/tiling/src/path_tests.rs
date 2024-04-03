@@ -39,7 +39,7 @@ fn sequence() -> Result<(), TilingError> {
   let test_length = 2000;
   let mut test_output = vec![];
   for _ in 0..test_length {
-    test_output.push(path.next().to_string());
+    test_output.push(path.next_path().to_string());
   }
 
   assert_debug_snapshot!(test_output);

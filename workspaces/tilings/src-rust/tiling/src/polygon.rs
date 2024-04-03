@@ -47,12 +47,12 @@ impl Polygon {
   }
 
   pub fn with_notation_index(mut self, notation_index: u16) -> Self {
-    self.notation_index = notation_index as u16;
+    self.notation_index = notation_index;
     self
   }
 
   pub fn with_stage_index(mut self, stage_index: u16) -> Self {
-    self.stage_index = stage_index as u16;
+    self.stage_index = stage_index;
     self
   }
 
@@ -159,7 +159,7 @@ impl Polygon {
       match line_segment.get_point_delta(point) {
         d if delta == 1 && d == -1 => return false,
         d if delta == -1 && d == 1 => return false,
-        d if d == 0 => return false,
+        0 => return false,
         d => delta = d,
       }
     }

@@ -25,7 +25,7 @@ impl Handler<Visit> for Worker {
       .with_first_transform();
 
     // TODO: Create an API for this
-    while let Some(_) = tiling.next() {}
+    while tiling.find_next_tiling().is_some() {}
 
     if let Some(build_context) = tiling.build_context {
       sender.try_send(

@@ -15,7 +15,7 @@ pub struct Tree {
 
 impl Tree {
   pub fn from_visit(visit: Visit) -> Result<Self, TilingError> {
-    let path: Path = visit.path.into();
+    let path: Path = visit.path;
 
     let mut tree = Self {
       id: NodeId::Path(path.clone()),

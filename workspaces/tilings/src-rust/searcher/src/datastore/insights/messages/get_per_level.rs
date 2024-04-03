@@ -17,6 +17,6 @@ impl Handler<GetPerLevel> for Store {
   fn handle(&mut self, _: GetPerLevel, _: &mut Context<Self>) -> Self::Result {
     let pool = self.pool.clone();
 
-    Box::pin(async move { Ok(insights::get_per_level(&pool).await?) })
+    Box::pin(async move { insights::get_per_level(&pool).await })
   }
 }

@@ -103,7 +103,7 @@ impl Validator {
     while let (Some(s), Some(p), Some(c)) = (start, previous, current) {
       // If the current line segment is not connected to the previous
       // we'll put it back and take the next one.
-      if !p.is_connected(&c) {
+      if !p.is_connected(c) {
         line_segments.push_back(c);
         current = line_segments.pop_front();
 
@@ -120,7 +120,7 @@ impl Validator {
 
       // If the current line segment is connected to the starting
       // line segment, we have completed a full border
-      if p != s && c.is_connected(&s) {
+      if p != s && c.is_connected(s) {
         break;
       }
 
@@ -144,12 +144,9 @@ impl Validator {
     }
 
     if polygons.vertex_type_store.vertex_types.is_empty() {
-      return Err(
-        ValidationError::PatternRadial {
-          reason: "No vertex types found".into(),
-        }
-        .into(),
-      );
+      return Err(ValidationError::PatternRadial {
+        reason: "No vertex types found".into(),
+      });
     }
 
     Ok(())

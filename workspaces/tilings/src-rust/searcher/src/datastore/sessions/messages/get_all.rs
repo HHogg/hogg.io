@@ -19,6 +19,6 @@ impl Handler<GetAll> for Store {
   fn handle(&mut self, _: GetAll, _: &mut Context<Self>) -> Self::Result {
     let pool = self.pool.clone();
 
-    Box::pin(async move { Ok(sessions::get_all(&pool).await?) })
+    Box::pin(async move { sessions::get_all(&pool).await })
   }
 }

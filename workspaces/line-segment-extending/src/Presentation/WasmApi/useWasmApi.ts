@@ -1,15 +1,17 @@
 import { useWasmContext } from '@hogg/common';
 import * as wasm from '../../../pkg/line_segment_extending';
 
+export type X1Y1X2Y2 = [number, number, number, number];
+
 function getExtendedLineSegment(
-  bounds: [number, number, number, number],
-  lineSegment: [number, number, number, number],
+  lineSegment: X1Y1X2Y2,
+  bounds: X1Y1X2Y2,
   extendStart: boolean,
   extendEnd: boolean
-): [number, number, number, number] {
+): X1Y1X2Y2 {
   return wasm.get_extended_line_segment(
-    bounds,
     lineSegment,
+    bounds,
     extendStart,
     extendEnd
   );

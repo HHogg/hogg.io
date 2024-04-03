@@ -34,7 +34,7 @@ impl VertexTypeStore {
 
       match self.possible_vertex_types.get_match(&vertex_type.pattern) {
         Match::Exact(sequence) => {
-          point.vertex_type = Some(self.vertex_types.insert_sequence(sequence) as u8);
+          point.vertex_type = Some(self.vertex_types.insert_sequence(sequence));
         }
         Match::None => {
           return Err(

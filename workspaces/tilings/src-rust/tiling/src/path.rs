@@ -97,7 +97,7 @@ impl Path {
 
   pub fn has_shape(&self, shape: &Shape) -> bool {
     return self.nodes.iter().any(|node| {
-      node == &Node::Seed(Seed::default().with_shape(*shape)) || node == &Node::Shape(shape.clone())
+      node == &Node::Seed(Seed::default().with_shape(*shape)) || node == &Node::Shape(*shape)
     });
   }
 
@@ -131,7 +131,7 @@ impl Path {
     })
   }
 
-  pub fn previous(&mut self) -> Option<Self> {
+  pub fn previous_path(&mut self) -> Option<Self> {
     'previous: loop {
       if self.nodes == vec![Seed::default().into()] {
         return None;
@@ -157,7 +157,7 @@ impl Path {
     }
   }
 
-  pub fn next(&mut self) -> Self {
+  pub fn next_path(&mut self) -> Self {
     'next: loop {
       if self.nodes.is_empty() {
         self.nodes = vec![Seed::default().into()];
@@ -192,20 +192,19 @@ impl Path {
   /// - The shapes must not overlap
   fn is_valid(&mut self) -> Result<bool, TilingError> {
     let mut group_index = 0;
-    let mut sibling_iter: SiblingIterator<_> = self.nodes.iter().into();
+    let sibling_iter: SiblingIterator<_> = self.nodes.iter().into();
 
     // We know from the possible vertex's that the only valid path that contains an
     // octagon must also include a square, and no other shape.
-    if self.has_shape(&Shape::Octagon) {
-      if self.nodes.len() > 3 || !self.has_shape(&Shape::Square) {
-        return Err(TilingError::InvalidNotation {
-          notation: self.to_string(),
-          reason: "any path containing an 8, must contain only one other 4".into(),
-        });
-      }
+    if self.has_shape(&Shape::Octagon) && (self.nodes.len() > 3 || !self.has_shape(&Shape::Square))
+    {
+      return Err(TilingError::InvalidNotation {
+        notation: self.to_string(),
+        reason: "any path containing an 8, must contain only one other 4".into(),
+      });
     }
 
-    while let Some((last_node, current_node, next_node)) = sibling_iter.next() {
+    for (last_node, current_node, next_node) in sibling_iter {
       match (last_node, current_node, next_node) {
         (
           None,

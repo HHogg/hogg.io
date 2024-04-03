@@ -100,7 +100,7 @@ fn on_line_segment_triangle() {
   assert_eq_points(
     Polygon::default()
       .with_shape(Shape::Triangle)
-      .on_line_segment(&&LineSegment::default().with_start(p2).with_end(p1)),
+      .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1)),
     vec![(1.5, -2.598076), (p2.x, p2.y), (p1.x, p1.y)],
   );
 }

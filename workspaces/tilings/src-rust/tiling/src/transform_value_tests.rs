@@ -25,7 +25,7 @@ fn next() {
 
         results.push((*operation, *shape, transform_value.value));
 
-        while let Some(next_transform_value) = transform_value.next() {
+        while let Some(next_transform_value) = transform_value.next_value() {
           results.push((*operation, *shape, next_transform_value.value));
         }
       }

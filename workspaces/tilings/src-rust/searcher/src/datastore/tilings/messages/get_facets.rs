@@ -18,6 +18,6 @@ impl Handler<GetFacets> for Store {
     let GetFacets(request) = message;
     let pool = self.pool.clone();
 
-    Box::pin(async move { Ok(get_facets(&pool, request).await?) })
+    Box::pin(async move { get_facets(&pool, request).await })
   }
 }

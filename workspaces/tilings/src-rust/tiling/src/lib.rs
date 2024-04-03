@@ -1,3 +1,5 @@
+#![allow(clippy::approx_constant)]
+
 mod bbox;
 mod build_context;
 mod edge_type_store;

@@ -40,7 +40,7 @@ impl Patterns {
   }
 
   pub fn get_match(&self, pattern: &Pattern) -> Match {
-    Match::from(&pattern.clone().into(), &self.clone().into())
+    Match::from(&(*pattern).into(), &self.clone().into())
   }
 
   pub fn len(&self) -> usize {
@@ -66,30 +66,30 @@ impl Display for Patterns {
   }
 }
 
-impl Into<HashSet<Sequence>> for Patterns {
-  fn into(self) -> HashSet<Sequence> {
-    self.patterns.into_iter().map(|p| p.into()).collect()
+impl From<Patterns> for HashSet<Sequence> {
+  fn from(val: Patterns) -> Self {
+    val.patterns.into_iter().map(|p| p.into()).collect()
   }
 }
 
-impl Into<Vec<Sequence>> for Patterns {
-  fn into(self) -> Vec<Sequence> {
-    self.patterns.into_iter().map(|p| p.into()).collect()
+impl From<Patterns> for Vec<Sequence> {
+  fn from(val: Patterns) -> Self {
+    val.patterns.into_iter().map(|p| p.into()).collect()
   }
 }
 
-impl Into<Vec<String>> for Patterns {
-  fn into(self) -> Vec<String> {
-    circular_sequence::sort(self.into())
+impl From<Patterns> for Vec<String> {
+  fn from(val: Patterns) -> Self {
+    circular_sequence::sort(val.into())
       .iter()
       .map(|s| circular_sequence::to_string(vec![*s]))
       .collect()
   }
 }
 
-impl Into<String> for Patterns {
-  fn into(self) -> String {
-    self.to_string()
+impl From<Patterns> for String {
+  fn from(val: Patterns) -> Self {
+    val.to_string()
   }
 }
 
@@ -105,8 +105,12 @@ impl Pattern {
     circular_sequence::get_length(self.sequence())
   }
 
+  pub fn is_empty(&self) -> bool {
+    self.len() == 0
+  }
+
   pub fn rev(&self) -> Self {
-    Self(circular_sequence::reverse(&self.sequence()))
+    Self(circular_sequence::reverse(self.sequence()))
   }
 
   pub fn insert(&mut self, value: u8) -> Result<(), TilingError> {
@@ -129,7 +133,7 @@ impl FromIterator<u8> for Pattern {
     let mut sequence = Sequence::default();
 
     for (index, value) in iter.into_iter().enumerate() {
-      sequence[index] = value as u8;
+      sequence[index] = value;
     }
 
     Self(sequence)
@@ -142,15 +146,15 @@ impl From<Sequence> for Pattern {
   }
 }
 
-impl Into<Sequence> for Pattern {
-  fn into(self) -> Sequence {
-    self.0
+impl From<Pattern> for Sequence {
+  fn from(pattern: Pattern) -> Self {
+    pattern.0
   }
 }
 
-impl Into<String> for Pattern {
-  fn into(self) -> String {
-    circular_sequence::to_string(vec![self.sequence().clone()])
+impl From<Pattern> for String {
+  fn from(pattern: Pattern) -> String {
+    circular_sequence::to_string(vec![*pattern.sequence()])
   }
 }
 

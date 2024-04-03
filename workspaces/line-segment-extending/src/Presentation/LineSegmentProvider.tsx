@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import useWasmApi from './WasmApi/useWasmApi';
+import useWasmApi, { type X1Y1X2Y2 } from './WasmApi/useWasmApi';
 import {
   BoundFlag,
   LineSegmentContext,
@@ -37,6 +37,11 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
   const [showLineSegment, setShowLineSegment] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
+  const lineSegment = useMemo<X1Y1X2Y2>(
+    () => [x1, y1, x2, y2],
+    [x1, x2, y1, y2]
+  );
+
   // Clamps the points to the bounds of the container
   const handleSetPoints1 = useCallback(
     ([x, y]: [number, number]) => {
@@ -61,8 +66,8 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
   const extendedLineSegmentToContainer = useMemo(
     () =>
       getExtendedLineSegment(
+        lineSegment,
         [0, 0, containerWidth, containerHeight],
-        [x1, y1, x2, y2],
         extendStart,
         extendEnd
       ),
@@ -72,17 +77,13 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
       getExtendedLineSegment,
       containerWidth,
       containerHeight,
-      x1,
-      x2,
-      y1,
-      y2,
+      lineSegment,
     ]
   );
 
   const extendedLineSegmentToBounds = useMemo(
-    () =>
-      getExtendedLineSegment(bounds, [x1, y1, x2, y2], extendStart, extendEnd),
-    [extendEnd, extendStart, getExtendedLineSegment, bounds, x1, x2, y1, y2]
+    () => getExtendedLineSegment(lineSegment, bounds, extendStart, extendEnd),
+    [extendEnd, extendStart, getExtendedLineSegment, bounds, lineSegment]
   );
 
   useEffect(() => {

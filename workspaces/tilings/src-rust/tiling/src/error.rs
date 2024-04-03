@@ -44,10 +44,7 @@ pub enum TilingError {
 
 impl TilingError {
   pub fn is_empty(&self) -> bool {
-    match self {
-      Self::Noop => true,
-      _ => false,
-    }
+    matches!(self, Self::Noop)
   }
 }
 

@@ -39,7 +39,7 @@ impl<'r> FromRow<'r, PgRow> for Visit {
 
     let valid_tilings = row
       .try_get::<String, &str>("valid_tilings")?
-      .split(";")
+      .split(';')
       .filter_map(|s| {
         if s.is_empty() {
           None

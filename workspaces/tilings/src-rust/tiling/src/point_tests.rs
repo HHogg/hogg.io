@@ -63,8 +63,8 @@ fn hashing_exactly_the_same_values() {
 
 #[test]
 fn hashing_close_to_the_same_values() {
-  let a = vec![(-5.551115123125783e-16, -1.7320508075688767)];
-  let b = vec![(-3.3306690738754696e-16, -1.7320508075688774)];
+  let a = [(-5.551115123125783e-16, -1.7320508075688767)];
+  let b = [(-3.3306690738754696e-16, -1.7320508075688774)];
 
   for (a, b) in a.iter().zip(b.iter()) {
     let a = Point::default().with_xy(a.0, a.1);

@@ -107,7 +107,7 @@ impl TransformValue {
     })
   }
 
-  pub fn previous(&mut self) -> Option<Self> {
+  pub fn previous_value(&mut self) -> Option<Self> {
     if self.value - self.increment < self.increment {
       return None;
     }
@@ -116,7 +116,7 @@ impl TransformValue {
     Some(self.clone())
   }
 
-  pub fn next(&mut self) -> Option<Self> {
+  pub fn next_value(&mut self) -> Option<Self> {
     if self.value + self.increment >= 180 {
       return None;
     }

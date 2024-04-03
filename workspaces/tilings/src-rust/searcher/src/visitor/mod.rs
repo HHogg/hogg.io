@@ -15,7 +15,7 @@ pub struct Visitor {
 impl Visitor {
   pub fn new(worker_count: usize) -> Self {
     Self {
-      workers: actix::SyncArbiter::start(worker_count, move || Worker::default()),
+      workers: actix::SyncArbiter::start(worker_count, Worker::default),
     }
   }
 }

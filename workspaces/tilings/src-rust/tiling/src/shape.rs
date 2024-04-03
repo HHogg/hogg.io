@@ -142,15 +142,15 @@ impl FromStr for Shape {
   }
 }
 
-impl Into<u8> for Shape {
-  fn into(self) -> u8 {
-    match self {
-      Self::Skip => 0,
-      Self::Triangle => 3,
-      Self::Square => 4,
-      Self::Hexagon => 6,
-      Self::Octagon => 8,
-      Self::Dodecagon => 12,
+impl From<Shape> for u8 {
+  fn from(shape: Shape) -> u8 {
+    match shape {
+      Shape::Skip => 0,
+      Shape::Triangle => 3,
+      Shape::Square => 4,
+      Shape::Hexagon => 6,
+      Shape::Octagon => 8,
+      Shape::Dodecagon => 12,
     }
   }
 }

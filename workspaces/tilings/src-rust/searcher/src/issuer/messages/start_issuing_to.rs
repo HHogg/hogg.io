@@ -30,7 +30,7 @@ impl Handler<StartIssuingTo> for Issuer {
         let mailbox_size = min_mailbox_size + (*buffer_size * messages_per_session);
 
         // Update the buffer size.
-        *buffer_size = *buffer_size + (msg.count * 2);
+        *buffer_size += msg.count * 2;
 
         tracing::info!(%buffer_size, "buffer_size_increased");
 

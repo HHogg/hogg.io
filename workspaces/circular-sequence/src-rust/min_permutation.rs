@@ -20,10 +20,10 @@ pub fn get_min_permutation(sequence: &Sequence) -> Sequence {
 /// Time: O(n^2)
 fn get_min_permutation_directional(sequence: &Sequence, direction: Direction) -> Sequence {
   let length = get_length(sequence);
-  let mut a = sequence.clone();
+  let mut a = *sequence;
 
   for i in 0..length {
-    let b = shift_left(&sequence, i);
+    let b = shift_left(sequence, i);
 
     if compare(&a, &b) == std::cmp::Ordering::Greater {
       a = b;
@@ -50,6 +50,7 @@ fn shift_left(sequence: &Sequence, shift: usize) -> Sequence {
   let length = get_length(sequence);
   let mut shifted_sequence = Sequence::default();
 
+  #[allow(clippy::needless_range_loop)]
   for i in 0..length {
     let j = (i + shift) % length;
     shifted_sequence[i] = sequence[j];

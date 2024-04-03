@@ -5,7 +5,7 @@ use crate::Shape;
 
 #[test]
 fn from_paths() {
-  let shapes = vec![
+  let shapes = [
     Shape::Triangle,
     Shape::Square,
     Shape::Hexagon,

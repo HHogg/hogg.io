@@ -37,5 +37,5 @@ pub fn setup(max_level: Level, log_to_file: bool) -> Option<WorkerGuard> {
 
   tracing::info!(%max_level, "log_level");
 
-  return None;
+  None
 }

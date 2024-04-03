@@ -19,6 +19,6 @@ impl Handler<Insert> for Store {
   fn handle(&mut self, msg: Insert, _ctx: &mut Self::Context) -> Self::Result {
     let pool = self.pool.clone();
 
-    Box::pin(async move { Ok(errors::insert(&pool, msg.errors).await?) })
+    Box::pin(async move { errors::insert(&pool, msg.errors).await })
   }
 }

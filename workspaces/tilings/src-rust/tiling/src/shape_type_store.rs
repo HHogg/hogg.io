@@ -20,14 +20,11 @@ pub struct ShapeTypeStore {
 impl ShapeTypeStore {
   ///
   pub fn annotate_polygon(&mut self, polygon: &mut Polygon) {
-    self
-      .shape_types_by_point
-      .get(&polygon.centroid)
-      .map(|shape_type| {
-        if shape_type.is_full() {
-          polygon.shape_type = self.shape_types.index_of(&shape_type.pattern);
-        }
-      });
+    if let Some(shape_type) = self.shape_types_by_point.get(&polygon.centroid) {
+      if shape_type.is_full() {
+        polygon.shape_type = self.shape_types.index_of(&shape_type.pattern);
+      }
+    }
   }
 
   /// Takes a polygon that has just been added to start recording which
@@ -41,7 +38,7 @@ impl ShapeTypeStore {
   /// the other polygons shape type to include this polygon.
   pub fn add_polygon(
     &mut self,
-    polygon: &mut Polygon,
+    polygon: &Polygon,
     edge_type_store: &EdgeTypeStore,
   ) -> Result<(), TilingError> {
     for line_segment in polygon.line_segments.iter() {
@@ -75,7 +72,7 @@ impl ShapeTypeStore {
     shape_type.insert_location(*location_b)?;
 
     if shape_type.is_full() {
-      self.shape_types.insert_pattern(shape_type.pattern.clone());
+      self.shape_types.insert_pattern(shape_type.pattern);
     }
 
     Ok(())

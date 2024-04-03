@@ -20,8 +20,7 @@ impl Handler<GetByPath> for Store {
       Ok(
         get_by_path(pool, message.0)
           .await?
-          .map(|visit| Tree::from_visit(visit).ok())
-          .flatten(),
+          .and_then(|visit| Tree::from_visit(visit).ok()),
       )
     })
   }

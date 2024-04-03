@@ -84,11 +84,11 @@ where
 
   pub fn add_component(&mut self, layer: TLayer, component: Component) -> Result<(), Error> {
     let layers = self.layers.get_or_insert(BTreeMap::new());
-    let layer = layers.entry(layer).or_insert_with(Vec::new);
+    let layer = layers.entry(layer).or_default();
     let canvas_bbox = &self.scale.scaled_canvas_bbox();
 
     let component_bbox =
-      component.bbox(&self.context, &canvas_bbox, &self.content_bbox, &self.scale)?;
+      component.bbox(&self.context, canvas_bbox, &self.content_bbox, &self.scale)?;
 
     layer.push(component);
 
@@ -100,7 +100,7 @@ where
 
   fn rescale_canvas(&mut self) -> Result<(), Error> {
     self.scale = self.scale.to_owned().with_content_bbox(self.content_bbox);
-    self.scale.scale_canvas_context(&mut self.context)?;
+    self.scale.scale_canvas_context(&self.context)?;
 
     Ok(())
   }
@@ -112,8 +112,8 @@ where
       let canvas_bbox = self.scale.scaled_canvas_bbox();
 
       Rect {
-        min: canvas_bbox.min.clone(),
-        max: canvas_bbox.max.clone(),
+        min: canvas_bbox.min,
+        max: canvas_bbox.max,
         style: self.debug_style.clone(),
       }
       .draw_bbox(

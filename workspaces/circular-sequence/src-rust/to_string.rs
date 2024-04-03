@@ -36,7 +36,7 @@ fn flatten_duplicates(content: Vec<String>, wrapper: Option<(&str, &str)>) -> Ve
   let mut index = 0;
   let mut count = 1;
 
-  if content.len() == 0 {
+  if content.is_empty() {
     return vec![];
   }
 

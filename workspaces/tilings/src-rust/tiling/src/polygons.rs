@@ -129,7 +129,7 @@ impl Polygons {
 
     if !transforms.list.is_empty() {
       for (index, transform) in transforms.list.iter().enumerate() {
-        self.apply_initial_transform(index, &transform)?;
+        self.apply_initial_transform(index, transform)?;
         self.validate_overlaps()?;
       }
 
@@ -351,14 +351,14 @@ impl Polygons {
     // Store the polygon's points
     // for looking up origins for transforms
     if polygon.phase <= Phase::Placement {
-      self.points_center.insert(polygon.centroid.clone());
+      self.points_center.insert(polygon.centroid);
     }
 
     for point in polygon.points.iter() {
       // Store the polygon's points
       // for looking up origins for transforms
       if polygon.phase <= Phase::Placement {
-        self.points_end.insert(point.clone());
+        self.points_end.insert(*point);
       }
     }
 
@@ -369,13 +369,13 @@ impl Polygons {
         self
           .line_segments_by_shape_group
           .last_mut()
-          .map(|line_segments| line_segments.insert(line_segment.clone()));
+          .map(|line_segments| line_segments.insert(*line_segment));
 
         // Store the polygon's line segments
         // for looking up reflection lines.
         self
           .line_segments_by_mid_point
-          .insert(line_segment.mid_point(), line_segment.clone());
+          .insert(line_segment.mid_point(), *line_segment);
 
         // Store the line segments mid point
         // for looking up origins for transforms
@@ -391,12 +391,12 @@ impl Polygons {
     }
 
     // Add the polygon to the edge type store
-    self.edge_type_store.add_polygon(&mut polygon);
+    self.edge_type_store.add_polygon(&polygon);
 
     // Add the polygon to the shape type store
     self
       .shape_type_store
-      .add_polygon(&mut polygon, &self.edge_type_store)?;
+      .add_polygon(&polygon, &self.edge_type_store)?;
 
     // We insert down here because the vertex, edge and shape type stores
     // need to be able to annotate the polygon and its elements
@@ -569,13 +569,12 @@ impl Polygons {
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
-    let origin = self
+    let origin = *self
       .get_point_by_index_and_type(origin_type, origin_index)
       .ok_or(TilingError::InvalidTransform {
         transform: transform.to_string(),
         reason: "origin point not found".into(),
-      })?
-      .clone();
+      })?;
 
     let stage_index = self.stages;
 

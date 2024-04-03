@@ -46,7 +46,7 @@ impl EdgeTypeStore {
     }
 
     self.edge_types_by_line_segment.insert(
-      line_segment.clone(),
+      *line_segment,
       PatternRadial::new(line_segment.mid_point(), Some(2)),
     );
 
@@ -81,11 +81,11 @@ impl EdgeTypeStore {
   }
 
   ///
-  pub fn add_polygon(&mut self, polygon: &mut Polygon) {
+  pub fn add_polygon(&mut self, polygon: &Polygon) {
     for line_segment in polygon.line_segments.iter() {
       self
         .get_mut(line_segment)
-        .map(|pattern| pattern.add_polygon(&polygon));
+        .map(|pattern| pattern.add_polygon(polygon));
     }
   }
 }

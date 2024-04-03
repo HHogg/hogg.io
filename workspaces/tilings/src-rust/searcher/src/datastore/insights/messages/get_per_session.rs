@@ -17,6 +17,6 @@ impl Handler<GetPerSession> for Store {
   fn handle(&mut self, _: GetPerSession, _: &mut Context<Self>) -> Self::Result {
     let pool = self.pool.clone();
 
-    Box::pin(async move { Ok(insights::get_per_session(&pool).await?) })
+    Box::pin(async move { insights::get_per_session(&pool).await })
   }
 }

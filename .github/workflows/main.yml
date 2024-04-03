@@ -21,6 +21,8 @@ jobs:
         run: cargo fetch
       - name: 'Install dependencies: wasm-pack'
         run: cargo install wasm-pack
+      - name: 'Install dependencies: typeshare'
+        run: cargo install typeshare-cli
       - name: 'Install dependencies: wasm32-unknown-unknown'
         run: rustup target add wasm32-unknown-unknown
       - name: 'Build'

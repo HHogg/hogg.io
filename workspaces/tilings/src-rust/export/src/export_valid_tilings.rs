@@ -13,7 +13,7 @@ pub async fn export_valid_tilings(pool: &Pool<Postgres>, mut file: File) -> Resu
 
   loop {
     let response = visits::get_paged(
-      &pool,
+      pool,
       &VisitsRequest {
         page,
         page_direction: Direction::Ascending,
