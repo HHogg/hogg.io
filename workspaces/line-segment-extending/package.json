@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@hogg/common": "workspace:^",
-    "@hogg/geometry": "workspace:^",
     "@hogg/tilings": "workspace:^",
     "framer-motion": "^10.16.16",
     "lucide-react": "^0.294.0",

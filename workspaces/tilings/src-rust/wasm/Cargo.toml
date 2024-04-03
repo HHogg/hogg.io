@@ -1,11 +1,12 @@
 [package]
-name = "tiling-renderer"
+name = "tiling-wasm"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
-description = "Renderer of GomJau-Hogg tilings to a WebCanvas"
+description = "Wasm API for tilings project"
 
 [lib]
+crate-type = ["cdylib"]
 path = "src/lib.rs"
 
 [dependencies]
@@ -28,8 +29,5 @@ web-sys = { workspace = true, features = [
   'Window',
 ] }
 
-colorgrad = "0.6.2"
-# This is needed as a dependecy for wasm-bindgen
-getrandom = { version = "0.2", features = ["js"] }
-rand = "0.8.5"
 tiling = { path = "../tiling" }
+tiling-renderer = { path = "../renderer" }

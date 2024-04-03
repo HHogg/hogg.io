@@ -6,18 +6,17 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "yarn generate:types",
-    "clean": "rm -rf ./logs",
+    "build": "yarn build:types && yarn build:wasm",
+    "build:types": "typeshare ./src-rust --lang=typescript --output-file=./src/types.ts",
+    "build:wasm": "wasm-pack build ./src-rust/wasm --target web --out-dir ../../pkg",
+    "clean": "rm -rf ./logs ./pkg",
+    "dev": "cargo watch -w ./src-rust -q -s \"yarn workspace @hogg/tilings run build\"",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
-    "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file",
-    "generate:types": "typeshare ./src-rust --lang=typescript --output-file=./src/types.ts"
+    "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file"
   },
   "dependencies": {
-    "@hogg/canvas": "workspace:^",
     "@hogg/common": "workspace:^",
-    "@hogg/tiling-parser": "workspace:^",
-    "@hogg/tiling-renderer": "workspace:^",
     "lucide-react": "^0.294.0",
     "preshape": "^18.1.3",
     "react": "^18.2.0",

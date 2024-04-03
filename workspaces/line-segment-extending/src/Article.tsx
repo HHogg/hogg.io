@@ -431,7 +431,7 @@ if intercepts_min_y {
         <ArticleParagraph>
           That's it! The full implementation can be found{' '}
           <Link
-            href="https://github.com/HHogg/hogg.io/blob/master/workspaces/geometry/src-rust/line_segment.rs#L150-L278"
+            href="https://github.com/HHogg/hogg.io/blob/master/workspaces/line-segment-extending/src-rust/extend_line_segment.rs"
             target="_blank"
           >
             here

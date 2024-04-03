@@ -37,7 +37,6 @@
     "@hogg/snake": "workspace:^",
     "@hogg/spirals": "workspace:^",
     "@hogg/tilings": "workspace:^",
-    "@hogg/wasm-api": "workspace:^",
     "@react-spring/web": "^9.7.3",
     "@visx/axis": "^3.5.0",
     "@visx/curve": "^3.3.0",

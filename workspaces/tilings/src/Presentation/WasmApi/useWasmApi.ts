@@ -1,14 +1,13 @@
 import { useWasmContext } from '@hogg/common';
-import * as tilingParser from '@hogg/tiling-parser';
-import * as tilingRenderer from '@hogg/tiling-renderer';
+import * as wasm from '../../../pkg/tiling_wasm';
 import { Options, Tiling, Transform, ValidationFlag } from '../../types';
 
 function parseNotation(notation: string): Tiling {
-  return tilingParser.parse_notation(notation);
+  return wasm.parse_notation(notation);
 }
 
 function parseTransform(transform: string, path: string): Transform {
-  return tilingParser.parse_transform(transform, path);
+  return wasm.parse_transform(transform, path);
 }
 
 function renderNotation(
@@ -24,12 +23,7 @@ function renderNotation(
     ValidationFlag.ShapeTypes,
   ]
 ): Tiling {
-  return tilingRenderer.render_notation(
-    notation,
-    canvasId,
-    options,
-    validations
-  );
+  return wasm.render_notation(notation, canvasId, options, validations);
 }
 
 export const wasmApi = {

@@ -2278,10 +2278,13 @@ dependencies = [
  "anyhow",
  "chrono",
  "circular-sequence",
+ "console_error_panic_hook",
+ "console_log",
  "insta",
  "log",
  "pretty_assertions",
  "serde",
+ "serde-wasm-bindgen",
  "serde_json",
  "serde_with",
  "thiserror",
@@ -2331,21 +2334,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tiling-parser"
-version = "0.0.0"
-dependencies = [
- "console_error_panic_hook",
- "console_log",
- "getrandom",
- "log",
- "serde-wasm-bindgen",
- "tiling",
- "tracing",
- "wasm-bindgen",
- "web-sys",
-]
-
-[[package]]
 name = "tiling-renderer"
 version = "0.0.0"
 dependencies = [
@@ -2386,6 +2374,25 @@ dependencies = [
  "tracing-appender",
  "tracing-subscriber",
  "typeshare",
+]
+
+[[package]]
+name = "tiling-wasm"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "console_error_panic_hook",
+ "console_log",
+ "log",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "thiserror",
+ "tiling",
+ "tiling-renderer",
+ "typeshare",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
