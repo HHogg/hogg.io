@@ -1,7 +1,8 @@
 import { useProjectWindowContext } from '@hogg/common';
 import { Box, Grid, Motion, Text } from 'preshape';
-import { useNotationContext, formatUniform } from '..';
+import { useNotationContext } from '../Notation/useNotationContext';
 import TilingResult from '../Tiling/TilingResult';
+import { formatUniform } from '../utils/formatting';
 import { useLibraryContext } from './useLibraryContext';
 
 export default function LibraryResultsGrid() {

@@ -13,20 +13,14 @@ import {
   SettingsIcon,
 } from 'lucide-react';
 import { Box, useMatchMedia } from 'preshape';
-import ArrangementControlBar from './PlayerControlBar';
+import { useSettingsContext } from '../Settings/useSettingsContext';
+import PlayerControlBar from './PlayerControlBar';
 import { usePlayerContext } from './usePlayerContext';
 
 export default function PlayerControls() {
-  const {
-    play,
-    pause,
-    forward,
-    backward,
-    toStart,
-    toEnd,
-    toggleSettings,
-    isPlaying,
-  } = usePlayerContext();
+  const { toggleSettings } = useSettingsContext();
+  const { play, pause, forward, backward, toStart, toEnd, isPlaying } =
+    usePlayerContext();
 
   const match = useMatchMedia(['600px']);
   const isLarge = match('600px');
@@ -75,7 +69,7 @@ export default function PlayerControls() {
 
         {isLarge && (
           <Box grow>
-            <ArrangementControlBar />
+            <PlayerControlBar />
           </Box>
         )}
 

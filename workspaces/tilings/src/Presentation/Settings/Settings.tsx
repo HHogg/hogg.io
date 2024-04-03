@@ -17,12 +17,13 @@ import {
   MenuConfigEntryOneOf,
 } from 'preshape';
 import { Annotation, ColorMode, ScaleMode } from '../../types';
-import { SPEEDS, Speed } from './usePlayer';
-import { usePlayerContext } from './usePlayerContext';
+import { SPEEDS, Speed } from '../Player/usePlayer';
+import { usePlayerContext } from '../Player/usePlayerContext';
+import { useSettingsContext } from './useSettingsContext';
 
 const annotationOptions = Object.values(Annotation);
 
-export default function PlayerSettings() {
+export default function Settings() {
   const {
     autoRotate,
     colorMode,
@@ -32,7 +33,6 @@ export default function PlayerSettings() {
     showAnnotations,
     showDebug,
     showSettings,
-    speed,
     setAutoRotate,
     setScaleMode,
     setScaleSize,
@@ -40,8 +40,8 @@ export default function PlayerSettings() {
     setColorMode,
     setExpansionPhases,
     setShowDebug,
-    setSpeed,
-  } = usePlayerContext();
+  } = useSettingsContext();
+  const { speed, setSpeed } = usePlayerContext();
 
   const handleAnnotationsChange = (annotations: Annotation[]) => {
     setShowAnnotations(

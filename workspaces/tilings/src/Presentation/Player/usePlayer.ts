@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Annotation, ColorMode, ScaleMode } from '../../types';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
 
@@ -9,15 +8,7 @@ export type Speed = 0.25 | 0.5 | 1 | 1.5 | 2;
 export const SPEEDS: Speed[] = [0.25, 0.5, 1, 1.5, 2];
 
 export type UsePlayerOptions = {
-  autoRotate: boolean;
-  colorMode: ColorMode;
-  createSimplerTilingLink?: (notation: string) => string;
-  expansionPhases: number;
   isPlaying: boolean;
-  scaleMode: ScaleMode;
-  scaleSize: number;
-  showAnnotations: Record<Annotation, boolean>;
-  showDebug: boolean;
   speed: Speed;
 };
 
@@ -26,37 +17,15 @@ export type UsePlayerResult = UsePlayerOptions & {
   pause: () => void;
   forward: () => void;
   backward: () => void;
-  setAutoRotate: (autoRotate: boolean) => void;
-  setColorMode: (colorMode: ColorMode) => void;
-  setExpansionPhases: (count: number) => void;
-  setScaleMode: (scaleMode: ScaleMode) => void;
-  setScaleSize: (scaleSize: number) => void;
-  setShowAnnotations: (annotations: Record<Annotation, boolean>) => void;
-  setShowDebug: (debug: boolean) => void;
-  setShowSettings: (show: boolean) => void;
   setSpeed: (speed: Speed) => void;
   toStart: () => void;
   toEnd: () => void;
-  toggleSettings: () => void;
   elapsed: number;
-  expansionPhases: number;
   maxStage?: number;
-  showSettings: boolean;
 };
 
 export const defaultOptions: UsePlayerOptions = {
-  autoRotate: false,
-  colorMode: ColorMode.VaporWaveRandom,
-  expansionPhases: 3,
-  isPlaying: true,
-  scaleMode: ScaleMode.WithinBounds,
-  scaleSize: 20,
-  showAnnotations: {
-    [Annotation.AxisOrigin]: false,
-    [Annotation.Transform]: false,
-    [Annotation.VertexType]: false,
-  },
-  showDebug: false,
+  isPlaying: false,
   speed: 1,
 };
 
@@ -71,22 +40,8 @@ export const usePlayer = (
   const { tiling } = useArrangementContext();
   const { notation } = useNotationContext();
   const [elapsedTime, setElapsedTime] = useState(0);
-  const [showSettings, setShowSettings] = useState(false);
-  const [autoRotate, setAutoRotate] = useState(initialState.autoRotate);
   const [speed, setSpeed] = useState<Speed>(initialState.speed);
-  const [expansionPhases, setExpansionPhases] = useState(
-    initialState.expansionPhases
-  );
   const [isPlaying, setIsPlaying] = useState(initialState.isPlaying);
-  const [colorMode, setColorMode] = useState<ColorMode>(initialState.colorMode);
-  const [scaleMode, setScaleMode] = useState<ScaleMode>(initialState.scaleMode);
-  const [scaleSize, setScaleSize] = useState<number>(initialState.scaleSize);
-
-  const [showAnnotations, setShowAnnotations] = useState(
-    initialState.showAnnotations
-  );
-
-  const [showDebug, setShowDebug] = useState(initialState.showDebug);
 
   const refAnimationFrameRequest = useRef<number>();
   const refTimeout = useRef<NodeJS.Timeout>();
@@ -210,10 +165,6 @@ export const usePlayer = (
     setElapsedTime(duration);
   };
 
-  const toggleSettings = () => {
-    setShowSettings((showSettings) => !showSettings);
-  };
-
   useEffect(() => {
     if (isPlaying) {
       startLoop();
@@ -242,33 +193,15 @@ export const usePlayer = (
 
   return {
     backward,
-    createSimplerTilingLink: opts.createSimplerTilingLink,
     forward,
     pause,
     play,
-    setAutoRotate,
-    setColorMode,
-    setExpansionPhases,
-    setScaleMode,
-    setScaleSize,
-    setShowAnnotations,
-    setShowDebug,
-    setShowSettings,
     setSpeed,
     toStart,
     toEnd,
-    toggleSettings,
-    autoRotate,
-    colorMode,
     elapsed,
-    expansionPhases,
     isPlaying,
     maxStage: getActiveStage(elapsedTime),
-    scaleMode,
-    scaleSize,
-    showAnnotations,
-    showDebug,
-    showSettings,
     speed,
   };
 };

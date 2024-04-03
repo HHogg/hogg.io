@@ -7,13 +7,7 @@ import {
   ArticlePage,
   ProjectPageLink,
 } from '@hogg/common';
-import {
-  Annotation,
-  TilingArrangementProvider,
-  TilingNotationProvider,
-  TilingRenderer,
-  meta as tilingsMeta,
-} from '@hogg/tilings';
+import { Annotation, TilingRenderer, meta as tilingsMeta } from '@hogg/tilings';
 import {
   ArticleSection,
   ArticleHeading,
@@ -57,14 +51,11 @@ const Article = ({}: Props) => {
             id="reflective-tiling-transformation"
             description="Live rendered example of an annotated reflective transform"
           >
-            <TilingNotationProvider notation="12-4-3,6/m30/m(c4)">
-              <TilingArrangementProvider>
-                <TilingRenderer
-                  height="300px"
-                  options={tilingRendererOptions}
-                />
-              </TilingArrangementProvider>
-            </TilingNotationProvider>
+            <TilingRenderer
+              height="300px"
+              notation="12-4-3,6/m30/m(c4)"
+              options={tilingRendererOptions}
+            />
           </ArticleFig>
         </ArticleFigs>
       </ArticleSection>
@@ -342,14 +333,11 @@ let intercepts_max_x = y_for_max_x >= min_y && y_for_max_x <= max_y;
             id="rotational-tiling-transformation"
             description="Live rendered example of an annotated rotational transform"
           >
-            <TilingNotationProvider notation="3-3-6-3-3,3/r(h16)/r60">
-              <TilingArrangementProvider>
-                <TilingRenderer
-                  height="300px"
-                  options={tilingRendererOptions}
-                />
-              </TilingArrangementProvider>
-            </TilingNotationProvider>
+            <TilingRenderer
+              height="300px"
+              options={tilingRendererOptions}
+              notation="3-3-6-3-3,3/r(h16)/r60"
+            />
           </ArticleFig>
         </ArticleFigs>
 

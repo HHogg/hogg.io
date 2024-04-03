@@ -2,10 +2,7 @@ import { type Project, ProjectKey } from '@hogg/common';
 import image from './image.webp';
 
 export { default as Project } from './Project';
-
-export { default as TilingArrangementProvider } from './Presentation/Arrangement/ArrangementProvider';
-export { default as TilingNotationProvider } from './Presentation/Notation/NotationProvider';
-export { default as TilingRenderer } from './Presentation/Renderer/Renderer';
+export { default as TilingRenderer } from './TilingRenderer';
 export * from './types';
 
 export const meta: Project = {

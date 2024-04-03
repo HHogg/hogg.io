@@ -28,6 +28,31 @@ pub fn parse_transform(transform: &str, path: &str) -> Result<JsValue, JsError> 
 }
 
 #[wasm_bindgen]
+pub fn find_previous_tiling(
+  notation: &str,
+  validations: &JsValue,
+) -> Result<Option<String>, JsError> {
+  let validations = serde_wasm_bindgen::from_value::<Vec<ValidationFlag>>(validations.to_owned())?;
+
+  let mut tiling = Tiling::default()
+    .with_validations(Some(validations))
+    .from_string(notation.to_string());
+
+  Ok(tiling.find_previous_tiling().map(|t| t.to_string()))
+}
+
+#[wasm_bindgen]
+pub fn find_next_tiling(notation: &str, validations: &JsValue) -> Result<Option<String>, JsError> {
+  let validations = serde_wasm_bindgen::from_value::<Vec<ValidationFlag>>(validations.to_owned())?;
+
+  let mut tiling = Tiling::default()
+    .with_validations(Some(validations))
+    .from_string(notation.to_string());
+
+  Ok(tiling.find_next_tiling().map(|t| t.to_string()))
+}
+
+#[wasm_bindgen]
 pub fn render_notation(
   canvas_id: &str,
   notation: &str,

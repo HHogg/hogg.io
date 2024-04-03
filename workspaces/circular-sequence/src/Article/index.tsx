@@ -6,13 +6,7 @@ import {
   ArticlePage,
   ProjectPageLink,
 } from '@hogg/common';
-import {
-  TilingArrangementProvider,
-  ColorMode,
-  TilingNotationProvider,
-  TilingRenderer,
-  meta as tilingsMeta,
-} from '@hogg/tilings';
+import { ColorMode, TilingRenderer, meta as tilingsMeta } from '@hogg/tilings';
 import {
   ArticleHeading,
   ArticleParagraph,
@@ -56,16 +50,13 @@ const Article = () => {
             id="dodecagon-shape-arrangement"
             description="Shape arrangement of a dodecagon at the center, with alternating triangles, squares and hexagons on it's edges."
           >
-            <TilingArrangementProvider>
-              <TilingNotationProvider notation="12-3,4,6,4,3,4,6,4,3,4,6,4">
-                <TilingRenderer
-                  height="200px"
-                  options={{
-                    colorMode: ColorMode.None,
-                  }}
-                />
-              </TilingNotationProvider>
-            </TilingArrangementProvider>
+            <TilingRenderer
+              height="200px"
+              notation="12-3,4,6,4,3,4,6,4,3,4,6,4"
+              options={{
+                colorMode: ColorMode.None,
+              }}
+            />
           </ArticleFig>
         </ArticleFigs>
       </ArticleSection>
@@ -180,18 +171,15 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="sequence-34312"
             description="A symmetrical sequence, the same traversal is produced regardless of the direction."
             presentation={
-              <TilingArrangementProvider>
-                <TilingNotationProvider notation="4-3,4,3,12">
-                  <TilingRenderer
-                    height="200px"
-                    validations={[]}
-                    options={{
-                      colorMode: ColorMode.None,
-                      padding: sizeX12Px,
-                    }}
-                  />
-                </TilingNotationProvider>
-              </TilingArrangementProvider>
+              <TilingRenderer
+                height="200px"
+                validations={[]}
+                notation="4-3,4,3,12"
+                options={{
+                  colorMode: ColorMode.None,
+                  padding: sizeX12Px,
+                }}
+              />
             }
             language="rust"
           >
@@ -217,19 +205,16 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="sequence-33412"
             description="An asymmetrical sequence, and it's differing traversals in either direction"
             presentation={
-              <TilingArrangementProvider>
-                <TilingNotationProvider notation="4-3,3,4,12">
-                  <TilingRenderer
-                    height="200px"
-                    validations={[]}
-                    options={{
-                      colorMode: ColorMode.None,
-                      padding: sizeX12Px,
-                      isValid: true,
-                    }}
-                  />
-                </TilingNotationProvider>
-              </TilingArrangementProvider>
+              <TilingRenderer
+                height="200px"
+                notation="4-3,3,4,12"
+                validations={[]}
+                options={{
+                  colorMode: ColorMode.None,
+                  padding: sizeX12Px,
+                  isValid: true,
+                }}
+              />
             }
             language="rust"
           >

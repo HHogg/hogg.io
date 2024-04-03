@@ -8,7 +8,7 @@ import {
 import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 
-export type RendererProps = {
+export type CanvasProps = {
   scale?: number;
   shadow?: boolean;
   render: (id: string) => void;
@@ -19,7 +19,7 @@ function Canvas({
   shadow,
   render,
   ...rest
-}: BoxProps & RendererProps) {
+}: BoxProps & CanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState('');
   const { theme } = useThemeContext();

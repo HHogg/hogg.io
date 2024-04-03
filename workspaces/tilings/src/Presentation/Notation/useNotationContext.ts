@@ -6,6 +6,8 @@ type NotationContextProps = {
   path: string;
   isValid?: boolean;
   setNotation: (notation: string) => void;
+  previousNotation: () => void;
+  nextNotation: () => void;
 };
 
 export const FIRST_NOTATION = '3/m30/m(h2)';
@@ -15,6 +17,8 @@ export const NotationContext = createContext<NotationContextProps>({
   notationRef: { current: '' },
   path: '',
   setNotation: () => {},
+  previousNotation: () => {},
+  nextNotation: () => {},
 });
 
 export function useNotationContext() {
