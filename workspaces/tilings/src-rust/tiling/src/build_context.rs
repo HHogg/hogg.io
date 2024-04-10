@@ -1,8 +1,8 @@
 use chrono::{NaiveDateTime, Utc};
+use circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::pattern::Patterns;
 use crate::{ApplicationError, Tiling};
 
 #[derive(Clone, Debug, Default, Serialize)]
@@ -38,9 +38,10 @@ pub struct ValidTiling {
   pub t_index: i32,
   pub uniform: i32,
   #[typeshare(serialized_as = "Vec<String>")]
-  pub vertex_types: Patterns,
+  pub vertex_types: SequenceStore,
   #[typeshare(serialized_as = "Vec<String>")]
-  pub shape_types: Patterns,
+  /// The sequence store for shape types.
+  pub shape_types: SequenceStore,
   #[typeshare(serialized_as = "string")]
   pub timestamp: NaiveDateTime,
 }

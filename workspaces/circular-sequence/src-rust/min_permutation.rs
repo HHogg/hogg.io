@@ -61,7 +61,7 @@ fn shift_left(sequence: &Sequence, shift: usize) -> Sequence {
 
 /// Reverses a sequence
 ///
-/// Space: O(1)
+/// Space: O(n)
 /// Time:  O(n)
 pub fn reverse(sequence: &Sequence) -> Sequence {
   let mut reversed_sequence = Sequence::default();

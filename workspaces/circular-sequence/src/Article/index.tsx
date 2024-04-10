@@ -32,17 +32,16 @@ const Article = () => {
           While working on my <ProjectPageLink project={tilingsMeta} /> project,
           I was needing to build up a list of distinct shape arrangements (
           <ArticleFigLink fig="dodecagon-shape-arrangement" />
-          ). This of course needed a way to check an arrangement against a list
-          of previously seen arrangements.
+          ). This needed a way to check an arrangement against a list of
+          previously seen arrangements.
         </ArticleParagraph>
 
         <ArticleParagraph>
-          The complexity and interesting part of this problem came from the fact
-          that the shapes could be arranged in a circular fashion, and there was
-          no defined start or end point. This meant that the same arrangement
-          could be represented in multiple ways. I was also dealing with an
-          infinite amount of these arrangements, and 100,000s of them every
-          second.
+          The complexity and interesting part of this problem came because the
+          shapes could be arranged cyclicly, and there was no defined start or
+          end point. This meant that the same arrangement could be represented
+          in multiple ways. I was also dealing with an infinite amount of these
+          arrangements, and 100,000s of them every second.
         </ArticleParagraph>
 
         <ArticleFigs>
@@ -317,10 +316,26 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         <ArticleParagraph>
           Our comparing logic for two sequences is going to be somewhat similar
           to the symmetrical check. We're going to concatenate the sequence with
-          itself and then check for the target sequence within the concatenated
-          sequence, forwards and backwards (when asymmetrical) (
+          itself (by looping twice) and then check for the target sequence
+          within the concatenated sequence, forwards and backwards (when
+          asymmetrical) (
           <ArticleFigLink fig="compare-sequences" />
           ).
+        </ArticleParagraph>
+
+        <ArticleParagraph>
+          We can use the{' '}
+          <Link
+            href="https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm"
+            target="_KMP"
+          >
+            Knuth-Morris-Pratt algorithm
+          </Link>{' '}
+          to do this, which is an efficient way to search for a substring within
+          a string in <Code>O(n + m)</Code> time, instead of{' '}
+          <Code>O(n * m)</Code>. I wont go into the details of the algorithm
+          here as there are plenty of resources that explain it better than I
+          could.
         </ArticleParagraph>
 
         <ArticleFigs>
@@ -361,6 +376,12 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
           of the 2.
         </ArticleParagraph>
 
+        <ArticleParagraph>
+          Maybe this could be performed in less than <Code>O(n^2)</Code> time
+          but for my purposes it is called very infrequently so I didn't worry
+          too much about it.
+        </ArticleParagraph>
+
         <ArticleFigs>
           <ArticleFigCodeBlock
             id="normalize-sequence"
@@ -383,11 +404,13 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         <ArticleHeading>Summary</ArticleHeading>
 
         <ArticleParagraph>
-          There's a sequences of numbers that can have a cyclic property to them
+          There's sequences of numbers that can have a cyclic property to them
           and this poses a problem when trying to compare them because there's
-          no defied start and endpoint. We solved this by essentially
-          duplicating the sequence and then checking for the target sequence
-          within the duplicated sequence. We also covered the symmetrical
+          no defied start and endpoint. I solved this by essentially
+          concatenating (by looping twice) the sequence and then checking for
+          the target sequence within the duplicated sequence. This checking
+          behaviour can be done using a slightly modified Knuth-Morris-Pratt
+          algorithm, to make it more efficient. I also covered the symmetrical
           property of the sequence and how we can use this to our advantage to
           find the starting index of the reverse sequence if it exists.
         </ArticleParagraph>

@@ -32,6 +32,7 @@ export default function NotationInput() {
         <Input
           align="middle"
           backgroundColor="transparent"
+          basis="0"
           borderColor={error ? 'negative-shade-4' : 'text-shade-1'}
           borderBottom
           borderSize="x3"

@@ -8,8 +8,8 @@ use crate::{get_length, is_symmetrical, reverse, Sequence};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 pub enum Match {
-  Exact(Sequence),
-  Partial(Sequence),
+  Exact(u8),
+  Partial(u8),
   None,
 }
 
@@ -24,19 +24,19 @@ pub enum Direction {
 /// assumes that the targets are sorted.
 ///
 /// Space: O(1)
-/// Time:  O(n * m) where n is the number of targets and m is the length of the
+/// Time:  O(n + m) where n is the number of targets and m is the length of the
 ///        longest target.
 pub fn get_match(sequence: &Sequence, targets: &[Sequence]) -> Match {
   let mut first_partial_match = Match::None;
 
-  for target in targets.iter() {
-    match get_match_directional(sequence, target, Direction::Forward) {
-      Match::Exact(sequence) => {
-        return Match::Exact(sequence);
+  for (index, target) in targets.iter().enumerate() {
+    match get_sequence_match(sequence, target, Direction::Forward) {
+      Match::Exact(_) => {
+        return Match::Exact(index as u8);
       }
-      Match::Partial(sequence) => {
-        if first_partial_match == Match::None {
-          first_partial_match = Match::Partial(sequence);
+      Match::Partial(_) => {
+        if matches!(first_partial_match, Match::None) {
+          first_partial_match = Match::Partial(index as u8);
         }
       }
       _ => {}
@@ -46,39 +46,79 @@ pub fn get_match(sequence: &Sequence, targets: &[Sequence]) -> Match {
   first_partial_match
 }
 
-fn get_match_directional(source: &Sequence, target: &Sequence, direction: Direction) -> Match {
+// Searches for a sequence in a list of sequences, and returns the first
+// sequence that either matches exactly or partially. This function uses
+// the Knuth-Morris-Pratt algorithm to search for the sequence in the target,
+// wrapping around the target to match offset starting points. It will search
+// in both directions if the target is not symmetrical.
+//
+// Space: O(n)
+// Time:  O(n + m)
+fn get_sequence_match(source: &Sequence, target: &Sequence, direction: Direction) -> Match {
   let source_length = get_length(source);
   let target_length = get_length(target);
+  let source_lps = get_lps(source);
 
   if source_length > target_length {
     return Match::None;
   }
 
-  let mut i = 0;
+  let mut target_i = 0;
+  let mut source_i = 0;
 
-  for _ in 0..2 {
-    for j in 0..target_length {
-      if source[i] == target[j] {
-        if i == target_length - 1 {
-          return Match::Exact(*target);
-        }
+  while target_i < target_length * 2 {
+    if source[source_i] == target[target_i % target_length] {
+      target_i += 1;
+      source_i += 1;
+    } else if source_i != 0 {
+      source_i = source_lps[source_i - 1] as usize;
+    } else {
+      target_i += 1;
+    }
 
-        if i == source_length - 1 {
-          return Match::Partial(*target);
-        }
-
-        i += 1;
-      } else if source[0] == target[j] {
-        i = 1;
-      } else {
-        i = 0;
+    if source_i == source_length {
+      if source_i == target_length {
+        return Match::Exact(0);
       }
+
+      return Match::Partial(0);
     }
   }
 
   if direction == Direction::Forward && !is_symmetrical(target) {
-    return get_match_directional(&reverse(source), target, Direction::Backward);
+    return get_sequence_match(&reverse(source), target, Direction::Backward);
   }
 
   Match::None
+}
+
+// Creates a KMP longest prefix suffix array
+//
+// Space: O(n)
+// Time:  O(n)
+fn get_lps(sequence: &Sequence) -> Sequence {
+  let length = get_length(sequence);
+  let mut lps = Sequence::default();
+
+  let mut l = 0;
+  let mut r = 1;
+
+  // The first element is always 0, as there
+  // are no prefixes or suffixes
+  lps[0] = 0;
+
+  while r < length {
+    if sequence[l] == sequence[r] {
+      lps[r] = (l + 1) as u8;
+      l += 1;
+      r += 1;
+    } else if l != 0 {
+      l = lps[l - 1] as usize;
+    } else {
+      lps[r] = 0;
+      r += 1;
+    }
+  }
+
+  lps
 }

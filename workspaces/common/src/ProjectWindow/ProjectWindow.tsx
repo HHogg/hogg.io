@@ -5,13 +5,13 @@ import {
   ThemeProvider,
   useResizeObserver,
 } from 'preshape';
-import ProjectBackground, { ProjectBackgroundProps } from './ProjectBackground';
+import PatternBackground, { PatternBackgroundProps } from './PatternBackground';
 import ProjectWindowProvider from './ProjectWindowProvider';
 
 type Props = {
-  backgroundPattern?: ProjectBackgroundProps['pattern'];
-  backgroundPatternGap?: ProjectBackgroundProps['patternGap'];
-  backgroundPatternSize?: ProjectBackgroundProps['patternSize'];
+  backgroundPattern?: PatternBackgroundProps['pattern'];
+  backgroundPatternGap?: PatternBackgroundProps['patternGap'];
+  backgroundPatternSize?: PatternBackgroundProps['patternSize'];
   controls?: JSX.Element;
   controlsVisible?: boolean;
   controlsPosition?: 'top' | 'bottom';
@@ -94,7 +94,7 @@ export default function ProjectWindow({
             ref={refWindow}
             overflow="hidden"
           >
-            <ProjectBackground
+            <PatternBackground
               backgroundColor={backgroundColor}
               flex="vertical"
               grow
@@ -136,7 +136,7 @@ export default function ProjectWindow({
               <Box absolute="bottom" ref={refTabs} width="100%">
                 {tabs}
               </Box>
-            </ProjectBackground>
+            </PatternBackground>
           </Box>
 
           {controls && controlsPosition === 'bottom' && (

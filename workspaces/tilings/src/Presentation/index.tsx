@@ -1,6 +1,7 @@
 import { ProjectWindow, ProjectTabs, ProjectTab } from '@hogg/common';
-import { BookOpenIcon } from 'lucide-react';
+import { BookOpenIcon, InfoIcon } from 'lucide-react';
 import { Box } from 'preshape';
+import ArrangementInformation from './Arrangement/ArrangementInformation';
 import ArrangementProvider from './Arrangement/ArrangementProvider';
 import Library from './Library/Library';
 import NotationInput from './Notation/NotationInput';
@@ -22,6 +23,10 @@ function PresentationInner(props: RendererProps) {
       onClick={() => setShowSettings(false)}
       tabs={
         <ProjectTabs>
+          <ProjectTab Icon={InfoIcon} name="Info">
+            <ArrangementInformation />
+          </ProjectTab>
+
           <ProjectTab Icon={BookOpenIcon} name="Library">
             <Library />
           </ProjectTab>
@@ -42,7 +47,7 @@ export default function Presentation({}) {
   return (
     <WasmApi>
       <SettingsProvider>
-        <NotationProvider notation="3/m30/m(h2)">
+        <NotationProvider notation="3-4,3-3,3-12/m90/r(h12)">
           <ArrangementProvider>
             <PlayerProvider>
               <PresentationInner />

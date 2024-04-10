@@ -1,34 +1,38 @@
 use std::collections::HashMap;
 
+use circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::pattern_radial::PatternRadial;
-use crate::{LineSegment, Polygon};
+use super::shape_node::ShapeLocation;
+use crate::classification::GeoNode;
+use crate::{LineSegment, Polygon, TilingError};
 
 #[derive(Clone, Debug, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct EdgeTypeStore {
+  #[typeshare(serialized_as = "Vec<String>")]
+  pub edge_types: SequenceStore,
   #[serde(skip)]
-  edge_types_by_line_segment: HashMap<LineSegment, PatternRadial>,
+  edge_types_by_line_segment: HashMap<LineSegment, GeoNode>,
 }
 
 impl EdgeTypeStore {
-  /// Returns the pattern for a line segment (the shapes that are around it)
-  pub fn get(&self, line_segment: &LineSegment) -> Option<&PatternRadial> {
+  pub fn get(&self, line_segment: &LineSegment) -> Option<&GeoNode> {
     match (
       self.edge_types_by_line_segment.get(line_segment),
       self.edge_types_by_line_segment.get(&line_segment.flip()),
     ) {
-      (Some(pattern), _) => Some(pattern),
-      (_, Some(pattern)) => Some(pattern),
+      (Some(node), _) => Some(node),
+      (_, Some(node)) => Some(node),
       (_, _) => None,
     }
   }
 
   /// Returns the number of times a line segment has been used
   /// by a polygon.
-  pub fn get_mut(&mut self, line_segment: &LineSegment) -> Option<&mut PatternRadial> {
+  pub fn get_mut(&mut self, line_segment: &LineSegment) -> Option<&mut GeoNode> {
     if self.edge_types_by_line_segment.get(line_segment).is_some() {
       return self.edge_types_by_line_segment.get_mut(line_segment);
     }
@@ -47,7 +51,9 @@ impl EdgeTypeStore {
 
     self.edge_types_by_line_segment.insert(
       *line_segment,
-      PatternRadial::new(line_segment.mid_point(), Some(2)),
+      GeoNode::default()
+        .with_point(line_segment.mid_point())
+        .with_size(Some(2)),
     );
 
     self.edge_types_by_line_segment.get_mut(line_segment)
@@ -56,7 +62,7 @@ impl EdgeTypeStore {
   /// Returns the number of times a line segment has been used
   /// by a polygon.
   pub fn get_count(&self, line_segment: &LineSegment) -> usize {
-    self.get(line_segment).map_or(0, |pattern| pattern.len())
+    self.get(line_segment).map_or(0, |node| node.len())
   }
 
   /// Returns all of the line segments that only have a single
@@ -66,8 +72,8 @@ impl EdgeTypeStore {
     self
       .edge_types_by_line_segment
       .iter()
-      .filter_map(|(line_segment, pattern)| {
-        if pattern.len() == 1 {
+      .filter_map(|(line_segment, node)| {
+        if node.len() == 1 {
           Some(line_segment)
         } else {
           None
@@ -81,11 +87,23 @@ impl EdgeTypeStore {
   }
 
   ///
-  pub fn add_polygon(&mut self, polygon: &Polygon) {
+  pub fn add_polygon(&mut self, polygon: &Polygon) -> Result<(), TilingError> {
     for line_segment in polygon.line_segments.iter() {
-      self
-        .get_mut(line_segment)
-        .map(|pattern| pattern.add_polygon(polygon));
+      if let Some(node) = self.get_mut(line_segment) {
+        node.connect(
+          ShapeLocation::default()
+            .with_point(polygon.centroid)
+            .with_shape(polygon.shape),
+        )?;
+      }
+
+      if let Some(node) = self.get(line_segment) {
+        if node.is_full() {
+          self.edge_types.insert(node.sequence);
+        }
+      }
     }
+
+    Ok(())
   }
 }

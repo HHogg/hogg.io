@@ -21,6 +21,8 @@ export { default as SvgLabel } from './SvgLabels/SvgLabel';
 export { default as SvgLabelsProvider } from './SvgLabels/SvgLabelsProvider';
 export { default as useSvgLabelsContext } from './SvgLabels/useSvgLabelsContext';
 
+export { default as PatternBackground } from './ProjectWindow/PatternBackground';
+
 export {
   default as ProjectPage,
   type ProjectPageProps,
@@ -29,7 +31,6 @@ export { default as ProjectPageLink } from './ProjectPage/ProjectPageLink';
 export { default as ProjectPageProvider } from './ProjectPage/ProjectPageProvider';
 export { useProjectPageContext } from './ProjectPage/useProjectPageContext';
 
-export { default as ProjectBackground } from './ProjectWindow/ProjectBackground';
 export { default as ProjectControl } from './ProjectWindow/ProjectControl';
 export { default as ProjectControlGroup } from './ProjectWindow/ProjectControlGroup';
 export { default as ProjectControls } from './ProjectWindow/ProjectControls';

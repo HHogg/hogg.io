@@ -67,3 +67,14 @@ pub fn get_symmetry_index(sequence: &Sequence) -> Option<usize> {
 pub fn is_symmetrical(sequence: &Sequence) -> bool {
   get_symmetry_index(sequence).is_some()
 }
+
+///
+pub fn insert(sequence: &mut Sequence, value: u8) {
+  let length = get_length(sequence);
+
+  if length == 12 {
+    return;
+  }
+
+  sequence[length] = value;
+}

@@ -1,45 +1,51 @@
 use std::collections::HashMap;
 
+use circular_sequence::{Match, SequenceStore};
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::pattern_radial::PatternRadial;
-use crate::r#match::Match;
-use crate::{Patterns, Point, Polygon, TilingError, ValidationError};
+use super::shape_node::ShapeLocation;
+use crate::classification::GeoNode;
+use crate::{Point, Polygon, TilingError};
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct VertexTypeStore {
   #[typeshare(serialized_as = "Vec<String>")]
-  pub vertex_types: Patterns,
+  pub vertex_types: SequenceStore,
+  #[typeshare(serialized_as = "Vec<String>")]
+  valid_vertex_types: SequenceStore,
   #[serde(skip)]
-  vertex_types_by_point: HashMap<Point, PatternRadial>,
-  #[serde(skip)]
-  possible_vertex_types: Patterns,
+  vertex_types_by_point: HashMap<Point, GeoNode>,
 }
 
 impl VertexTypeStore {
   ///
   pub fn add_polygon(&mut self, polygon: &mut Polygon) -> Result<(), TilingError> {
-    let polygon_clone = polygon.clone();
-
     for point in polygon.points.iter_mut() {
-      let vertex_type = self
+      let node = self
         .vertex_types_by_point
         .entry(*point)
-        .or_insert_with(|| PatternRadial::new(*point, None));
+        .or_insert_with(|| GeoNode::default().with_point(*point));
 
-      vertex_type.add_polygon(&polygon_clone)?;
+      node.connect(
+        ShapeLocation::default()
+          .with_point(polygon.centroid)
+          .with_shape(polygon.shape),
+      )?;
 
-      match self.possible_vertex_types.get_match(&vertex_type.pattern) {
-        Match::Exact(sequence) => {
-          point.vertex_type = Some(self.vertex_types.insert_sequence(sequence));
+      match self.valid_vertex_types.get_match(&node.sequence) {
+        Match::Exact(index) => {
+          if let Some(vertex_type) = self.valid_vertex_types.get(index) {
+            let inserted_index = self.vertex_types.insert(*vertex_type);
+            point.vertex_type = Some(inserted_index);
+          }
         }
         Match::None => {
           return Err(
-            ValidationError::PatternRadial {
-              reason: "no matching arrangement".to_string(),
+            TilingError::InvalidVertexType {
+              value: format!("{:?}", node.sequence),
             }
             .into(),
           );
@@ -55,9 +61,9 @@ impl VertexTypeStore {
 impl Default for VertexTypeStore {
   fn default() -> Self {
     Self {
-      vertex_types: Patterns::default(),
+      vertex_types: SequenceStore::default(),
       vertex_types_by_point: HashMap::new(),
-      possible_vertex_types: Patterns::new(&[
+      valid_vertex_types: SequenceStore::from(vec![
         [3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0],
         [4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0],
         [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0],
