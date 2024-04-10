@@ -143,12 +143,6 @@ impl Validator {
       return Ok(());
     }
 
-    if polygons.vertex_type_store.vertex_types.is_empty() {
-      return Err(ValidationError::PatternRadial {
-        reason: "No vertex types found".into(),
-      });
-    }
-
     Ok(())
   }
 
@@ -209,8 +203,6 @@ impl From<Option<Vec<ValidationFlag>>> for Validator {
 pub enum ValidationError {
   #[error("Application error -> {reason}")]
   Application { reason: String },
-  #[error("Unknown shape arrangement around a point -> {reason}")]
-  PatternRadial { reason: String },
   #[error("Overall size did not expand")]
   Expansion,
   #[error("Gaps between shapes")]

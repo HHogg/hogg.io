@@ -38,6 +38,8 @@ pub enum TilingError {
   InvalidTransform { transform: String, reason: String },
   #[error("Invalid transform value \"{value}\" -> {reason}")]
   InvalidTransformValue { value: String, reason: String },
+  #[error("Invalid vertex type \"{value}\"")]
+  InvalidVertexType { value: String },
   #[error("")]
   Noop,
 }

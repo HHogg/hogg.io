@@ -220,6 +220,7 @@ export interface ValidTiling {
 	tIndex: number;
 	uniform: number;
 	vertexTypes: string[];
+	/** The sequence store for shape types. */
 	shapeTypes: string[];
 	timestamp: string;
 }
@@ -231,6 +232,15 @@ export interface BuildContext {
 }
 
 export interface EdgeTypeStore {
+}
+
+export interface ShapeTypeStore {
+	shapeTypes: string[];
+}
+
+export interface VertexTypeStore {
+	vertexTypes: string[];
+	validVertexTypes: string[];
 }
 
 export interface LineSegment {
@@ -269,14 +279,6 @@ export interface Polygon {
 	shape: Shape;
 	shape_type?: number;
 	stage_index: number;
-}
-
-export interface ShapeTypeStore {
-	shapeTypes: string[];
-}
-
-export interface VertexTypeStore {
-	vertexTypes: string[];
 }
 
 export interface Polygons {
@@ -355,9 +357,6 @@ export enum Separator {
 /**  */
 export type ValidationError = 
 	| { type: "Application", content: {
-	reason: string;
-}}
-	| { type: "PatternRadial", content: {
 	reason: string;
 }}
 	| { type: "Expansion", content?: undefined }

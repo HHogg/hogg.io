@@ -36,6 +36,8 @@ pub fn find_previous_tiling(
 
   let mut tiling = Tiling::default()
     .with_validations(Some(validations))
+    .with_expansion_phases(3)
+    .with_link_paths(true)
     .from_string(notation.to_string());
 
   Ok(tiling.find_previous_tiling().map(|t| t.to_string()))
@@ -47,6 +49,8 @@ pub fn find_next_tiling(notation: &str, validations: &JsValue) -> Result<Option<
 
   let mut tiling = Tiling::default()
     .with_validations(Some(validations))
+    .with_expansion_phases(3)
+    .with_link_paths(true)
     .from_string(notation.to_string());
 
   Ok(tiling.find_next_tiling().map(|t| t.to_string()))

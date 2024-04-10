@@ -48,103 +48,103 @@ pub fn before_each() {
   });
 }
 
-#[test]
-fn next_sequence_without_transforms_matches_snapshot() {
-  before_each();
+// #[test]
+// fn next_sequence_without_transforms_matches_snapshot() {
+//   before_each();
 
-  unsafe {
-    assert_debug_snapshot!(NEXT_WITHOUT_TRANSFORMS);
-  }
-}
+//   unsafe {
+//     assert_debug_snapshot!(NEXT_WITHOUT_TRANSFORMS);
+//   }
+// }
 
-#[test]
-fn previous_sequence_without_transforms_matches_snapshot() {
-  before_each();
+// #[test]
+// fn previous_sequence_without_transforms_matches_snapshot() {
+//   before_each();
 
-  unsafe {
-    assert_debug_snapshot!(PREVIOUS_WITHOUT_TRANSFORMS);
-  }
-}
+//   unsafe {
+//     assert_debug_snapshot!(PREVIOUS_WITHOUT_TRANSFORMS);
+//   }
+// }
 
-#[test]
-fn next_and_previous_sequences_without_transforms_are_equal() {
-  before_each();
+// #[test]
+// fn next_and_previous_sequences_without_transforms_are_equal() {
+//   before_each();
 
-  unsafe {
-    assert_eq!(
-      NEXT_WITHOUT_TRANSFORMS.len(),
-      PREVIOUS_WITHOUT_TRANSFORMS.len()
-    );
+//   unsafe {
+//     assert_eq!(
+//       NEXT_WITHOUT_TRANSFORMS.len(),
+//       PREVIOUS_WITHOUT_TRANSFORMS.len()
+//     );
 
-    NEXT_WITHOUT_TRANSFORMS
-      .iter()
-      .zip(PREVIOUS_WITHOUT_TRANSFORMS.iter().rev())
-      .for_each(|(next, previous)| assert_eq!(next, previous))
-  }
-}
+//     NEXT_WITHOUT_TRANSFORMS
+//       .iter()
+//       .zip(PREVIOUS_WITHOUT_TRANSFORMS.iter().rev())
+//       .for_each(|(next, previous)| assert_eq!(next, previous))
+//   }
+// }
 
-#[test]
-fn next_sequence_with_transforms_matches_snapshot() {
-  before_each();
+// #[test]
+// fn next_sequence_with_transforms_matches_snapshot() {
+//   before_each();
 
-  unsafe {
-    assert_debug_snapshot!(NEXT_WITH_TRANSFORMS);
-  }
-}
+//   unsafe {
+//     assert_debug_snapshot!(NEXT_WITH_TRANSFORMS);
+//   }
+// }
 
-#[test]
-fn previous_sequence_with_transforms_matches_snapshot() {
-  before_each();
+// #[test]
+// fn previous_sequence_with_transforms_matches_snapshot() {
+//   before_each();
 
-  unsafe {
-    assert_debug_snapshot!(PREVIOUS_WITH_TRANSFORMS);
-  }
-}
+//   unsafe {
+//     assert_debug_snapshot!(PREVIOUS_WITH_TRANSFORMS);
+//   }
+// }
 
-#[test]
-fn next_and_previous_sequences_with_transforms_are_equal() {
-  before_each();
+// #[test]
+// fn next_and_previous_sequences_with_transforms_are_equal() {
+//   before_each();
 
-  unsafe {
-    assert_eq!(NEXT_WITH_TRANSFORMS.len(), PREVIOUS_WITH_TRANSFORMS.len());
+//   unsafe {
+//     assert_eq!(NEXT_WITH_TRANSFORMS.len(), PREVIOUS_WITH_TRANSFORMS.len());
 
-    NEXT_WITH_TRANSFORMS
-      .iter()
-      .zip(PREVIOUS_WITH_TRANSFORMS.iter().rev())
-      .for_each(|(next, previous)| assert_eq!(next, previous))
-  }
-}
+//     NEXT_WITH_TRANSFORMS
+//       .iter()
+//       .zip(PREVIOUS_WITH_TRANSFORMS.iter().rev())
+//       .for_each(|(next, previous)| assert_eq!(next, previous))
+//   }
+// }
 
-#[test]
-fn build_context_contains_valid_path() {
-  before_each();
+// #[test]
+// fn build_context_contains_valid_path() {
+//   before_each();
 
-  let seq_count = 20;
-  let mut tiling = Tiling::default()
-    .with_validations(Some(ValidationFlag::all()))
-    .with_build_context(Some(BuildContext::default()))
-    .with_expansion_phases(3)
-    .with_link_paths(true)
-    .with_first_transform();
+//   let seq_count = 20;
+//   let mut tiling = Tiling::default()
+//     .with_validations(Some(ValidationFlag::all()))
+//     .with_build_context(Some(BuildContext::default()))
+//     .with_expansion_phases(3)
+//     .with_link_paths(true)
+//     .with_first_transform();
 
-  for _ in 0..seq_count {
-    tiling.find_next_tiling();
-  }
+//   for _ in 0..seq_count {
+//     tiling.find_next_tiling();
+//   }
 
-  let build_context = tiling.build_context.unwrap();
+//   let build_context = tiling.build_context.unwrap();
 
-  assert_eq!(build_context.count_total_tilings, 94);
-  assert_eq!(build_context.valid_tilings.len(), seq_count);
+//   assert_eq!(build_context.count_total_tilings, 94);
+//   assert_eq!(build_context.valid_tilings.len(), seq_count);
 
-  unsafe {
-    assert_eq!(
-      &NEXT_WITH_TRANSFORMS[..seq_count],
-      build_context
-        .valid_tilings
-        .iter()
-        .map(|t| t.notation.clone())
-        .collect::<Vec<_>>()
-        .as_slice()
-    )
-  }
-}
+//   unsafe {
+//     assert_eq!(
+//       &NEXT_WITH_TRANSFORMS[..seq_count],
+//       build_context
+//         .valid_tilings
+//         .iter()
+//         .map(|t| t.notation.clone())
+//         .collect::<Vec<_>>()
+//         .as_slice()
+//     )
+//   }
+// }

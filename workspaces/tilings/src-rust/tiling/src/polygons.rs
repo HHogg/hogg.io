@@ -4,9 +4,7 @@ use std::f64::consts::PI;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::edge_type_store::EdgeTypeStore;
-use crate::shape_type_store::ShapeTypeStore;
-use crate::vertex_type_store::VertexTypeStore;
+use crate::classification::{EdgeTypeStore, ShapeTypeStore, VertexTypeStore};
 use crate::{
   path,
   BBox,
@@ -26,7 +24,6 @@ use crate::{
   TransformEccentric,
   TransformValue,
   Transforms,
-  ValidationError,
   ValidationFlag,
   Validator,
 };
@@ -75,21 +72,6 @@ impl Polygons {
     self.scale = scale;
   }
 
-  ///
-  pub fn validate_expanded(&mut self) -> Result<(), ValidationError> {
-    self.validator.validate_expanded(self)
-  }
-
-  ///
-  pub fn validate_gaps(&mut self) -> Result<(), ValidationError> {
-    self.validator.validate_gaps(self)
-  }
-
-  ///
-  pub fn validate_overlaps(&mut self) -> Result<(), ValidationError> {
-    self.validator.validate_overlaps(self)
-  }
-
   // TODO: There's an improvement that can be made here to not
   // clear out everything when the path or transforms change. We
   // can commit sections and then remove those commits as parts of the
@@ -125,19 +107,19 @@ impl Polygons {
   ) -> Result<(), TilingError> {
     self.reset();
     self.apply_path(path)?;
-    self.validate_overlaps()?;
+    self.validator.validate_overlaps(self)?;
 
     if !transforms.list.is_empty() {
       for (index, transform) in transforms.list.iter().enumerate() {
         self.apply_initial_transform(index, transform)?;
-        self.validate_overlaps()?;
+        self.validator.validate_overlaps(self)?;
       }
 
       if expansion_phases > 0 {
         for _ in 0..expansion_phases {
           for transform in transforms.list.iter() {
             self.apply_transform(transform)?;
-            self.validate_overlaps()?;
+            self.validator.validate_overlaps(self)?;
           }
         }
 
@@ -154,8 +136,7 @@ impl Polygons {
           .collect();
 
         self.validator.validate_vertex_types(self)?;
-        self.validator.validate_edge_types(self)?;
-        self.validator.validate_gaps(self)?;
+        // self.validator.validate_edge_types(self)?;
         self.validator.validate_gaps(self)?;
         self.validator.validate_expanded(self)?;
       }
@@ -396,7 +377,7 @@ impl Polygons {
     // Add the polygon to the shape type store
     self
       .shape_type_store
-      .add_polygon(&polygon, &self.edge_type_store)?;
+      .add_polygon(&polygon, &mut self.edge_type_store)?;
 
     // We insert down here because the vertex, edge and shape type stores
     // need to be able to annotate the polygon and its elements

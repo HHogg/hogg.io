@@ -1,5 +1,5 @@
 import { useGraph } from '@hogg/circle-intersections';
-import { ProjectBackground } from '@hogg/common';
+import { PatternBackground } from '@hogg/common';
 import { Box, Button } from 'preshape';
 import EditorViewer from './EditorViewer';
 import { GalleryItem } from './configurations';
@@ -33,7 +33,7 @@ export default function EditorGalleryItem({
       }}
     >
       <Box alignChildrenVertical="middle" flex="vertical" grow width="100%">
-        <ProjectBackground patternSize={0.5} patternGap={10}>
+        <PatternBackground patternSize={0.5} patternGap={10}>
           <EditorViewer
             fills={item.config.fills}
             graph={graph}
@@ -42,7 +42,7 @@ export default function EditorGalleryItem({
             width={item.config.width}
             height={item.config.height}
           />
-        </ProjectBackground>
+        </PatternBackground>
       </Box>
     </Button>
   );
