@@ -8,7 +8,9 @@ import tilings from '../results/output.json' assert { type: 'json' };
 const outputDir = path.resolve('./results/images');
 
 const generateTilingImage = async (page, notation, filePath) => {
-  await page.goto(`http://localhost:4001/tiling_generate/${notation}`);
+  await page.goto(
+    `http://localhost:4001/_tiling_generation?notation=${notation}`
+  );
 
   const element = await page.waitForSelector('canvas', {
     timeout: 60_000,
@@ -37,6 +39,12 @@ const generateTilingImage = async (page, notation, filePath) => {
 
 (async () => {
   console.log('Starting puppeteer...');
+
+  // Remove the directory if it exists
+  // if (fs.existsSync(outputDir)) {
+  //   fs.rmSync(outputDir, { recursive: true });
+  //   fs.mkdirSync(outputDir, { recursive: true });
+  // }
 
   // Launch the browser and open a new blank page
   const browser = await launch({ headless: 'new' });

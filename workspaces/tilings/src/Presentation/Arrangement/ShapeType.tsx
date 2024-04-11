@@ -12,11 +12,6 @@ type Props = Omit<ArrangementCardProps, 'label' | 'notation'> & {
 };
 
 export default function ShapeType({ shapeType, ...rest }: Props) {
-  return (
-    <ArrangementCard
-      {...rest}
-      label={shapeType}
-      notation={useMemo(() => parseShapeType(shapeType), [shapeType])}
-    />
-  );
+  const notation = useMemo(() => parseShapeType(shapeType), [shapeType]);
+  return <ArrangementCard {...rest} label={shapeType} notation={notation} />;
 }

@@ -4,7 +4,7 @@ import useProjectWindowContext from './useProjectWindowContext';
 
 export default function ProjectTabs({ children }: PropsWithChildren<{}>) {
   const { theme } = useThemeContext();
-  const { activeTabContentHeight, isTabContentVisible, tabsContentHeight } =
+  const { activeTabContentHeight, isTabContentVisible, maxTabContentHeight } =
     useProjectWindowContext();
 
   return (
@@ -18,7 +18,7 @@ export default function ProjectTabs({ children }: PropsWithChildren<{}>) {
       animate={{
         transform: `translateY(${
           isTabContentVisible
-            ? Math.min(activeTabContentHeight, tabsContentHeight) * -1
+            ? Math.min(activeTabContentHeight, maxTabContentHeight) * -1
             : 0
         }px)`,
       }}

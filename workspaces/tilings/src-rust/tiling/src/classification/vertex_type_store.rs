@@ -14,7 +14,7 @@ use crate::{Point, Polygon, TilingError};
 pub struct VertexTypeStore {
   #[typeshare(serialized_as = "Vec<String>")]
   pub vertex_types: SequenceStore,
-  #[typeshare(serialized_as = "Vec<String>")]
+  #[serde(skip)]
   valid_vertex_types: SequenceStore,
   #[serde(skip)]
   vertex_types_by_point: HashMap<Point, GeoNode>,

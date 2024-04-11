@@ -17,9 +17,7 @@ SELECT
   bool_or(has_6) as has_6,
   bool_or(has_8) as has_8,
   bool_or(has_12) as has_12,
-  array_agg(DISTINCT uniform) AS uniform,
-  (SELECT ARRAY(SELECT DISTINCT unnest(vertex_types) FROM tilings ORDER BY 1)) AS vertex_types,
-  (SELECT ARRAY(SELECT DISTINCT unnest(shape_types) FROM tilings ORDER BY 1)) AS shape_types
+  array_agg(DISTINCT uniform) AS uniform
 FROM tilings";
 
 #[derive(Clone, Debug, Deserialize)]
@@ -28,8 +26,6 @@ FROM tilings";
 pub struct TilingsFacetsRequest {
   pub show_nodes: Vec<Shape>,
   pub show_uniform: Vec<String>,
-  pub show_vertex_types: Vec<String>,
-  pub show_shape_types: Vec<String>,
 }
 
 impl Display for TilingsFacetsRequest {
@@ -37,8 +33,6 @@ impl Display for TilingsFacetsRequest {
     let TilingsFacetsRequest {
       show_nodes,
       show_uniform,
-      show_shape_types,
-      show_vertex_types,
       ..
     } = self;
 
@@ -50,20 +44,6 @@ impl Display for TilingsFacetsRequest {
 
     if !show_uniform.is_empty() {
       conditions.push(format!("uniform IN ({})", show_uniform.join(",")));
-    }
-
-    if !show_vertex_types.is_empty() {
-      conditions.push(format!(
-        "vertex_types @> ARRAY['{}']",
-        show_vertex_types.join("','")
-      ));
-    }
-
-    if !show_shape_types.is_empty() {
-      conditions.push(format!(
-        "shape_types @> ARRAY['{}']",
-        show_shape_types.join("','")
-      ));
     }
 
     if conditions.is_empty() {
@@ -83,8 +63,6 @@ pub struct FacetRow {
   pub has_8: bool,
   pub has_12: bool,
   pub uniform: Vec<i32>,
-  pub vertex_types: Vec<String>,
-  pub shape_types: Vec<String>,
 }
 
 pub async fn get_facets(
@@ -129,32 +107,6 @@ pub async fn get_facets(
             FacetValue {
               name: u.to_string(),
               disabled: !filtered_facets.uniform.contains(u),
-            }
-          })
-          .collect(),
-      },
-      Facet {
-        key: "vertexTypes".to_string(),
-        values: all_facets
-          .vertex_types
-          .iter()
-          .map(|v| {
-            FacetValue {
-              name: v.to_string(),
-              disabled: !filtered_facets.vertex_types.contains(v),
-            }
-          })
-          .collect(),
-      },
-      Facet {
-        key: "shapeTypes".to_string(),
-        values: all_facets
-          .shape_types
-          .iter()
-          .map(|s| {
-            FacetValue {
-              name: s.to_string(),
-              disabled: !filtered_facets.shape_types.contains(s),
             }
           })
           .collect(),

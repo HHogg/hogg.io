@@ -1,11 +1,11 @@
 use chrono::{NaiveDateTime, Utc};
-use circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 
 use crate::{ApplicationError, Tiling};
 
 #[derive(Clone, Debug, Default, Serialize)]
+#[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct BuildContext {
   pub application_errors: Vec<ApplicationError>,
@@ -37,11 +37,6 @@ pub struct ValidTiling {
   pub d_key: String,
   pub t_index: i32,
   pub uniform: i32,
-  #[typeshare(serialized_as = "Vec<String>")]
-  pub vertex_types: SequenceStore,
-  #[typeshare(serialized_as = "Vec<String>")]
-  /// The sequence store for shape types.
-  pub shape_types: SequenceStore,
   #[typeshare(serialized_as = "string")]
   pub timestamp: NaiveDateTime,
 }
@@ -49,16 +44,18 @@ pub struct ValidTiling {
 impl ValidTiling {
   pub fn from_tiling(tiling: &Tiling) -> Self {
     let vertex_types = tiling.polygons.vertex_type_store.vertex_types.clone();
+    let edge_types = tiling.polygons.edge_type_store.edge_types.clone();
     let shape_types = tiling.polygons.shape_type_store.shape_types.clone();
-    let d_key = format!("{}-{}", vertex_types, shape_types);
+    let d_key = format!(
+      "V({}) + E({}) + S({})",
+      vertex_types, edge_types, shape_types
+    );
 
     ValidTiling {
       notation: tiling.to_string(),
       d_key,
       t_index: tiling.transforms.index,
       uniform: 0,
-      vertex_types,
-      shape_types,
       timestamp: Utc::now().naive_utc(),
     }
   }

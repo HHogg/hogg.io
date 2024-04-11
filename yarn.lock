@@ -836,6 +836,7 @@ __metadata:
     react-router-dom: ^6.20.1
     react-use: ^17.4.3
     sat: ^0.9.0
+    screenfull: ^6.0.2
   languageName: unknown
   linkType: soft
 
@@ -915,6 +916,7 @@ __metadata:
     puppeteer: ^21.4.1
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-router-dom: ^6.20.1
     sharp: ^0.32.6
     typescript: ^5.0.4
     uuid: ^9.0.1
@@ -12892,6 +12894,13 @@ __metadata:
   version: 5.2.0
   resolution: "screenfull@npm:5.2.0"
   checksum: 21eae33b780eb4679ea0ea2d14734b11168cf35049c45a2bf24ddeb39c67a788e7a8fb46d8b61ca6d8367fd67ce9dd4fc8bfe476489249c7189c2a79cf83f51a
+  languageName: node
+  linkType: hard
+
+"screenfull@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "screenfull@npm:6.0.2"
+  checksum: 56a541da09241ae7c97115cc31245623c09230bcbebb93636871e955b545f26c7dcdb2299795234a0a21bff5d5401b7329b22609becf4c381a9e22347acf87ba
   languageName: node
   linkType: hard
 

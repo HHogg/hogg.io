@@ -6,7 +6,8 @@ use std::fmt::{self, Display, Formatter};
 
 use serde::Serialize;
 
-use crate::{get_match, to_string, Match, Sequence};
+use crate::to_string::{to_string, to_string_one};
+use crate::{get_match, get_min_permutation, sort, Match, Sequence};
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[serde(into = "Vec<String>")]
@@ -28,7 +29,7 @@ impl SequenceStore {
       Match::Exact(index) => index,
       _ => {
         let index = self.sequences.len();
-        self.sequences.push(sequence);
+        self.sequences.push(get_min_permutation(&sequence));
         index as u8
       }
     }
@@ -55,10 +56,9 @@ impl From<SequenceStore> for Vec<Sequence> {
 
 impl From<SequenceStore> for Vec<String> {
   fn from(store: SequenceStore) -> Self {
-    store
-      .sequences
+    sort(store.sequences)
       .iter()
-      .map(|s| to_string(vec![*s]))
+      .map(|s| to_string_one(*s))
       .collect()
   }
 }

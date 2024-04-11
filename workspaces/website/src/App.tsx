@@ -6,6 +6,7 @@ import { Route, Routes } from 'react-router-dom';
 import Page404 from './pages/404';
 import Landing from './pages/Landing/Landing';
 import ProjectPage from './pages/Project/Project';
+import TilingGenerationPage from './pages/TilingGenerationPage';
 import { projects, shouldShowProject } from './projects';
 import 'preshape/dist/style.css';
 
@@ -34,6 +35,13 @@ export default function App({ helmetContext = {} }: Props) {
                   />
                 ))}
             </Route>
+
+            {process.env.NODE_ENV === 'development' && (
+              <Route
+                path="_tiling_generation"
+                element={<TilingGenerationPage />}
+              />
+            )}
 
             <Route path="*" element={<Page404 />} />
           </Routes>

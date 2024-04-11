@@ -23,8 +23,8 @@ export default function ProjectTab({
 }: PropsWithChildren<ProjectTabProps>) {
   const {
     activeTab,
-    tabsContentHeight,
     isTabContentVisible,
+    maxTabContentHeight,
     selectTab,
     setActiveTabContentHeight,
   } = useProjectWindowContext();
@@ -98,7 +98,7 @@ export default function ProjectTab({
         borderTop
         style={{
           position: 'absolute',
-          height: tabsContentHeight,
+          height: maxTabContentHeight,
           left: 0,
           right: 0,
           overflow: 'auto',

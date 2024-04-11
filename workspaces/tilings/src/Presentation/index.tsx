@@ -1,6 +1,7 @@
 import { ProjectWindow, ProjectTabs, ProjectTab } from '@hogg/common';
 import { BookOpenIcon, InfoIcon } from 'lucide-react';
 import { Box } from 'preshape';
+import { useSearchParams } from 'react-router-dom';
 import ArrangementInformation from './Arrangement/ArrangementInformation';
 import ArrangementProvider from './Arrangement/ArrangementProvider';
 import Library from './Library/Library';
@@ -43,11 +44,20 @@ function PresentationInner(props: RendererProps) {
   );
 }
 
+const DEFAULT_NOTATION = '3-4,3-3,3-12/m90/r(h12)';
+
 export default function Presentation({}) {
+  const [params, setParams] = useSearchParams();
+  const notation = params.get('notation') ?? DEFAULT_NOTATION;
+
+  const handleNotationChange = (notation: string) => {
+    setParams({ notation });
+  };
+
   return (
     <WasmApi>
       <SettingsProvider>
-        <NotationProvider notation="3-4,3-3,3-12/m90/r(h12)">
+        <NotationProvider notation={notation} onChange={handleNotationChange}>
           <ArrangementProvider>
             <PlayerProvider>
               <PresentationInner />

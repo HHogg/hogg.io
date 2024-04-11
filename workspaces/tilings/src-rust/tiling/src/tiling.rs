@@ -37,8 +37,7 @@ pub struct Tiling {
   pub path: Path,
   #[typeshare(serialized_as = "String")]
   pub transforms: Transforms,
-  #[serde(skip)]
-  pub build_context: Option<BuildContext>,
+  pub build_context: BuildContext,
 
   #[typeshare(serialized_as = "String")]
   #[serde_as(as = "DisplayFromStr")]
@@ -85,12 +84,6 @@ impl Tiling {
     self
   }
 
-  ///
-  pub fn with_build_context(mut self, build_context: Option<BuildContext>) -> Self {
-    self.build_context = build_context;
-    self
-  }
-
   pub fn with_first_transform(mut self) -> Self {
     self.option_with_first_transform = true;
     self
@@ -98,21 +91,27 @@ impl Tiling {
 
   ///
   pub fn with_path(mut self, path: Path) -> Self {
+    // self.build_context = BuildContext::default();
+
     if let Err(err) = self.set_path(path, &Direction::FromStart) {
       self.error = err;
-    } else if let Err(err) = self.build() {
-      self.error = err;
     }
+
+    // else if let Err(err) = self.build() {
+    //   self.error = err;
+    // }
 
     self
   }
 
   pub fn with_transforms(mut self, transforms: Transforms) -> Self {
+    // self.build_context = BuildContext::default();
+
     self.set_transforms(transforms);
 
-    if let Err(err) = self.build() {
-      self.error = err;
-    }
+    // if let Err(err) = self.build() {
+    //   self.error = err;
+    // }
 
     self
   }
@@ -120,9 +119,7 @@ impl Tiling {
   pub fn from_string(mut self, notation: String) -> Self {
     if let Err(err) = self.parse_string(notation.clone()) {
       self.error = err;
-    }
-
-    if let Err(err) = self.build() {
+    } else if let Err(err) = self.build() {
       self.error = err;
     }
 
@@ -217,8 +214,6 @@ impl Tiling {
 
       let build_result = self.build();
 
-      self.update_build_context(&build_result);
-
       if build_result.is_ok() {
         return Ok(Some(self.clone()));
       }
@@ -259,8 +254,6 @@ impl Tiling {
 
       let build_result = self.build();
 
-      self.update_build_context(&build_result);
-
       if build_result.is_ok() {
         return Ok(Some(self.clone()));
       }
@@ -290,26 +283,33 @@ impl Tiling {
     Ok(Some(()))
   }
 
-  fn build(&mut self) -> Result<(), TilingError> {
-    self
-      .polygons
-      .build(&self.path, &self.transforms, self.option_expansion_phases)
+  pub fn build(&mut self) -> Result<(), TilingError> {
+    let build_result =
+      self
+        .polygons
+        .build(&self.path, &self.transforms, self.option_expansion_phases);
+
+    self.update_build_context(&build_result);
+
+    build_result
   }
 
   fn update_build_context(&mut self, build_result: &Result<(), TilingError>) {
     let notation = self.to_string();
-    let valid_tiling = ValidTiling::from_tiling(self);
 
-    if let Some(build_context) = self.build_context.as_mut() {
-      build_context.incr();
+    self.build_context.incr();
 
-      match build_result {
-        Err(TilingError::Application { reason }) => {
-          build_context.add_application_error(notation, reason.clone())
-        }
-        Ok(()) => build_context.add_valid_tiling(valid_tiling),
-        _ => {}
+    match build_result {
+      Err(TilingError::Application { reason }) => {
+        self
+          .build_context
+          .add_application_error(notation, reason.clone())
       }
+      Ok(()) => {
+        let valid_tiling = ValidTiling::from_tiling(self);
+        self.build_context.add_valid_tiling(valid_tiling);
+      }
+      _ => {}
     }
   }
 

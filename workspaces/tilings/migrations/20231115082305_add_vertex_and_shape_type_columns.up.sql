@@ -1,3 +1,1 @@
 ALTER TABLE tilings DROP COLUMN vertex;
-ALTER TABLE tilings ADD COLUMN vertex_types TEXT ARRAY;
-ALTER TABLE tilings ADD COLUMN shape_types TEXT ARRAY;

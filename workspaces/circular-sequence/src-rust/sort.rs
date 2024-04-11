@@ -17,13 +17,7 @@ pub fn compare(a: &Sequence, b: &Sequence) -> std::cmp::Ordering {
       continue;
     }
 
-    if a > b || b == 0 {
-      return std::cmp::Ordering::Greater;
-    }
-
-    if a < b || a == 0 {
-      return std::cmp::Ordering::Less;
-    }
+    return a.cmp(&b);
   }
 
   std::cmp::Ordering::Equal

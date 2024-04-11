@@ -10,7 +10,8 @@
     "build:types": "typeshare src-rust --lang=typescript --output-file=./src/types.ts",
     "build:wasm": "wasm-pack build src-rust/wasm --target web --out-dir ../../pkg",
     "clean": "rm -rf ./logs ./pkg",
-    "dev": "cargo watch -w workspaces/tilings/src-rust -q -s \"yarn workspace @hogg/tilings run build\"",
+    "dev": "cargo watch -w workspaces/circular-sequence/src-rust -w workspaces/tilings/src-rust -q -s \"yarn workspace @hogg/tilings run build\"",
+    "dev:searcher": "cargo watch -w workspaces/circular-sequence/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --reset --migrations-dir=workspaces/tilings/migrations\"",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file"
@@ -21,6 +22,7 @@
     "preshape": "^18.1.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

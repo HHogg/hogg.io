@@ -25,8 +25,6 @@ pub async fn export_unique_tilings(pool: &Pool<Postgres>, mut file: File) -> Res
         show_distinct: true,
         show_nodes: vec![],
         show_uniform: vec![],
-        show_shape_types: vec![],
-        show_vertex_types: vec![],
       },
     )
     .await?;

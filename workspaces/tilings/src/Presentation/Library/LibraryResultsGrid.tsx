@@ -1,4 +1,3 @@
-import { useProjectWindowContext } from '@hogg/common';
 import { Box, Grid, Motion, Text } from 'preshape';
 import { useNotationContext } from '../Notation/useNotationContext';
 import TilingResult from '../Tiling/TilingResult';
@@ -8,10 +7,8 @@ import { useLibraryContext } from './useLibraryContext';
 export default function LibraryResultsGrid() {
   const { setNotation } = useNotationContext();
   const { filteredResultsByUniform } = useLibraryContext();
-  const { hideTab } = useProjectWindowContext();
 
   const handleSelect = (notation: string) => {
-    hideTab();
     setNotation(notation);
   };
 

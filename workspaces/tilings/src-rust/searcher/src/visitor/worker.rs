@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::{BuildContext, Tiling, ValidationFlag};
+use tiling::{Tiling, ValidationFlag};
 
 use super::{Visit, VisitResult};
 
@@ -19,7 +19,6 @@ impl Handler<Visit> for Worker {
 
     let mut tiling = Tiling::default()
       .with_validations(Some(ValidationFlag::all()))
-      .with_build_context(Some(BuildContext::default()))
       .with_expansion_phases(3)
       .with_path(path.clone())
       .with_first_transform();
@@ -27,13 +26,11 @@ impl Handler<Visit> for Worker {
     // TODO: Create an API for this
     while tiling.find_next_tiling().is_some() {}
 
-    if let Some(build_context) = tiling.build_context {
-      sender.try_send(
-        VisitResult::default()
-          .with_path(path)
-          .with_build_context(build_context),
-      )?;
-    }
+    sender.try_send(
+      VisitResult::default()
+        .with_path(path)
+        .with_build_context(tiling.build_context),
+    )?;
 
     Ok(())
   }

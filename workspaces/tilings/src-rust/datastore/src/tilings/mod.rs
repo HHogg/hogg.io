@@ -20,8 +20,6 @@ pub struct Tiling {
   pub has_8: bool,
   pub has_12: bool,
   pub uniform: i32,
-  pub vertex_types: Vec<String>,
-  pub shape_types: Vec<String>,
   pub p_index: i32,
   pub t_index: i32,
   pub timestamp: NaiveDateTime,

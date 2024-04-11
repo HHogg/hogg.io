@@ -24,3 +24,17 @@ const indexResultsBy = (key: keyof Pick<TilingResult, 'notation'>) =>
 
 export const resultsByUniform = groupResultsByUniform(results);
 export const resultsByNotation = indexResultsBy('notation');
+
+export const resultsImages: Record<string, string> = {};
+
+Object.entries(
+  import.meta.glob('../../../results/images/*.png', {
+    eager: true,
+    as: 'url',
+  })
+).forEach(([key, value]) => {
+  const filename = key.split('/').pop()!;
+  const notation = filename.replace('.png', '').replace(/:/g, '/');
+
+  resultsImages[notation] = value as string;
+});

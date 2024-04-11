@@ -21,8 +21,6 @@ pub struct TilingsRequest {
   pub show_distinct: bool,
   pub show_nodes: Vec<Shape>,
   pub show_uniform: Vec<String>,
-  pub show_vertex_types: Vec<String>,
-  pub show_shape_types: Vec<String>,
 }
 
 impl Display for TilingsRequest {
@@ -31,8 +29,6 @@ impl Display for TilingsRequest {
       search,
       show_nodes,
       show_uniform,
-      show_shape_types,
-      show_vertex_types,
       ..
     } = self;
 
@@ -48,20 +44,6 @@ impl Display for TilingsRequest {
 
     if !show_uniform.is_empty() {
       conditions.push(format!("uniform IN ({})", show_uniform.join(",")));
-    }
-
-    if !show_vertex_types.is_empty() {
-      conditions.push(format!(
-        "vertex_types @> ARRAY['{}']",
-        show_vertex_types.join("','")
-      ));
-    }
-
-    if !show_shape_types.is_empty() {
-      conditions.push(format!(
-        "shape_types @> ARRAY['{}']",
-        show_shape_types.join("','")
-      ));
     }
 
     if conditions.is_empty() {

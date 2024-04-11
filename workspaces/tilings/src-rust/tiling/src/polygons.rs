@@ -372,7 +372,7 @@ impl Polygons {
     }
 
     // Add the polygon to the edge type store
-    self.edge_type_store.add_polygon(&polygon);
+    self.edge_type_store.add_polygon(&polygon)?;
 
     // Add the polygon to the shape type store
     self

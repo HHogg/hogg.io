@@ -1,3 +1,5 @@
+use std::fmt::format;
+
 use super::*;
 
 fn get_sequence_store() -> SequenceStore {
@@ -27,4 +29,14 @@ fn get_match() {
     store.get_match(&[3, 3, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0]),
     Match::Exact(0)
   );
+}
+
+#[test]
+fn to_string() {
+  let store = SequenceStore::from(vec![
+    [3, 6, 6, 3, 6, 6, 0, 0, 0, 0, 0, 0],
+    [3, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  ]);
+
+  assert_eq!(format!("{store}"), "3².6; 3.6².3.6²");
 }

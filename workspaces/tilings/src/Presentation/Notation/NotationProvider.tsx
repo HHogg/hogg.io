@@ -1,22 +1,18 @@
-import {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { PropsWithChildren, useCallback, useRef, useState } from 'react';
 import useWasmApi from '../WasmApi/useWasmApi';
 import { NotationContext } from './useNotationContext';
 
 export type NotationProviderProps = {
   notation: string;
   isValid?: boolean;
+  onChange?: (notation: string) => void;
 };
 
 export default function NotationProvider({
   children,
   notation: initialNotation,
   isValid,
+  onChange,
 }: PropsWithChildren<NotationProviderProps>) {
   const { findNextTiling, findPreviousTiling } = useWasmApi();
   const [notation, setNotation] = useState(initialNotation);
@@ -26,8 +22,9 @@ export default function NotationProvider({
     (notation: string) => {
       notationRef.current = notation;
       setNotation(notation);
+      onChange?.(notation);
     },
-    [setNotation]
+    [onChange]
   );
 
   const handlePreviousNotation = useCallback(() => {
@@ -45,10 +42,6 @@ export default function NotationProvider({
       handleSetNotation(nextNotation);
     }
   }, [findNextTiling, handleSetNotation]);
-
-  useEffect(() => {
-    handleSetNotation(initialNotation);
-  }, [handleSetNotation, initialNotation]);
 
   const value = {
     notation,

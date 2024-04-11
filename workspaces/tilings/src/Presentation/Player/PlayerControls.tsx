@@ -2,12 +2,15 @@ import {
   ProjectControl,
   ProjectControlGroup,
   ProjectControls,
+  useProjectWindowContext,
 } from '@hogg/common';
 import {
-  ChevronFirst,
-  ChevronLast,
-  ChevronLeft,
-  ChevronRight,
+  ChevronFirstIcon,
+  ChevronLastIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MaximizeIcon,
+  MinimizeIcon,
   PauseIcon,
   PlayIcon,
   SettingsIcon,
@@ -18,6 +21,8 @@ import PlayerControlBar from './PlayerControlBar';
 import { usePlayerContext } from './usePlayerContext';
 
 export default function PlayerControls() {
+  const { fullScreenEnter, fullScreenExit, isFullScreen } =
+    useProjectWindowContext();
   const { toggleSettings } = useSettingsContext();
   const { play, pause, forward, backward, toStart, toEnd, isPlaying } =
     usePlayerContext();
@@ -55,14 +60,14 @@ export default function PlayerControls() {
           {isLarge && (
             <ProjectControl
               title="Beginning"
-              Icon={ChevronFirst}
+              Icon={ChevronFirstIcon}
               onClick={toStart}
             />
           )}
 
           <ProjectControl
             title="Step backwards"
-            Icon={ChevronLeft}
+            Icon={ChevronLeftIcon}
             onClick={backward}
           />
         </ProjectControlGroup>
@@ -76,28 +81,41 @@ export default function PlayerControls() {
         <ProjectControlGroup>
           <ProjectControl
             title="Step forwards"
-            Icon={ChevronRight}
+            Icon={ChevronRightIcon}
             onClick={forward}
-            variant="tertiary"
           />
 
           {isLarge && (
             <ProjectControl
               title="End"
-              Icon={ChevronLast}
+              Icon={ChevronLastIcon}
               onClick={toEnd}
-              variant="tertiary"
             />
           )}
         </ProjectControlGroup>
       </Box>
 
       <ProjectControlGroup>
+        {isLarge && !isFullScreen && (
+          <ProjectControl
+            title="Enter fullscreen"
+            Icon={MaximizeIcon}
+            onClick={fullScreenEnter}
+          />
+        )}
+
+        {isLarge && isFullScreen && (
+          <ProjectControl
+            title="Exit fullscreen"
+            Icon={MinimizeIcon}
+            onClick={fullScreenExit}
+          />
+        )}
+
         <ProjectControl
           title="Settings"
           Icon={SettingsIcon}
           onClick={handleSettingsClick}
-          variant="tertiary"
         />
       </ProjectControlGroup>
     </ProjectControls>

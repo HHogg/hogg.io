@@ -7,20 +7,16 @@ mod tests;
 /// Converts a sequence to a string.
 pub fn to_string(sequences: Vec<Sequence>) -> String {
   flatten_duplicates(
-    sort(sequences.clone())
-      .iter()
-      .copied()
-      .map(to_string_one)
-      .collect(),
+    sort(sequences).iter().copied().map(to_string_one).collect(),
     Some(("(", ")")),
   )
   .join("; ")
 }
 
 ///
-fn to_string_one(sequence: Sequence) -> String {
+pub fn to_string_one(sequence: Sequence) -> String {
   flatten_duplicates(
-    get_min_permutation(&sequence)
+    sequence
       .iter()
       .map(|&x| x.to_string())
       .collect::<Vec<String>>(),

@@ -68,8 +68,6 @@ export enum Shape {
 export interface TilingsFacetsRequest {
 	showNodes: Shape[];
 	showUniform: string[];
-	showVertexTypes: string[];
-	showShapeTypes: string[];
 }
 
 export enum Direction {
@@ -85,8 +83,6 @@ export interface TilingsRequest {
 	showDistinct: boolean;
 	showNodes: Shape[];
 	showUniform: string[];
-	showVertexTypes: string[];
-	showShapeTypes: string[];
 }
 
 export interface ResponseMultiple<T> {
@@ -219,16 +215,13 @@ export interface ValidTiling {
 	dKey: string;
 	tIndex: number;
 	uniform: number;
-	vertexTypes: string[];
-	/** The sequence store for shape types. */
-	shapeTypes: string[];
 	timestamp: string;
 }
 
 export interface BuildContext {
-	application_errors: ApplicationError[];
-	count_total_tilings: number;
-	valid_tilings: ValidTiling[];
+	applicationErrors: ApplicationError[];
+	countTotalTilings: number;
+	validTilings: ValidTiling[];
 }
 
 export interface EdgeTypeStore {
@@ -241,7 +234,6 @@ export interface ShapeTypeStore {
 
 export interface VertexTypeStore {
 	vertexTypes: string[];
-	validVertexTypes: string[];
 }
 
 export interface LineSegment {
@@ -305,6 +297,7 @@ export interface Tiling {
 	optionTypeAhead: boolean;
 	path: string;
 	transforms: string;
+	buildContext: BuildContext;
 	error: string;
 	polygons: Polygons;
 }

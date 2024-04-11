@@ -11,6 +11,8 @@ export { default as ArticleProvider } from './Article/ArticleProvider';
 export { getCodeSnippetFromFile } from './Article/getCodeSnippetFromFile';
 export { useArticleFigNumber } from './Article/useArticleContext';
 
+export { default as CopyToClipboardCard } from './CopyToClipboardCard/CopyToClipboardCard';
+
 export { default as ImageCover } from './ImageCover/ImageCover';
 
 export { default as InView } from './InView/InView';

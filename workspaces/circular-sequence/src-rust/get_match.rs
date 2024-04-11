@@ -57,7 +57,7 @@ pub fn get_match(sequence: &Sequence, targets: &[Sequence]) -> Match {
 fn get_sequence_match(source: &Sequence, target: &Sequence, direction: Direction) -> Match {
   let source_length = get_length(source);
   let target_length = get_length(target);
-  let source_lps = get_lps(source);
+  let lps = create_lps(source);
 
   if source_length > target_length {
     return Match::None;
@@ -71,7 +71,7 @@ fn get_sequence_match(source: &Sequence, target: &Sequence, direction: Direction
       target_i += 1;
       source_i += 1;
     } else if source_i != 0 {
-      source_i = source_lps[source_i - 1] as usize;
+      source_i = lps[source_i - 1] as usize;
     } else {
       target_i += 1;
     }
@@ -96,7 +96,7 @@ fn get_sequence_match(source: &Sequence, target: &Sequence, direction: Direction
 //
 // Space: O(n)
 // Time:  O(n)
-fn get_lps(sequence: &Sequence) -> Sequence {
+fn create_lps(sequence: &Sequence) -> Sequence {
   let length = get_length(sequence);
   let mut lps = Sequence::default();
 

@@ -1,6 +1,6 @@
 import { Link, LinkProps } from 'preshape';
-import { useState } from 'react';
 import CroppedImage from '../Image/CroppedImage';
+import { resultsImages } from '../utils/results';
 import TilingInformation from './TilingInformation';
 
 type Props = {
@@ -24,25 +24,8 @@ export default function TilingCard({
   withUniqueKey,
   ...rest
 }: LinkProps & Props) {
-  const [filepath] = useState<string>('');
-  // const [, setError] = useState('');
   const withAnyInformation =
     withGomJauHogg || withCundyRollett || withUniform || withUniqueKey;
-
-  // useEffect(() => {
-  //   const filename = notation.replace(/\//g, ':');
-  //   const filepath = import(`../../results/images/${filename}.png`);
-
-  //   filepath
-  //     .then((filepath) => {
-  //       setError('');
-  //       setFilepath(filepath.default);
-  //     })
-  //     .catch((error) => {
-  //       setError(error.message);
-  //       setFilepath('');
-  //     });
-  // }, [notation]);
 
   return (
     <Link {...rest}>
@@ -52,7 +35,7 @@ export default function TilingCard({
         grow={height === undefined}
         height={height}
         scale={scale}
-        src={filepath}
+        src={resultsImages[notation]}
         style={style}
       />
 

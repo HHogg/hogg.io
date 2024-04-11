@@ -1,3 +1,5 @@
+use core::panic;
+use std::path::absolute;
 use std::str::FromStr;
 
 use anyhow::Result;
@@ -18,8 +20,13 @@ pub async fn get_pool(url: String, migrations_dir: String, do_reset: bool) -> Re
     reset(pool.clone()).await?;
   }
 
-  let migrator = Migrator::new(std::path::Path::new(&migrations_dir)).await?;
-  migrator.run(&pool).await?;
+  let absolute_path = absolute(&migrations_dir)?;
+  if absolute_path.exists() {
+    let migrator = Migrator::new(absolute_path).await?;
+    migrator.run(&pool).await?;
+  } else {
+    panic!("migrations_dir does not exist - {:?}", absolute_path);
+  }
 
   Ok(pool)
 }

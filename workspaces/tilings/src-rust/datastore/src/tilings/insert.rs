@@ -24,9 +24,6 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
   let has_12 = path.has_shape(&Shape::Dodecagon);
 
   let futures_insert_tilings = tilings.iter().cloned().map(|t| {
-    let vertex_types: Vec<String> = t.vertex_types.clone().into();
-    let shape_types: Vec<String> = t.shape_types.clone().into();
-
     sqlx::query(
       "INSERT INTO tilings (
           notation,
@@ -37,8 +34,6 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
           has_8,
           has_12,
           uniform,
-          vertex_types,
-          shape_types,
           p_index,
           t_index,
           d_key
@@ -53,9 +48,7 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
             $8,
             $9,
             $10,
-            $11,
-            $12,
-            $13
+            $11
         ) ON CONFLICT (notation) DO UPDATE SET
           has_0 = $2,
           has_3 = $3,
@@ -64,11 +57,9 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
           has_8 = $6,
           has_12 = $7,
           uniform = $8,
-          vertex_types = $9,
-          shape_types = $10,
-          p_index = $11,
-          t_index = $12,
-          d_key = $13
+          p_index = $9,
+          t_index = $10,
+          d_key = $11
       ",
     )
     .bind(t.notation)
@@ -79,8 +70,6 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
     .bind(has_8)
     .bind(has_12)
     .bind(t.uniform)
-    .bind(vertex_types)
-    .bind(shape_types)
     .bind(path_index)
     .bind(t.t_index)
     .bind(t.d_key)
