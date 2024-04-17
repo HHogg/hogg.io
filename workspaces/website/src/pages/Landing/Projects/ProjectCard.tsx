@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function ProjectCard({ project }: Props) {
-  const { name, description, href, image, imageDark } = project;
+  const { name, description, href, image } = project;
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -27,7 +27,7 @@ export default function ProjectCard({ project }: Props) {
       underline={false}
     >
       <Box>
-        {image || imageDark ? (
+        {image ? (
           <ImageCover
             backgroundColor="text-shade-1"
             borderRadius="x2"
@@ -36,7 +36,6 @@ export default function ProjectCard({ project }: Props) {
             height="140px"
             margin="x4"
             src={image}
-            srcDark={imageDark}
           />
         ) : (
           <Box
