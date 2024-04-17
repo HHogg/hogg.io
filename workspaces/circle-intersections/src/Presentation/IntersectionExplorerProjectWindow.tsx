@@ -15,7 +15,6 @@ const IntersectionExplorerProjectWindow = () => {
 
   return (
     <ProjectWindow
-      tabsRevealPercentage={0.5}
       controls={isLarge ? <IntersectionExplorerControls /> : undefined}
       onClick={() => setIsConfigMenuOpen(false)}
       tabs={

@@ -18,7 +18,6 @@ const Presentation = ({
         controls={<EditorControls />}
         controlsPosition="top"
         padding="x0"
-        tabsRevealPercentage={0.5}
         tabs={
           <ProjectTabs>
             <ProjectTab name="Gallery" Icon={GalleryVerticalIcon}>
