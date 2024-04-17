@@ -13,7 +13,7 @@ export default function TimelineEntry({
   ...rest
 }: Props) {
   return (
-    <Box {...rest} basis="0" grow>
+    <Box {...rest} basis="0" grow minWidth="300px">
       <Box flex="vertical" gap="x8">
         <Box
           alignChildrenHorizontal="start"
