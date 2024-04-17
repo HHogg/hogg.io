@@ -50,7 +50,11 @@ export default function DragHandle({
 
       window.document.body.style.cursor = 'grabbing';
       window.document.body.style.userSelect = 'none';
-      audio?.play();
+
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play();
+      }
 
       setAnimate(false);
 
@@ -72,8 +76,12 @@ export default function DragHandle({
       const handlePointerUp = () => {
         window.document.body.style.cursor = '';
         window.document.body.style.userSelect = '';
-        audio?.play();
-        audio;
+
+        if (audio) {
+          audio.currentTime = 0;
+          audio.play();
+        }
+
         setAnimate(true);
 
         window.removeEventListener('pointermove', handlePointerMove);
