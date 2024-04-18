@@ -9,11 +9,11 @@ const Strong = (props: TextProps) => (
 
 export default function AboutMe() {
   return (
-    <Box flex="vertical" gap="x3">
+    <Box flex="vertical" gap="x6">
       <Text size="x7">
         <Text tag="span">Hi, I'm </Text>
         <Text tag="span" weight="x5">
-          Harrison Hogg
+          Harry Hogg
         </Text>
         <Text tag="span">.</Text>
       </Text>

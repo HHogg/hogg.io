@@ -157,19 +157,12 @@ const Article = ({ onRuleSelect }: Props) => {
         </ArticleParagraph>
       </ArticleSection>
 
-      <ArticleFigs maxWidth="800px">
+      <ArticleFigs>
         <ArticleFig
           id="arrangement-2-intersecting"
           description="Arrangement of two intersecting circles."
         >
           <SvgCirclesGraph3 />
-        </ArticleFig>
-
-        <ArticleFig
-          id="arrangement-2-intersecting-labelled"
-          description="Arrangement of two intersecting circles, with labelled edges."
-        >
-          <SvgCirclesGraph4 />
         </ArticleFig>
       </ArticleFigs>
 
@@ -190,6 +183,15 @@ const Article = ({ onRuleSelect }: Props) => {
           to node 1 via edge 2, then traverse from node 1 to node 0 via edge 3",
           to get us the left most intersection are.
         </ArticleParagraph>
+
+        <ArticleFigs>
+          <ArticleFig
+            id="arrangement-2-intersecting-labelled"
+            description="Arrangement of two intersecting circles, with labelled edges."
+          >
+            <SvgCirclesGraph4 />
+          </ArticleFig>
+        </ArticleFigs>
       </ArticleSection>
 
       <ArticleSection>

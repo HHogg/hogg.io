@@ -1,4 +1,5 @@
-import { Box, useMatchMedia } from 'preshape';
+import { Media } from '@hogg/common';
+import { Box } from 'preshape';
 // import AsciiTagGrid from '../../components/AsciiTagGrid/AsciiTagGrid';
 import Header from '../../components/Header/Header';
 import Page from '../../components/Page/Page';
@@ -9,16 +10,16 @@ import SectionTitle from './SectionTitle';
 import Timeline from './Timeline/Timeline';
 
 export default function Landing() {
-  const match = useMatchMedia(['1000px']);
-
   return (
     <Page
       title="Harrison Hogg"
       description="Harrison Hogg's portfolio website, showcases experience, projects and placements"
-      gap={match('1000px') ? 'x32' : 'x16'}
+      gap="x24"
     >
       <Header alignChildrenVertical="middle">
-        <Me size={140} />
+        <Media greaterThanOrEqual="desktop">
+          <Me size={140} />
+        </Media>
       </Header>
 
       <Box flex="horizontal">
@@ -31,12 +32,12 @@ export default function Landing() {
         </Box> */}
       </Box>
 
-      <Box flex="vertical" gap={match('1000px') ? 'x12' : 'x6'}>
+      <Box flex="vertical" gap="x12">
         <SectionTitle maxWidthTop={800} title="Prjcts ////" />
         <ProjectCards />
       </Box>
 
-      <Box flex="vertical" gap={match('1000px') ? 'x12' : 'x6'}>
+      <Box flex="vertical" gap="x12">
         <SectionTitle
           maxWidthTop={1200}
           maxWidthBottom={600}

@@ -1,4 +1,5 @@
 import {
+  Media,
   ProjectControl,
   ProjectControlGroup,
   ProjectControls,
@@ -11,7 +12,7 @@ import {
   PauseIcon,
   PlayIcon,
 } from 'lucide-react';
-import { Box, useMatchMedia } from 'preshape';
+import { Box } from 'preshape';
 import { useSnakeContext } from './useSnakeContext';
 
 const SnakeControls = () => {
@@ -27,9 +28,6 @@ const SnakeControls = () => {
     stepBackwards,
     stepForwards,
   } = useSnakeContext();
-
-  const match = useMatchMedia(['600px']);
-  const isLarge = match('600px');
 
   const initialSnakeLength = history[0]?.snake.length ?? 0;
   const currentSnakeLength = snake?.length ?? 0;
@@ -65,11 +63,9 @@ const SnakeControls = () => {
           />
         </ProjectControlGroup>
 
-        {isLarge && (
-          <Box grow>
-            <ProjectProgressBar elapsed={elapsed} />
-          </Box>
-        )}
+        <Media greaterThanOrEqual="desktop" grow>
+          <ProjectProgressBar elapsed={elapsed} />
+        </Media>
 
         <ProjectControlGroup>
           <ProjectControl

@@ -47,5 +47,8 @@ export { default as Spinner } from './Spinner/Spinner';
 export { default as WasmProvider } from './WasmProvider/WasmProvider';
 export { useWasmContext } from './WasmProvider/useWasmContext';
 
+export { default as Media } from './Media/Media';
+export { MediaContextProvider, createMediaStyle } from './Media/MediaProvider';
+
 export * from './types';
 export * from './utils';

@@ -27,9 +27,10 @@
     "caniuse-lite": "^1.0.30000697",
     "superstatic": "^6.0.4",
     "typescript": "^5.0.4",
-    "vite": "^5.2.7"
+    "vite": "^5.2.9"
   },
   "dependencies": {
+    "@artsy/fresnel": "^7.1.4",
     "@hogg/circle-art": "workspace:^",
     "@hogg/circle-intersections": "workspace:^",
     "@hogg/circular-sequence": "workspace:^",

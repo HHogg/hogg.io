@@ -1,7 +1,8 @@
-import { Box, BoxProps, useMatchMedia } from 'preshape';
+import { Box, BoxProps } from 'preshape';
 import { PropsWithChildren } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
+import './Page.css';
 
 // TODO
 const DEFAULT_IMAGE = '';
@@ -21,7 +22,6 @@ export default function Page({
   ...rest
 }: PropsWithChildren<PageProps & BoxProps>) {
   const location = useLocation();
-  const match = useMatchMedia(['1000px']);
 
   return (
     <>
@@ -39,13 +39,7 @@ export default function Page({
         <meta property="og:image" content={image || DEFAULT_IMAGE} />
       </Helmet>
 
-      <Box
-        {...rest}
-        flex="vertical"
-        grow
-        padding={match('1000px') ? 'x16' : 'x8'}
-        maxWidth="1600px"
-      >
+      <Box {...rest} className="Page" flex="vertical" grow maxWidth="1600px">
         <Box flex="vertical" {...rest} gap={gap} grow>
           {children}
         </Box>

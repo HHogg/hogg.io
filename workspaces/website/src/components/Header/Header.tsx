@@ -1,6 +1,6 @@
 import { Lines } from '@hogg/common';
 import { GithubIcon, LinkedinIcon } from 'lucide-react';
-import { Box, BoxProps, Link, useMatchMedia } from 'preshape';
+import { Box, BoxProps, Link } from 'preshape';
 import { PropsWithChildren } from 'react';
 import { ThemeSwitcher } from '../ThemeSwitcher/ThemeSwitcher';
 import Ascii from './Ascii';
@@ -9,12 +9,9 @@ export default function Header({
   children,
   ...rest
 }: PropsWithChildren<BoxProps>) {
-  const match = useMatchMedia(['600px']);
-  const isSmall = !match('600px');
-
   return (
     <Box {...rest} flex="horizontal" gap="x8">
-      <Box flex="vertical">{children}</Box>
+      {children}
 
       <Box
         borderRadius="x2"
@@ -33,8 +30,8 @@ export default function Header({
 
           <Box
             flex="horizontal"
-            gap={isSmall ? 'x4' : 'x8'}
-            paddingHorizontal={isSmall ? 'x2' : 'x8'}
+            gap="x4"
+            paddingHorizontal="x8"
             textColor="text-shade-1"
           >
             <Box backgroundColor="background-shade-1">

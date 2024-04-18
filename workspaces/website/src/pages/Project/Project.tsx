@@ -1,10 +1,11 @@
 import {
+  Media,
   Project,
   ProjectPageProps,
   ProjectPageProvider,
   getProjectRoutePath,
 } from '@hogg/common';
-import { useMatchMedia } from 'preshape';
+import { Box } from 'preshape';
 import { ComponentType, useEffect } from 'react';
 import Header from '../../components/Header/Header';
 import Page from '../../components/Page/Page';
@@ -18,7 +19,6 @@ export type Props = {
 };
 
 export default function Project({ Component, meta }: Props) {
-  const match = useMatchMedia(['1000px']);
   const previousProject = getPreviousProject(meta.id);
   const nextProject = getNextProject(meta.id);
 
@@ -32,16 +32,21 @@ export default function Project({ Component, meta }: Props) {
         title={meta.name}
         description={meta.description}
         image={meta.image}
-        gap={match('1000px') ? 'x24' : 'x16'}
+        gap="x16"
       >
         <Header>
-          <PageBackButton title="Home" path="/" />
+          <Box flex="vertical">
+            <PageBackButton title="Home" path="/" />
+          </Box>
         </Header>
 
-        <Component
-          layout={match('1000px') ? 'horizontal' : 'vertical'}
-          gap={match('1000px') ? 'x16' : 'x8'}
-        />
+        <Media lessThan="desktop">
+          <Component layout="vertical" gap="x16" />
+        </Media>
+
+        <Media greaterThanOrEqual="desktop">
+          <Component layout="horizontal" gap="x24" />
+        </Media>
 
         <PageChangeButtons
           previous={

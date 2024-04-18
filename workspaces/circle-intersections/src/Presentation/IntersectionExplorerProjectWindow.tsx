@@ -1,6 +1,5 @@
-import { ProjectTab, ProjectTabs, ProjectWindow } from '@hogg/common';
+import { Media, ProjectTab, ProjectTabs, ProjectWindow } from '@hogg/common';
 import { GitCommitVerticalIcon, RouteIcon } from 'lucide-react';
-import { useMatchMedia } from 'preshape';
 import GraphRenderer from './GraphRenderer/GraphRenderer';
 import IntersectionExplorerConfigMenu from './IntersectionExplorerConfigMenu';
 import IntersectionExplorerControls from './IntersectionExplorerControls';
@@ -10,12 +9,14 @@ import useIntersectionExplorerContext from './useIntersectionExplorerContext';
 
 const IntersectionExplorerProjectWindow = () => {
   const { setIsConfigMenuOpen } = useIntersectionExplorerContext();
-  const match = useMatchMedia(['600px']);
-  const isLarge = match('600px');
 
   return (
     <ProjectWindow
-      controls={isLarge ? <IntersectionExplorerControls /> : undefined}
+      controls={
+        <Media greaterThanOrEqual="desktop">
+          <IntersectionExplorerControls />
+        </Media>
+      }
       onClick={() => setIsConfigMenuOpen(false)}
       tabs={
         <ProjectTabs>

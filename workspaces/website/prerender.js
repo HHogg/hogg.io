@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'url';
-import { SSRRender as render } from './dist/server/entry-server.js';
+import { render } from './dist/server/entry-server.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const toAbsolute = (p) => path.resolve(__dirname, p);
@@ -20,10 +20,11 @@ const routesToPrerender = [
 
 // pre-render each route...
 for (const url of routesToPrerender) {
-  const { html: htmlContent, helmetContext } = render(url);
+  const { html: htmlContent, helmetContext, mediaStyle } = render(url);
   const metaContent = helmetContext.helmet.priority.toString();
 
   const contents = template
+    .replace(`<!--media-style-->`, `<style>${mediaStyle}</style>`)
     .replace(`<!--meta-tags-->`, metaContent)
     .replace(`<!--app-html-->`, htmlContent);
 

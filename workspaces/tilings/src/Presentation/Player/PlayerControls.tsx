@@ -1,4 +1,5 @@
 import {
+  Media,
   ProjectControl,
   ProjectControlGroup,
   ProjectControls,
@@ -15,7 +16,7 @@ import {
   PlayIcon,
   SettingsIcon,
 } from 'lucide-react';
-import { Box, useMatchMedia } from 'preshape';
+import { Box } from 'preshape';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 import PlayerControlBar from './PlayerControlBar';
 import { usePlayerContext } from './usePlayerContext';
@@ -26,9 +27,6 @@ export default function PlayerControls() {
   const { toggleSettings } = useSettingsContext();
   const { play, pause, forward, backward, toStart, toEnd, isPlaying } =
     usePlayerContext();
-
-  const match = useMatchMedia(['600px']);
-  const isLarge = match('600px');
 
   const handleSettingsClick = (event: React.PointerEvent) => {
     event.stopPropagation();
@@ -57,13 +55,13 @@ export default function PlayerControls() {
 
       <Box alignChildren="middle" flex="horizontal" gap="x6" grow>
         <ProjectControlGroup>
-          {isLarge && (
+          <Media greaterThanOrEqual="desktop">
             <ProjectControl
               title="Beginning"
               Icon={ChevronFirstIcon}
               onClick={toStart}
             />
-          )}
+          </Media>
 
           <ProjectControl
             title="Step backwards"
@@ -72,11 +70,9 @@ export default function PlayerControls() {
           />
         </ProjectControlGroup>
 
-        {isLarge && (
-          <Box grow>
-            <PlayerControlBar />
-          </Box>
-        )}
+        <Media greaterThanOrEqual="desktop" grow>
+          <PlayerControlBar />
+        </Media>
 
         <ProjectControlGroup>
           <ProjectControl
@@ -85,31 +81,35 @@ export default function PlayerControls() {
             onClick={forward}
           />
 
-          {isLarge && (
+          <Media greaterThanOrEqual="desktop">
             <ProjectControl
               title="End"
               Icon={ChevronLastIcon}
               onClick={toEnd}
             />
-          )}
+          </Media>
         </ProjectControlGroup>
       </Box>
 
       <ProjectControlGroup>
-        {isLarge && !isFullScreen && (
-          <ProjectControl
-            title="Enter fullscreen"
-            Icon={MaximizeIcon}
-            onClick={fullScreenEnter}
-          />
+        {!isFullScreen && (
+          <Media greaterThanOrEqual="desktop">
+            <ProjectControl
+              title="Enter fullscreen"
+              Icon={MaximizeIcon}
+              onClick={fullScreenEnter}
+            />
+          </Media>
         )}
 
-        {isLarge && isFullScreen && (
-          <ProjectControl
-            title="Exit fullscreen"
-            Icon={MinimizeIcon}
-            onClick={fullScreenExit}
-          />
+        {isFullScreen && (
+          <Media greaterThanOrEqual="desktop">
+            <ProjectControl
+              title="Exit fullscreen"
+              Icon={MinimizeIcon}
+              onClick={fullScreenExit}
+            />
+          </Media>
         )}
 
         <ProjectControl

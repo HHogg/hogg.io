@@ -1,5 +1,5 @@
 import { Lines } from '@hogg/common';
-import { Box, BoxProps, useMatchMedia } from 'preshape';
+import { Box, BoxProps } from 'preshape';
 import PageChangeButton, { PageChangeButtonProps } from './PageChangeButton';
 
 type Props = BoxProps & {
@@ -7,11 +7,7 @@ type Props = BoxProps & {
   next?: Omit<PageChangeButtonProps, 'direction'>;
 };
 
-const maxWidth = '1200px';
-
 export default function PageChangeButtons({ previous, next, ...rest }: Props) {
-  const match = useMatchMedia([maxWidth]);
-
   return (
     <Box {...rest}>
       <Lines
@@ -22,16 +18,14 @@ export default function PageChangeButtons({ previous, next, ...rest }: Props) {
         margin="x2"
       />
 
-      <Box
-        alignChildrenVertical="middle"
-        flex={match(maxWidth) ? 'horizontal' : 'vertical'}
-        gap={match(maxWidth) ? 'x16' : 'x2'}
-      >
+      <Box alignChildrenVertical="middle" flex="horizontal" gap="x8" wrap>
         {previous && (
           <Box
+            basis="0"
             flex="vertical"
             alignChildrenHorizontal="start"
-            paddingVertical={match(maxWidth) ? undefined : 'x10'}
+            grow
+            minWidth="300px"
           >
             <PageChangeButton
               direction="previous"
@@ -44,16 +38,19 @@ export default function PageChangeButtons({ previous, next, ...rest }: Props) {
 
         <Lines
           backgroundColor="text-shade-1"
-          count={match(maxWidth) ? 12 : 4}
+          minWidth="300px"
           size={5}
           grow
+          count={3}
         />
 
         {next && (
           <Box
+            basis="0"
             flex="vertical"
             alignChildrenHorizontal="end"
-            paddingVertical={match(maxWidth) ? undefined : 'x10'}
+            grow
+            minWidth="300px"
           >
             <PageChangeButton
               direction="next"

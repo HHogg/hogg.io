@@ -34,6 +34,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@artsy/fresnel@npm:^7.1.4":
+  version: 7.1.4
+  resolution: "@artsy/fresnel@npm:7.1.4"
+  peerDependencies:
+    react: ">=18.0.0"
+  checksum: ac0ed0ddffa3e63b3f8dcfec19001b223c0efdb7d433c47aecc4ac83234501bb88fcefe6a3735d965a459403a17b24a95b12ceecb1270b3fe7f49bd094ffa6a7
+  languageName: node
+  linkType: hard
+
 "@babel/code-frame@npm:^7.0.0":
   version: 7.8.3
   resolution: "@babel/code-frame@npm:7.8.3"
@@ -927,6 +936,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/website@workspace:workspaces/website"
   dependencies:
+    "@artsy/fresnel": ^7.1.4
     "@hogg/circle-art": "workspace:^"
     "@hogg/circle-intersections": "workspace:^"
     "@hogg/circular-sequence": "workspace:^"
@@ -941,6 +951,7 @@ __metadata:
     "@swc/core": ^1.4.2
     "@types/lodash": ^4.14.202
     "@types/luxon": ^3.4.1
+    "@types/node": ^20.11.20
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@visx/axis": ^3.5.0
@@ -964,7 +975,7 @@ __metadata:
     react-router-dom: ^6.20.1
     superstatic: ^6.0.4
     typescript: ^5.0.4
-    vite: ^5.2.7
+    vite: ^5.2.9
   languageName: unknown
   linkType: soft
 
@@ -14911,9 +14922,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:^5.2.7":
-  version: 5.2.7
-  resolution: "vite@npm:5.2.7"
+"vite@npm:^5.2.9":
+  version: 5.2.9
+  resolution: "vite@npm:5.2.9"
   dependencies:
     esbuild: ^0.20.1
     fsevents: ~2.3.3
@@ -14947,7 +14958,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 66b4243f0ce147a1871e9bea772e5bd4842410ec9f3aa71d21e9427836f79a15b00f5cb7f023003f169249bc6ead20f68ee31ce6a326e091670ffd3b5441d131
+  checksum: 7a97f9547af8550c55bc2529cc6827c1ef0a043a09e9686cf20b615e8d59305cbe917954e806c5fdad6c33bfb883c1ce51325a9c474b5aa5bc13c377a74805fd
   languageName: node
   linkType: hard
 

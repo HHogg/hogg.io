@@ -30,7 +30,7 @@ export const resultsImages: Record<string, string> = {};
 Object.entries(
   import.meta.glob('../../../results/images/*.png', {
     eager: true,
-    as: 'url',
+    query: '?url',
   })
 ).forEach(([key, value]) => {
   const filename = key.split('/').pop()!;

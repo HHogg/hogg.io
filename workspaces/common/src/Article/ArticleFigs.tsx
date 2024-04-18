@@ -1,9 +1,4 @@
-import {
-  useMatchMedia,
-  ThemeProvider,
-  ArticleSectionProps,
-  ArticleSection,
-} from 'preshape';
+import { ThemeProvider, ArticleSectionProps, ArticleSection } from 'preshape';
 import { PropsWithChildren } from 'react';
 
 type Props = ArticleSectionProps & {
@@ -16,12 +11,10 @@ const ArticleFigs = (props: PropsWithChildren<Props>) => {
     active,
     backgroundColor = 'background-shade-2',
     children,
-    maxWidth = '800px',
     textColor = 'text-shade-1',
     theme,
     ...rest
   } = props;
-  const match = useMatchMedia([maxWidth]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -31,8 +24,7 @@ const ArticleFigs = (props: PropsWithChildren<Props>) => {
         borderRadius="x3"
         borderColor="background-shade-4"
         borderSize="x1"
-        flex={match(maxWidth) ? 'horizontal' : 'vertical'}
-        maxWidth={maxWidth}
+        flex="horizontal"
         size="x3"
         textColor={textColor}
         theme={theme}
@@ -42,6 +34,7 @@ const ArticleFigs = (props: PropsWithChildren<Props>) => {
             ? 'drop-shadow(0 0 32px rgba(var(--rgb-accent-shade-4), 0.25)'
             : undefined,
         }}
+        wrap
       >
         {children}
       </ArticleSection>

@@ -49,7 +49,7 @@ const ArticleFig = ({
       flex="vertical"
       grow
       id={`Fig-${id}`}
-      minWidth="0"
+      minWidth="250px"
       ref={ref}
     >
       <Text
