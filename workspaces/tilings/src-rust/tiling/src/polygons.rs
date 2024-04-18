@@ -377,7 +377,7 @@ impl Polygons {
     // Add the polygon to the shape type store
     self
       .shape_type_store
-      .add_polygon(&polygon, &mut self.edge_type_store)?;
+      .add_polygon(&polygon, &self.edge_type_store)?;
 
     // We insert down here because the vertex, edge and shape type stores
     // need to be able to annotate the polygon and its elements

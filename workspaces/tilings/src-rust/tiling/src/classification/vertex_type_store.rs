@@ -43,12 +43,9 @@ impl VertexTypeStore {
           }
         }
         Match::None => {
-          return Err(
-            TilingError::InvalidVertexType {
-              value: format!("{:?}", node.sequence),
-            }
-            .into(),
-          );
+          return Err(TilingError::InvalidVertexType {
+            value: format!("{:?}", node.sequence),
+          });
         }
         _ => {}
       }

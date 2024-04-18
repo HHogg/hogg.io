@@ -138,7 +138,7 @@ impl Validator {
     }
   }
 
-  pub fn validate_vertex_types(&self, polygons: &Polygons) -> Result<(), ValidationError> {
+  pub fn validate_vertex_types(&self, _polygons: &Polygons) -> Result<(), ValidationError> {
     if !self.option_validate_vertex_types {
       return Ok(());
     }

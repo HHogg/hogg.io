@@ -1,4 +1,4 @@
-use crate::{get_min_permutation, sort, super_script, Sequence};
+use crate::{sort, super_script, Sequence};
 
 #[path = "./to_string_tests.rs"]
 #[cfg(test)]

@@ -1,52 +1,52 @@
-use std::sync::Once;
+// use std::sync::Once;
 
-use insta::assert_debug_snapshot;
+// use insta::assert_debug_snapshot;
 
-use super::*;
+// use super::*;
 
-static SEQ_COUNT: u8 = 200; // This needs to be high enough to catch stack overflows
+// static SEQ_COUNT: u8 = 200; // This needs to be high enough to catch stack overflows
 
-static BEFORE_EACH: Once = Once::new();
-static mut NEXT_WITHOUT_TRANSFORMS: Vec<String> = vec![];
-static mut NEXT_WITH_TRANSFORMS: Vec<String> = vec![];
-static mut PREVIOUS_WITHOUT_TRANSFORMS: Vec<String> = vec![];
-static mut PREVIOUS_WITH_TRANSFORMS: Vec<String> = vec![];
+// static BEFORE_EACH: Once = Once::new();
+// static mut NEXT_WITHOUT_TRANSFORMS: Vec<String> = vec![];
+// static mut NEXT_WITH_TRANSFORMS: Vec<String> = vec![];
+// static mut PREVIOUS_WITHOUT_TRANSFORMS: Vec<String> = vec![];
+// static mut PREVIOUS_WITH_TRANSFORMS: Vec<String> = vec![];
 
-pub fn before_each() {
-  BEFORE_EACH.call_once(|| unsafe {
-    let mut tiling_without_transforms =
-      Tiling::default().with_validations(Some(ValidationFlag::all()));
+// pub fn before_each() {
+//   BEFORE_EACH.call_once(|| unsafe {
+//     let mut tiling_without_transforms =
+//       Tiling::default().with_validations(Some(ValidationFlag::all()));
 
-    let mut tiling_with_transforms = Tiling::default()
-      .with_validations(Some(ValidationFlag::all()))
-      .with_expansion_phases(3)
-      .with_link_paths(true)
-      .with_first_transform();
+//     let mut tiling_with_transforms = Tiling::default()
+//       .with_validations(Some(ValidationFlag::all()))
+//       .with_expansion_phases(3)
+//       .with_link_paths(true)
+//       .with_first_transform();
 
-    for _ in 0..SEQ_COUNT {
-      if let Some(next_tiling) = tiling_without_transforms.find_next_tiling() {
-        NEXT_WITHOUT_TRANSFORMS.push(next_tiling.to_string());
-      }
+//     for _ in 0..SEQ_COUNT {
+//       if let Some(next_tiling) = tiling_without_transforms.find_next_tiling() {
+//         NEXT_WITHOUT_TRANSFORMS.push(next_tiling.to_string());
+//       }
 
-      if let Some(next_tiling) = tiling_with_transforms.find_next_tiling() {
-        NEXT_WITH_TRANSFORMS.push(next_tiling.to_string());
-      }
-    }
+//       if let Some(next_tiling) = tiling_with_transforms.find_next_tiling() {
+//         NEXT_WITH_TRANSFORMS.push(next_tiling.to_string());
+//       }
+//     }
 
-    PREVIOUS_WITHOUT_TRANSFORMS.push(tiling_without_transforms.to_string());
-    PREVIOUS_WITH_TRANSFORMS.push(tiling_with_transforms.to_string());
+//     PREVIOUS_WITHOUT_TRANSFORMS.push(tiling_without_transforms.to_string());
+//     PREVIOUS_WITH_TRANSFORMS.push(tiling_with_transforms.to_string());
 
-    for _ in 0..SEQ_COUNT + 1 {
-      if let Some(previous_tiling) = tiling_without_transforms.find_previous_tiling() {
-        PREVIOUS_WITHOUT_TRANSFORMS.push(previous_tiling.to_string());
-      }
+//     for _ in 0..SEQ_COUNT + 1 {
+//       if let Some(previous_tiling) = tiling_without_transforms.find_previous_tiling() {
+//         PREVIOUS_WITHOUT_TRANSFORMS.push(previous_tiling.to_string());
+//       }
 
-      if let Some(previous_tiling) = tiling_with_transforms.find_previous_tiling() {
-        PREVIOUS_WITH_TRANSFORMS.push(previous_tiling.to_string());
-      }
-    }
-  });
-}
+//       if let Some(previous_tiling) = tiling_with_transforms.find_previous_tiling() {
+//         PREVIOUS_WITH_TRANSFORMS.push(previous_tiling.to_string());
+//       }
+//     }
+//   });
+// }
 
 // #[test]
 // fn next_sequence_without_transforms_matches_snapshot() {

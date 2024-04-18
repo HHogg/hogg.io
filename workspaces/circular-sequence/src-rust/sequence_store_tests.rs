@@ -1,5 +1,3 @@
-use std::fmt::format;
-
 use super::*;
 
 fn get_sequence_store() -> SequenceStore {

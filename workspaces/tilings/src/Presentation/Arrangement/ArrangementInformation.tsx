@@ -22,8 +22,6 @@ export default function ArrangementInformation() {
   const edgeTypes = tiling?.polygons.edgeTypeStore.edgeTypes ?? [];
   const shapeTypes = tiling?.polygons.shapeTypeStore.shapeTypes ?? [];
 
-  console.log(tiling);
-
   return (
     <Box flex="vertical" gap="x8">
       {validTiling && (

@@ -50,12 +50,9 @@ impl GeoNode {
         self.links[index] = Some(node);
         break;
       } else if index == size {
-        return Err(
-          TilingError::Application {
-            reason: "too many entries in ShapeNode".to_string(),
-          }
-          .into(),
-        );
+        return Err(TilingError::Application {
+          reason: "too many entries in ShapeNode".to_string(),
+        });
       }
     }
 

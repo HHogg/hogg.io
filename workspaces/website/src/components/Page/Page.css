@@ -1,9 +1,9 @@
 .Page {
-    padding: var(--size--x12);
+  padding: var(--size--x12);
 }
 
-@media (min-width: 800px) {
-    .Page {
-        padding: var(--size--x16);
-    }
+@media (width >= 800px) {
+  .Page {
+    padding: var(--size--x16);
+  }
 }
