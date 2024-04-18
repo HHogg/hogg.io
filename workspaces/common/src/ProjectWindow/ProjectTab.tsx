@@ -40,7 +40,7 @@ export default function ProjectTab({
 
   return (
     <Box>
-      <Motion layout="position">
+      <Motion container layout="position" zIndex={2}>
         <Button
           backgroundColor="transparent"
           backgroundColorActive="transparent"
