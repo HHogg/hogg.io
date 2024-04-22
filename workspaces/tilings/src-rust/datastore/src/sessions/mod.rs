@@ -8,7 +8,7 @@ use local_ip_address::local_ip;
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::{NaiveDateTime, Utc};
 use sqlx::FromRow;
-use sysinfo::{CpuExt, System, SystemExt};
+use sysinfo::System;
 use typeshare::typeshare;
 
 pub use self::close::close;
@@ -64,6 +64,7 @@ pub struct SysInfo {
 impl Default for SysInfo {
   fn default() -> Self {
     let system = System::new_all();
+
     let cpu = system
       .cpus()
       .iter()
@@ -81,10 +82,10 @@ impl Default for SysInfo {
       .unwrap_or(IpAddr::V4(Ipv4Addr::new(127, 0, 0, 1)));
 
     SysInfo {
-      hostname: system.host_name().unwrap_or_default(),
+      hostname: System::host_name().unwrap_or_default(),
       ip_address: lan_ip_address.to_string(),
-      os: system.distribution_id(),
-      os_version: system.os_version().unwrap_or_default(),
+      os: System::distribution_id(),
+      os_version: System::os_version().unwrap_or_default(),
       cpu,
     }
   }

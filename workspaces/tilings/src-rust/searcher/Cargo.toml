@@ -24,7 +24,7 @@ tracing-subscriber.workspace = true
 typeshare.workspace = true
 
 actix = "0.13.0"
-async-channel = "1.8.0"
+async-channel = "2.2.1"
 clap = { version = "4.1.8", features = ["derive"] }
 nanoid = "0.4.0"
 tiling = { path = "../tiling" }

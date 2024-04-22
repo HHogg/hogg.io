@@ -7,6 +7,6 @@ export const {
 } = createMedia({
   breakpoints: {
     mobile: 0,
-    desktop: 800,
+    desktop: 1025,
   },
 });
