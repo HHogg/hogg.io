@@ -4,43 +4,40 @@ use std::f64::consts::PI;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::classification::{EdgeTypeStore, ShapeTypeStore, VertexTypeStore};
-use crate::{
-  path,
-  BBox,
-  LineSegment,
+use super::phase::Phase;
+use crate::classification::Classifier;
+use crate::geometry::{BBox, LineSegment, Point, Polygon};
+use crate::notation::{
+  Node,
+  Notation,
   Operation,
   OriginIndex,
   OriginType,
   Path,
-  Phase,
-  Point,
-  Polygon,
   Separator,
   Shape,
-  TilingError,
   Transform,
   TransformContinuous,
   TransformEccentric,
   TransformValue,
-  Transforms,
-  ValidationFlag,
-  Validator,
 };
+use crate::validation::{self, Validator};
+use crate::TilingError;
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
-pub struct Polygons {
+pub struct Plane {
   pub bbox: BBox,
   pub scale: u8,
   pub stages: u16,
   pub stage_added_polygon: bool,
 
-  pub edge_type_store: EdgeTypeStore,
-  pub shape_type_store: ShapeTypeStore,
-  pub vertex_type_store: VertexTypeStore,
+  pub classifier: Classifier,
 
+  // pub edge_type_store: EdgeTypeStore,
+  // pub shape_type_store: ShapeTypeStore,
+  // pub vertex_type_store: VertexTypeStore,
   #[serde(skip)]
   pub line_segments_by_mid_point: HashMap<Point, LineSegment>,
   #[serde(skip)]
@@ -59,12 +56,12 @@ pub struct Polygons {
   pub validator: Validator,
 }
 
-impl Polygons {
+impl Plane {
   /// Setting this skips the validation that happens as
   /// the tiling is being built up. This should only be
   /// used when the notation provided is known to be valid,
   /// and can be used to speed up the process of building.
-  pub fn with_validations(&mut self, validations: Option<Vec<ValidationFlag>>) {
+  pub fn with_validations(&mut self, validations: Option<Vec<validation::Flag>>) {
     self.validator = validations.into();
   }
 
@@ -82,9 +79,7 @@ impl Polygons {
     self.stages = 0;
     self.stage_added_polygon = false;
 
-    self.edge_type_store = EdgeTypeStore::default();
-    self.shape_type_store = ShapeTypeStore::default();
-    self.vertex_type_store = VertexTypeStore::default();
+    self.classifier = Classifier::default();
 
     self.line_segments_by_mid_point = HashMap::new();
     self.line_segments_by_shape_group = Vec::new();
@@ -99,25 +94,20 @@ impl Polygons {
     self.polygons.iter()
   }
 
-  pub fn build(
-    &mut self,
-    path: &Path,
-    transforms: &Transforms,
-    expansion_phases: u8,
-  ) -> Result<(), TilingError> {
+  pub fn build(&mut self, notation: &Notation, expansion_phases: u8) -> Result<(), TilingError> {
     self.reset();
-    self.apply_path(path)?;
+    self.apply_path(&notation.path)?;
     self.validator.validate_overlaps(self)?;
 
-    if !transforms.list.is_empty() {
-      for (index, transform) in transforms.list.iter().enumerate() {
+    if !notation.transforms.list.is_empty() {
+      for (index, transform) in notation.transforms.list.iter().enumerate() {
         self.apply_initial_transform(index, transform)?;
         self.validator.validate_overlaps(self)?;
       }
 
       if expansion_phases > 0 {
         for _ in 0..expansion_phases {
-          for transform in transforms.list.iter() {
+          for transform in notation.transforms.list.iter() {
             self.apply_transform(transform)?;
             self.validator.validate_overlaps(self)?;
           }
@@ -129,14 +119,11 @@ impl Polygons {
         self.polygons = self
           .polygons
           .drain()
-          .map(|mut polygon| {
-            self.shape_type_store.annotate_polygon(&mut polygon);
-            polygon
-          })
+          .map(|polygon| self.classifier.annotate_polygon(polygon))
           .collect();
 
         self.validator.validate_vertex_types(self)?;
-        // self.validator.validate_edge_types(self)?;
+        self.validator.validate_edge_types(self)?;
         self.validator.validate_gaps(self)?;
         self.validator.validate_expanded(self)?;
       }
@@ -162,7 +149,7 @@ impl Polygons {
       .iter()
       .try_for_each::<_, Result<(), TilingError>>(|node| {
         match node {
-          path::Node::Seed(seed) => {
+          Node::Seed(seed) => {
             let polygon = Polygon::default()
               .with_phase(Phase::Seed)
               .with_shape(seed.shape)
@@ -175,10 +162,10 @@ impl Polygons {
             shape_counter += 1;
             self.next_stage();
           }
-          path::Node::Shape(Shape::Skip) => {
+          Node::Shape(Shape::Skip) => {
             skip += 1;
           }
-          path::Node::Shape(shape) => {
+          Node::Shape(shape) => {
             let line_segment = group_counter
               .checked_sub(1)
               .and_then(|group_index| self.get_available_line_segment_from_group(group_index, skip))
@@ -199,13 +186,13 @@ impl Polygons {
             shape_counter += 1;
             self.next_stage();
           }
-          path::Node::Separator(Separator::Group) => {
+          Node::Separator(Separator::Group) => {
             self.line_segments_by_shape_group.push(BTreeSet::new());
             group_counter += 1;
             skip = 0;
           }
-          path::Node::Separator(Separator::Shape) => {}
-          path::Node::Separator(Separator::Transform) => {
+          Node::Separator(Separator::Shape) => {}
+          Node::Separator(Separator::Transform) => {
             Err(TilingError::Application {
               reason: "a transform separator made it's way into the Path".into(),
             })?;
@@ -226,6 +213,14 @@ impl Polygons {
     }
   }
 
+  pub fn get_edges(&self) -> impl Iterator<Item = &LineSegment> {
+    self.classifier.get_edges()
+  }
+
+  pub fn is_line_segment_available(&self, line_segment: &LineSegment) -> bool {
+    self.classifier.is_line_segment_available(line_segment)
+  }
+
   /// Returns the line segments that only have a single shape
   /// touching it for the polygons from the placement phase
   /// for a given group. The order of these line segments is
@@ -236,7 +231,7 @@ impl Polygons {
   ) -> impl Iterator<Item = &LineSegment> {
     self.line_segments_by_shape_group[group_index]
       .iter()
-      .filter(|line_segment| self.edge_type_store.is_available(line_segment))
+      .filter(|line_segment| self.classifier.is_line_segment_available(line_segment))
   }
 
   /// Returns the line segment from a placement group that
@@ -364,23 +359,13 @@ impl Polygons {
       }
     }
 
-    // Add the polygon to the vertex type store
-    if let Err(err) = self.vertex_type_store.add_polygon(&mut polygon) {
+    if let Err(err) = self.classifier.add_polygon(&mut polygon) {
+      // todo: Just one validation config?
       if self.validator.is_validating_vertex_types() {
         return Err(err);
       }
     }
 
-    // Add the polygon to the edge type store
-    self.edge_type_store.add_polygon(&polygon)?;
-
-    // Add the polygon to the shape type store
-    self
-      .shape_type_store
-      .add_polygon(&polygon, &self.edge_type_store)?;
-
-    // We insert down here because the vertex, edge and shape type stores
-    // need to be able to annotate the polygon and its elements
     self.polygons.insert(polygon);
 
     Ok(())

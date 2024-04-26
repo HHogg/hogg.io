@@ -15,8 +15,6 @@ export const PlayerContext = createContext<UsePlayerResult>({
   setSpeed: noop,
   toStart: noop,
   toEnd: noop,
-  fullScreenEnter: noop,
-  fullScreenExit: noop,
 });
 
 export const usePlayerContext = () => useContext(PlayerContext);

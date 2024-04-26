@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use tiling::BBox;
+use tiling::geometry::BBox;
 
 use super::{Chevron, Component, Draw, LineSegment, Style};
 use crate::canvas::collision::Theia;
@@ -9,7 +9,7 @@ use crate::Error;
 
 #[derive(Clone)]
 pub struct Arrow {
-  pub line_segment: tiling::LineSegment,
+  pub line_segment: tiling::geometry::LineSegment,
   pub style: Style,
 }
 

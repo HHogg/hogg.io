@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use tiling::BBox;
+use tiling::geometry::BBox;
 
 use super::{Component, Draw, Style};
 use crate::canvas::collision::Theia;
@@ -9,7 +9,7 @@ use crate::Error;
 
 #[derive(Clone)]
 pub struct Point {
-  pub point: tiling::Point,
+  pub point: tiling::geometry::Point,
   pub style: Style,
 }
 
@@ -59,12 +59,12 @@ impl Draw for Point {
     let min = self
       .point
       .clone()
-      .translate(&tiling::Point::default().with_xy(-radius, -radius));
+      .translate(&tiling::geometry::Point::default().with_xy(-radius, -radius));
 
     let max = self
       .point
       .clone()
-      .translate(&tiling::Point::default().with_xy(radius, radius));
+      .translate(&tiling::geometry::Point::default().with_xy(radius, radius));
 
     Ok(BBox { min, max })
   }

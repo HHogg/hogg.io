@@ -1,5 +1,5 @@
 use super::Shape;
-use crate::math::radian_to_degrees;
+use crate::utils::math::radian_to_degrees;
 
 #[test]
 fn test_shape_next() {

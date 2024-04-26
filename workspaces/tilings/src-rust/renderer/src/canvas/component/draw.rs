@@ -1,4 +1,4 @@
-use tiling::BBox;
+use tiling::geometry::BBox;
 use web_sys::CanvasRenderingContext2d;
 
 use super::{Component, Style};

@@ -7,16 +7,9 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::path::Direction;
-use crate::{
-  Path,
-  Polygons,
-  Separator,
-  TilingError,
-  Transform,
-  TransformContinuous,
-  TransformEccentric,
-};
+use super::{Direction, Path, Separator, Transform, TransformContinuous, TransformEccentric};
+use crate::build::Plane;
+use crate::TilingError;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(into = "String")]
@@ -28,11 +21,7 @@ pub struct Transforms {
 }
 
 impl Transforms {
-  pub fn first(
-    path: Path,
-    polygons: &Polygons,
-    direction: &Direction,
-  ) -> Result<Self, TilingError> {
+  pub fn first(path: Path, polygons: &Plane, direction: &Direction) -> Result<Self, TilingError> {
     Ok(Self {
       path: path.clone(),
       index: 0,
@@ -63,11 +52,7 @@ impl Transforms {
     Ok(())
   }
 
-  pub fn previous(
-    &mut self,
-    polygons: &Polygons,
-    path: &Path,
-  ) -> Result<Option<Self>, TilingError> {
+  pub fn previous(&mut self, polygons: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
     if self.list.is_empty() {
       return Ok(Some(Self::first(
         path.clone(),
@@ -95,7 +80,7 @@ impl Transforms {
     Ok(None)
   }
 
-  pub fn next(&mut self, polygons: &Polygons, path: &Path) -> Result<Option<Self>, TilingError> {
+  pub fn next(&mut self, polygons: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
     if self.list.is_empty() {
       return Ok(Some(Self::first(
         path.clone(),
@@ -119,7 +104,7 @@ impl Transforms {
     &mut self,
     transform_index: usize,
     transform: Transform,
-    polygons: &Polygons,
+    polygons: &Plane,
     path: &Path,
     direction: &Direction,
   ) -> Result<(), TilingError> {
@@ -130,7 +115,7 @@ impl Transforms {
   fn reset_from(
     &mut self,
     transform_index: usize,
-    polygons: &Polygons,
+    polygons: &Plane,
     path: &Path,
     direction: &Direction,
   ) -> Result<(), TilingError> {

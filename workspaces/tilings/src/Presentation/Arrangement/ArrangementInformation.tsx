@@ -18,9 +18,10 @@ export default function ArrangementInformation() {
   const { tiling } = useArrangementContext();
 
   const validTiling = tiling?.buildContext.validTilings[0];
-  const vertexTypes = tiling?.polygons.vertexTypeStore.vertexTypes ?? [];
-  const edgeTypes = tiling?.polygons.edgeTypeStore.edgeTypes ?? [];
-  const shapeTypes = tiling?.polygons.shapeTypeStore.shapeTypes ?? [];
+  const vertexTypes =
+    tiling?.plane.classifier.vertexTypeStore.vertexTypes ?? [];
+  const edgeTypes = tiling?.plane.classifier.edgeTypeStore.edgeTypes ?? [];
+  const shapeTypes = tiling?.plane.classifier.shapeTypeStore.shapeTypes ?? [];
 
   return (
     <Box flex="vertical" gap="x8">
@@ -31,7 +32,7 @@ export default function ArrangementInformation() {
           </Section>
 
           <Section title="UID">
-            <CopyToClipboardCard text={validTiling.dKey} size="x2" />
+            <CopyToClipboardCard text={validTiling.uid} size="x2" />
           </Section>
         </>
       )}

@@ -3,8 +3,8 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::{Operation, Path, TilingError, TransformValue};
-use crate::path::Direction;
+use super::{Direction, Operation, Path, TransformValue};
+use crate::TilingError;
 
 ///
 #[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize, Serialize)]

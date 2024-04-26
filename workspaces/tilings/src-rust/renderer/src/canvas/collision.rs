@@ -1,4 +1,4 @@
-use tiling::BBox;
+use tiling::geometry::BBox;
 
 use super::component::{Component, Draw};
 use super::Scale;

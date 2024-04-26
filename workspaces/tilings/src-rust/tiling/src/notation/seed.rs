@@ -4,8 +4,8 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::path::Direction;
-use crate::{Offset, Shape, TilingError};
+use super::{Direction, Offset, Shape};
+use crate::TilingError;
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[typeshare]

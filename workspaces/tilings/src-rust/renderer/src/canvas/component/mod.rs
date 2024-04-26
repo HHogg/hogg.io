@@ -8,7 +8,7 @@ mod point;
 mod polygon;
 mod rect;
 
-use tiling::BBox;
+use tiling::geometry::BBox;
 
 pub use self::arc::Arc;
 pub use self::arrow::Arrow;

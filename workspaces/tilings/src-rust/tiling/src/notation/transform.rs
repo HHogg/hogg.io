@@ -9,9 +9,18 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::{Operation, OriginIndex, OriginType, Path, TilingError, TransformValue};
-use crate::path::Direction;
-use crate::{Polygons, TransformContinuous, TransformEccentric};
+use super::{
+  Direction,
+  Operation,
+  OriginIndex,
+  OriginType,
+  Path,
+  TransformContinuous,
+  TransformEccentric,
+  TransformValue,
+};
+use crate::build::Plane;
+use crate::TilingError;
 
 #[derive(Clone, Debug, Eq, Deserialize, Serialize)]
 #[typeshare]
@@ -115,7 +124,7 @@ impl Transform {
     })
   }
 
-  pub fn previous(&mut self, polygons: &Polygons) -> Option<Self> {
+  pub fn previous(&mut self, polygons: &Plane) -> Option<Self> {
     match self {
       Self::Continuous(transform) => {
         transform
@@ -130,7 +139,7 @@ impl Transform {
     }
   }
 
-  pub fn next(&mut self, polygons: &Polygons) -> Option<Self> {
+  pub fn next(&mut self, polygons: &Plane) -> Option<Self> {
     match self {
       Self::Continuous(transform) => transform.next_transform().map(|transform| transform.into()),
       Self::Eccentric(transform) => transform.next(polygons).map(|transform| transform.into()),
@@ -139,7 +148,7 @@ impl Transform {
 
   pub fn reset(
     &mut self,
-    polygons: &Polygons,
+    polygons: &Plane,
     path: &Path,
     direction: &Direction,
   ) -> Result<Self, TilingError> {

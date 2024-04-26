@@ -6,7 +6,8 @@ use typeshare::typeshare;
 
 use super::shape_node::ShapeLocation;
 use crate::classification::GeoNode;
-use crate::{LineSegment, Polygon, TilingError};
+use crate::geometry::{LineSegment, Polygon};
+use crate::TilingError;
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]

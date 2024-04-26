@@ -1,6 +1,7 @@
 use std::f64::consts::PI;
 
-use tiling::{Operation, OriginIndex, OriginType, Tiling};
+use tiling::notation::{Operation, OriginIndex, OriginType};
+use tiling::Tiling;
 
 use super::Layer;
 use crate::canvas::{Arc, Canvas, LineSegment, LineSegmentArrows, Point, Style};
@@ -22,14 +23,14 @@ pub fn draw_transform_eccentric(
     .unwrap_or_default();
 
   let origin_point = tiling
-    .polygons
+    .plane
     .get_point_by_index_and_type(origin_type, origin_index)
     .ok_or(Error::InvalidTiling {
       reason: "transform origin not found",
     })?;
 
   let reflection_line_segment = tiling
-    .polygons
+    .plane
     .get_reflection_line(origin_index, origin_type)
     .ok_or(Error::InvalidTiling {
       reason: "transform reflection line not found",
@@ -74,15 +75,15 @@ pub fn draw_transform_eccentric(
 
 fn draw_transform_eccentric_reflect(
   canvas: &mut Canvas<Layer>,
-  origin_point: &tiling::Point,
-  line_segment: tiling::LineSegment,
+  origin_point: &tiling::geometry::Point,
+  line_segment: tiling::geometry::LineSegment,
   style: &Style,
 ) -> Result<(), Error> {
-  let line_segment_p1 = tiling::LineSegment::default()
+  let line_segment_p1 = tiling::geometry::LineSegment::default()
     .with_start(*origin_point)
     .with_end(line_segment.p1);
 
-  let line_segment_p2 = tiling::LineSegment::default()
+  let line_segment_p2 = tiling::geometry::LineSegment::default()
     .with_start(*origin_point)
     .with_end(line_segment.p2);
 
@@ -116,13 +117,13 @@ fn draw_transform_eccentric_reflect(
 fn draw_transform_eccentric_rotate(
   canvas: &mut Canvas<Layer>,
   tiling: &Tiling,
-  origin_point: &tiling::Point,
+  origin_point: &tiling::geometry::Point,
   origin_type: &OriginType,
   style: &Style,
 ) -> Result<(), Error> {
   let start_angle = match origin_type {
     OriginType::MidPoint => {
-      if let Some(line_segment) = tiling.polygons.line_segments_by_mid_point.get(origin_point) {
+      if let Some(line_segment) = tiling.plane.line_segments_by_mid_point.get(origin_point) {
         line_segment.p2.radian_to(origin_point)
       } else {
         0.0

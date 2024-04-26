@@ -4,9 +4,9 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::TilingError;
-use crate::path::Direction;
-use crate::{OriginType, Polygons};
+use super::{Direction, OriginType};
+use crate::build::Plane;
+use crate::TilingError;
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Hash, PartialEq, Eq, Serialize)]
 #[typeshare]
@@ -15,7 +15,7 @@ pub struct OriginIndex {
 }
 
 impl OriginIndex {
-  pub fn first(polygons: &Polygons, origin_type: &OriginType, direction: &Direction) -> Self {
+  pub fn first(polygons: &Plane, origin_type: &OriginType, direction: &Direction) -> Self {
     match direction {
       Direction::FromStart => 0,
       Direction::FromEnd => polygons.get_point_count_by_type(origin_type) - 1,

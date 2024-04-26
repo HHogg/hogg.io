@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::ValidationError;
+use crate::validation;
 
 #[derive(Clone, Debug, thiserror::Error, Serialize, Deserialize)]
 pub enum TilingError {
@@ -33,7 +33,7 @@ pub enum TilingError {
   #[error("Invalid state -> {reason}")]
   InvalidState { reason: String },
   #[error("Invalid tiling -> {0}")]
-  InvalidTiling(ValidationError),
+  InvalidTiling(validation::Error),
   #[error("Invalid transform \"{transform}\" -> {reason}")]
   InvalidTransform { transform: String, reason: String },
   #[error("Invalid transform value \"{value}\" -> {reason}")]
@@ -56,8 +56,8 @@ impl Default for TilingError {
   }
 }
 
-impl From<ValidationError> for TilingError {
-  fn from(error: ValidationError) -> Self {
+impl From<validation::Error> for TilingError {
+  fn from(error: validation::Error) -> Self {
     Self::InvalidTiling(error)
   }
 }

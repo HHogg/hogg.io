@@ -1,4 +1,4 @@
-use tiling::BBox;
+use tiling::geometry::BBox;
 
 use super::{Component, Draw, Style};
 use crate::canvas::collision::Theia;
@@ -7,7 +7,7 @@ use crate::Error;
 
 #[derive(Clone)]
 pub struct Polygon {
-  pub polygon: tiling::Polygon,
+  pub polygon: tiling::geometry::Polygon,
   pub style: Style,
 }
 

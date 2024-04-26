@@ -1,7 +1,7 @@
 use insta::assert_debug_snapshot;
 
 use super::*;
-use crate::Shape;
+use crate::notation::Shape;
 
 #[test]
 fn from_string_with_invalid_operation() {

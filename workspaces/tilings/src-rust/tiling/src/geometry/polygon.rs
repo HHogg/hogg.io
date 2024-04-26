@@ -9,8 +9,10 @@ use std::str::FromStr;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use super::{BBox, LineSegment, Phase, Point, Shape, TilingError};
-use crate::{math, Offset};
+use super::{BBox, LineSegment, Point};
+use crate::notation::{Offset, Shape};
+use crate::utils::math;
+use crate::{build, TilingError};
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[typeshare]
@@ -20,7 +22,7 @@ pub struct Polygon {
   pub line_segments: Vec<LineSegment>,
   pub notation_index: u16,
   pub offset: Offset,
-  pub phase: Phase,
+  pub phase: build::Phase,
   pub points: Vec<Point>,
   pub shape: Shape,
   pub shape_type: Option<u8>,
@@ -56,7 +58,7 @@ impl Polygon {
     self
   }
 
-  pub fn with_phase(mut self, phase: Phase) -> Self {
+  pub fn with_phase(mut self, phase: build::Phase) -> Self {
     self.phase = phase;
     self
   }

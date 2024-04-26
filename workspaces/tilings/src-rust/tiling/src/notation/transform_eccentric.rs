@@ -3,9 +3,8 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::{Operation, OriginIndex, OriginType};
-use crate::path::Direction;
-use crate::Polygons;
+use super::{Direction, Operation, OriginIndex, OriginType};
+use crate::build::Plane;
 
 #[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -17,7 +16,7 @@ pub struct TransformEccentric {
 }
 
 impl TransformEccentric {
-  pub fn first(polygons: &Polygons, direction: &Direction) -> Self {
+  pub fn first(polygons: &Plane, direction: &Direction) -> Self {
     let mut transform = Self::default();
     transform.operation = Operation::first(direction);
     transform.origin_type = OriginType::first(direction);
@@ -25,7 +24,7 @@ impl TransformEccentric {
     transform
   }
 
-  pub fn previous(&mut self, polygons: &Polygons) -> Option<Self> {
+  pub fn previous(&mut self, polygons: &Plane) -> Option<Self> {
     if let Some(previous_origin_index) = self.origin_index.previous_index() {
       if polygons
         .get_point_by_index_and_type(&self.origin_type, &previous_origin_index)
@@ -52,7 +51,7 @@ impl TransformEccentric {
     None
   }
 
-  pub fn next(&mut self, polygons: &Polygons) -> Option<Self> {
+  pub fn next(&mut self, polygons: &Plane) -> Option<Self> {
     let next_origin_index = self.origin_index.next_index();
 
     if polygons

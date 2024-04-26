@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use tiling::BBox;
+use tiling::geometry::BBox;
 use typeshare::typeshare;
 
 use crate::Error;

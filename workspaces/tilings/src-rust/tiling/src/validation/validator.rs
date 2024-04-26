@@ -1,12 +1,8 @@
 use std::collections::VecDeque;
 
-use serde::{Deserialize, Serialize};
-use thiserror::Error;
-use typeshare::typeshare;
+use super::{Error, Flag};
+use crate::build::Plane;
 
-use crate::Polygons;
-
-///
 #[derive(Clone, Debug, Default)]
 pub struct Validator {
   option_validate_expansion: bool,
@@ -39,7 +35,7 @@ impl Validator {
   /// Checks that none of the polygons intersect
   /// with each other. See the polygon implementation
   /// for more details on how this is done.
-  pub fn validate_overlaps(&self, polygons: &Polygons) -> Result<(), ValidationError> {
+  pub fn validate_overlaps(&self, polygons: &Plane) -> Result<(), Error> {
     if !self.option_validate_overlap {
       return Ok(());
     }
@@ -47,7 +43,7 @@ impl Validator {
     for a in &polygons.polygons {
       for b in &polygons.polygons {
         if a != b && a.intersects(b) {
-          return Err(ValidationError::Overlaps);
+          return Err(Error::Overlaps);
         }
       }
     }
@@ -58,15 +54,15 @@ impl Validator {
   /// Checks that the tiling expanded by ensuring all of edges
   /// of the polygons placed in the placement phase now have
   /// shapes attached to them
-  pub fn validate_expanded(&self, polygons: &Polygons) -> Result<(), ValidationError> {
+  pub fn validate_expanded(&self, plane: &Plane) -> Result<(), Error> {
     if !self.option_validate_expansion {
       return Ok(());
     }
 
-    for line_segment_group in &polygons.line_segments_by_shape_group {
+    for line_segment_group in &plane.line_segments_by_shape_group {
       for line_segment in line_segment_group {
-        if polygons.edge_type_store.get_count(line_segment) <= 1 {
-          return Err(ValidationError::Expansion);
+        if plane.is_line_segment_available(line_segment) {
+          return Err(Error::Expansion);
         }
       }
     }
@@ -88,12 +84,12 @@ impl Validator {
   ///
   /// If there are any border line segments left over in the set, then the
   /// tessellation has gaps.
-  pub fn validate_gaps(&self, polygons: &Polygons) -> Result<(), ValidationError> {
+  pub fn validate_gaps(&self, plane: &Plane) -> Result<(), Error> {
     if !self.option_validate_gaps {
       return Ok(());
     }
 
-    let mut line_segments: VecDeque<_> = polygons.edge_type_store.get_edges().collect();
+    let mut line_segments: VecDeque<_> = plane.get_edges().collect();
     let start = line_segments.pop_front();
 
     let mut current = line_segments.pop_front();
@@ -110,7 +106,7 @@ impl Validator {
         // If we've gone through the entire list and haven't found
         // a connected line segment, then we have a problem.
         if current == first_current {
-          return Err(ValidationError::Application {
+          return Err(Error::Application {
             reason: "while checking for gaps, found an edge that did not form a link".into(),
           });
         }
@@ -134,11 +130,11 @@ impl Validator {
     if line_segments.is_empty() {
       Ok(())
     } else {
-      Err(ValidationError::Gaps)
+      Err(Error::Gaps)
     }
   }
 
-  pub fn validate_vertex_types(&self, _polygons: &Polygons) -> Result<(), ValidationError> {
+  pub fn validate_vertex_types(&self, _polygons: &Plane) -> Result<(), Error> {
     if !self.option_validate_vertex_types {
       return Ok(());
     }
@@ -146,7 +142,7 @@ impl Validator {
     Ok(())
   }
 
-  pub fn validate_edge_types(&self, _polygons: &Polygons) -> Result<(), ValidationError> {
+  pub fn validate_edge_types(&self, _polygons: &Plane) -> Result<(), Error> {
     if !self.option_validate_edge_types {
       return Ok(());
     }
@@ -154,7 +150,7 @@ impl Validator {
     Ok(())
   }
 
-  pub fn validate_shape_types(&self, _polygons: &Polygons) -> Result<(), ValidationError> {
+  pub fn validate_shape_types(&self, _polygons: &Plane) -> Result<(), Error> {
     if !self.option_validate_shape_types {
       return Ok(());
     }
@@ -163,8 +159,8 @@ impl Validator {
   }
 }
 
-impl From<Option<Vec<ValidationFlag>>> for Validator {
-  fn from(flags: Option<Vec<ValidationFlag>>) -> Self {
+impl From<Option<Vec<Flag>>> for Validator {
+  fn from(flags: Option<Vec<Flag>>) -> Self {
     let mut option_validate_expansion = false;
     let mut option_validate_gaps = false;
     let mut option_validate_overlap = false;
@@ -175,12 +171,12 @@ impl From<Option<Vec<ValidationFlag>>> for Validator {
     if let Some(flags) = flags {
       for flag in flags {
         match flag {
-          ValidationFlag::Expansion => option_validate_expansion = true,
-          ValidationFlag::Gaps => option_validate_gaps = true,
-          ValidationFlag::Overlaps => option_validate_overlap = true,
-          ValidationFlag::VertexTypes => option_validate_vertex_types = true,
-          ValidationFlag::EdgeTypes => option_validate_edge_types = true,
-          ValidationFlag::ShapeTypes => option_validate_shape_types = true,
+          Flag::Expansion => option_validate_expansion = true,
+          Flag::Gaps => option_validate_gaps = true,
+          Flag::Overlaps => option_validate_overlap = true,
+          Flag::VertexTypes => option_validate_vertex_types = true,
+          Flag::EdgeTypes => option_validate_edge_types = true,
+          Flag::ShapeTypes => option_validate_shape_types = true,
         }
       }
     }
@@ -193,44 +189,5 @@ impl From<Option<Vec<ValidationFlag>>> for Validator {
       option_validate_edge_types,
       option_validate_shape_types,
     }
-  }
-}
-
-///
-#[derive(Clone, Debug, Deserialize, Error, Serialize)]
-#[serde(tag = "type", content = "content")]
-#[typeshare]
-pub enum ValidationError {
-  #[error("Application error -> {reason}")]
-  Application { reason: String },
-  #[error("Overall size did not expand")]
-  Expansion,
-  #[error("Gaps between shapes")]
-  Gaps,
-  #[error("Shapes overlap")]
-  Overlaps,
-}
-
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[typeshare]
-pub enum ValidationFlag {
-  Overlaps,
-  Gaps,
-  Expansion,
-  VertexTypes,
-  EdgeTypes,
-  ShapeTypes,
-}
-
-impl ValidationFlag {
-  pub fn all() -> Vec<Self> {
-    vec![
-      Self::Overlaps,
-      Self::Gaps,
-      Self::Expansion,
-      Self::VertexTypes,
-      Self::EdgeTypes,
-      Self::ShapeTypes,
-    ]
   }
 }

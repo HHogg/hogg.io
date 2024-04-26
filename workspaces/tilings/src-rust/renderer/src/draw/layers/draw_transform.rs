@@ -1,5 +1,6 @@
 use anyhow::Result;
-use tiling::{Tiling, Transform, TransformContinuous, TransformEccentric};
+use tiling::notation::{Transform, TransformContinuous, TransformEccentric};
+use tiling::Tiling;
 
 use super::{draw_transform_continuous, draw_transform_eccentric, Layer};
 use crate::canvas::Canvas;
@@ -15,9 +16,10 @@ pub fn draw_transform(
   // player. Not the last one in the list.
   let active_transform_index = options
     .active_transform_index
-    .unwrap_or(tiling.get_transform_count() as u32 - 1) as usize;
+    .unwrap_or(tiling.notation.get_transform_count() as u32 - 1)
+    as usize;
 
-  if let Some(active_transform) = tiling.get_transform(active_transform_index) {
+  if let Some(active_transform) = tiling.notation.get_transform(active_transform_index) {
     match &active_transform {
       Transform::Continuous(TransformContinuous { operation, value }) => {
         draw_transform_continuous(canvas, options, operation, value)?

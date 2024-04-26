@@ -11,7 +11,7 @@ use typeshare::typeshare;
 
 use super::point::Point;
 use super::BBox;
-use crate::math::{compare_coordinate, compare_radians};
+use crate::utils::math::{compare_coordinate, compare_radians};
 
 fn get_point_at_percentage(p1: Point, p2: Point, percentage: f64, offset: f64) -> Point {
   let x = p1.x + (p2.x - p1.x) * percentage + offset;
@@ -20,7 +20,7 @@ fn get_point_at_percentage(p1: Point, p2: Point, percentage: f64, offset: f64) -
   Point::default().with_xy(x, y)
 }
 
-pub enum Origin {
+pub enum LineSegmentOrigin {
   Start,
   Middle,
   End,
@@ -108,7 +108,7 @@ impl LineSegment {
     get_point_at_percentage(self.p1, self.p2, percentage, offset)
   }
 
-  pub fn set_length(&self, length: f64, origin: Origin) -> Self {
+  pub fn set_length(&self, length: f64, origin: LineSegmentOrigin) -> Self {
     let dx = self.p2.x - self.p1.x;
     let dy = self.p2.y - self.p1.y;
     let theta = dy.atan2(dx);
@@ -117,11 +117,11 @@ impl LineSegment {
     let mut p2 = self.p2;
 
     match origin {
-      Origin::Start => {
+      LineSegmentOrigin::Start => {
         p2.x = self.p1.x + length * theta.cos();
         p2.y = self.p1.y + length * theta.sin();
       }
-      Origin::Middle => {
+      LineSegmentOrigin::Middle => {
         let half_length = length / 2.0;
 
         p1.x = self.p2.x - half_length * theta.cos();
@@ -129,7 +129,7 @@ impl LineSegment {
         p2.x = self.p1.x + half_length * theta.cos();
         p2.y = self.p1.y + half_length * theta.sin();
       }
-      Origin::End => {
+      LineSegmentOrigin::End => {
         p1.x = self.p2.x - length * theta.cos();
         p1.y = self.p2.y - length * theta.sin();
       }

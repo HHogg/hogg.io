@@ -3,8 +3,8 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::TilingError;
-use crate::path::Direction;
+use super::Direction;
+use crate::TilingError;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
 #[typeshare]

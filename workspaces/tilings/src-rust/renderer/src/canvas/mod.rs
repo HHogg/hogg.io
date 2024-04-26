@@ -7,7 +7,7 @@ use std::collections::BTreeMap;
 use std::hash::Hash;
 
 use anyhow::Result;
-use tiling::BBox;
+use tiling::geometry::BBox;
 use wasm_bindgen::JsCast;
 use web_sys::CanvasRenderingContext2d;
 

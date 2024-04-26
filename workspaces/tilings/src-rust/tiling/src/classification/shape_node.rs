@@ -3,8 +3,10 @@ use std::cmp::Ordering;
 use circular_sequence::Sequence;
 use serde::Serialize;
 
-use crate::math::compare_radians;
-use crate::{Point, Shape, TilingError};
+use crate::geometry::Point;
+use crate::notation::Shape;
+use crate::utils::math::compare_radians;
+use crate::TilingError;
 
 const MAX_SIZE: usize = 12;
 

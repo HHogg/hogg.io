@@ -23,7 +23,7 @@ const TraversalList = () => {
         alignChildren="middle"
         flex="vertical"
         gap="x4"
-        textColor="text-shade-4"
+        textColor="text-shade-3"
         paddingVertical="x8"
       >
         <RouteIcon size="3rem" />

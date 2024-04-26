@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use tiling::{BBox, Point};
+use tiling::geometry::{BBox, Point};
 
 use super::{Chevron, Component, Draw, Style};
 use crate::canvas::collision::Theia;

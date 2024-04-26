@@ -1,6 +1,7 @@
 use std::f64::consts::PI;
 
-use tiling::{math, Operation, TransformValue};
+use tiling::notation::{Operation, TransformValue};
+use tiling::utils::math;
 
 use super::Layer;
 use crate::canvas::{Arc, Canvas, LineSegment, LineSegmentArrows, Point, Style};
@@ -31,7 +32,7 @@ pub fn draw_transform_continuous(
   canvas.add_component(
     Layer::AnnotationLines,
     Point {
-      point: tiling::Point::default(),
+      point: tiling::geometry::Point::default(),
       style: style.set_line_dash(&canvas.scale, None),
     }
     .into(),
@@ -52,10 +53,10 @@ fn draw_transform_continuous_reflect_transform(
       math::coordinate_equals(value - PI, *other) || math::coordinate_equals(value + PI, *other)
     });
 
-    let implicit_line_segment = tiling::LineSegment::default()
-      .with_start(tiling::Point::default())
+    let implicit_line_segment = tiling::geometry::LineSegment::default()
+      .with_start(tiling::geometry::Point::default())
       .with_end(
-        tiling::Point::default()
+        tiling::geometry::Point::default()
           .with_xy(0.0, -1.0)
           .rotate(value + PI, None),
       );
@@ -85,10 +86,10 @@ fn draw_transform_continuous_reflect_transform(
       .into(),
     )?;
 
-    let line_segment = tiling::LineSegment::default()
-      .with_start(tiling::Point::default())
+    let line_segment = tiling::geometry::LineSegment::default()
+      .with_start(tiling::geometry::Point::default())
       .with_end(
-        tiling::Point::default()
+        tiling::geometry::Point::default()
           .with_xy(0.0, -1.0)
           .rotate(*value, None),
       );
@@ -130,13 +131,13 @@ fn draw_transform_continuous_rotate_transform(
     .get_abs_max_point()
     .distance_to_center();
 
-  let origin = tiling::Point::default();
+  let origin = tiling::geometry::Point::default();
   let arc_angle_padding = PI * 0.05;
   let mut previous_start_angle = 0.0;
 
-  let line_segment = tiling::LineSegment::default()
-    .with_start(tiling::Point::default())
-    .with_end(tiling::Point::default().with_xy(0.0, -1.0));
+  let line_segment = tiling::geometry::LineSegment::default()
+    .with_start(tiling::geometry::Point::default())
+    .with_end(tiling::geometry::Point::default().with_xy(0.0, -1.0));
 
   canvas.add_component(
     Layer::AnnotationLines,
@@ -150,10 +151,10 @@ fn draw_transform_continuous_rotate_transform(
   )?;
 
   for value in transform_value.get_transform_values() {
-    let line_segment = tiling::LineSegment::default()
-      .with_start(tiling::Point::default())
+    let line_segment = tiling::geometry::LineSegment::default()
+      .with_start(tiling::geometry::Point::default())
       .with_end(
-        tiling::Point::default()
+        tiling::geometry::Point::default()
           .with_xy(0.0, -1.0)
           .rotate(value, None),
       );

@@ -1,7 +1,7 @@
 use insta::assert_debug_snapshot;
 
 use super::*;
-use crate::Shape;
+use crate::notation::Shape;
 
 #[test]
 fn from_paths() {
@@ -18,12 +18,8 @@ fn from_paths() {
     .map(|shape| {
       (
         *shape,
-        Transforms::first(
-          Path::from(*shape),
-          &Polygons::default(),
-          &Direction::FromStart,
-        )
-        .map(|transforms| transforms.to_string()),
+        Transforms::first(Path::from(*shape), &Plane::default(), &Direction::FromStart)
+          .map(|transforms| transforms.to_string()),
       )
     })
     .collect::<Vec<(Shape, Result<String, TilingError>)>>());

@@ -1,5 +1,4 @@
-use tiling::line_segment::Origin;
-use tiling::{BBox, LineSegment};
+use tiling::geometry::{BBox, LineSegment, LineSegmentOrigin};
 use web_sys::CanvasRenderingContext2d;
 
 use super::{Arrow, Component, Draw, Style};
@@ -44,13 +43,13 @@ impl LineSegmentArrows {
 
     while shift < line_segment.length() {
       let p1 = line_segment
-        .set_length(line_segment.length() - shift, Origin::End)
+        .set_length(line_segment.length() - shift, LineSegmentOrigin::End)
         .p1;
 
       let p2 = line_segment
         .set_length(
           line_segment.length() - shift - length - gap_from_line_segment,
-          Origin::End,
+          LineSegmentOrigin::End,
         )
         .p1;
 
@@ -58,7 +57,7 @@ impl LineSegmentArrows {
 
       arrow_line_segment = arrow_line_segment.set_length(
         arrow_line_segment.length() - gap_from_line_segment,
-        Origin::End,
+        LineSegmentOrigin::End,
       );
 
       arrows.push(Arrow {

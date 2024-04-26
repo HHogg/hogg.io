@@ -46,7 +46,7 @@ pub fn draw_shapes(
   options: &Options,
   tiling: &Tiling,
 ) -> Result<(), Error> {
-  let path_shape_count = tiling.path.get_shape_count() as f64;
+  let path_shape_count = tiling.notation.path.get_shape_count() as f64;
   let color_mode = options.color_mode.clone().unwrap_or_default();
   let shape_style = options.styles.shape.clone().unwrap_or_default();
 
@@ -104,7 +104,7 @@ pub fn draw_shapes(
     }
   };
 
-  for shape in tiling.polygons.iter() {
+  for shape in tiling.plane.iter() {
     if let Some(max_stage) = options.max_stage {
       if shape.stage_index > max_stage {
         continue;

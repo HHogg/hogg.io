@@ -1,4 +1,4 @@
-use tiling::{BBox, Point};
+use tiling::geometry::{BBox, Point};
 
 use super::{Component, Draw, Style};
 use crate::canvas::collision::Theia;
@@ -43,7 +43,9 @@ impl LineSegment {
     for window in self.get_points(content_bbox).windows(2) {
       let a = &window[0];
       let b = &window[1];
-      let line_segment = tiling::LineSegment::default().with_start(*a).with_end(*b);
+      let line_segment = tiling::geometry::LineSegment::default()
+        .with_start(*a)
+        .with_end(*b);
 
       if line_segment.intersects_bbox(bbox) {
         return true;
@@ -153,7 +155,7 @@ pub fn get_extended_points_to_bbox(
     let mut point = *point;
 
     if extend_start && index == 0 {
-      let line_segment = tiling::LineSegment::default()
+      let line_segment = tiling::geometry::LineSegment::default()
         .with_start(points[0])
         .with_end(points[1])
         .extend_to_bbox(bbox, extend_start, false);
@@ -161,7 +163,7 @@ pub fn get_extended_points_to_bbox(
     }
 
     if extend_end && index == points.len() - 1 {
-      let line_segment = tiling::LineSegment::default()
+      let line_segment = tiling::geometry::LineSegment::default()
         .with_start(points[points.len() - 2])
         .with_end(points[points.len() - 1])
         .extend_to_bbox(bbox, false, extend_end);

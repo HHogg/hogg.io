@@ -194,6 +194,25 @@ export interface Visit {
 	path: string;
 }
 
+export interface ApplicationError {
+	tiling: string;
+	reason: string;
+}
+
+export interface Result {
+	notation: string;
+	uid: string;
+	transformIndex: number;
+	uniform: number;
+	timestamp: string;
+}
+
+export interface Context {
+	applicationErrors: ApplicationError[];
+	countTotalTilings: number;
+	validTilings: Result[];
+}
+
 export interface Point {
 	x: number;
 	y: number;
@@ -203,25 +222,6 @@ export interface Point {
 export interface BBox {
 	min: Point;
 	max: Point;
-}
-
-export interface ApplicationError {
-	tiling: string;
-	reason: string;
-}
-
-export interface ValidTiling {
-	notation: string;
-	dKey: string;
-	tIndex: number;
-	uniform: number;
-	timestamp: string;
-}
-
-export interface BuildContext {
-	applicationErrors: ApplicationError[];
-	countTotalTilings: number;
-	validTilings: ValidTiling[];
 }
 
 export interface EdgeTypeStore {
@@ -236,19 +236,23 @@ export interface VertexTypeStore {
 	vertexTypes: string[];
 }
 
+export interface Classifier {
+	edgeTypeStore: EdgeTypeStore;
+	shapeTypeStore: ShapeTypeStore;
+	vertexTypeStore: VertexTypeStore;
+}
+
+export interface Plane {
+	bbox: BBox;
+	scale: number;
+	stages: number;
+	stageAddedPolygon: boolean;
+	classifier: Classifier;
+}
+
 export interface LineSegment {
 	p1: Point;
 	p2: Point;
-}
-
-export interface OriginIndex {
-	value: number;
-}
-
-/**  */
-export interface Path {
-	option_type_ahead: boolean;
-	nodes: Node[];
 }
 
 export enum Offset {
@@ -274,32 +278,27 @@ export interface Polygon {
 	stage_index: number;
 }
 
-export interface Polygons {
-	bbox: BBox;
-	scale: number;
-	stages: number;
-	stageAddedPolygon: boolean;
-	edgeTypeStore: EdgeTypeStore;
-	shapeTypeStore: ShapeTypeStore;
-	vertexTypeStore: VertexTypeStore;
+export interface Notation {
+	optionLinkPaths: boolean;
+	optionTypeAhead: boolean;
+	optionWithFirstTransform: boolean;
+	path: string;
+	transforms: string;
+}
+
+export interface OriginIndex {
+	value: number;
+}
+
+/**  */
+export interface Path {
+	option_type_ahead: boolean;
+	nodes: Node[];
 }
 
 export interface Seed {
 	shape: Shape;
 	offset: Offset;
-}
-
-/**  */
-export interface Tiling {
-	optionExpansionPhases: number;
-	optionLinkPaths: boolean;
-	optionWithFirstTransform: boolean;
-	optionTypeAhead: boolean;
-	path: string;
-	transforms: string;
-	buildContext: BuildContext;
-	error: string;
-	polygons: Polygons;
 }
 
 export enum Operation {
@@ -342,13 +341,24 @@ export interface Transforms {
 	list: Transform[];
 }
 
+/**  */
+export interface Tiling {
+	optionExpansionPhases: number;
+	optionLinkPaths: boolean;
+	optionWithFirstTransform: boolean;
+	optionTypeAhead: boolean;
+	notation: Notation;
+	plane: Plane;
+	buildContext: Context;
+	error: string;
+}
+
 export enum Separator {
 	Group = "Group",
 	Shape = "Shape",
 	Transform = "Transform",
 }
 
-/**  */
 export type ValidationError = 
 	| { type: "Application", content: {
 	reason: string;

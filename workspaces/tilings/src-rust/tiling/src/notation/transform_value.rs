@@ -7,9 +7,8 @@ use std::fmt::Display;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::{math, Operation, Shape, TilingError};
-use crate::path::Direction;
-use crate::{Offset, Seed};
+use super::{Direction, Offset, Operation, Seed, Shape};
+use crate::{utils, TilingError};
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq, Serialize)]
 #[typeshare]
@@ -62,7 +61,7 @@ impl TransformValue {
   }
 
   pub fn as_radian(&self) -> f64 {
-    math::degrees_to_radian(self.value)
+    utils::math::degrees_to_radian(self.value)
   }
 
   pub fn get_last_increment(&self) -> u16 {
@@ -77,11 +76,11 @@ impl TransformValue {
 
   pub fn get_transform_values(&self) -> Vec<f64> {
     let mut value = self.value;
-    let mut values = vec![math::degrees_to_radian(value)];
+    let mut values = vec![utils::math::degrees_to_radian(value)];
 
     while value < 360 {
       value *= 2;
-      values.push(math::degrees_to_radian(value));
+      values.push(utils::math::degrees_to_radian(value));
     }
 
     values

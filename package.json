@@ -7,8 +7,7 @@
   "packageManager": "yarn@3.5.1",
   "type": "module",
   "workspaces": [
-    "./workspaces/*",
-    "./workspaces/tilings/src-rust/*"
+    "./workspaces/*"
   ],
   "scripts": {
     "build": "yarn workspaces foreach -ptvR --from @hogg/website run build",

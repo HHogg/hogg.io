@@ -46,7 +46,7 @@ export const usePlayer = (
   const refAnimationFrameRequest = useRef<number>();
   const refTimeout = useRef<NodeJS.Timeout>();
 
-  const stages = tiling?.polygons.stages ?? 0;
+  const stages = tiling?.plane.stages ?? 0;
   const duration = DURATION / speed;
   const durationOnEachStage = Math.min(duration / Math.max(1, stages));
   const elapsed = duration > 1 ? Math.min(1, elapsedTime / duration) : 0;

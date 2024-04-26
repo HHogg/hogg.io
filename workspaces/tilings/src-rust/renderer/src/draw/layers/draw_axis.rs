@@ -13,19 +13,19 @@ pub fn draw_axis(
 ) -> Result<(), Error> {
   let style = options.styles.axis.clone().unwrap_or_default();
   let size = tiling
-    .polygons
+    .plane
     .seed_polygon
     .as_ref()
     .map(|p| p.bbox.radius())
     .unwrap_or(1.0);
 
-  let line_segment_x = tiling::LineSegment::default()
-    .with_start(tiling::Point::default().with_xy(size * -1.0, 0.0))
-    .with_end(tiling::Point::default().with_xy(size, 0.0));
+  let line_segment_x = tiling::geometry::LineSegment::default()
+    .with_start(tiling::geometry::Point::default().with_xy(size * -1.0, 0.0))
+    .with_end(tiling::geometry::Point::default().with_xy(size, 0.0));
 
-  let line_segment_y = tiling::LineSegment::default()
-    .with_start(tiling::Point::default().with_xy(0.0, size * -1.0))
-    .with_end(tiling::Point::default().with_xy(0.0, size));
+  let line_segment_y = tiling::geometry::LineSegment::default()
+    .with_start(tiling::geometry::Point::default().with_xy(0.0, size * -1.0))
+    .with_end(tiling::geometry::Point::default().with_xy(0.0, size));
 
   canvas.add_component(
     Layer::AnnotationLines,

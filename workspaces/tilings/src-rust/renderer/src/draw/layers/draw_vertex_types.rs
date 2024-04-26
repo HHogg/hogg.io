@@ -13,7 +13,7 @@ pub fn draw_vertex_types(
 ) -> Result<(), Error> {
   let style = options.styles.vertex_type.clone().unwrap_or_default();
 
-  for polygon in tiling.polygons.iter() {
+  for polygon in tiling.plane.iter() {
     if let Some(max_stage) = options.max_stage {
       if polygon.stage_index > max_stage {
         continue;

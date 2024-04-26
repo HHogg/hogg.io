@@ -9,7 +9,7 @@ use std::hash::{Hash, Hasher};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::math::{
+use crate::utils::math::{
   compare_coordinate,
   compare_radians,
   coordinate_equals,

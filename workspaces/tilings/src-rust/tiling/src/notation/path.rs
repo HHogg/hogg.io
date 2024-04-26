@@ -8,15 +8,9 @@ use std::str::FromStr;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::{Separator, Shape};
-use crate::sibling_iterator::SiblingIterator;
-use crate::{Seed, Tiling, TilingError};
-
-#[derive(Clone, Copy, Debug)]
-pub enum Direction {
-  FromEnd,
-  FromStart,
-}
+use super::{Direction, Seed, Separator, Shape};
+use crate::utils::SiblingIterator;
+use crate::{Tiling, TilingError};
 
 ///
 #[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Deserialize, Serialize)]

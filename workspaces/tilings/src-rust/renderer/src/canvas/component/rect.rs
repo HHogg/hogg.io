@@ -1,4 +1,4 @@
-use tiling::{BBox, Point};
+use tiling::geometry::{BBox, Point};
 
 use super::{Component, Draw, Style, Theia};
 use crate::canvas::Scale;

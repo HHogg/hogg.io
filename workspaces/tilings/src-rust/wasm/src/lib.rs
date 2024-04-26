@@ -1,6 +1,7 @@
 use std::panic;
 
-use tiling::{Path, Tiling, Transform, ValidationFlag};
+use tiling::notation::{Path, Transform};
+use tiling::{validation, Tiling};
 use tiling_renderer::{draw, Options};
 use wasm_bindgen::prelude::*;
 
@@ -32,7 +33,8 @@ pub fn find_previous_tiling(
   notation: &str,
   validations: &JsValue,
 ) -> Result<Option<String>, JsError> {
-  let validations = serde_wasm_bindgen::from_value::<Vec<ValidationFlag>>(validations.to_owned())?;
+  let validations =
+    serde_wasm_bindgen::from_value::<Vec<validation::Flag>>(validations.to_owned())?;
 
   let mut tiling = Tiling::default()
     .with_validations(Some(validations))
@@ -40,12 +42,17 @@ pub fn find_previous_tiling(
     .with_link_paths(true)
     .from_string(notation.to_string());
 
-  Ok(tiling.find_previous_tiling().map(|t| t.to_string()))
+  Ok(
+    tiling
+      .find_previous_tiling()
+      .map(|t| t.notation.to_string()),
+  )
 }
 
 #[wasm_bindgen]
 pub fn find_next_tiling(notation: &str, validations: &JsValue) -> Result<Option<String>, JsError> {
-  let validations = serde_wasm_bindgen::from_value::<Vec<ValidationFlag>>(validations.to_owned())?;
+  let validations =
+    serde_wasm_bindgen::from_value::<Vec<validation::Flag>>(validations.to_owned())?;
 
   let mut tiling = Tiling::default()
     .with_validations(Some(validations))
@@ -53,7 +60,7 @@ pub fn find_next_tiling(notation: &str, validations: &JsValue) -> Result<Option<
     .with_link_paths(true)
     .from_string(notation.to_string());
 
-  Ok(tiling.find_next_tiling().map(|t| t.to_string()))
+  Ok(tiling.find_next_tiling().map(|t| t.notation.to_string()))
 }
 
 #[wasm_bindgen]
@@ -64,7 +71,8 @@ pub fn render_notation(
   validations: &JsValue,
 ) -> Result<JsValue, JsError> {
   let options = serde_wasm_bindgen::from_value::<Options>(options.to_owned())?;
-  let validations = serde_wasm_bindgen::from_value::<Vec<ValidationFlag>>(validations.to_owned())?;
+  let validations =
+    serde_wasm_bindgen::from_value::<Vec<validation::Flag>>(validations.to_owned())?;
 
   let tiling = Tiling::default()
     .with_validations(Some(validations))

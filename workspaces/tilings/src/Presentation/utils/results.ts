@@ -1,6 +1,7 @@
 import groupBy from 'lodash/groupBy';
 import uniqueTilings from '../../../results/output.json';
 
+export type ImageModule = { default: string };
 export type TilingResult = (typeof uniqueTilings)[number];
 
 export const results = uniqueTilings;
@@ -36,5 +37,5 @@ Object.entries(
   const filename = key.split('/').pop()!;
   const notation = filename.replace('.png', '').replace(/:/g, '/');
 
-  resultsImages[notation] = value as string;
+  resultsImages[notation] = (value as ImageModule).default;
 });
