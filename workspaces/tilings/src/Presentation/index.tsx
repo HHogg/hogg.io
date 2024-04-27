@@ -36,7 +36,7 @@ function PresentationInner(props: RendererProps) {
     >
       <Box flex="vertical" gap="x8" grow>
         <NotationInput />
-        <Renderer {...props} />
+        <Renderer {...props} minHeight="500px" />
       </Box>
 
       <Settings />

@@ -16,6 +16,10 @@ export default function ProjectPageSingleView({
     <Box {...rest} flex="vertical" grow maxWidth="800px">
       <ProjectPageHeader />
 
+      <Box flex="vertical" grow>
+        {content}
+      </Box>
+
       <ImageCover
         backgroundColor="text-shade-1"
         borderRadius="x2"
@@ -25,10 +29,6 @@ export default function ProjectPageSingleView({
         maxWidth="800px"
         src={image}
       />
-
-      <Box flex="vertical" grow>
-        {content}
-      </Box>
     </Box>
   );
 }
