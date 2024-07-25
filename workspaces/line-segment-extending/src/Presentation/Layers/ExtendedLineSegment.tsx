@@ -1,10 +1,9 @@
 import { SvgLabel } from '@hogg/common';
 import { Box, colorNegativeShade5, useThemeContext } from 'preshape';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Circle from '../Shapes/Circle';
 import Line from '../Shapes/Line';
 import { useLineSegmentContext } from '../useLineSegmentContext';
-import laserSound from './laser.wav';
 
 export default function ExtendedLineSegment() {
   const { colors } = useThemeContext();
@@ -17,28 +16,10 @@ export default function ExtendedLineSegment() {
   const previousExtendStart = useRef(extendStart);
   const previousExtendEnd = useRef(extendEnd);
 
-  const laserAudio = useMemo(() => {
-    if ('Audio' in window === false) {
-      return null;
-    }
-
-    const audio = new Audio();
-    audio.src = laserSound;
-
-    return audio;
-  }, []);
-
   useEffect(() => {
-    if (
-      extendStart !== previousExtendStart.current ||
-      extendEnd !== previousExtendEnd.current
-    ) {
-      laserAudio?.play();
-    }
-
     previousExtendStart.current = extendStart;
     previousExtendEnd.current = extendEnd;
-  }, [laserAudio, extendStart, extendEnd]);
+  }, [extendStart, extendEnd]);
 
   if (!extendStart && !extendEnd) {
     return null;

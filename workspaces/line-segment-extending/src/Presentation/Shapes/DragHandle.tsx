@@ -1,9 +1,8 @@
 import { SvgLabel, extendPointFromOrigin } from '@hogg/common';
 import { sizeX8Px, useThemeContext } from 'preshape';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useLineSegmentContext } from '../useLineSegmentContext';
 import Rect from './Rect';
-import pickupSound from './pickup-sound.wav';
 
 const HANDLE_SIZE = 10;
 
@@ -28,17 +27,6 @@ export default function DragHandle({
   const [size, setSize] = useState({ width: 0, height: 0 });
   const { colors } = useThemeContext();
 
-  const audio = useMemo(() => {
-    if ('Audio' in window === false) {
-      return null;
-    }
-
-    const audio = new Audio();
-    audio.src = pickupSound;
-
-    return audio;
-  }, []);
-
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<SVGCircleElement>) => {
       const { clientX: downX, clientY: downY } = event;
@@ -50,11 +38,6 @@ export default function DragHandle({
 
       window.document.body.style.cursor = 'grabbing';
       window.document.body.style.userSelect = 'none';
-
-      if (audio) {
-        audio.currentTime = 0;
-        audio.play();
-      }
 
       setAnimate(false);
 
@@ -77,11 +60,6 @@ export default function DragHandle({
         window.document.body.style.cursor = '';
         window.document.body.style.userSelect = '';
 
-        if (audio) {
-          audio.currentTime = 0;
-          audio.play();
-        }
-
         setAnimate(true);
 
         window.removeEventListener('pointermove', handlePointerMove);
@@ -91,7 +69,7 @@ export default function DragHandle({
       window.addEventListener('pointermove', handlePointerMove);
       window.addEventListener('pointerup', handlePointerUp);
     },
-    [audio, onChange, setAnimate, refSvgContainer]
+    [onChange, setAnimate, refSvgContainer]
   );
 
   const [offsetX, offsetY] = extendPointFromOrigin(
