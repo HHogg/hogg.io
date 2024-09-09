@@ -32,10 +32,10 @@ impl Classifier {
 
   pub fn add_polygon(&mut self, polygon: &mut Polygon) -> Result<(), TilingError> {
     self.vertex_type_store.add_polygon(polygon)?;
-    self.edge_type_store.add_polygon(&polygon)?;
+    self.edge_type_store.add_polygon(polygon)?;
     self
       .shape_type_store
-      .add_polygon(&polygon, &self.edge_type_store)?;
+      .add_polygon(polygon, &self.edge_type_store)?;
     Ok(())
   }
 

@@ -59,7 +59,7 @@ impl Handler<ProcessVisit> for Issuer {
         .try_send(tilings::messages::Insert {
           path: msg.result.path.clone(),
           path_index,
-          tilings: msg.result.build_context.valid_tilings.clone(),
+          results: msg.result.build_context.results.clone(),
         })
         .inspect_err(
           |error| tracing::error!(%error, path = %msg.result.path, "failed_to_store_tilings"),

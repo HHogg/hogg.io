@@ -44,9 +44,6 @@ export { default as useProjectWindowContext } from './ProjectWindow/useProjectWi
 
 export { default as Spinner } from './Spinner/Spinner';
 
-export { default as WasmProvider } from './WasmProvider/WasmProvider';
-export { useWasmContext } from './WasmProvider/useWasmContext';
-
 export { default as Media } from './Media/Media';
 export { MediaContextProvider, createMediaStyle } from './Media/MediaProvider';
 

@@ -1,0 +1,10 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/notation/./transform_tests.rs
+expression: "Transform::from_string(\"r(h1a)\", &Shape::Triangle.into())"
+---
+Err(
+    InvalidOriginIndex {
+        origin_index: "1a",
+        reason: "failed to parse",
+    },
+)

@@ -16,7 +16,7 @@ pub struct Point {
 impl Point {
   fn draw_path(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     scale: &Scale,
     style: &Style,
   ) -> Result<(), Error> {
@@ -49,7 +49,7 @@ impl Draw for Point {
 
   fn bbox(
     &self,
-    _context: &web_sys::CanvasRenderingContext2d,
+    _context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     scale: &Scale,
@@ -71,7 +71,7 @@ impl Draw for Point {
 
   fn draw(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     scale: &Scale,

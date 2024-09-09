@@ -5,7 +5,6 @@ mod sequence_store;
 mod sort;
 mod super_script;
 mod to_string;
-mod wasm_api;
 
 pub use get_match::{get_match, Match};
 pub use min_permutation::{get_min_permutation, reverse};

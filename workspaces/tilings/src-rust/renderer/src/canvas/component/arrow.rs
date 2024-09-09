@@ -46,7 +46,7 @@ impl Draw for Arrow {
 
   fn bbox(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
@@ -66,29 +66,23 @@ impl Draw for Arrow {
 
   fn collides_with(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
     other: &Component,
   ) -> Result<bool, Error> {
     if match other {
-      Component::Arrow(arrow) => {
-        arrow
-          .bbox(context, canvas_bbox, content_bbox, scale)?
-          .intersects_bbox(&self.bbox(context, canvas_bbox, content_bbox, scale)?)
-      }
-      Component::Point(point) => {
-        point
-          .bbox(context, canvas_bbox, content_bbox, scale)?
-          .intersects_bbox(&self.bbox(context, canvas_bbox, content_bbox, scale)?)
-      }
-      Component::LineSegment(line_segment) => {
-        line_segment.intersects_bbox(
-          content_bbox,
-          &self.bbox(context, canvas_bbox, content_bbox, scale)?,
-        )
-      }
+      Component::Arrow(arrow) => arrow
+        .bbox(context, canvas_bbox, content_bbox, scale)?
+        .intersects_bbox(&self.bbox(context, canvas_bbox, content_bbox, scale)?),
+      Component::Point(point) => point
+        .bbox(context, canvas_bbox, content_bbox, scale)?
+        .intersects_bbox(&self.bbox(context, canvas_bbox, content_bbox, scale)?),
+      Component::LineSegment(line_segment) => line_segment.intersects_bbox(
+        content_bbox,
+        &self.bbox(context, canvas_bbox, content_bbox, scale)?,
+      ),
       _ => false,
     } {
       return Ok(true);
@@ -99,7 +93,7 @@ impl Draw for Arrow {
 
   fn draw(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,

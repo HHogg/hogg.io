@@ -9,7 +9,6 @@ use typeshare::typeshare;
 use crate::notation::{Direction, Notation, Path, Transforms};
 use crate::{build, validation, TilingError};
 
-///
 #[serde_as]
 #[derive(Clone, Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -30,7 +29,6 @@ pub struct Tiling {
 }
 
 impl Tiling {
-  ///
   pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
     self.option_expansion_phases = expansion_phases;
     self
@@ -49,7 +47,6 @@ impl Tiling {
     self
   }
 
-  ///
   pub fn with_path(mut self, path: Path) -> Self {
     if let Err(err) = self
       .notation
@@ -61,13 +58,11 @@ impl Tiling {
     self
   }
 
-  ///
   pub fn with_scale(mut self, scale: u8) -> Self {
     self.plane.with_scale(scale);
     self
   }
 
-  ///
   pub fn with_transforms(mut self, transforms: Transforms) -> Self {
     self.notation.set_transforms(transforms);
     self

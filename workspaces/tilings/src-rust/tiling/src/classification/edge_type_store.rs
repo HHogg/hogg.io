@@ -34,7 +34,7 @@ impl EdgeTypeStore {
   /// Returns the number of times a line segment has been used
   /// by a polygon.
   pub fn get_mut(&mut self, line_segment: &LineSegment) -> Option<&mut GeoNode> {
-    if self.edge_types_by_line_segment.get(line_segment).is_some() {
+    if self.edge_types_by_line_segment.contains_key(line_segment) {
       return self.edge_types_by_line_segment.get_mut(line_segment);
     }
 
@@ -42,8 +42,7 @@ impl EdgeTypeStore {
 
     if self
       .edge_types_by_line_segment
-      .get(&flipped_line_segment)
-      .is_some()
+      .contains_key(&flipped_line_segment)
     {
       return self
         .edge_types_by_line_segment
@@ -87,7 +86,6 @@ impl EdgeTypeStore {
     self.get_count(line_segment) <= 1
   }
 
-  ///
   pub fn add_polygon(&mut self, polygon: &Polygon) -> Result<(), TilingError> {
     for line_segment in polygon.line_segments.iter() {
       if let Some(node) = self.get_mut(line_segment) {

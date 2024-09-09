@@ -20,7 +20,7 @@ impl LineSegment {
 
   fn draw_path(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
@@ -67,13 +67,13 @@ impl Draw for LineSegment {
 
   fn bbox(
     &self,
-    _context: &web_sys::CanvasRenderingContext2d,
+    _context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
   ) -> Result<BBox, Error> {
-    let mut min = Point::default().with_xy(std::f64::INFINITY, std::f64::INFINITY);
-    let mut max = Point::default().with_xy(std::f64::NEG_INFINITY, std::f64::NEG_INFINITY);
+    let mut min = Point::default().with_xy(f64::INFINITY, f64::INFINITY);
+    let mut max = Point::default().with_xy(f64::NEG_INFINITY, f64::NEG_INFINITY);
 
     for point in self.get_points(content_bbox) {
       if point.x < min.x {
@@ -106,7 +106,7 @@ impl Draw for LineSegment {
 
   fn draw(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
@@ -142,9 +142,8 @@ impl Draw for LineSegment {
   }
 }
 
-///
 pub fn get_extended_points_to_bbox(
-  points: &Vec<Point>,
+  points: &[Point],
   bbox: &BBox,
   extend_start: bool,
   extend_end: bool,

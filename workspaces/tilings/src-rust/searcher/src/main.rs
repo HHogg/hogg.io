@@ -1,5 +1,3 @@
-#![feature(iterator_try_collect, result_option_inspect)]
-
 mod datastore;
 mod issuer;
 mod logging;
@@ -93,7 +91,6 @@ async fn main() -> Result<()> {
   Ok(())
 }
 
-///
 async fn shutdown(
   issuer_addr: Addr<Issuer>,
   search_client_addr: Addr<search::Client>,

@@ -1,5 +1,4 @@
 use tiling::geometry::BBox;
-use web_sys::CanvasRenderingContext2d;
 
 use super::{Component, Style};
 use crate::canvas::collision::Theia;
@@ -9,7 +8,7 @@ use crate::Error;
 pub trait Draw {
   fn bbox(
     &self,
-    _context: &CanvasRenderingContext2d,
+    _context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,
@@ -23,7 +22,7 @@ pub trait Draw {
 
   fn collides_with(
     &self,
-    _context: &CanvasRenderingContext2d,
+    _context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,
@@ -34,7 +33,7 @@ pub trait Draw {
 
   fn draw_start(
     &self,
-    context: &CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     scale: &Scale,
     style: &Style,
   ) -> Result<(), Error> {
@@ -44,7 +43,7 @@ pub trait Draw {
     Ok(())
   }
 
-  fn draw_end(&self, context: &CanvasRenderingContext2d) {
+  fn draw_end(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
     context.stroke();
     context.fill();
     context.close_path();
@@ -52,7 +51,7 @@ pub trait Draw {
 
   fn draw_bbox(
     &self,
-    context: &CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
@@ -70,7 +69,7 @@ pub trait Draw {
 
   fn draw(
     &self,
-    _context: &CanvasRenderingContext2d,
+    _context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,

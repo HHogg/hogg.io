@@ -5,11 +5,12 @@ export enum ProjectKey {
   circle_art = 'circle-art',
   circle_intersections = 'circle-intersections',
   circular_sequence = 'circular-sequence',
+  evolution = 'evolution',
   line_segment_extending = 'line-segment-extending',
   snake = 'snake',
   spirals = 'spirals',
   tilings = 'tilings',
-  wasm_api = 'wasm-api',
+  wasm = 'wasm',
 }
 
 export type Project = {

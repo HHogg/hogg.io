@@ -22,7 +22,7 @@ impl Draw for Rect {
 
   fn bbox(
     &self,
-    _context: &web_sys::CanvasRenderingContext2d,
+    _context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,
@@ -32,7 +32,7 @@ impl Draw for Rect {
 
   fn draw(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     scale: &Scale,

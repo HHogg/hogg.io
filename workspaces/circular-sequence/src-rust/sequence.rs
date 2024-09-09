@@ -68,7 +68,10 @@ pub fn is_symmetrical(sequence: &Sequence) -> bool {
   get_symmetry_index(sequence).is_some()
 }
 
+/// Inserts a value into a sequence.
 ///
+/// Space: O(1)
+/// Time:  O(n)
 pub fn insert(sequence: &mut Sequence, value: u8) {
   let length = get_length(sequence);
 

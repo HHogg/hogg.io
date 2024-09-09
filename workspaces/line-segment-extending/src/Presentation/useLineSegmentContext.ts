@@ -1,6 +1,7 @@
 import { Ref, RefObject, createContext, useContext } from 'react';
+import { X1Y1X2Y2 } from '../types';
 
-const defaultLineSegment: [number, number, number, number] = [0, 0, 0, 0];
+const defaultLineSegment: X1Y1X2Y2 = [0, 0, 0, 0];
 
 export enum BoundFlag {
   TOP = 'Top',
@@ -11,15 +12,15 @@ export enum BoundFlag {
 
 export type LineSegmentContextValue = {
   animate: boolean;
-  bounds: [number, number, number, number];
+  bounds: X1Y1X2Y2;
   boundsHeight: number;
   boundsWidth: number;
   containerHeight: number;
   containerWidth: number;
   extendEnd: boolean;
   extendStart: boolean;
-  extendedLineSegmentToBounds: [number, number, number, number];
-  extendedLineSegmentToContainer: [number, number, number, number];
+  extendedLineSegmentToBounds: X1Y1X2Y2 | null;
+  extendedLineSegmentToContainer: X1Y1X2Y2 | null;
   refDimensionContainer: Ref<HTMLDivElement>;
   refSvgContainer: RefObject<SVGSVGElement>;
   setAnimate: (animate: boolean) => void;

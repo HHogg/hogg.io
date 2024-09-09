@@ -1,12 +1,13 @@
 use actix::prelude::*;
 use anyhow::Result;
 use serde::Serialize;
-use tiling::{BuildContext, Path};
+use tiling::build;
+use tiling::notation::Path;
 
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct VisitResult {
   pub path: Path,
-  pub build_context: BuildContext,
+  pub build_context: build::Context,
 }
 
 impl VisitResult {
@@ -15,7 +16,7 @@ impl VisitResult {
     self
   }
 
-  pub fn with_build_context(mut self, build_context: BuildContext) -> Self {
+  pub fn with_build_context(mut self, build_context: build::Context) -> Self {
     self.build_context = build_context;
     self
   }

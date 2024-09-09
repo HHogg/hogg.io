@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 use wasm_bindgen::JsValue;
-use web_sys::CanvasRenderingContext2d;
 
 use super::Scale;
 
@@ -106,7 +105,11 @@ impl Style {
     style
   }
 
-  pub fn apply(&self, context: &CanvasRenderingContext2d, scale: &Scale) -> Result<(), JsValue> {
+  pub fn apply(
+    &self,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
+    scale: &Scale,
+  ) -> Result<(), JsValue> {
     context.set_line_join("round");
     context.set_line_cap("round");
     self.apply_opacity(context);
@@ -117,19 +120,19 @@ impl Style {
     Ok(())
   }
 
-  fn apply_fill(&self, context: &CanvasRenderingContext2d) {
+  fn apply_fill(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
     let default_fill_style = "transparent".to_string();
     let fill_style = self.fill.as_ref().unwrap_or(&default_fill_style);
 
     context.set_fill_style(&fill_style.into());
   }
 
-  fn apply_opacity(&self, context: &CanvasRenderingContext2d) {
+  fn apply_opacity(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
     let opacity = self.opacity.unwrap_or(1.0);
     context.set_global_alpha(opacity);
   }
 
-  fn apply_stroke(&self, context: &CanvasRenderingContext2d, scale: &Scale) {
+  fn apply_stroke(&self, context: &web_sys::OffscreenCanvasRenderingContext2d, scale: &Scale) {
     let stroke_color = self.get_stroke_color();
     let stroke_width = self.get_stroke_width(scale);
 
@@ -144,7 +147,7 @@ impl Style {
 
   fn apply_line_dash(
     &self,
-    context: &CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     scale: &Scale,
   ) -> Result<(), JsValue> {
     if let Some(line_dash) = &self.get_line_dash(scale) {

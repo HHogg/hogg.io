@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
-use tiling::Shape;
+use tiling::notation::Shape;
 use typeshare::typeshare;
 
 pub fn get_results_condition(

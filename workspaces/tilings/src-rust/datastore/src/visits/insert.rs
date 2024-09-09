@@ -1,12 +1,13 @@
 use anyhow::Result;
 use sqlx::{Pool, Postgres};
-use tiling::{BuildContext, Path, Shape};
+use tiling::build::Context;
+use tiling::notation::{Path, Shape};
 
 pub struct InsertRequest {
   pub session_id: String,
   pub path: Path,
   pub path_index: i32,
-  pub build_context: BuildContext,
+  pub build_context: Context,
 }
 
 pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()> {
@@ -72,16 +73,16 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
   )
   .bind(path.to_string())
   .bind(path.get_level() as i32)
-  .bind(build_context.valid_tilings.is_empty())
+  .bind(build_context.results.is_empty())
   .bind(
     build_context
-      .valid_tilings
+      .results
       .iter()
       .map(|t| t.notation.clone())
       .collect::<Vec<_>>()
       .join(";"),
   )
-  .bind(build_context.valid_tilings.len() as i32)
+  .bind(build_context.results.len() as i32)
   .bind(build_context.count_total_tilings as i32)
   .bind(has_0)
   .bind(has_3)

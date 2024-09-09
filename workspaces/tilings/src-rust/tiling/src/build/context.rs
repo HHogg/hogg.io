@@ -11,7 +11,7 @@ use crate::{ApplicationError, TilingError};
 pub struct Context {
   pub application_errors: Vec<ApplicationError>,
   pub count_total_tilings: u16,
-  pub valid_tilings: Vec<super::Result>,
+  pub results: Vec<super::Result>,
 }
 
 impl Context {
@@ -31,11 +31,11 @@ impl Context {
         });
       }
       Ok(()) => {
-        self.valid_tilings.push(
+        self.results.push(
           super::Result::default()
             .with_notation(notation.to_string())
-            .with_uid(plane.classifier.get_unique_key())
-            .with_transform_index(notation.transforms.list.len()),
+            .with_hash(plane.classifier.get_unique_key())
+            .with_transform_index(notation.transforms.index),
         );
       }
       _ => {}

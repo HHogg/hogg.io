@@ -4,7 +4,6 @@ mod worker;
 
 use actix::prelude::*;
 
-pub use self::error::VisitError;
 pub use self::messages::{Visit, VisitResult};
 use self::worker::Worker;
 

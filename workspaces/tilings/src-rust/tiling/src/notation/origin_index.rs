@@ -50,12 +50,10 @@ impl FromStr for OriginIndex {
   fn from_str(value: &str) -> Result<Self, Self::Err> {
     match value.parse::<usize>() {
       Ok(n) => Ok(Self::from(n - 1)),
-      Err(_) => {
-        Err(TilingError::InvalidOriginIndex {
-          origin_index: value.into(),
-          reason: "failed to parse".into(),
-        })
-      }
+      Err(_) => Err(TilingError::InvalidOriginIndex {
+        origin_index: value.into(),
+        reason: "failed to parse".into(),
+      }),
     }
   }
 }

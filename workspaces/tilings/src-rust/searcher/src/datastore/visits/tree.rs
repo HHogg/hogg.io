@@ -1,5 +1,6 @@
 use serde::{Serialize, Serializer};
-use tiling::{Path, Tiling, TilingError, Transform};
+use tiling::notation::{Path, Transform};
+use tiling::{Tiling, TilingError};
 use tiling_datastore::visits::Visit;
 use typeshare::typeshare;
 
@@ -28,6 +29,7 @@ impl Tree {
       tree.insert(
         Tiling::default()
           .from_string(tiling_string)
+          .notation
           .transforms
           .list
           .as_slice(),
@@ -38,7 +40,7 @@ impl Tree {
   }
 
   fn insert(&mut self, transforms: &[Transform]) {
-    if let Some(transform) = transforms.get(0) {
+    if let Some(transform) = transforms.first() {
       // Search for existing Transform child
       for child in self.children.iter_mut() {
         if child.id == NodeId::Transform(transform.clone()) {

@@ -3,6 +3,7 @@ mod options;
 
 use anyhow::Result;
 use tiling::Tiling;
+use web_sys::OffscreenCanvas;
 
 use self::layers::{draw_axis, draw_shapes, draw_transform, draw_vertex_types, Layer};
 use self::options::Annotation;
@@ -10,13 +11,17 @@ pub use self::options::Options;
 use crate::canvas::{Canvas, Scale};
 use crate::Error;
 
-pub fn draw(tiling: &Tiling, canvas_id: &str, options: Options) -> Result<(), Error> {
+pub fn draw(
+  tiling: &Tiling,
+  offscreen_canvas: OffscreenCanvas,
+  options: Options,
+) -> Result<(), Error> {
   let scale = Scale::default()
     .with_auto_rotate(options.auto_rotate)
     .with_padding(options.padding)
     .with_mode(options.scale_mode);
 
-  let mut canvas = Canvas::<Layer>::new(canvas_id, scale)?;
+  let mut canvas = Canvas::<Layer>::new(offscreen_canvas, scale)?;
 
   let show_annotations = options.show_annotations.clone().unwrap_or_default();
   let show_debug = options.show_debug.unwrap_or(false);

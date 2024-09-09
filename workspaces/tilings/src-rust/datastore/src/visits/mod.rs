@@ -1,7 +1,7 @@
 use serde::Serialize;
 use sqlx::postgres::PgRow;
 use sqlx::{FromRow, Row};
-use tiling::Path;
+use tiling::notation::Path;
 
 mod get_by_path;
 mod get_facets;
@@ -30,11 +30,9 @@ impl<'r> FromRow<'r, PgRow> for Visit {
   fn from_row(row: &'r PgRow) -> Result<Self, sqlx::Error> {
     let path = Path::default()
       .from_string(row.try_get("path")?)
-      .map_err(|e| {
-        sqlx::Error::ColumnDecode {
-          index: "path".into(),
-          source: e.into(),
-        }
+      .map_err(|e| sqlx::Error::ColumnDecode {
+        index: "path".into(),
+        source: e.into(),
       })?;
 
     let valid_tilings = row

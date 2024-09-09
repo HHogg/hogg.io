@@ -1,19 +1,20 @@
 use anyhow::Result;
 use futures_util::future::try_join_all;
 use sqlx::{Pool, Postgres};
-use tiling::{Path, Shape, ValidTiling};
+use tiling::build;
+use tiling::notation::{Path, Shape};
 
 pub struct InsertRequest {
   pub path: Path,
   pub path_index: i32,
-  pub tilings: Vec<ValidTiling>,
+  pub results: Vec<build::Result>,
 }
 
 pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()> {
   let InsertRequest {
     path,
     path_index,
-    tilings,
+    results,
   } = request;
 
   let has_0 = path.has_shape(&Shape::Skip);
@@ -23,7 +24,7 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
   let has_8 = path.has_shape(&Shape::Octagon);
   let has_12 = path.has_shape(&Shape::Dodecagon);
 
-  let futures_insert_tilings = tilings.iter().cloned().map(|t| {
+  let futures_insert_results = results.iter().cloned().map(|t| {
     sqlx::query(
       "INSERT INTO tilings (
           notation,
@@ -33,10 +34,10 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
           has_6,
           has_8,
           has_12,
+          path_index,
+          transform_index,
           uniform,
-          p_index,
-          t_index,
-          d_key
+          hash
         ) VALUES (
             $1,
             $2,
@@ -56,10 +57,10 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
           has_6 = $5,
           has_8 = $6,
           has_12 = $7,
-          uniform = $8,
-          p_index = $9,
-          t_index = $10,
-          d_key = $11
+          path_index = $8,
+          transform_index = $9,
+          uniform = $10,
+          hash = $11
       ",
     )
     .bind(t.notation)
@@ -69,14 +70,14 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
     .bind(has_6)
     .bind(has_8)
     .bind(has_12)
-    .bind(t.uniform)
     .bind(path_index)
-    .bind(t.t_index)
-    .bind(t.d_key)
+    .bind(t.transform_index)
+    .bind(t.uniform)
+    .bind(t.hash)
     .execute(pool)
   });
 
-  if let Err(error) = try_join_all(futures_insert_tilings).await {
+  if let Err(error) = try_join_all(futures_insert_results).await {
     tracing::error!(%error, "writing tilings");
   }
 

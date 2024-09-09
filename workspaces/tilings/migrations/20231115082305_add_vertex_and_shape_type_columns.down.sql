@@ -1,1 +1,0 @@
-ALTER TABLE tilings ADD COLUMN vertex TEXT NOT NULL;

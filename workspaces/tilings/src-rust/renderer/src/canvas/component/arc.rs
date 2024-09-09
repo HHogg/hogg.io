@@ -47,7 +47,7 @@ impl Arc {
 
   fn draw_path(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     scale: &Scale,
     style: &Style,
   ) -> Result<(), Error> {
@@ -69,7 +69,7 @@ impl Arc {
 impl Draw for Arc {
   fn bbox(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
@@ -129,7 +129,7 @@ impl Draw for Arc {
 
   fn draw(
     &self,
-    context: &web_sys::CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,

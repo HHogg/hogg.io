@@ -3,6 +3,7 @@ import { sizeX6Px } from 'preshape';
 import { PropsWithChildren } from 'react';
 
 type Props = {
+  index: number;
   isVisible: boolean;
   text: string;
   x: number;
@@ -12,6 +13,7 @@ type Props = {
 };
 
 const GraphLabel = ({
+  index,
   isVisible,
   text,
   x,
@@ -31,6 +33,7 @@ const GraphLabel = ({
     <SvgLabel
       backgroundColor="text-shade-1"
       borderRadius={4}
+      id={`graph-label-${index}`}
       paddingHorizontal={6}
       paddingVertical={1}
       size="x2"

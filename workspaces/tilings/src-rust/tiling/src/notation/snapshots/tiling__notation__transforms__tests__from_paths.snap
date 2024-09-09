@@ -1,0 +1,36 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/notation/./transforms_tests.rs
+expression: "shapes.iter().map(|shape|\n{\n    (*shape,\n    Transforms::first(Path::from(*shape), &Plane::default(),\n    &Direction::FromStart).map(|transforms| transforms.to_string()),)\n}).collect::<Vec<(Shape, Result<String, TilingError>)>>()"
+---
+[
+    (
+        Triangle,
+        Ok(
+            "m30/m(c1)",
+        ),
+    ),
+    (
+        Square,
+        Ok(
+            "m45/m(c1)",
+        ),
+    ),
+    (
+        Hexagon,
+        Ok(
+            "m30/m(c1)",
+        ),
+    ),
+    (
+        Octagon,
+        Ok(
+            "m45/m(c1)",
+        ),
+    ),
+    (
+        Dodecagon,
+        Ok(
+            "m15/m(c1)",
+        ),
+    ),
+]

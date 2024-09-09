@@ -20,7 +20,6 @@ pub struct ShapeTypeStore {
 }
 
 impl ShapeTypeStore {
-  ///
   pub fn annotate_polygon(&mut self, polygon: &mut Polygon) {
     if let Some(node) = self.shape_types_by_point.get(&polygon.centroid) {
       if node.is_full() {

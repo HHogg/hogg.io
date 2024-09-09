@@ -1,0 +1,15 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/notation/./transform_tests.rs
+expression: "Transform::from_string(\"r(h1)\", &Shape::Triangle.into())"
+---
+Ok(
+    Eccentric(
+        TransformEccentric {
+            operation: Rotate,
+            origin_type: MidPoint,
+            origin_index: OriginIndex {
+                value: 0,
+            },
+        },
+    ),
+)

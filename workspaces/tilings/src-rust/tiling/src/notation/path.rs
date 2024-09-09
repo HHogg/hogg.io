@@ -12,7 +12,6 @@ use super::{Direction, Seed, Separator, Shape};
 use crate::utils::SiblingIterator;
 use crate::{Tiling, TilingError};
 
-///
 #[derive(Clone, Debug, Default, Eq, Hash, PartialEq, Deserialize, Serialize)]
 #[serde(into = "String", from = "String")]
 #[typeshare]
@@ -31,7 +30,6 @@ impl Path {
     self
   }
 
-  ///
   pub fn from_string(mut self, string: &str) -> Result<Self, TilingError> {
     if string.is_empty() {
       if self.option_type_ahead {
@@ -54,13 +52,11 @@ impl Path {
     Ok(self)
   }
 
-  ///
   fn parse_seed_shape_group(&mut self, group: &str) -> Result<(), TilingError> {
     self.nodes.push(Seed::from_str(group)?.into());
     Ok(())
   }
 
-  ///
   fn parse_shape_group(&mut self, group: &str) -> Result<(), TilingError> {
     let shapes: Vec<_> = group.split(',').collect();
 
@@ -71,12 +67,10 @@ impl Path {
         return Ok(());
       }
 
-      let shape = Shape::from_str(shape).map_err(|error| {
-        TilingError::InvalidShapeInGroup {
-          shape: shape.to_string(),
-          group: group.to_string(),
-          reason: error.to_string(),
-        }
+      let shape = Shape::from_str(shape).map_err(|error| TilingError::InvalidShapeInGroup {
+        shape: shape.to_string(),
+        group: group.to_string(),
+        reason: error.to_string(),
       })?;
 
       if shape_index > 0 {
@@ -116,12 +110,10 @@ impl Path {
   }
 
   pub fn get_seed(&self) -> Option<&Seed> {
-    self.nodes.first().and_then(|node| {
-      match node {
-        Node::Seed(seed) => Some(seed),
-        Node::Shape(_) => None,
-        Node::Separator(_) => None,
-      }
+    self.nodes.first().and_then(|node| match node {
+      Node::Seed(seed) => Some(seed),
+      Node::Shape(_) => None,
+      Node::Separator(_) => None,
     })
   }
 

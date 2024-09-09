@@ -1,5 +1,3 @@
-#![feature(absolute_path)]
-
 pub mod errors;
 pub mod insights;
 pub mod pool;

@@ -63,12 +63,10 @@ impl FromStr for Offset {
   fn from_str(value: &str) -> Result<Self, Self::Err> {
     match value {
       "c" => Ok(Self::Center),
-      _ => {
-        Err(TilingError::InvalidOffset {
-          offset: value.into(),
-          reason: "invalid".into(),
-        })
-      }
+      _ => Err(TilingError::InvalidOffset {
+        offset: value.into(),
+        reason: "invalid".into(),
+      }),
     }
   }
 }

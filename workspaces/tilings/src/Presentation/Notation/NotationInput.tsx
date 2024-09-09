@@ -1,5 +1,6 @@
+import { useWasmApi } from '@hogg/wasm';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
-import { Box, Button, Input, Tooltip } from 'preshape';
+import { Box, ButtonAsync, Input, Tooltip } from 'preshape';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from './useNotationContext';
 
@@ -7,6 +8,7 @@ export default function NotationInput() {
   const { notation, setNotation, previousNotation, nextNotation } =
     useNotationContext();
   const { tiling } = useArrangementContext();
+  const { errors, loading } = useWasmApi();
   const error = tiling?.error;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,9 +19,16 @@ export default function NotationInput() {
   return (
     <Box flex="horizontal" alignChildrenVertical="middle">
       <Box>
-        <Button padding="x1" variant="tertiary" onClick={previousNotation}>
+        <ButtonAsync
+          error={errors.findPreviousTiling}
+          isError={!!errors.findPreviousTiling}
+          isLoading={loading.findPreviousTiling ?? false}
+          padding="x1"
+          variant="tertiary"
+          onClick={previousNotation}
+        >
           <ChevronLeftIcon size="2rem" />
-        </Button>
+        </ButtonAsync>
       </Box>
 
       <Tooltip
@@ -48,9 +57,16 @@ export default function NotationInput() {
       </Tooltip>
 
       <Box>
-        <Button padding="x1" variant="tertiary" onClick={nextNotation}>
+        <ButtonAsync
+          error={errors.findNextTiling}
+          isError={!!errors.findNextTiling}
+          isLoading={loading.findNextTiling ?? false}
+          padding="x1"
+          variant="tertiary"
+          onClick={nextNotation}
+        >
           <ChevronRightIcon size="2rem" />
-        </Button>
+        </ButtonAsync>
       </Box>
     </Box>
   );

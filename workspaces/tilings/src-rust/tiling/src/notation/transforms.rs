@@ -40,7 +40,6 @@ impl Transforms {
 
   pub fn from_string(mut self, string: &str) -> Result<Self, TilingError> {
     string
-      .to_string()
       .split(Separator::Transform.to_string().as_str())
       .try_for_each(|s| self.push_string(s))?;
 

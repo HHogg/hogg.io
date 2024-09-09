@@ -209,7 +209,6 @@ impl Polygon {
     false
   }
 
-  ///
   pub fn reflect(self, line_segment: &LineSegment) -> Self {
     let mut points = vec![];
     points.reserve_exact(self.points.len());
@@ -221,7 +220,6 @@ impl Polygon {
     self.with_points(points)
   }
 
-  ///
   pub fn rotate(self, radians: f64, origin: Option<&Point>) -> Self {
     let mut points = vec![];
     points.reserve_exact(self.points.len());

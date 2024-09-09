@@ -72,7 +72,7 @@ impl Notation {
     self.transforms = if self.transforms.list.is_empty() {
       Transforms::default().with_path(self.path.clone())
     } else {
-      Transforms::first(path.clone(), &plane, direction)?
+      Transforms::first(path.clone(), plane, direction)?
     };
 
     Ok(())
@@ -90,7 +90,6 @@ impl Notation {
     self.transforms.list.get(index)
   }
 
-  ///
   pub fn from_string(&mut self, notation: String, plane: &Plane) -> Result<(), TilingError> {
     let mut sections = notation.split('/');
     let path_string = sections.next().unwrap();
@@ -112,7 +111,7 @@ impl Notation {
       .with_type_ahead(self.option_type_ahead)
       .from_string(path_string)?;
 
-    self.set_path(path.clone(), &plane, &Direction::FromStart)?;
+    self.set_path(path.clone(), plane, &Direction::FromStart)?;
 
     // Keep parsing transform sections, building up
     // a list of transforms, and then add them to the
@@ -139,10 +138,10 @@ impl Notation {
     if !self.transforms.list.is_empty() || self.option_with_first_transform {
       if self.path.is_empty() {
         let next_path = self.path.next_path();
-        self.set_path(next_path, &plane, &Direction::FromStart)?;
+        self.set_path(next_path, plane, &Direction::FromStart)?;
       }
 
-      if let Some(next_transforms) = self.transforms.next(&plane, &self.path)? {
+      if let Some(next_transforms) = self.transforms.next(plane, &self.path)? {
         self.set_transforms(next_transforms);
         return Ok(Some(()));
       }
@@ -153,7 +152,7 @@ impl Notation {
     }
 
     let next_path = self.path.next_path();
-    self.set_path(next_path, &plane, &Direction::FromStart)?;
+    self.set_path(next_path, plane, &Direction::FromStart)?;
 
     Ok(Some(()))
   }
@@ -166,7 +165,7 @@ impl Notation {
         });
       }
 
-      if let Some(previous_transforms) = self.transforms.previous(&plane, &self.path)? {
+      if let Some(previous_transforms) = self.transforms.previous(plane, &self.path)? {
         self.set_transforms(previous_transforms);
         return Ok(Some(()));
       }
@@ -177,7 +176,7 @@ impl Notation {
     }
 
     if let Some(previous_path) = self.path.previous_path() {
-      self.set_path(previous_path, &plane, &Direction::FromEnd)?;
+      self.set_path(previous_path, plane, &Direction::FromEnd)?;
       return Ok(Some(()));
     }
 

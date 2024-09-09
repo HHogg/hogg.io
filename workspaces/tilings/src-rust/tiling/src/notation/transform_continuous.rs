@@ -6,7 +6,6 @@ use typeshare::typeshare;
 use super::{Direction, Operation, Path, TransformValue};
 use crate::TilingError;
 
-///
 #[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]

@@ -22,7 +22,6 @@ pub struct VertexTypeStore {
 }
 
 impl VertexTypeStore {
-  ///
   pub fn add_polygon(&mut self, polygon: &mut Polygon) -> Result<(), TilingError> {
     for point in polygon.points.iter_mut() {
       let node = self

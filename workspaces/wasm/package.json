@@ -1,0 +1,23 @@
+{
+  "name": "@hogg/wasm",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "yarn clean && yarn build:wasm",
+    "build:wasm": "wasm-pack build --target web",
+    "clean": "rm -rf ./pkg",
+    "dev": "cargo watch -w ./src-rust -w ../circular-sequence/src-rust -w ../line-segment-extending/src-rust -w ../tilings/src-rust -q -s 'yarn workspace @hogg/wasm run build:wasm'"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11"
+  }
+}

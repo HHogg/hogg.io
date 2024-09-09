@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::Path;
+use tiling::notation::Path;
 
 use super::VisitResult;
 use crate::visitor::Visitor;

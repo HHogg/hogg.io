@@ -4,6 +4,7 @@ use tiling::notation::{Path, Transform};
 use tiling::{validation, Tiling};
 use tiling_renderer::{draw, Options};
 use wasm_bindgen::prelude::*;
+use web_sys::OffscreenCanvas;
 
 #[wasm_bindgen(start)]
 fn main() -> Result<(), JsError> {
@@ -65,11 +66,12 @@ pub fn find_next_tiling(notation: &str, validations: &JsValue) -> Result<Option<
 
 #[wasm_bindgen]
 pub fn render_notation(
-  canvas_id: &str,
+  canvas: JsValue,
   notation: &str,
   options: &JsValue,
   validations: &JsValue,
 ) -> Result<JsValue, JsError> {
+  let offscreen_canvas: OffscreenCanvas = canvas.dyn_into().unwrap();
   let options = serde_wasm_bindgen::from_value::<Options>(options.to_owned())?;
   let validations =
     serde_wasm_bindgen::from_value::<Vec<validation::Flag>>(validations.to_owned())?;
@@ -81,7 +83,7 @@ pub fn render_notation(
     .with_expansion_phases(options.expansion_phases.unwrap_or_default())
     .from_string(notation.to_string());
 
-  draw(&tiling, canvas_id, options)?;
+  draw(&tiling, offscreen_canvas, options)?;
 
   Ok(serde_wasm_bindgen::to_value(&tiling)?)
 }

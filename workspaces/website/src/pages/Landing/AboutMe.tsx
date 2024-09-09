@@ -24,7 +24,7 @@ export default function AboutMe() {
       </Text>
 
       <Text>
-        The last ~3 years I've been working at <Strong>Spotify</Strong>. The
+        The last +3 years I've been working at <Strong>Spotify</Strong>. The
         previous 7 years were spent working at <Strong>startups</Strong> in
         Brighton and London within various industries. Before that, for 2 years
         I was shipping jQuery and PHP over FTP (it still counts).

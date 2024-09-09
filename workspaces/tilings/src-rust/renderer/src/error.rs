@@ -1,4 +1,4 @@
-use colorgrad::CustomGradientError;
+use colorgrad::GradientBuilderError;
 use wasm_bindgen::JsValue;
 
 #[derive(Clone, Debug, thiserror::Error)]
@@ -17,8 +17,8 @@ impl From<JsValue> for Error {
   }
 }
 
-impl From<CustomGradientError> for Error {
-  fn from(error: CustomGradientError) -> Self {
+impl From<GradientBuilderError> for Error {
+  fn from(error: GradientBuilderError) -> Self {
     Self::ApplicationError {
       reason: error.to_string(),
     }

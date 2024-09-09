@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, Pool, Postgres};
-use tiling::Shape;
+use tiling::notation::Shape;
 use typeshare::typeshare;
 
 use crate::utils::{get_show_nodes_condition, Facet, FacetValue, ResponseMultiple};
@@ -91,19 +91,17 @@ pub async fn get_facets(
       key: "shape".to_string(),
       values: Shape::as_vec()
         .iter()
-        .map(|s| {
-          FacetValue {
-            name: s.get_name(),
-            disabled: match s.get_name().as_str() {
-              "Skip" => !filtered_facets.has_0,
-              "Triangle" => !filtered_facets.has_3,
-              "Square" => !filtered_facets.has_4,
-              "Hexagon" => !filtered_facets.has_6,
-              "Octagon" => !filtered_facets.has_8,
-              "Dodecagon" => !filtered_facets.has_12,
-              _ => false,
-            },
-          }
+        .map(|s| FacetValue {
+          name: s.get_name(),
+          disabled: match s.get_name().as_str() {
+            "Skip" => !filtered_facets.has_0,
+            "Triangle" => !filtered_facets.has_3,
+            "Square" => !filtered_facets.has_4,
+            "Hexagon" => !filtered_facets.has_6,
+            "Octagon" => !filtered_facets.has_8,
+            "Dodecagon" => !filtered_facets.has_12,
+            _ => false,
+          },
         })
         .collect(),
     }],

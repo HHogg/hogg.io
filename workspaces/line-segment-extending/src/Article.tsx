@@ -165,7 +165,8 @@ let y = |x: f64| m * x + b;
           Let's say we have 2 line segments. The first line segment is defined
           by the points <Code>(x1, y1)</Code> and <Code>(x2, y2)</Code>. The
           second line segment is defined by the points <Code>(x3, y3)</Code> and{' '}
-          <Code>(x4, y4)</Code> (<ArticleFigLink fig="line-intersection" />
+          <Code>(x4, y4)</Code> (
+          <ArticleFigLink fig="line-intersection" />
           ).
         </ArticleParagraph>
 

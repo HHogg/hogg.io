@@ -17,7 +17,7 @@ const Section = ({ children, title, ...rest }: BoxProps) => (
 export default function ArrangementInformation() {
   const { tiling } = useArrangementContext();
 
-  const validTiling = tiling?.buildContext.validTilings[0];
+  const validTiling = tiling?.buildContext.results[0];
   const vertexTypes =
     tiling?.plane.classifier.vertexTypeStore.vertexTypes ?? [];
   const edgeTypes = tiling?.plane.classifier.edgeTypeStore.edgeTypes ?? [];
@@ -31,8 +31,8 @@ export default function ArrangementInformation() {
             <CopyToClipboardCard text={validTiling.notation} size="x2" />
           </Section>
 
-          <Section title="UID">
-            <CopyToClipboardCard text={validTiling.uid} size="x2" />
+          <Section title="Hash">
+            <CopyToClipboardCard text={validTiling.hash} size="x2" />
           </Section>
         </>
       )}

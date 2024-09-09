@@ -5,7 +5,7 @@ const noop = () => {
   throw new Error('usePlayerContext was not initialized');
 };
 
-export const PlayerContext = createContext<UsePlayerResult>({
+const initialContext = {
   ...defaultOptions,
   elapsed: 0,
   backward: noop,
@@ -15,6 +15,11 @@ export const PlayerContext = createContext<UsePlayerResult>({
   setSpeed: noop,
   toStart: noop,
   toEnd: noop,
-});
+};
 
-export const usePlayerContext = () => useContext(PlayerContext);
+export const PlayerContext = createContext<UsePlayerResult>(initialContext);
+
+export const usePlayerContext = (enabled = true): UsePlayerResult => {
+  const context = useContext(PlayerContext);
+  return enabled ? context : initialContext;
+};

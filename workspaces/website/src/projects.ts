@@ -2,6 +2,7 @@ import * as CircleArt from '@hogg/circle-art';
 import * as CircleIntersections from '@hogg/circle-intersections';
 import * as CircularSequence from '@hogg/circular-sequence';
 import { Project, ProjectKey, ProjectPageProps } from '@hogg/common';
+import * as Evolution from '@hogg/evolution';
 import * as LineSegmentExtending from '@hogg/line-segment-extending';
 import * as Preshape from '@hogg/preshape';
 import * as Snake from '@hogg/snake';
@@ -43,6 +44,10 @@ export const projects: {
   {
     meta: LineSegmentExtending.meta,
     Component: LineSegmentExtending.Project,
+  },
+  {
+    meta: Evolution.meta,
+    Component: Evolution.Project,
   },
   // Next: Performance benchmark difference between atan2 and hypot.
 ];

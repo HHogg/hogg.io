@@ -1,10 +1,10 @@
 import groupBy from 'lodash/groupBy';
 import uniqueTilings from '../../../results/output.json';
+import { Result } from '../../types';
 
 export type ImageModule = { default: string };
-export type TilingResult = (typeof uniqueTilings)[number];
 
-export const results = uniqueTilings;
+export const results = uniqueTilings as Result[];
 
 export const getRandomNotation = (previous: string): string => {
   const randomResult = results[Math.floor(Math.random() * results.length)];
@@ -14,11 +14,11 @@ export const getRandomNotation = (previous: string): string => {
 };
 
 export const groupResultsByUniform = (
-  results: TilingResult[]
-): Record<string, TilingResult[]> => groupBy(results, 'uniform');
+  results: Result[]
+): Record<string, Result[]> => groupBy(results, 'uniform');
 
-const indexResultsBy = (key: keyof Pick<TilingResult, 'notation'>) =>
-  results.reduce<Record<string, TilingResult>>((acc, tiling) => {
+const indexResultsBy = (key: keyof Pick<Result, 'notation'>) =>
+  results.reduce<Record<string, Result>>((acc, tiling) => {
     acc[tiling[key]] = tiling;
     return acc;
   }, {});

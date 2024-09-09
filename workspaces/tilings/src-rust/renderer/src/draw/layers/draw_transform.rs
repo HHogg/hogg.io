@@ -28,16 +28,14 @@ pub fn draw_transform(
         operation,
         origin_index,
         origin_type,
-      }) => {
-        draw_transform_eccentric(
-          canvas,
-          options,
-          tiling,
-          operation,
-          origin_type,
-          origin_index,
-        )?
-      }
+      }) => draw_transform_eccentric(
+        canvas,
+        options,
+        tiling,
+        operation,
+        origin_type,
+        origin_index,
+      )?,
     }
   }
 

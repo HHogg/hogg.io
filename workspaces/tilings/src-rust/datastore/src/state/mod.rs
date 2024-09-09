@@ -1,4 +1,4 @@
-use tiling::Path;
+use tiling::notation::Path;
 
 mod get;
 mod set;

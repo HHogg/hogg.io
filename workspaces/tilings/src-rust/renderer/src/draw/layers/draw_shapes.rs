@@ -1,5 +1,5 @@
 use anyhow::Result;
-use colorgrad::{CustomGradient, CustomGradientError, Gradient};
+use colorgrad::{Gradient, GradientBuilder, GradientBuilderError};
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 use tiling::{Tiling, TilingError};
@@ -19,25 +19,25 @@ pub fn create_custom_gradient(
   domain_min: usize,
   domain_max: usize,
   colors: [&str; 2],
-) -> Result<Gradient, CustomGradientError> {
-  CustomGradient::new()
+) -> Result<colorgrad::LinearGradient, GradientBuilderError> {
+  GradientBuilder::new()
     .html_colors(&colors)
-    .domain(&[domain_min as f64, domain_max as f64])
+    .domain(&[domain_min as f32, domain_max as f32])
     .mode(colorgrad::BlendMode::Rgb)
-    .build()
+    .build::<colorgrad::LinearGradient>()
 }
 
 pub fn create_invalid_mode_gradient(
   domain_min: usize,
   domain_max: usize,
-) -> Result<Gradient, CustomGradientError> {
+) -> Result<colorgrad::LinearGradient, GradientBuilderError> {
   create_custom_gradient(domain_min, domain_max, ["#e64980", "#a61e4d"])
 }
 
 pub fn create_valid_mode_gradient(
   domain_min: usize,
   domain_max: usize,
-) -> Result<Gradient, CustomGradientError> {
+) -> Result<colorgrad::LinearGradient, GradientBuilderError> {
   create_custom_gradient(domain_min, domain_max, ["#12b886", "#087f5b"])
 }
 
@@ -46,7 +46,7 @@ pub fn draw_shapes(
   options: &Options,
   tiling: &Tiling,
 ) -> Result<(), Error> {
-  let path_shape_count = tiling.notation.path.get_shape_count() as f64;
+  let path_shape_count = tiling.notation.path.get_shape_count() as f32;
   let color_mode = options.color_mode.clone().unwrap_or_default();
   let shape_style = options.styles.shape.clone().unwrap_or_default();
 
@@ -57,31 +57,27 @@ pub fn draw_shapes(
   let gradient = {
     match color_mode {
       ColorMode::None => None,
-      ColorMode::BlackAndWhite => {
-        Some(
-          CustomGradient::new()
-            .html_colors(&["#000000", "#ffffff"])
-            .domain(&[0.0, path_shape_count])
-            .mode(colorgrad::BlendMode::Rgb)
-            .build()?,
-        )
-      }
-      ColorMode::VaporWave => {
-        Some(
-          CustomGradient::new()
-            .html_colors(&VAPOR_WAVE_COLOR_PALETTE)
-            .domain(&[0.0, path_shape_count])
-            .mode(colorgrad::BlendMode::Rgb)
-            .build()?,
-        )
-      }
+      ColorMode::BlackAndWhite => Some(
+        GradientBuilder::new()
+          .html_colors(&["#000000", "#ffffff"])
+          .domain(&[0.0, path_shape_count])
+          .mode(colorgrad::BlendMode::Rgb)
+          .build()?,
+      ),
+      ColorMode::VaporWave => Some(
+        GradientBuilder::new()
+          .html_colors(&VAPOR_WAVE_COLOR_PALETTE)
+          .domain(&[0.0, path_shape_count])
+          .mode(colorgrad::BlendMode::Rgb)
+          .build()?,
+      ),
       ColorMode::VaporWaveRandom => {
         let mut colors = VAPOR_WAVE_COLOR_PALETTE.to_vec();
 
         colors.shuffle(&mut thread_rng());
 
         Some(
-          CustomGradient::new()
+          GradientBuilder::new()
             .html_colors(&colors)
             .domain(&[0.0, path_shape_count])
             .mode(colorgrad::BlendMode::Rgb)
@@ -123,17 +119,15 @@ pub fn draw_shapes(
           .set_stroke_width(&canvas.scale, None)
           .set_fill(match (&gradient, shape.shape_type) {
             (Some(gradient), Some(shape_type)) => {
-              Some(gradient.at(shape_type as f64).to_hex_string())
+              Some(gradient.at(shape_type as f32).to_hex_string())
             }
             _ => shape_style.get_fill(),
           })
-          .set_opacity(
-            if options.fade_unmatched_shape_types.unwrap_or_default() {
-              shape.shape_type.map(|_| 1.0).or(Some(0.2))
-            } else {
-              None
-            },
-          ),
+          .set_opacity(if options.fade_unmatched_shape_types.unwrap_or_default() {
+            shape.shape_type.map(|_| 1.0).or(Some(0.2))
+          } else {
+            None
+          }),
       }
       .into(),
     )?;

@@ -10,11 +10,7 @@ use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use crate::utils::math::{
-  compare_coordinate,
-  compare_radians,
-  coordinate_equals,
-  normalize_radian,
-  round_coordinate,
+  compare_coordinate, compare_radians, coordinate_equals, normalize_radian, round_coordinate,
 };
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]

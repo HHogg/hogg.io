@@ -128,6 +128,7 @@ const GraphRenderer = (props: MotionsProps) => {
             <g>
               {[...nodes, ...edges].map((node) => (
                 <GraphLabel
+                  index={node.index}
                   isVisible={node.state.isVisible}
                   key={node.index}
                   text={node.index.toString()}

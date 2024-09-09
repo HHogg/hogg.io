@@ -55,12 +55,10 @@ impl std::str::FromStr for OriginType {
       "c" => Ok(Self::CenterPoint),
       "h" => Ok(Self::MidPoint),
       "v" => Ok(Self::EndPoint),
-      _ => {
-        Err(TilingError::InvalidOriginType {
-          origin_type: value.to_string(),
-          reason: "failed to parse".into(),
-        })
-      }
+      _ => Err(TilingError::InvalidOriginType {
+        origin_type: value.to_string(),
+        reason: "failed to parse".into(),
+      }),
     }
   }
 }

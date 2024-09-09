@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::{Tiling, ValidationFlag};
+use tiling::{validation, Tiling};
 
 use super::{Visit, VisitResult};
 
@@ -18,7 +18,7 @@ impl Handler<Visit> for Worker {
     let Visit { sender, path } = message;
 
     let mut tiling = Tiling::default()
-      .with_validations(Some(ValidationFlag::all()))
+      .with_validations(Some(validation::Flag::all()))
       .with_expansion_phases(3)
       .with_path(path.clone())
       .with_first_transform();

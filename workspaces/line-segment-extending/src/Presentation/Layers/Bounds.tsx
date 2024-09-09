@@ -113,7 +113,7 @@ export default function Bounds() {
   );
 
   const isLineIntersecting = (line: BoundingLine): boolean => {
-    if (line.y1 === line.y2) {
+    if (line.y1 === line.y2 && extendedLineSegmentToBounds) {
       return (
         extendedLineSegmentToBounds[1] === line.y1 ||
         extendedLineSegmentToBounds[3] === line.y1 ||
@@ -122,7 +122,7 @@ export default function Bounds() {
       );
     }
 
-    if (line.x1 === line.x2) {
+    if (line.x1 === line.x2 && extendedLineSegmentToBounds) {
       return (
         extendedLineSegmentToBounds[0] === line.x1 ||
         extendedLineSegmentToBounds[2] === line.x1 ||

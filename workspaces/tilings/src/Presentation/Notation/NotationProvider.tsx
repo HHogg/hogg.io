@@ -1,5 +1,5 @@
+import { useWasmApi } from '@hogg/wasm';
 import { PropsWithChildren, useCallback, useRef, useState } from 'react';
-import useWasmApi from '../WasmApi/useWasmApi';
 import { NotationContext } from './useNotationContext';
 
 export type NotationProviderProps = {
@@ -14,7 +14,7 @@ export default function NotationProvider({
   isValid,
   onChange,
 }: PropsWithChildren<NotationProviderProps>) {
-  const { findNextTiling, findPreviousTiling } = useWasmApi();
+  const { api } = useWasmApi();
   const [notation, setNotation] = useState(initialNotation);
   const notationRef = useRef<string>(initialNotation);
 
@@ -27,21 +27,23 @@ export default function NotationProvider({
     [onChange]
   );
 
-  const handlePreviousNotation = useCallback(() => {
-    const previousNotation = findPreviousTiling(notationRef.current);
+  const handlePreviousNotation = useCallback(async () => {
+    const previousNotation = await api.findPreviousTiling([
+      notationRef.current,
+    ]);
 
     if (previousNotation) {
       handleSetNotation(previousNotation);
     }
-  }, [findPreviousTiling, handleSetNotation]);
+  }, [api, handleSetNotation]);
 
-  const handleNextNotation = useCallback(() => {
-    const nextNotation = findNextTiling(notationRef.current);
+  const handleNextNotation = useCallback(async () => {
+    const nextNotation = await api.findNextTiling([notationRef.current]);
 
     if (nextNotation) {
       handleSetNotation(nextNotation);
     }
-  }, [findNextTiling, handleSetNotation]);
+  }, [api, handleSetNotation]);
 
   const value = {
     notation,

@@ -2,6 +2,7 @@ import { type Project, ProjectKey } from '@hogg/common';
 import image from './image.webp';
 
 export { default as Project } from './Project';
+export * from './types';
 
 export const meta: Project = {
   id: ProjectKey.circular_sequence,

@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::{Path, ValidTiling};
+use tiling::notation::Path;
 use tiling_datastore::tilings::{self, InsertRequest};
 
 use crate::datastore::tilings::Store;
@@ -8,7 +8,7 @@ use crate::datastore::tilings::Store;
 pub struct Insert {
   pub path: Path,
   pub path_index: i32,
-  pub tilings: Vec<ValidTiling>,
+  pub results: Vec<tiling::build::Result>,
 }
 
 impl Message for Insert {
@@ -22,7 +22,7 @@ impl Handler<Insert> for Store {
     let Insert {
       path,
       path_index,
-      tilings,
+      results,
     } = message;
 
     let pool = self.pool.clone();
@@ -33,7 +33,7 @@ impl Handler<Insert> for Store {
         InsertRequest {
           path,
           path_index,
-          tilings,
+          results,
         },
       )
       .await

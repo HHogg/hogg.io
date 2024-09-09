@@ -1,3 +1,4 @@
+import { useWasmApi } from '@hogg/wasm';
 import { useResizeObserver } from 'preshape';
 import {
   PropsWithChildren,
@@ -7,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
-import useWasmApi, { type X1Y1X2Y2 } from './WasmApi/useWasmApi';
+import { X1Y1X2Y2 } from '../types';
 import {
   BoundFlag,
   LineSegmentContext,
@@ -23,7 +24,9 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
     refDimensionContainer,
   ] = useResizeObserver<HTMLDivElement>();
 
-  const { getExtendedLineSegment } = useWasmApi();
+  const {
+    api: { getExtendedLineSegment },
+  } = useWasmApi();
   const [bounds, setBounds] = useState<LineSegmentContextValue['bounds']>([
     0, 0, 0, 0,
   ]);
@@ -41,6 +44,11 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
     () => [x1, y1, x2, y2],
     [x1, x2, y1, y2]
   );
+
+  const [extendedLineSegmentToContainer, setExtendedLineSegmentToContainer] =
+    useState<X1Y1X2Y2 | null>(null);
+  const [extendedLineSegmentToBounds, setExtendedLineSegmentToBounds] =
+    useState<X1Y1X2Y2 | null>(null);
 
   // Clamps the points to the bounds of the container
   const handleSetPoints1 = useCallback(
@@ -61,29 +69,6 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
       ]);
     },
     [bounds]
-  );
-
-  const extendedLineSegmentToContainer = useMemo(
-    () =>
-      getExtendedLineSegment(
-        lineSegment,
-        [0, 0, containerWidth, containerHeight],
-        extendStart,
-        extendEnd
-      ),
-    [
-      extendEnd,
-      extendStart,
-      getExtendedLineSegment,
-      containerWidth,
-      containerHeight,
-      lineSegment,
-    ]
-  );
-
-  const extendedLineSegmentToBounds = useMemo(
-    () => getExtendedLineSegment(lineSegment, bounds, extendStart, extendEnd),
-    [extendEnd, extendStart, getExtendedLineSegment, bounds, lineSegment]
   );
 
   useEffect(() => {
@@ -110,6 +95,28 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
       BoundFlag.BOTTOM,
     ]);
   }, [containerHeight, containerWidth]);
+
+  useEffect(() => {
+    getExtendedLineSegment([
+      lineSegment,
+      [0, 0, containerWidth, containerHeight],
+      extendStart,
+      extendEnd,
+    ]).then(setExtendedLineSegmentToContainer);
+  }, [
+    containerHeight,
+    containerWidth,
+    extendEnd,
+    extendStart,
+    getExtendedLineSegment,
+    lineSegment,
+  ]);
+
+  useEffect(() => {
+    getExtendedLineSegment([lineSegment, bounds, extendStart, extendEnd]).then(
+      setExtendedLineSegmentToBounds
+    );
+  }, [bounds, extendEnd, extendStart, getExtendedLineSegment, lineSegment]);
 
   const value = {
     animate,

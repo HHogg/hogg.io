@@ -1,4 +1,5 @@
 import { MediaContextProvider, getProjectRoutePath } from '@hogg/common';
+import { WasmApiProvider } from '@hogg/wasm';
 import { ThemeProvider } from 'preshape';
 import { Suspense } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
@@ -20,37 +21,39 @@ export default function App({ helmetContext = {} }: Props) {
     <HelmetProvider context={helmetContext}>
       <ThemeProvider theme="night" disableSystemTheme>
         <MediaContextProvider>
-          <Suspense fallback={null}>
-            <Routes>
-              <Route path="/">
-                <Route index element={<Landing />} />
+          <WasmApiProvider>
+            <Suspense fallback={null}>
+              <Routes>
+                <Route path="/">
+                  <Route index element={<Landing />} />
 
-                {projects
-                  .filter(
-                    ({ Component, meta }) =>
-                      Component && shouldShowProject(meta)
-                  )
-                  .map(({ Component, meta }) => (
-                    <Route
-                      key={meta.id}
-                      path={getProjectRoutePath(meta)}
-                      element={
-                        <ProjectPage Component={Component!} meta={meta} />
-                      }
-                    />
-                  ))}
-              </Route>
+                  {projects
+                    .filter(
+                      ({ Component, meta }) =>
+                        Component && shouldShowProject(meta)
+                    )
+                    .map(({ Component, meta }) => (
+                      <Route
+                        key={meta.id}
+                        path={getProjectRoutePath(meta)}
+                        element={
+                          <ProjectPage Component={Component!} meta={meta} />
+                        }
+                      />
+                    ))}
+                </Route>
 
-              {process.env.NODE_ENV === 'development' && (
-                <Route
-                  path="_tiling_generation"
-                  element={<TilingGenerationPage />}
-                />
-              )}
+                {process.env.NODE_ENV === 'development' && (
+                  <Route
+                    path="_tiling_generation"
+                    element={<TilingGenerationPage />}
+                  />
+                )}
 
-              <Route path="*" element={<Page404 />} />
-            </Routes>
-          </Suspense>
+                <Route path="*" element={<Page404 />} />
+              </Routes>
+            </Suspense>
+          </WasmApiProvider>
         </MediaContextProvider>
       </ThemeProvider>
     </HelmetProvider>

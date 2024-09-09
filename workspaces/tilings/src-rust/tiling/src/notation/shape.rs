@@ -132,12 +132,10 @@ impl FromStr for Shape {
       "Octagon" => Ok(Self::Octagon),
       "Dodecagon" => Ok(Self::Dodecagon),
       "Skip" => Ok(Self::Skip),
-      _ => {
-        Err(TilingError::InvalidShape {
-          shape: value.into(),
-          reason: "invalid".into(),
-        })
-      }
+      _ => Err(TilingError::InvalidShape {
+        shape: value.into(),
+        reason: "invalid".into(),
+      }),
     }
   }
 }

@@ -201,7 +201,7 @@ export interface ApplicationError {
 
 export interface Result {
 	notation: string;
-	uid: string;
+	hash: string;
 	transformIndex: number;
 	uniform: number;
 	timestamp: string;
@@ -210,7 +210,7 @@ export interface Result {
 export interface Context {
 	applicationErrors: ApplicationError[];
 	countTotalTilings: number;
-	validTilings: Result[];
+	results: Result[];
 }
 
 export interface Point {
@@ -290,7 +290,6 @@ export interface OriginIndex {
 	value: number;
 }
 
-/**  */
 export interface Path {
 	option_type_ahead: boolean;
 	nodes: Node[];
@@ -313,7 +312,6 @@ export interface TransformValue {
 	value: number;
 }
 
-/**  */
 export interface TransformContinuous {
 	operation: Operation;
 	value: TransformValue;
@@ -341,7 +339,6 @@ export interface Transforms {
 	list: Transform[];
 }
 
-/**  */
 export interface Tiling {
 	optionExpansionPhases: number;
 	optionLinkPaths: boolean;

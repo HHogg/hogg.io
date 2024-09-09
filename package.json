@@ -11,7 +11,9 @@
   ],
   "scripts": {
     "build": "yarn workspaces foreach -ptvR --from @hogg/website run build",
-    "clean": "yarn workspaces foreach -ptvR --from @hogg/website run clean",
+    "clean": "yarn clean:root && yarn clean:workspaces",
+    "clean:root": "rm -rf .firebase target yarn-error.log",
+    "clean:workspaces": "yarn workspaces foreach -ptvR --from @hogg/website run clean",
     "deploy": "firebase deploy",
     "dev": "yarn workspaces foreach -pviR --from @hogg/website -j unlimited run dev",
     "format": "prettier --write .",
@@ -23,7 +25,9 @@
     "lint:rust:fmt": "cargo fmt --all -- --check",
     "preview": "yarn workspace @hogg/website preview",
     "test": "yarn test:rust",
+    "test:ci": "yarn test:rust:ci",
     "test:rust": "cargo watch -x 'test -- --test-threads=1'",
+    "test:rust:ci": "cargo test -- --test-threads=1",
     "test:rust:clean": "cargo insta test --unreferenced=delete",
     "test:rust:review": "cargo insta review --include-ignored",
     "ts:check": "tsc --noEmit --skipLibCheck"
@@ -50,6 +54,6 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "preshape": "^18.1.3"
+    "preshape": "^19.1.0"
   }
 }

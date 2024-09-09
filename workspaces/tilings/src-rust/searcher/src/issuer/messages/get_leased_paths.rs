@@ -1,5 +1,5 @@
 use actix::prelude::*;
-use tiling::Path;
+use tiling::notation::Path;
 
 use crate::issuer::Issuer;
 

@@ -5,18 +5,16 @@
   "private": true,
   "type": "module",
   "main": "./src/index.ts",
-  "scripts": {
-    "build": "yarn clean && yarn build:wasm",
-    "build:wasm": "wasm-pack build --target web",
-    "clean": "rm -rf ./pkg",
-    "dev": "cargo watch -w ./src-rust -q -s 'yarn workspace @hogg/circular-sequence run build:wasm'"
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts"
   },
   "dependencies": {
     "@hogg/common": "workspace:^",
-    "lucide-react": "^0.294.0",
-    "preshape": "^18.1.3",
+    "lucide-react": "0.439.0",
+    "preshape": "^19.1.0",
     "react": "^18.2.0",
-    "uuid": "^9.0.1"
+    "uuid": "10.0.0"
   },
   "devDependencies": {
     "@svgr/cli": "^8.1.0",

@@ -25,5 +25,5 @@ tracing-subscriber.workspace = true
 typeshare.workspace = true
 
 local-ip-address = "0.6.1"
-sysinfo = "0.30.11"
+sysinfo = "0.31.4"
 tiling = { path = "../tiling" }

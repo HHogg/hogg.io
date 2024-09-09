@@ -27,28 +27,32 @@ export default function ExtendedLineSegment() {
 
   return (
     <Box textColor="negative-shade-4" tag="g">
-      <Line
-        id="extended-line-segment-to-container"
-        x1={extendedLineSegmentToContainer[0]}
-        y1={extendedLineSegmentToContainer[1]}
-        x2={extendedLineSegmentToContainer[2]}
-        y2={extendedLineSegmentToContainer[3]}
-        strokeWidth={1}
-        strokeDasharray="4 4"
-        opacity={0.5}
-      />
+      {extendedLineSegmentToContainer && (
+        <Line
+          id="extended-line-segment-to-container"
+          x1={extendedLineSegmentToContainer[0]}
+          y1={extendedLineSegmentToContainer[1]}
+          x2={extendedLineSegmentToContainer[2]}
+          y2={extendedLineSegmentToContainer[3]}
+          strokeWidth={1}
+          strokeDasharray="4 4"
+          opacity={0.5}
+        />
+      )}
 
-      <Line
-        id="extended-line-segment-to-bounds"
-        x1={extendedLineSegmentToBounds[0]}
-        y1={extendedLineSegmentToBounds[1]}
-        x2={extendedLineSegmentToBounds[2]}
-        y2={extendedLineSegmentToBounds[3]}
-        strokeWidth={1}
-        style={{ filter: `drop-shadow(0 0 5px ${colorNegativeShade5})` }}
-      />
+      {extendedLineSegmentToBounds && (
+        <Line
+          id="extended-line-segment-to-bounds"
+          x1={extendedLineSegmentToBounds[0]}
+          y1={extendedLineSegmentToBounds[1]}
+          x2={extendedLineSegmentToBounds[2]}
+          y2={extendedLineSegmentToBounds[3]}
+          strokeWidth={1}
+          style={{ filter: `drop-shadow(0 0 5px ${colorNegativeShade5})` }}
+        />
+      )}
 
-      {extendStart && (
+      {extendStart && extendedLineSegmentToBounds && (
         <Circle
           id="extended-line-segment-start"
           type="solid"
@@ -62,7 +66,7 @@ export default function ExtendedLineSegment() {
         />
       )}
 
-      {extendEnd && (
+      {extendEnd && extendedLineSegmentToBounds && (
         <Circle
           id="extended-line-segment-end"
           type="solid"
@@ -76,7 +80,7 @@ export default function ExtendedLineSegment() {
         />
       )}
 
-      {extendStart && (
+      {extendStart && extendedLineSegmentToBounds && (
         <SvgLabel
           id="extended-line-segment-start-label"
           isVisible
@@ -94,7 +98,7 @@ export default function ExtendedLineSegment() {
         />
       )}
 
-      {extendEnd && (
+      {extendEnd && extendedLineSegmentToBounds && (
         <SvgLabel
           id="extended-line-segment-end-label"
           isVisible

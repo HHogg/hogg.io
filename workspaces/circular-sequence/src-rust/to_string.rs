@@ -4,7 +4,7 @@ use crate::{sort, super_script, Sequence};
 #[cfg(test)]
 mod tests;
 
-/// Converts a sequence to a string.
+/// Converts sequences to a string.
 pub fn to_string(sequences: Vec<Sequence>) -> String {
   flatten_duplicates(
     sort(sequences).iter().copied().map(to_string_one).collect(),
@@ -13,7 +13,7 @@ pub fn to_string(sequences: Vec<Sequence>) -> String {
   .join("; ")
 }
 
-///
+/// Converts a sequence to a string.
 pub fn to_string_one(sequence: Sequence) -> String {
   flatten_duplicates(
     sequence
@@ -25,7 +25,7 @@ pub fn to_string_one(sequence: Sequence) -> String {
   .join(".")
 }
 
-///
+/// Flattens duplicates in a sequence.
 fn flatten_duplicates(content: Vec<String>, wrapper: Option<(&str, &str)>) -> Vec<String> {
   let (prefix, suffix) = wrapper.unwrap_or(("", ""));
   let mut flattened_content: Vec<String> = Vec::new();

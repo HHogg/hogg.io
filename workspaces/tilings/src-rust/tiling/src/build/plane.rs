@@ -8,18 +8,8 @@ use super::phase::Phase;
 use crate::classification::Classifier;
 use crate::geometry::{BBox, LineSegment, Point, Polygon};
 use crate::notation::{
-  Node,
-  Notation,
-  Operation,
-  OriginIndex,
-  OriginType,
-  Path,
-  Separator,
-  Shape,
-  Transform,
-  TransformContinuous,
-  TransformEccentric,
-  TransformValue,
+  Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
+  TransformContinuous, TransformEccentric, TransformValue,
 };
 use crate::validation::{self, Validator};
 use crate::TilingError;
@@ -132,7 +122,6 @@ impl Plane {
     Ok(())
   }
 
-  ///
   pub fn apply_path(&mut self, path: &Path) -> Result<(), TilingError> {
     // Keep track of the number of line segments that need to be
     // skipped as we go around placing shapes.
@@ -205,7 +194,6 @@ impl Plane {
     Ok(())
   }
 
-  ///
   fn next_stage(&mut self) {
     if self.stage_added_polygon {
       self.stages += 1;
@@ -271,7 +259,6 @@ impl Plane {
     }
   }
 
-  ///
   pub fn get_reflection_line(
     &self,
     origin_index: &OriginIndex,
@@ -279,25 +266,23 @@ impl Plane {
   ) -> Option<LineSegment> {
     self
       .get_point_by_index_and_type(origin_type, origin_index)
-      .and_then(|origin| {
-        match origin_type {
-          OriginType::MidPoint => self.line_segments_by_mid_point.get(origin).copied(),
-          _ => {
-            if origin.eq(&Point::default()) {
-              return Some(
-                LineSegment::default()
-                  .with_start(Point::default().with_xy(-1.0, 0.0))
-                  .with_end(Point::default().with_xy(1.0, 0.0)),
-              );
-            }
-
-            Some(
+      .and_then(|origin| match origin_type {
+        OriginType::MidPoint => self.line_segments_by_mid_point.get(origin).copied(),
+        _ => {
+          if origin.eq(&Point::default()) {
+            return Some(
               LineSegment::default()
-                .with_start(Point::default())
-                .with_end(origin.multiply(2.0))
-                .rotate(PI * 0.5, None),
-            )
+                .with_start(Point::default().with_xy(-1.0, 0.0))
+                .with_end(Point::default().with_xy(1.0, 0.0)),
+            );
           }
+
+          Some(
+            LineSegment::default()
+              .with_start(Point::default())
+              .with_end(origin.multiply(2.0))
+              .rotate(PI * 0.5, None),
+          )
         }
       })
   }

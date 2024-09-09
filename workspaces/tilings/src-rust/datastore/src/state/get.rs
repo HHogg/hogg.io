@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use anyhow::Result;
 use sqlx::PgPool;
-use tiling::Path;
+use tiling::notation::Path;
 
 use super::State;
 
@@ -19,17 +19,13 @@ pub async fn get(pool: &PgPool) -> Result<State> {
       .await?;
 
   match (current_path, current_path_index) {
-    (Some(path), Some(path_index)) => {
-      Ok(State {
-        path,
-        path_index: path_index.parse()?,
-      })
-    }
-    _ => {
-      Ok(State {
-        path: Path::default(),
-        path_index: 0,
-      })
-    }
+    (Some(path), Some(path_index)) => Ok(State {
+      path,
+      path_index: path_index.parse()?,
+    }),
+    _ => Ok(State {
+      path: Path::default(),
+      path_index: 0,
+    }),
   }
 }

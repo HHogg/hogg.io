@@ -2,7 +2,6 @@ use tracing::Level;
 use tracing_appender::non_blocking::WorkerGuard;
 use tracing_subscriber::fmt::format;
 
-///
 pub fn setup(max_level: Level, log_to_file: bool) -> Option<WorkerGuard> {
   let event_format = format()
     .with_ansi(false)

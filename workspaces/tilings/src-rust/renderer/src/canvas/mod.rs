@@ -9,10 +9,9 @@ use std::hash::Hash;
 use anyhow::Result;
 use tiling::geometry::BBox;
 use wasm_bindgen::JsCast;
-use web_sys::CanvasRenderingContext2d;
 
 use self::collision::Theia;
-pub use self::component::{Arc, Arrow, Chevron, LineSegment, LineSegmentArrows, Point, Polygon};
+pub use self::component::{Arc, LineSegment, LineSegmentArrows, Point, Polygon};
 use self::component::{Component, Draw, Rect};
 pub use self::scale::{Scale, ScaleMode};
 pub use self::style::Style;
@@ -21,7 +20,7 @@ use crate::Error;
 pub struct Canvas<TLayer> {
   pub scale: Scale,
 
-  context: CanvasRenderingContext2d,
+  context: web_sys::OffscreenCanvasRenderingContext2d,
   content_bbox: BBox,
 
   show_debug_layer: bool,
@@ -35,21 +34,34 @@ impl<TLayer> Canvas<TLayer>
 where
   TLayer: Eq + Hash + Ord,
 {
-  pub fn new(canvas_id: &str, scale: Scale) -> Result<Self, Error> {
-    let window = web_sys::window().unwrap();
-    let document = window.document().unwrap();
-    let canvas = document.get_element_by_id(canvas_id).unwrap();
-    let canvas: web_sys::HtmlCanvasElement = canvas
-      .dyn_into::<web_sys::HtmlCanvasElement>()
-      .map_err(|_| ())
-      .unwrap();
+  pub fn new(canvas: web_sys::OffscreenCanvas, scale: Scale) -> Result<Self, Error> {
+    let context = canvas.get_context("2d");
 
-    let context = canvas
-      .get_context("2d")
+    if context.is_err() {
+      return Err(Error::ApplicationError {
+        reason: "Failed to get 2d context (error)".into(),
+      });
+    }
+
+    let context = context.unwrap();
+
+    if context.is_none() {
+      return Err(Error::ApplicationError {
+        reason: "Failed to get 2d context (empty)".into(),
+      });
+    }
+
+    let context = context
       .unwrap()
-      .unwrap()
-      .dyn_into::<web_sys::CanvasRenderingContext2d>()
-      .unwrap();
+      .dyn_into::<web_sys::OffscreenCanvasRenderingContext2d>();
+
+    if context.is_err() {
+      return Err(Error::ApplicationError {
+        reason: "Failed to get 2d context (dyn_into error)".into(),
+      });
+    }
+
+    let context = context.unwrap();
 
     let width = canvas.width() as f64;
     let height = canvas.height() as f64;

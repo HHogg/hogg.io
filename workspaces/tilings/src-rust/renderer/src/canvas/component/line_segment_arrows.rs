@@ -1,5 +1,4 @@
 use tiling::geometry::{BBox, LineSegment, LineSegmentOrigin};
-use web_sys::CanvasRenderingContext2d;
 
 use super::{Arrow, Component, Draw, Style};
 use crate::canvas::collision::Theia;
@@ -83,7 +82,7 @@ impl Draw for LineSegmentArrows {
 
   fn bbox(
     &self,
-    context: &CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
@@ -105,7 +104,7 @@ impl Draw for LineSegmentArrows {
 
   fn draw_bbox(
     &self,
-    context: &CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
@@ -120,7 +119,7 @@ impl Draw for LineSegmentArrows {
 
   fn draw(
     &self,
-    context: &CanvasRenderingContext2d,
+    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,

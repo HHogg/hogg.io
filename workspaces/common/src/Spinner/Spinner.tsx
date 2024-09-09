@@ -7,7 +7,7 @@ const startingRotations = Array.from({ length: 6 }).map(
 
 export default function Spinner({ children }: PropsWithChildren) {
   return (
-    <Box grow flex="vertical" alignChildren="middle">
+    <Box grow flex="vertical" alignChildren="middle" paddingVertical="x8">
       <Motion container width="60px" height="60px">
         {startingRotations.map((r, i) => (
           <Motion

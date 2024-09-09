@@ -6,6 +6,5 @@ Ok(
     Path {
         option_type_ahead: true,
         nodes: [],
-        index: 0,
     },
 )

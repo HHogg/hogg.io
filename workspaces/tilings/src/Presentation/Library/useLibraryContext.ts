@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
-import { TilingResult, results } from '../utils/results';
+import { Result } from '../../types';
+import { results } from '../utils/results';
 
 const FILTER_KEYS = [
   'has_0',
@@ -16,8 +17,8 @@ export type LibraryResultCounts = Record<FilterKeys, number>;
 
 export type LibraryContextProps = {
   countsByShapes: LibraryResultCounts;
-  filteredResults: TilingResult[];
-  filteredResultsByUniform: Record<string, TilingResult[]>;
+  filteredResults: Result[];
+  filteredResultsByUniform: Record<string, Result[]>;
   filters: LibraryFilters;
   toggleFilter: (filter: keyof LibraryFilters) => void;
 };
@@ -33,9 +34,9 @@ export const defaultFilters = FILTER_KEYS.reduce(
 );
 
 export const getFilteredResults = (
-  results: TilingResult[],
+  results: Result[],
   filters: LibraryFilters
-): TilingResult[] => {
+): Result[] => {
   if (Object.values(filters).every((value) => !value)) {
     return results;
   }
@@ -45,7 +46,7 @@ export const getFilteredResults = (
       Object.entries(filters)
         // .filter(([, selected]) => selected)
         .every(([key, value]) => {
-          return result[key as keyof TilingResult] === value;
+          return result[key as keyof Result] === value;
         })
     );
   });
@@ -63,7 +64,7 @@ export const getCountsByShapes = (
       // then we increase all the counts
       const matches = Object.entries(filters)
         .filter(([, selected]) => selected)
-        .every(([key]) => result[key as keyof TilingResult]);
+        .every(([key]) => result[key as keyof Result]);
 
       if (!matches) {
         continue;
@@ -71,7 +72,7 @@ export const getCountsByShapes = (
     }
 
     for (const key of FILTER_KEYS) {
-      if (result[key as keyof TilingResult]) {
+      if (result[key as keyof Result]) {
         counts[key]++;
       }
     }

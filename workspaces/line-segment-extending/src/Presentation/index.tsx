@@ -1,9 +1,9 @@
 import { ProjectWindow } from '@hogg/common';
+import { WasmApiLoadingScreen } from '@hogg/wasm';
 import Controls from './Controls';
 import LineSegmentProvider from './LineSegmentProvider';
 import Renderer from './Renderer';
 import Settings from './Settings';
-import WasmApi from './WasmApi/WasmApi';
 import { useLineSegmentContext } from './useLineSegmentContext';
 
 type Props = {};
@@ -25,11 +25,11 @@ function Presentation({}: Props) {
 
 function PresentationWithContext() {
   return (
-    <WasmApi>
+    <WasmApiLoadingScreen>
       <LineSegmentProvider>
         <Presentation />
       </LineSegmentProvider>
-    </WasmApi>
+    </WasmApiLoadingScreen>
   );
 }
 

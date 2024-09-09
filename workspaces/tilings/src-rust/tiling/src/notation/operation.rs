@@ -60,12 +60,10 @@ impl std::str::FromStr for Operation {
     match value {
       "m" => Ok(Self::Reflect),
       "r" => Ok(Self::Rotate),
-      _ => {
-        Err(TilingError::InvalidOperation {
-          operation: value.to_string(),
-          reason: "invalid".into(),
-        })
-      }
+      _ => Err(TilingError::InvalidOperation {
+        operation: value.to_string(),
+        reason: "invalid".into(),
+      }),
     }
   }
 }

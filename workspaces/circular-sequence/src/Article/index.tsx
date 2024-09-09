@@ -16,9 +16,9 @@ import {
   Text,
   sizeX12Px,
 } from 'preshape';
-import fileContentsGetMatch from '@hogg/circular-sequence/src-rust/get_match.rs?raw';
-import fileContentsMinPermutation from '@hogg/circular-sequence/src-rust/min_permutation.rs?raw';
-import fileContentsSequence from '@hogg/circular-sequence/src-rust/sequence.rs?raw';
+import fileContentsGetMatch from '../../src-rust/get_match.rs?raw';
+import fileContentsMinPermutation from '../../src-rust/min_permutation.rs?raw';
+import fileContentsSequence from '../../src-rust/sequence.rs?raw';
 import ConcatenatedSequencesFig from './Figs/ConcatenatedSequencesFig';
 import MinPermutationFigWithWasApi from './Figs/MinPermutationFig';
 
@@ -194,9 +194,10 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
         <ArticleParagraph>
           However if we take a very similar sequence of{' '}
-          <Code>[3, 3, 4, 12]</Code> (<ArticleFigLink fig="sequence-33412" />)
-          and do the same thing, then we get different traversal results when we
-          traverse in both directions.
+          <Code>[3, 3, 4, 12]</Code> (
+          <ArticleFigLink fig="sequence-33412" />) and do the same thing, then
+          we get different traversal results when we traverse in both
+          directions.
         </ArticleParagraph>
 
         <ArticleFigs>
@@ -249,7 +250,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         <ArticleParagraph>
           It's fairly simple to check if a sequence is symmetrical. We can
           simply concatenate the sequence and check for the inverted sequence
-          within itself (<ArticleFigLink fig="concatenated-sequence" />
+          within itself (
+          <ArticleFigLink fig="concatenated-sequence" />
           ).
         </ArticleParagraph>
 

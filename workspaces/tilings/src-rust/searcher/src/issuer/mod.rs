@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::Path;
+use tiling::notation::Path;
 use tiling_datastore::state::State;
 use tokio::sync::Mutex;
 
@@ -27,7 +27,7 @@ pub struct Issuer {
 
   stop_issuing: Arc<Mutex<bool>>,
   buffer_tx: async_channel::Sender<Path>,
-  buffer_rx: async_channel::Receiver<Path>,
+  buffer_rx: Box<async_channel::Receiver<Path>>,
   buffer_size: Arc<Mutex<usize>>,
   leases: Arc<Mutex<HashMap<Path, i32>>>,
 }
@@ -54,7 +54,7 @@ impl Issuer {
 
       stop_issuing: Arc::new(Mutex::new(false)),
       buffer_tx,
-      buffer_rx,
+      buffer_rx: Box::new(buffer_rx),
       buffer_size: Arc::new(Mutex::new(0)),
       leases: Arc::new(Mutex::new(HashMap::default())),
     })

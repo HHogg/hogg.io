@@ -10,23 +10,17 @@ crate-type = ["cdylib"]
 path = "src/lib.rs"
 
 [dependencies]
-anyhow.workspace = true
 console_log.workspace = true
 console_error_panic_hook.workspace = true
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 serde-wasm-bindgen.workspace = true
-thiserror.workspace = true
-typeshare.workspace = true
 wasm-bindgen.workspace = true
 web-sys = { workspace = true, features = [
   'console',
-  'CanvasRenderingContext2d',
-  'Document',
-  'Element',
-  'HtmlCanvasElement',
-  'Window',
+  'OffscreenCanvas',
+  'OffscreenCanvasRenderingContext2d',
 ] }
 
 tiling = { path = "../tiling" }

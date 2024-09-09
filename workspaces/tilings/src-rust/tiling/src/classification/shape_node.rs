@@ -31,6 +31,10 @@ impl GeoNode {
     circular_sequence::get_length(&self.sequence)
   }
 
+  pub fn is_empty(&self) -> bool {
+    self.len() == 0
+  }
+
   pub fn is_full(&self) -> bool {
     self.len() == self.size.unwrap_or(MAX_SIZE as u8) as usize
   }
@@ -60,18 +64,14 @@ impl GeoNode {
 
     // The shapes need to be sorted to match
     // up with a valid combination.
-    self.links.sort_by(|a, b| {
-      match (a, b) {
-        (Some(a), Some(b)) => {
-          compare_radians(
-            a.point.radian_to(&self.point),
-            b.point.radian_to(&self.point),
-          )
-        }
-        (Some(_), None) => Ordering::Less,
-        (None, Some(_)) => Ordering::Greater,
-        (None, None) => Ordering::Equal,
-      }
+    self.links.sort_by(|a, b| match (a, b) {
+      (Some(a), Some(b)) => compare_radians(
+        a.point.radian_to(&self.point),
+        b.point.radian_to(&self.point),
+      ),
+      (Some(_), None) => Ordering::Less,
+      (None, Some(_)) => Ordering::Greater,
+      (None, None) => Ordering::Equal,
     });
 
     // Update the sequence.

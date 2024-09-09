@@ -10,13 +10,7 @@ use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::{
-  Direction,
-  Operation,
-  OriginIndex,
-  OriginType,
-  Path,
-  TransformContinuous,
-  TransformEccentric,
+  Direction, Operation, OriginIndex, OriginType, Path, TransformContinuous, TransformEccentric,
   TransformValue,
 };
 use crate::build::Plane;
@@ -126,16 +120,12 @@ impl Transform {
 
   pub fn previous(&mut self, polygons: &Plane) -> Option<Self> {
     match self {
-      Self::Continuous(transform) => {
-        transform
-          .previous_transform()
-          .map(|transform| transform.into())
-      }
-      Self::Eccentric(transform) => {
-        transform
-          .previous(polygons)
-          .map(|transform| transform.into())
-      }
+      Self::Continuous(transform) => transform
+        .previous_transform()
+        .map(|transform| transform.into()),
+      Self::Eccentric(transform) => transform
+        .previous(polygons)
+        .map(|transform| transform.into()),
     }
   }
 
