@@ -12,16 +12,22 @@ pub struct Result {
   pub uniform: i32,
   #[typeshare(serialized_as = "string")]
   pub timestamp: NaiveDateTime,
+  pub build_time_ms: i32,
 }
 
 impl Result {
-  pub fn with_notation(mut self, notation: String) -> Self {
-    self.notation = notation.clone();
+  pub fn with_build_time_ms(mut self, build_time_ms: i32) -> Self {
+    self.build_time_ms = build_time_ms;
     self
   }
 
   pub fn with_hash(mut self, hash: String) -> Self {
     self.hash = hash;
+    self
+  }
+
+  pub fn with_notation(mut self, notation: String) -> Self {
+    self.notation = notation.clone();
     self
   }
 
@@ -39,6 +45,7 @@ impl Default for Result {
       transform_index: 0,
       uniform: 0,
       timestamp: Utc::now().naive_utc(),
+      build_time_ms: 0,
     }
   }
 }

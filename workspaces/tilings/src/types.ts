@@ -205,6 +205,7 @@ export interface Result {
 	transformIndex: number;
 	uniform: number;
 	timestamp: string;
+	buildTimeMs: number;
 }
 
 export interface Context {

@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod tests;
 
+use chrono::{TimeDelta, Utc};
 use serde::Serialize;
 use serde_with::{serde_as, DisplayFromStr};
 use typeshare::typeshare;
@@ -145,13 +146,18 @@ impl Tiling {
   }
 
   pub fn build(&mut self) -> Result<(), TilingError> {
+    let start = Utc::now();
+
     let build_result = self
       .plane
       .build(&self.notation, self.option_expansion_phases);
 
+    let end = Utc::now();
+    let duration: TimeDelta = end - start;
+
     self
       .build_context
-      .add_result(&self.notation, &self.plane, &build_result);
+      .add_result(&self.notation, &self.plane, &build_result, duration);
 
     build_result
   }

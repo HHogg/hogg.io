@@ -1,3 +1,4 @@
+use chrono::TimeDelta;
 use serde::Serialize;
 use typeshare::typeshare;
 
@@ -20,6 +21,7 @@ impl Context {
     notation: &Notation,
     plane: &Plane,
     result: &Result<(), TilingError>,
+    duration: TimeDelta,
   ) {
     self.count_total_tilings += 1;
 
@@ -35,7 +37,8 @@ impl Context {
           super::Result::default()
             .with_notation(notation.to_string())
             .with_hash(plane.classifier.get_unique_key())
-            .with_transform_index(notation.transforms.index),
+            .with_transform_index(notation.transforms.index)
+            .with_build_time_ms(duration.num_milliseconds() as i32),
         );
       }
       _ => {}
