@@ -395,22 +395,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@emotion/is-prop-valid@npm:^0.8.2":
-  version: 0.8.6
-  resolution: "@emotion/is-prop-valid@npm:0.8.6"
-  dependencies:
-    "@emotion/memoize": 0.7.4
-  checksum: 9c9b4b2d857cdb9df538917ec817e3b788f29f845ba2b152ad0eff294dc4244efc00f0e65754c1fdede4c600e5f45b44da6d76f938b3fc2833b0bca5c2ea0497
-  languageName: node
-  linkType: hard
-
-"@emotion/memoize@npm:0.7.4":
-  version: 0.7.4
-  resolution: "@emotion/memoize@npm:0.7.4"
-  checksum: 4e3920d4ec95995657a37beb43d3f4b7d89fed6caa2b173a4c04d10482d089d5c3ea50bbc96618d918b020f26ed6e9c4026bbd45433566576c1f7b056c3271dc
-  languageName: node
-  linkType: hard
-
 "@ericcornelissen/bash-parser@npm:0.5.2":
   version: 0.5.2
   resolution: "@ericcornelissen/bash-parser@npm:0.5.2"
@@ -650,6 +634,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@floating-ui/core@npm:^1.6.0":
+  version: 1.6.8
+  resolution: "@floating-ui/core@npm:1.6.8"
+  dependencies:
+    "@floating-ui/utils": ^0.2.8
+  checksum: 82faa6ea9d57e466779324e51308d6d49c098fb9d184a08d9bb7f4fad83f08cc070fc491f8d56f0cad44a16215fb43f9f829524288413e6c33afcb17303698de
+  languageName: node
+  linkType: hard
+
+"@floating-ui/dom@npm:^1.0.0":
+  version: 1.6.11
+  resolution: "@floating-ui/dom@npm:1.6.11"
+  dependencies:
+    "@floating-ui/core": ^1.6.0
+    "@floating-ui/utils": ^0.2.8
+  checksum: d6413759abd06a541edfad829c45313f930310fe76a3322e74a00eb655e283db33fe3e65b5265c4072eb54db7447e11225acd355a9a02cabd1d1b0d5fc8fc21d
+  languageName: node
+  linkType: hard
+
 "@floating-ui/dom@npm:^1.5.1":
   version: 1.5.3
   resolution: "@floating-ui/dom@npm:1.5.3"
@@ -660,7 +663,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/react-dom@npm:^2.0.1, @floating-ui/react-dom@npm:^2.0.3":
+"@floating-ui/react-dom@npm:^2.0.3":
   version: 2.0.4
   resolution: "@floating-ui/react-dom@npm:2.0.4"
   dependencies:
@@ -672,17 +675,29 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/react@npm:^0.24.0":
-  version: 0.24.8
-  resolution: "@floating-ui/react@npm:0.24.8"
+"@floating-ui/react-dom@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@floating-ui/react-dom@npm:2.1.2"
   dependencies:
-    "@floating-ui/react-dom": ^2.0.1
-    aria-hidden: ^1.2.3
-    tabbable: ^6.0.1
+    "@floating-ui/dom": ^1.0.0
   peerDependencies:
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: b345d3bbb7b1eb4a8d09bb5cb0c46713b0b051578a1bb15fb49708b27009dcb992cdd55ffc79ae56d7e4494ce122f6e971e7d2737c9a2bffd88cb2408230f9af
+  checksum: 25bb031686e23062ed4222a8946e76b3f9021d40a48437bd747233c4964a766204b8a55f34fa8b259839af96e60db7c6e3714d81f1de06914294f90e86ffbc48
+  languageName: node
+  linkType: hard
+
+"@floating-ui/react@npm:0.26.24":
+  version: 0.26.24
+  resolution: "@floating-ui/react@npm:0.26.24"
+  dependencies:
+    "@floating-ui/react-dom": ^2.1.2
+    "@floating-ui/utils": ^0.2.8
+    tabbable: ^6.0.0
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: c49fc0040d0a75608dc8f9b259027fbaebc8b04bc791b4ec38c680b551fffeaa19dac945ac5d10f75570862159353f0aab78451e1ecc59e0abea6f07251d4504
   languageName: node
   linkType: hard
 
@@ -704,6 +719,13 @@ __metadata:
   version: 0.1.6
   resolution: "@floating-ui/utils@npm:0.1.6"
   checksum: b34d4b5470869727f52e312e08272edef985ba5a450a76de0917ba0a9c6f5df2bdbeb99448e2c60f39b177fb8981c772ff1831424e75123471a27ebd5b52c1eb
+  languageName: node
+  linkType: hard
+
+"@floating-ui/utils@npm:^0.2.8":
+  version: 0.2.8
+  resolution: "@floating-ui/utils@npm:0.2.8"
+  checksum: deb98bba017c4e073c7ad5740d4dec33a4d3e0942d412e677ac0504f3dade15a68fc6fd164d43c93c0bb0bcc5dc5015c1f4080dfb1a6161140fe660624f7c875
   languageName: node
   linkType: hard
 
@@ -794,7 +816,7 @@ __metadata:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
-    preshape: ^19.1.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
   languageName: unknown
@@ -812,17 +834,17 @@ __metadata:
     "@swc/core": ^1.4.2
     "@types/file-saver": ^2.0.7
     "@types/sat": ^0.0.35
-    "@types/uuid": ^9.0.7
+    "@types/uuid": 10.0.0
     bitset: ^5.1.1
     classnames: ^2.3.2
     file-saver: ^2.0.5
-    framer-motion: ^10.16.16
-    lucide-react: ^0.294.0
-    preshape: ^19.1.0
+    framer-motion: 11.5.6
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
     sat: ^0.9.0
-    uuid: ^9.0.1
+    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -834,8 +856,8 @@ __metadata:
     "@svgr/cli": ^8.1.0
     "@svgr/plugin-jsx": ^8.1.0
     "@types/react": ^18.0.28
-    lucide-react: 0.439.0
-    preshape: ^19.1.0
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
     react: ^18.2.0
     typescript: ^5.0.4
     uuid: 10.0.0
@@ -846,9 +868,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/common@workspace:workspaces/common"
   dependencies:
-    framer-motion: ^10.16.16
-    lucide-react: ^0.294.0
-    preshape: ^19.1.0
+    framer-motion: 11.5.6
+    lucide-react: 0.445.0
+    luxon: 3.5.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
@@ -864,11 +887,12 @@ __metadata:
   dependencies:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
-    lucide-react: ^0.294.0
-    preshape: ^19.1.0
+    "@types/uuid": 10.0.0
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
     react: ^18.2.0
     typescript: ^5.0.4
-    uuid: ^9.0.1
+    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -882,8 +906,8 @@ __metadata:
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     framer-motion: 11.5.4
-    lucide-react: 0.439.0
-    preshape: ^19.1.0
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
   languageName: unknown
@@ -894,7 +918,7 @@ __metadata:
   resolution: "@hogg/preshape@workspace:workspaces/preshape"
   dependencies:
     "@hogg/common": "workspace:^"
-    preshape: ^19.1.0
+    preshape: ^19.1.5
   languageName: unknown
   linkType: soft
 
@@ -905,13 +929,34 @@ __metadata:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
+    "@visx/axis": ^3.5.0
+    "@visx/curve": ^3.3.0
+    "@visx/scale": ^3.5.0
+    "@visx/shape": ^3.5.0
+    "@visx/xychart": ^3.5.1
     caniuse-lite: ^1.0.30000697
-    lucide-react: ^0.294.0
-    preshape: ^19.1.0
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
     typescript: ^5.0.4
+  languageName: unknown
+  linkType: soft
+
+"@hogg/spatial-grid-map@workspace:^, @hogg/spatial-grid-map@workspace:workspaces/spatial-grid-map":
+  version: 0.0.0-use.local
+  resolution: "@hogg/spatial-grid-map@workspace:workspaces/spatial-grid-map"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@svgr/cli": ^8.1.0
+    "@svgr/plugin-jsx": ^8.1.0
+    "@types/react": ^18.0.28
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
+    react: ^18.2.0
+    typescript: ^5.0.4
+    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -923,10 +968,15 @@ __metadata:
     "@types/lodash": ^4.14.202
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
+    "@visx/axis": ^3.5.0
+    "@visx/curve": ^3.3.0
+    "@visx/scale": ^3.5.0
+    "@visx/shape": ^3.5.0
+    "@visx/xychart": ^3.5.1
     caniuse-lite: ^1.0.30000697
     gl-matrix: ^3.4.3
     lodash: ^4.17.21
-    preshape: ^19.1.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
@@ -943,10 +993,18 @@ __metadata:
     "@hogg/wasm": "workspace:^"
     "@swc-node/register": ^1.8.0
     "@swc/core": ^1.4.2
+    "@types/lodash": ^4.17.10
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
-    lucide-react: 0.439.0
-    preshape: ^19.1.0
+    "@visx/axis": ^3.5.0
+    "@visx/curve": ^3.3.0
+    "@visx/scale": ^3.5.0
+    "@visx/shape": ^3.5.0
+    "@visx/xychart": ^3.5.1
+    lodash: ^4.17.21
+    lucide-react: 0.447.0
+    open-color: ^1.9.1
+    preshape: ^19.1.5
     puppeteer: 23.3.0
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -963,9 +1021,11 @@ __metadata:
   dependencies:
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
-    uuid: ^8.3.2
+    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -980,6 +1040,7 @@ __metadata:
     "@hogg/line-segment-extending": "workspace:^"
     "@hogg/preshape": "workspace:^"
     "@hogg/snake": "workspace:^"
+    "@hogg/spatial-grid-map": "workspace:^"
     "@hogg/spirals": "workspace:^"
     "@hogg/tilings": "workspace:^"
     "@hogg/wasm": "workspace:^"
@@ -992,20 +1053,15 @@ __metadata:
     "@types/node": 22.5.4
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
-    "@visx/axis": ^3.5.0
-    "@visx/curve": ^3.3.0
-    "@visx/scale": ^3.5.0
-    "@visx/shape": ^3.5.0
-    "@visx/xychart": ^3.5.1
     "@vitejs/plugin-react-swc": ^3.0.0
     bitset: ^5.1.1
     caniuse-lite: ^1.0.30000697
-    framer-motion: ^10.16.16
+    framer-motion: 11.5.6
     lodash: ^4.17.21
-    lucide-react: ^0.294.0
+    lucide-react: 0.447.0
     luxon: ^3.4.4
     numbro: ^2.4.0
-    preshape: ^19.1.0
+    preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
     react-helmet-async: ^2.0.3
@@ -2607,6 +2663,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.17.10":
+  version: 4.17.10
+  resolution: "@types/lodash@npm:4.17.10"
+  checksum: 4600f2f25270c8fee6953e363d318149a5f0f1b1bb820aa2f42d7ada6e4f7de31848bb5ffc2c687b40bd73aa982167bdd6e6d8d456e72abe0c660ec77d1fa7e9
+  languageName: node
+  linkType: hard
+
 "@types/long@npm:^4.0.0":
   version: 4.0.1
   resolution: "@types/long@npm:4.0.1"
@@ -2823,10 +2886,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:^9.0.7":
-  version: 9.0.7
-  resolution: "@types/uuid@npm:9.0.7"
-  checksum: c7321194aeba9ea173efd1e721403bdf4e7ae6945f8f8cdbc87c791f4b505ccf3dbc4a8883d90b394ef13b7c2dc778045792b05dbb23b3c746f8ea347804d448
+"@types/uuid@npm:10.0.0":
+  version: 10.0.0
+  resolution: "@types/uuid@npm:10.0.0"
+  checksum: e3958f8b0fe551c86c14431f5940c3470127293280830684154b91dc7eb3514aeb79fe3216968833cf79d4d1c67f580f054b5be2cd562bebf4f728913e73e944
   languageName: node
   linkType: hard
 
@@ -3625,15 +3688,6 @@ __metadata:
   version: 2.0.1
   resolution: "argparse@npm:2.0.1"
   checksum: 83644b56493e89a254bae05702abf3a1101b4fa4d0ca31df1c9985275a5a5bd47b3c27b7fa0b71098d41114d8ca000e6ed90cad764b306f8a503665e4d517ced
-  languageName: node
-  linkType: hard
-
-"aria-hidden@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "aria-hidden@npm:1.2.3"
-  dependencies:
-    tslib: ^2.0.0
-  checksum: 7d7d211629eef315e94ed3b064c6823d13617e609d3f9afab1c2ed86399bb8e90405f9bdd358a85506802766f3ecb468af985c67c846045a34b973bcc0289db9
   languageName: node
   linkType: hard
 
@@ -4548,17 +4602,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"classnames@npm:^2.2.5":
-  version: 2.2.5
-  resolution: "classnames@npm:2.2.5"
-  checksum: cf6bc29a8aeb1812d947d7f4a19601675bbec6e959127a85754bb10fbedc50d321dbdc15d8245dba74de34aeab1a6b3d0293fe5763934dc535844a7a89a54bc2
-  languageName: node
-  linkType: hard
-
 "classnames@npm:^2.3.1, classnames@npm:^2.3.2":
   version: 2.3.2
   resolution: "classnames@npm:2.3.2"
   checksum: 2c62199789618d95545c872787137262e741f9db13328e216b093eea91c85ef2bfb152c1f9e63027204e2559a006a92eb74147d46c800a9f96297ae1d9f96f4e
+  languageName: node
+  linkType: hard
+
+"classnames@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "classnames@npm:2.5.1"
+  checksum: da424a8a6f3a96a2e87d01a432ba19315503294ac7e025f9fece656db6b6a0f7b5003bb1fbb51cbb0d9624d964f1b9bb35a51c73af9b2434c7b292c42231c1e5
   languageName: node
   linkType: hard
 
@@ -7123,24 +7177,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"framer-motion@npm:^10.16.16":
-  version: 10.16.16
-  resolution: "framer-motion@npm:10.16.16"
+"framer-motion@npm:11.5.6":
+  version: 11.5.6
+  resolution: "framer-motion@npm:11.5.6"
   dependencies:
-    "@emotion/is-prop-valid": ^0.8.2
     tslib: ^2.4.0
   peerDependencies:
+    "@emotion/is-prop-valid": "*"
     react: ^18.0.0
     react-dom: ^18.0.0
-  dependenciesMeta:
+  peerDependenciesMeta:
     "@emotion/is-prop-valid":
       optional: true
-  peerDependenciesMeta:
     react:
       optional: true
     react-dom:
       optional: true
-  checksum: 992d755faab7171aecd4b548ea4c3baf6a9172b9348a98033e594a46a9f3f90c6f5854898d48884c3ecf7db4fc2ae3f05e27e125b4c5b397e836d765265577c1
+  checksum: b37bc0856e7c887ba8f7c656bda46a1b492a9c2a093e2ede4b98392292685550a1cb646a1ea2575c3c54d371d2af77c4c6b1b07ebe4e2facfdf4bf6e9de58ba4
   languageName: node
   linkType: hard
 
@@ -8035,7 +8088,7 @@ __metadata:
     eslint-plugin-react-refresh: ^0.4.1
     firebase-tools: ^13.3.0
     knip: ^5.0.1
-    preshape: ^19.1.0
+    preshape: ^19.1.5
     prettier: ^2.8.8
     stylelint: ^15.6.1
     stylelint-config-prettier: ^8.0.2
@@ -9965,30 +10018,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lucide-react@npm:0.439.0":
-  version: 0.439.0
-  resolution: "lucide-react@npm:0.439.0"
+"lucide-react@npm:0.445.0, lucide-react@npm:^0.445.0":
+  version: 0.445.0
+  resolution: "lucide-react@npm:0.445.0"
   peerDependencies:
     react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
-  checksum: 3de85588b697cdec076172878aedcffb382953e96cf529dfe738bf63f2dad9f22dcf7ebfebbc9d64ca02c7c05346c5706c5cde940107f172ed7fdd90c79f6fa4
+  checksum: 848f382ead7950a15b9633c42167edb28563c7923cdb84f5835dfa3f51115d12142a1051ca6f1451d669c8f7c6bfe7e8d56820459e71d0d38c0710c66a605f3e
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.291.0":
-  version: 0.291.0
-  resolution: "lucide-react@npm:0.291.0"
+"lucide-react@npm:0.447.0":
+  version: 0.447.0
+  resolution: "lucide-react@npm:0.447.0"
   peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: 7c15106d25aecb492004bcdb8e5e7c3805929f00d8b3bb096a45b4489e59dd8276f92b146fe66d1d72cefe88a570c25e832fd97ad55ce272a3bbfded7a459c86
+    react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
+  checksum: c634a6d6fac1799d3ba8c342dd95be75a9c2a74db9576d875b77008f31a9bfb3b0128c039d41dbe5bbdece7e200c6ae3e89760f2e8674863cd972046bdb2b82f
   languageName: node
   linkType: hard
 
-"lucide-react@npm:^0.294.0":
-  version: 0.294.0
-  resolution: "lucide-react@npm:0.294.0"
-  peerDependencies:
-    react: ^16.5.1 || ^17.0.0 || ^18.0.0
-  checksum: d8e741603209a0e0400b2d71e676aff660251f7e078f8be72a2fbaf57876946a76571675230b7c0f7d27d8a9344d0c788dba14177d35f4ba911897282eaae22a
+"luxon@npm:3.5.0":
+  version: 3.5.0
+  resolution: "luxon@npm:3.5.0"
+  checksum: f290fe5788c8e51e748744f05092160d4be12150dca70f9fadc0d233e53d60ce86acd82e7d909a114730a136a77e56f0d3ebac6141bbb82fd310969a4704825b
   languageName: node
   linkType: hard
 
@@ -11415,6 +11466,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"open-color@npm:^1.9.1":
+  version: 1.9.1
+  resolution: "open-color@npm:1.9.1"
+  checksum: 8ab89bb9506d5c8ece6f0f11e98bb294ee43f2e41f8ca61de8f5b1ece9d5f7f33bc46a1caefefff8112370abdef6bfc4df4a58283b1e458b32feb451820a2d61
+  languageName: node
+  linkType: hard
+
 "open@npm:^6.3.0":
   version: 6.4.0
   resolution: "open@npm:6.4.0"
@@ -11885,15 +11943,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preshape@npm:^19.1.0":
-  version: 19.1.0
-  resolution: "preshape@npm:19.1.0"
+"preshape@npm:^19.1.5":
+  version: 19.1.5
+  resolution: "preshape@npm:19.1.5"
   dependencies:
-    "@floating-ui/react": ^0.24.0
-    classnames: ^2.2.5
+    "@floating-ui/react": 0.26.24
+    classnames: ^2.5.1
     framer-motion: ^11.2.11
     lodash.omit: ^4.5.0
-    lucide-react: ^0.291.0
+    lucide-react: ^0.445.0
     luxon: ^3.3.0
     normalize.css: ^8.0.0
     open-color: ^1.6.3
@@ -11902,12 +11960,12 @@ __metadata:
     react-router-dom: ^6.11.1
     react-syntax-highlighter: ^15.5.0
     resize-observer-polyfill: ^1.5.0
-    uuid: ^8.3.2
+    uuid: 10.0.0
   peerDependencies:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.11.1
-  checksum: 7716ddbc6b3b2c8775eca4966624247630e2f53a0ce4f991f5934a9e111a052401552624674283e214fdec9205228cfe83557bc16af32107da4f8076fa3ed625
+  checksum: 4601ca65cf2cc95aae67cffea4940789509979391e96d12bcc824a1cf3e00742694bd18ebad560f2aca02ea5402d83728d4a64c0300d4def05127c24667a28d4
   languageName: node
   linkType: hard
 
@@ -14264,7 +14322,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tabbable@npm:^6.0.1":
+"tabbable@npm:^6.0.0, tabbable@npm:^6.0.1":
   version: 6.2.0
   resolution: "tabbable@npm:6.2.0"
   checksum: f8440277d223949272c74bb627a3371be21735ca9ad34c2570f7e1752bd646ccfc23a9d8b1ee65d6561243f4134f5fbbf1ad6b39ac3c4b586554accaff4a1300
@@ -14568,7 +14626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.0, tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
+"tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
@@ -15072,15 +15130,6 @@ __metadata:
   bin:
     uuid: dist/bin/uuid
   checksum: 5575a8a75c13120e2f10e6ddc801b2c7ed7d8f3c8ac22c7ed0c7b2ba6383ec0abda88c905085d630e251719e0777045ae3236f04c812184b7c765f63a70e58df
-  languageName: node
-  linkType: hard
-
-"uuid@npm:^9.0.1":
-  version: 9.0.1
-  resolution: "uuid@npm:9.0.1"
-  bin:
-    uuid: dist/bin/uuid
-  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
   languageName: node
   linkType: hard
 

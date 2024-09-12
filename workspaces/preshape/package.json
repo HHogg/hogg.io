@@ -7,6 +7,6 @@
   "main": "./src/index.ts",
   "dependencies": {
     "@hogg/common": "workspace:^",
-    "preshape": "^19.1.0"
+    "preshape": "^19.1.5"
   }
 }

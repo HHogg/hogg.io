@@ -1,4 +1,4 @@
-import { Appear, Box, BoxProps } from 'preshape';
+import { Box, BoxProps } from 'preshape';
 import { useProjectWindowContext } from '..';
 import PatternBackground, { PatternBackgroundProps } from './PatternBackground';
 
@@ -7,8 +7,7 @@ export type ProjectWindowContentsProps = {
   backgroundPatternGap?: PatternBackgroundProps['patternGap'];
   backgroundPatternSize?: PatternBackgroundProps['patternSize'];
   controls?: JSX.Element;
-  controlsVisible?: boolean;
-  controlsPosition?: 'top' | 'bottom';
+  header?: JSX.Element;
   tabs?: JSX.Element;
   shadow?: boolean;
 };
@@ -23,11 +22,10 @@ export default function ProjectWindowContents({
   backgroundPatternSize,
   children,
   controls,
-  controlsVisible,
-  controlsPosition = 'bottom',
   gap,
   gapHorizontal,
   gapVertical,
+  header,
   onClick,
   padding = 'x6',
   paddingBottom,
@@ -59,15 +57,10 @@ export default function ProjectWindowContents({
       ref={refWindow}
       theme={theme}
     >
-      {controls && controlsPosition === 'top' && (
-        <Appear
-          animation="Expand"
-          borderBottom
-          borderColor="background-shade-4"
-          visible={controlsVisible}
-        >
-          {controls}
-        </Appear>
+      {header && (
+        <Box borderBottom borderColor="background-shade-4">
+          {header}
+        </Box>
       )}
 
       <Box
@@ -123,15 +116,10 @@ export default function ProjectWindowContents({
         </PatternBackground>
       </Box>
 
-      {controls && controlsPosition === 'bottom' && (
-        <Appear
-          animation="Expand"
-          borderTop
-          borderColor="background-shade-4"
-          visible={controlsVisible}
-        >
+      {controls && (
+        <Box borderTop borderColor="background-shade-4">
           {controls}
-        </Appear>
+        </Box>
       )}
     </Box>
   );

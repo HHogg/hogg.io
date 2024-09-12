@@ -97,10 +97,26 @@ impl Scale {
     Ok(())
   }
 
+  /**
+   * Canvas value = JS caller value
+   * Content value = Scaled canvas value
+   *
+   * Use this function to convert a value from the
+   * canvas space to the content space. Usually called
+   * in getting values from a Style object.
+   */
   pub fn scale_value_to_content(&self, value: f64) -> f64 {
-    value * self.invert().scale
+    value * (1.0 / self.scale)
   }
 
+  /**
+   * Canvas value = JS caller value
+   * Content value = Scaled canvas value
+   *
+   * Use this function to convert a value from the
+   * content space to the canvas space. Usually called
+   * in setting value to store on a Style object.
+   */
   pub fn scale_value_to_canvas(&self, value: f64) -> f64 {
     value * self.scale
   }
@@ -112,24 +128,14 @@ impl Scale {
       .translate(-0.5, -0.5)
   }
 
-  fn invert(&self) -> Self {
-    Self {
-      canvas_bbox: self.canvas_bbox,
-      content_bbox: self.content_bbox,
-      padding: self.padding,
-      auto_rotate: self.auto_rotate,
-      mode: self.mode,
-      scale: 1.0 / self.scale,
-      translate_x: -self.translate_x,
-      translate_y: -self.translate_y,
-      rotate: -self.rotate,
-    }
-  }
-
   fn update(&mut self) {
+    let canvas_height = self.canvas_bbox.height();
+    let canvas_width = self.canvas_bbox.width();
     let canvas_ratio = self.canvas_bbox.ratio();
     let content_ratio = self.content_bbox.ratio();
     let content_centroid = self.content_bbox.centroid();
+    let content_height = self.content_bbox.height();
+    let content_width = self.content_bbox.width();
 
     // Shift the content to the center of the canvas.
     self.translate_x = -content_centroid.x;
@@ -147,18 +153,16 @@ impl Scale {
 
     let is_zero_size = self.content_bbox.width() == 0.0
       || self.content_bbox.height() == 0.0
-      || self.canvas_bbox.width() == 0.0
-      || self.canvas_bbox.height() == 0.0;
+      || canvas_width == 0.0
+      || canvas_height == 0.0;
 
     // Scale the content to fit within the canvas.
     self.scale = if self.mode == ScaleMode::Fixed || is_zero_size {
       1.0
     } else if self.rotate == 0.0 {
-      (self.canvas_bbox.height() / (self.content_bbox.height() + self.padding))
-        .min(self.canvas_bbox.width() / (self.content_bbox.width() + self.padding))
+      (canvas_height / content_height).min(canvas_width / content_width)
     } else {
-      (self.canvas_bbox.width() / (self.content_bbox.height() + self.padding))
-        .min(self.canvas_bbox.height() / (self.content_bbox.width() + self.padding))
+      (canvas_width / content_height).min(canvas_height / content_width)
     };
   }
 }

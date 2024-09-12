@@ -26,7 +26,8 @@ web-sys = { workspace = true, features = [
   'OffscreenCanvasRenderingContext2d',
 ] }
 
-circular-sequence = { path = "../circular-sequence" }
+spatial_grid_map = { path = "../spatial-grid-map" }
+circular_sequence = { path = "../circular-sequence" }
 line_segment_extending = { path = "../line-segment-extending" }
 tiling = { path = "../tilings/src-rust/tiling" }
 tiling-renderer = { path = "../tilings/src-rust/renderer" }

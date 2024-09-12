@@ -26,7 +26,8 @@ tracing.workspace = true
 typeshare.workspace = true
 wasm-bindgen.workspace = true
 
-circular-sequence = { path = "../../../circular-sequence" }
+spatial_grid_map = { path = "../../../spatial-grid-map" }
+circular_sequence = { path = "../../../circular-sequence" }
 line_segment_extending = { path = "../../../line-segment-extending" }
 
 [dev-dependencies]

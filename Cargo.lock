@@ -441,7 +441,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "circular-sequence"
+name = "circular_sequence"
 version = "0.0.0"
 dependencies = [
  "pretty_assertions",
@@ -1963,6 +1963,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_arrays"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "38636132857f68ec3d5f3eb121166d2af33cb55174c4d5ff645db6165cbef0fd"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "serde_derive"
 version = "1.0.210"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1999,9 +2008,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with"
-version = "3.9.0"
+version = "3.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69cecfa94848272156ea67b2b1a53f20fc7bc638c4a46d2f8abde08f05f4b857"
+checksum = "8e28bdad6db2b8340e449f7108f020b3b092e8583a9e3fb82713e1d4e71fe817"
 dependencies = [
  "base64",
  "chrono",
@@ -2017,9 +2026,9 @@ dependencies = [
 
 [[package]]
 name = "serde_with_macros"
-version = "3.9.0"
+version = "3.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a8fee4991ef4f274617a51ad4af30519438dacb2f56ac773b08a1922ff743350"
+checksum = "9d846214a9854ef724f3da161b426242d8de7c1fc7de2f89bb1efcb154dca79d"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -2131,6 +2140,19 @@ checksum = "7b5fac59a5cb5dd637972e5fca70daf0523c9067fcdc4842f053dae04a18f8e9"
 dependencies = [
  "libc",
  "windows-sys 0.48.0",
+]
+
+[[package]]
+name = "spatial_grid_map"
+version = "0.0.0"
+dependencies = [
+ "insta",
+ "log",
+ "rand",
+ "serde",
+ "serde_arrays",
+ "serde_json",
+ "typeshare",
 ]
 
 [[package]]
@@ -2482,7 +2504,7 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "chrono",
- "circular-sequence",
+ "circular_sequence",
  "console_error_panic_hook",
  "console_log",
  "insta",
@@ -2493,6 +2515,7 @@ dependencies = [
  "serde-wasm-bindgen",
  "serde_json",
  "serde_with",
+ "spatial_grid_map",
  "thiserror",
  "tracing",
  "typeshare",
@@ -2544,6 +2567,7 @@ name = "tiling-renderer"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "circular_sequence",
  "colorgrad",
  "console_error_panic_hook",
  "console_log",
@@ -2553,6 +2577,7 @@ dependencies = [
  "serde",
  "serde-wasm-bindgen",
  "serde_json",
+ "spatial_grid_map",
  "thiserror",
  "tiling",
  "typeshare",
@@ -2580,22 +2605,6 @@ dependencies = [
  "tracing-appender",
  "tracing-subscriber",
  "typeshare",
-]
-
-[[package]]
-name = "tiling-wasm"
-version = "0.0.0"
-dependencies = [
- "console_error_panic_hook",
- "console_log",
- "log",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "tiling",
- "tiling-renderer",
- "wasm-bindgen",
- "web-sys",
 ]
 
 [[package]]
@@ -2868,7 +2877,7 @@ checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
 name = "wasm"
 version = "0.0.0"
 dependencies = [
- "circular-sequence",
+ "circular_sequence",
  "console_error_panic_hook",
  "console_log",
  "line_segment_extending",
@@ -2877,6 +2886,7 @@ dependencies = [
  "serde",
  "serde-wasm-bindgen",
  "serde_json",
+ "spatial_grid_map",
  "tiling",
  "tiling-renderer",
  "wasm-bindgen",

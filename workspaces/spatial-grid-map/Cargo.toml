@@ -1,0 +1,23 @@
+[package]
+name = "spatial_grid_map"
+version = "0.0.0"
+edition = "2021"
+authors = ["Harry Hogg <harry@hogg.io>"]
+description = "A custom data structure for dividing a 2D space into a grid of cells, and bucketing value for efficient lookup."
+license = "MIT/Apache-2.0"
+repository = "https://github.com/hhogg/hogg.io"
+
+[lib]
+name = "spatial_grid_map"
+path = "src-rust/lib.rs"
+
+[dependencies]
+log.workspace = true
+rand.workspace = true
+serde.workspace = true
+serde_arrays.workspace = true
+serde_json.workspace = true
+typeshare.workspace = true
+
+[dev-dependencies]
+insta = { workspace = true }

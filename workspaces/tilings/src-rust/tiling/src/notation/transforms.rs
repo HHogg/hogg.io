@@ -12,7 +12,7 @@ use crate::build::Plane;
 use crate::TilingError;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
-#[serde(into = "String")]
+#[serde(into = "String", from = "String")]
 #[typeshare]
 pub struct Transforms {
   pub path: Path,
@@ -138,6 +138,12 @@ impl Display for Transforms {
         .collect::<Vec<_>>()
         .join(Separator::Transform.to_string().as_str())
     )
+  }
+}
+
+impl From<String> for Transforms {
+  fn from(value: String) -> Self {
+    Self::default().from_string(value.as_str()).unwrap()
   }
 }
 

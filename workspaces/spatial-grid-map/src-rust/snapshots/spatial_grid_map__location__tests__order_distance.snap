@@ -1,0 +1,9 @@
+---
+source: workspaces/spatial-grid-map/src-rust/./location_tests.rs
+expression: sorted_locations_ids
+---
+[
+    "center",
+    "top",
+    "top-right",
+]

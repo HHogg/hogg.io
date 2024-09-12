@@ -1,19 +1,45 @@
 use tiling::geometry::{BBox, Point};
 
-use super::{Component, Draw, Style};
+use super::{Draw, Style};
 use crate::canvas::collision::Theia;
 use crate::canvas::Scale;
 use crate::Error;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Default)]
 pub struct LineSegment {
-  pub points: Vec<Point>,
-  pub extend_start: bool,
-  pub extend_end: bool,
-  pub style: Style,
+  points: Vec<Point>,
+  extend_start: bool,
+  extend_end: bool,
+  interactive: Option<bool>,
+  style: Style,
 }
 
 impl LineSegment {
+  pub fn non_interactive(mut self) -> Self {
+    self.interactive = Some(false);
+    self
+  }
+
+  pub fn with_extend_start(mut self, extend_start: bool) -> Self {
+    self.extend_start = extend_start;
+    self
+  }
+
+  pub fn with_extend_end(mut self, extend_end: bool) -> Self {
+    self.extend_end = extend_end;
+    self
+  }
+
+  pub fn with_points(mut self, points: Vec<Point>) -> Self {
+    self.points = points;
+    self
+  }
+
+  pub fn with_style(mut self, style: Style) -> Self {
+    self.style = style;
+    self
+  }
+
   fn get_points(&self, bbox: &BBox) -> Vec<Point> {
     get_extended_points_to_bbox(&self.points, bbox, self.extend_start, self.extend_end)
   }
@@ -38,29 +64,9 @@ impl LineSegment {
     self.draw_end(context);
     Ok(())
   }
-
-  pub fn intersects_bbox(&self, content_bbox: &BBox, bbox: &BBox) -> bool {
-    for window in self.get_points(content_bbox).windows(2) {
-      let a = &window[0];
-      let b = &window[1];
-      let line_segment = tiling::geometry::LineSegment::default()
-        .with_start(*a)
-        .with_end(*b);
-
-      if line_segment.intersects_bbox(bbox) {
-        return true;
-      }
-    }
-
-    false
-  }
 }
 
 impl Draw for LineSegment {
-  fn component(&self) -> Component {
-    self.clone().into()
-  }
-
   fn style(&self) -> &Style {
     &self.style
   }
@@ -71,37 +77,41 @@ impl Draw for LineSegment {
     _canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
-  ) -> Result<BBox, Error> {
-    let mut min = Point::default().with_xy(f64::INFINITY, f64::INFINITY);
-    let mut max = Point::default().with_xy(f64::NEG_INFINITY, f64::NEG_INFINITY);
+  ) -> BBox {
+    let points = self.get_points(content_bbox);
+    let line_thickness = self.style.get_line_thickness(scale);
+    let stroke_width = self.style.get_stroke_width(scale);
+    let width = line_thickness + stroke_width;
 
-    for point in self.get_points(content_bbox) {
-      if point.x < min.x {
-        min.x = point.x
+    match points.len() {
+      0 => BBox::default(),
+      1 => BBox::default().with_center(points[0]),
+      2 => {
+        let a = points[0];
+        let b = points[1];
+        let line_segment = tiling::geometry::LineSegment::default()
+          .with_start(a)
+          .with_end(b)
+          .extend_to_bbox(content_bbox, self.extend_start, self.extend_end);
+
+        BBox::default()
+          .with_center(line_segment.mid_point())
+          .with_height(line_segment.length() + width)
+          .with_width(width)
+          .with_rotation(line_segment.theta())
       }
+      _ => {
+        let bbox: BBox = (&points).into();
 
-      if point.x > max.x {
-        max.x = point.x
-      }
-
-      if point.y < min.y {
-        min.y = point.y
-      }
-
-      if point.y > max.y {
-        max.y = point.y
+        bbox
+          .with_width(bbox.width() + width)
+          .with_height(bbox.height() + width)
       }
     }
+  }
 
-    let line_thickness = self.style.get_line_thickness(scale) * 0.5;
-    let stroke_width = self.style.get_stroke_width(scale) * 0.5;
-    let offset = line_thickness + stroke_width;
-
-    Ok(
-      BBox::default()
-        .with_min(min.translate(&Point::default().with_xy(-offset, -offset)))
-        .with_max(max.translate(&Point::default().with_xy(offset, offset))),
-    )
+  fn component(&self) -> super::Component {
+    self.clone().into()
   }
 
   fn draw(
@@ -134,11 +144,15 @@ impl Draw for LineSegment {
       &self
         .style
         .set_fill(None)
-        .set_stroke_color(self.style.get_fill())
+        .set_stroke_color(Some(self.style.get_fill()))
         .set_stroke_width(scale, Some(line_thickness)),
     )?;
 
     Ok(())
+  }
+
+  fn interactive(&self) -> Option<bool> {
+    self.interactive
   }
 }
 
@@ -166,6 +180,7 @@ pub fn get_extended_points_to_bbox(
         .with_start(points[points.len() - 2])
         .with_end(points[points.len() - 1])
         .extend_to_bbox(bbox, false, extend_end);
+
       point = line_segment.p2;
     }
 

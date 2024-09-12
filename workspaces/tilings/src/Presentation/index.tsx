@@ -1,23 +1,46 @@
 import { ProjectWindow, ProjectTabs, ProjectTab } from '@hogg/common';
 import { WasmApiLoadingScreen } from '@hogg/wasm';
-import { BookOpenIcon, InfoIcon } from 'lucide-react';
+import { ChartNoAxesCombinedIcon, InfoIcon } from 'lucide-react';
 import { Box } from 'preshape';
-import ArrangementInformation from './Arrangement/ArrangementInformation';
+import { useMemo } from 'react';
 import ArrangementProvider from './Arrangement/ArrangementProvider';
-import Library from './Library/Library';
+import ArrangementInformation from './ArrangementInformation/ArrangementInformation';
+import ArrangementStats from './ArrangementStats/ArrangementStats';
 import NotationInput from './Notation/NotationInput';
 import NotationProvider from './Notation/NotationProvider';
 import PlayerControls from './Player/PlayerControls';
 import PlayerProvider from './Player/PlayerProvider';
+import { usePlayerContext } from './Player/usePlayerContext';
 import Renderer, { RendererProps } from './Renderer/Renderer';
 import Settings from './Settings/Settings';
 import SettingsProvider from './Settings/SettingsProvider';
 import { useSettingsContext } from './Settings/useSettingsContext';
 
-const DEFAULT_NOTATION = '3-4,3-3,3-12/m90/r(h12)';
+const DEFAULT_NOTATION = '3-4,3-3,3,3/m60/m(c3)';
 
 function PresentationInner(props: RendererProps) {
-  const { setShowSettings } = useSettingsContext();
+  const {
+    setShowSettings,
+    autoRotate,
+    expansionPhases,
+    colorMode,
+    scaleMode,
+    scaleSize,
+    showLayers,
+  } = useSettingsContext();
+  const { maxStage } = usePlayerContext();
+
+  const options = useMemo(
+    () => ({
+      autoRotate,
+      colorMode,
+      maxStage,
+      scaleMode,
+      scaleSize,
+      showLayers,
+    }),
+    [autoRotate, colorMode, maxStage, scaleMode, scaleSize, showLayers]
+  );
 
   return (
     <ProjectWindow
@@ -29,15 +52,24 @@ function PresentationInner(props: RendererProps) {
             <ArrangementInformation />
           </ProjectTab>
 
-          <ProjectTab Icon={BookOpenIcon} name="Library">
-            <Library />
+          <ProjectTab Icon={ChartNoAxesCombinedIcon} name="Stats">
+            <ArrangementStats />
           </ProjectTab>
+
+          {/* <ProjectTab Icon={BookOpenIcon} name="Library">
+            <Library />
+          </ProjectTab> */}
         </ProjectTabs>
       }
     >
       <Box flex="vertical" gap="x8" grow>
         <NotationInput />
-        <Renderer {...props} minHeight="500px" withPlayer />
+        <Renderer
+          {...props}
+          expansionPhases={expansionPhases}
+          minHeight="500px"
+          options={options}
+        />
       </Box>
 
       <Settings />

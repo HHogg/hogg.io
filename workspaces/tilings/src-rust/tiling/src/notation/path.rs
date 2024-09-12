@@ -84,9 +84,9 @@ impl Path {
   }
 
   pub fn has_shape(&self, shape: &Shape) -> bool {
-    return self.nodes.iter().any(|node| {
+    self.nodes.iter().any(|node| {
       node == &Node::Seed(Seed::default().with_shape(*shape)) || node == &Node::Shape(*shape)
-    });
+    })
   }
 
   pub fn is_empty(&self) -> bool {
@@ -95,6 +95,14 @@ impl Path {
 
   pub fn len(&self) -> u16 {
     self.nodes.len() as u16
+  }
+
+  pub fn iter_shapes(&self) -> impl Iterator<Item = &Shape> {
+    self.nodes.iter().filter_map(|node| match node {
+      Node::Shape(shape) => Some(shape),
+      Node::Seed(seed) => Some(&seed.shape),
+      _ => None,
+    })
   }
 
   pub fn get_level(&self) -> usize {

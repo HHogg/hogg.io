@@ -11,6 +11,7 @@ export type TilingRendererProps = BoxProps &
   RendererProps;
 
 export default function TilingRenderer({
+  expansionPhases,
   isValid,
   notation,
   options,
@@ -21,7 +22,12 @@ export default function TilingRenderer({
     <WasmApiLoadingScreen>
       <NotationProvider isValid={isValid} notation={notation}>
         <ArrangementProvider>
-          <Renderer {...rest} options={options} validations={validations} />
+          <Renderer
+            {...rest}
+            expansionPhases={expansionPhases}
+            options={options}
+            validations={validations}
+          />
         </ArrangementProvider>
       </NotationProvider>
     </WasmApiLoadingScreen>

@@ -11,15 +11,15 @@ use typeshare::typeshare;
 use super::Direction;
 use crate::TilingError;
 
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Ord, Serialize)]
 #[typeshare]
 pub enum Shape {
-  Skip,
-  Triangle,
-  Square,
-  Hexagon,
-  Octagon,
-  Dodecagon,
+  Skip = 0,
+  Triangle = 3,
+  Square = 4,
+  Hexagon = 6,
+  Octagon = 8,
+  Dodecagon = 12,
 }
 
 impl Shape {
@@ -42,18 +42,6 @@ impl Shape {
     ]
   }
 
-  // TODO: Remove
-  pub fn to_u8(&self) -> u8 {
-    match self {
-      Self::Skip => 0,
-      Self::Triangle => 3,
-      Self::Square => 4,
-      Self::Hexagon => 6,
-      Self::Octagon => 8,
-      Self::Dodecagon => 12,
-    }
-  }
-
   pub fn get_name(&self) -> String {
     match self {
       Self::Skip => "Skip".to_string(),
@@ -66,7 +54,11 @@ impl Shape {
   }
 
   pub fn get_internal_angle(&self) -> f64 {
-    (PI * 2.0) / self.to_u8() as f64
+    (PI * 2.0) / *self as u8 as f64
+  }
+
+  pub fn get_side_length(&self) -> f64 {
+    2.0 * (PI / *self as u8 as f64).sin()
   }
 
   pub fn previous(&self) -> Option<Self> {
@@ -142,13 +134,6 @@ impl FromStr for Shape {
 
 impl From<Shape> for u8 {
   fn from(shape: Shape) -> u8 {
-    match shape {
-      Shape::Skip => 0,
-      Shape::Triangle => 3,
-      Shape::Square => 4,
-      Shape::Hexagon => 6,
-      Shape::Octagon => 8,
-      Shape::Dodecagon => 12,
-    }
+    shape as u8
   }
 }

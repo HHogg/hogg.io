@@ -46,26 +46,23 @@ export const usePlayer = (
   const refAnimationFrameRequest = useRef<number>();
   const refTimeout = useRef<NodeJS.Timeout>();
 
-  const stages = tiling?.plane.stages ?? 0;
+  const stages = tiling?.plane.stages.length ?? 0;
   const duration = DURATION / speed;
   const durationOnEachStage = Math.min(duration / Math.max(1, stages));
   const elapsed = duration > 1 ? Math.min(1, elapsedTime / duration) : 0;
 
-  const getActiveStage = useCallback(
-    (elapsedTime: number) => {
-      if (Number.isFinite(elapsedTime) === false) {
-        return undefined;
-      }
+  const getActiveStage = (elapsedTime: number) => {
+    if (Number.isFinite(elapsedTime) === false) {
+      return undefined;
+    }
 
-      const elapsedStage = elapsedTime / durationOnEachStage;
-      const activePartIndex = Math.floor(elapsedStage);
+    const elapsedStage = elapsedTime / durationOnEachStage;
+    const activePartIndex = Math.floor(elapsedStage);
 
-      return activePartIndex;
-    },
-    [durationOnEachStage]
-  );
+    return activePartIndex;
+  };
 
-  const handleNextStage = useCallback(() => {
+  const handleNextStage = () => {
     setElapsedTime((prevElapsedTime) => {
       const activePart = getActiveStage(prevElapsedTime);
 
@@ -81,9 +78,9 @@ export const usePlayer = (
 
       return (nextPart * durationOnEachStage) % duration;
     });
-  }, [duration, durationOnEachStage, stages, getActiveStage]);
+  };
 
-  const handlePreviousStage = useCallback(() => {
+  const handlePreviousStage = () => {
     setElapsedTime((prevElapsedTime) => {
       let activePart = getActiveStage(prevElapsedTime);
 
@@ -99,7 +96,7 @@ export const usePlayer = (
 
       return (nextPart * durationOnEachStage) % duration;
     });
-  }, [duration, durationOnEachStage, stages, getActiveStage]);
+  };
 
   const stopLoop = () => {
     if (refAnimationFrameRequest.current) {

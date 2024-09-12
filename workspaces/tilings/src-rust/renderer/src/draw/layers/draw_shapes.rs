@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use anyhow::Result;
 use colorgrad::{Gradient, GradientBuilder, GradientBuilderError};
 use rand::seq::SliceRandom;
@@ -41,11 +43,7 @@ pub fn create_valid_mode_gradient(
   create_custom_gradient(domain_min, domain_max, ["#12b886", "#087f5b"])
 }
 
-pub fn draw_shapes(
-  canvas: &mut Canvas<Layer>,
-  options: &Options,
-  tiling: &Tiling,
-) -> Result<(), Error> {
+pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> Result<(), Error> {
   let path_shape_count = tiling.notation.path.get_shape_count() as f32;
   let color_mode = options.color_mode.clone().unwrap_or_default();
   let shape_style = options.styles.shape.clone().unwrap_or_default();
@@ -100,7 +98,32 @@ pub fn draw_shapes(
     }
   };
 
-  for shape in tiling.plane.iter() {
+  // Match up polygons during the placement stage (by their notation index)
+  // to the index of their shape type in the sequence store. This allows
+  // us to color the polygons by their shape type.
+  let shape_types = tiling.plane.get_shape_types();
+  let shape_types_by_index = tiling
+    .plane
+    .iter_polygons_placement()
+    .map(|polygon| {
+      (
+        polygon.index,
+        shape_types.get_index(
+          &tiling
+            .plane
+            .points_center
+            .get_value(&polygon.centroid.into())
+            .expect("Expected to find a sequence for point center")
+            .sequence,
+        ),
+      )
+    })
+    .filter_map(|(notation_index, shape_type)| {
+      shape_type.map(|shape_type| (notation_index, shape_type))
+    })
+    .collect::<HashMap<u16, u8>>();
+
+  for shape in tiling.plane.iter_polygons() {
     if let Some(max_stage) = options.max_stage {
       if shape.stage_index > max_stage {
         continue;
@@ -109,41 +132,40 @@ pub fn draw_shapes(
 
     canvas.add_component(
       Layer::ShapeFill,
-      Polygon {
-        polygon: shape.clone(),
-        style: options
-          .styles
-          .shape
-          .clone()
-          .unwrap_or_default()
-          .set_stroke_width(&canvas.scale, None)
-          .set_fill(match (&gradient, shape.shape_type) {
-            (Some(gradient), Some(shape_type)) => {
-              Some(gradient.at(shape_type as f32).to_hex_string())
-            }
-            _ => shape_style.get_fill(),
-          })
-          .set_opacity(if options.fade_unmatched_shape_types.unwrap_or_default() {
-            shape.shape_type.map(|_| 1.0).or(Some(0.2))
-          } else {
-            None
-          }),
-      }
-      .into(),
+      Polygon::default()
+        .non_interactive()
+        .with_polygon(shape.clone())
+        .with_style(
+          options
+            .styles
+            .shape
+            .clone()
+            .unwrap_or_default()
+            .set_stroke_width(&canvas.scale, None)
+            .set_fill(match (&gradient, shape_types_by_index.get(&shape.index)) {
+              (Some(gradient), Some(shape_type)) => {
+                Some(gradient.at(*shape_type as f32).to_hex_string())
+              }
+              _ => Some(shape_style.get_fill()),
+            }),
+        )
+        .into(),
     )?;
 
     canvas.add_component(
       Layer::ShapeBorder,
-      Polygon {
-        polygon: shape.clone(),
-        style: options
-          .styles
-          .shape
-          .clone()
-          .unwrap_or_default()
-          .set_fill(None),
-      }
-      .into(),
+      Polygon::default()
+        .non_interactive()
+        .with_polygon(shape.clone())
+        .with_style(
+          options
+            .styles
+            .shape
+            .clone()
+            .unwrap_or_default()
+            .set_fill(None),
+        )
+        .into(),
     )?;
   }
 

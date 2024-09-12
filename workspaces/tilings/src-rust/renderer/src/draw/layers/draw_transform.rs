@@ -1,41 +1,45 @@
 use anyhow::Result;
 use tiling::notation::{Transform, TransformContinuous, TransformEccentric};
-use tiling::Tiling;
+use tiling::{build, Tiling};
 
-use super::{draw_transform_continuous, draw_transform_eccentric, Layer};
+use super::{draw_transform_continuous, draw_transform_eccentric};
 use crate::canvas::Canvas;
 use crate::draw::Options;
 use crate::Error;
 
 pub fn draw_transform(
-  canvas: &mut Canvas<Layer>,
+  canvas: &mut Canvas,
   options: &Options,
   tiling: &Tiling,
 ) -> Result<(), Error> {
-  // TODO: This should be the index shown on the
-  // player. Not the last one in the list.
-  let active_transform_index = options
-    .active_transform_index
-    .unwrap_or(tiling.notation.get_transform_count() as u32 - 1)
-    as usize;
+  let max_stage = options.max_stage.unwrap_or(0) - 1;
+  let transform_index = if let Some(index) = options.show_transform_index {
+    Some(index)
+  } else if let Some(build::Stage::Transform(index)) = tiling.plane.stages.get(max_stage as usize) {
+    Some(*index)
+  } else {
+    None
+  };
 
-  if let Some(active_transform) = tiling.notation.get_transform(active_transform_index) {
-    match &active_transform {
-      Transform::Continuous(TransformContinuous { operation, value }) => {
-        draw_transform_continuous(canvas, options, operation, value)?
+  if let Some(index) = transform_index {
+    if let Some(active_transform) = tiling.notation.get_transform(index as usize) {
+      match &active_transform {
+        Transform::Continuous(TransformContinuous { operation, value }) => {
+          draw_transform_continuous(canvas, options, operation, value)?
+        }
+        Transform::Eccentric(TransformEccentric {
+          operation,
+          origin_index,
+          origin_type,
+        }) => draw_transform_eccentric(
+          canvas,
+          options,
+          tiling,
+          operation,
+          origin_type,
+          origin_index,
+        )?,
       }
-      Transform::Eccentric(TransformEccentric {
-        operation,
-        origin_index,
-        origin_type,
-      }) => draw_transform_eccentric(
-        canvas,
-        options,
-        tiling,
-        operation,
-        origin_type,
-        origin_index,
-      )?,
     }
   }
 

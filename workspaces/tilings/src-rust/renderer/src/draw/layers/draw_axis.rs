@@ -1,52 +1,80 @@
 use anyhow::Result;
-use tiling::Tiling;
 
 use super::Layer;
-use crate::canvas::{Canvas, LineSegment};
+use crate::canvas::{Canvas, LineSegment, Point};
 use crate::draw::Options;
 use crate::Error;
 
-pub fn draw_axis(
-  canvas: &mut Canvas<Layer>,
-  options: &Options,
-  tiling: &Tiling,
-) -> Result<(), Error> {
+pub fn draw_axis(canvas: &mut Canvas, options: &Options) -> Result<(), Error> {
   let style = options.styles.axis.clone().unwrap_or_default();
-  let size = tiling
-    .plane
-    .seed_polygon
-    .as_ref()
-    .map(|p| p.bbox.radius())
-    .unwrap_or(1.0);
-
-  let line_segment_x = tiling::geometry::LineSegment::default()
-    .with_start(tiling::geometry::Point::default().with_xy(size * -1.0, 0.0))
-    .with_end(tiling::geometry::Point::default().with_xy(size, 0.0));
-
-  let line_segment_y = tiling::geometry::LineSegment::default()
-    .with_start(tiling::geometry::Point::default().with_xy(0.0, size * -1.0))
-    .with_end(tiling::geometry::Point::default().with_xy(0.0, size));
 
   canvas.add_component(
-    Layer::AnnotationLines,
-    LineSegment {
-      points: line_segment_x.into(),
-      style: style.set_line_dash(&canvas.scale, None),
-      extend_start: false,
-      extend_end: false,
-    }
-    .into(),
+    Layer::Axis,
+    Point::default()
+      .non_interactive()
+      .with_point(tiling::geometry::Point::default())
+      .with_style(style.clone())
+      .into(),
   )?;
 
   canvas.add_component(
-    Layer::AnnotationLines,
-    LineSegment {
-      points: line_segment_y.into(),
-      style: style.clone(),
-      extend_start: false,
-      extend_end: false,
-    }
-    .into(),
+    Layer::Axis,
+    LineSegment::default()
+      .non_interactive()
+      .with_points(
+        tiling::geometry::LineSegment::default()
+          .with_start(tiling::geometry::Point::at(-0.5, 0.0))
+          .with_end(tiling::geometry::Point::at(-1.0, 0.0))
+          .into(),
+      )
+      .with_style(style.clone())
+      .with_extend_end(true)
+      .into(),
+  )?;
+
+  canvas.add_component(
+    Layer::Axis,
+    LineSegment::default()
+      .non_interactive()
+      .with_points(
+        tiling::geometry::LineSegment::default()
+          .with_start(tiling::geometry::Point::at(0.5, 0.0))
+          .with_end(tiling::geometry::Point::at(1.0, 0.0))
+          .into(),
+      )
+      .with_style(style.clone())
+      .with_extend_end(true)
+      .into(),
+  )?;
+
+  canvas.add_component(
+    Layer::Axis,
+    LineSegment::default()
+      .non_interactive()
+      .with_points(
+        tiling::geometry::LineSegment::default()
+          .with_start(tiling::geometry::Point::at(0.0, -0.5))
+          .with_end(tiling::geometry::Point::at(0.0, -1.0))
+          .into(),
+      )
+      .with_style(style.clone())
+      .with_extend_end(true)
+      .into(),
+  )?;
+
+  canvas.add_component(
+    Layer::Axis,
+    LineSegment::default()
+      .non_interactive()
+      .with_points(
+        tiling::geometry::LineSegment::default()
+          .with_start(tiling::geometry::Point::at(0.0, 0.5))
+          .with_end(tiling::geometry::Point::at(0.0, 1.0))
+          .into(),
+      )
+      .with_style(style.clone())
+      .with_extend_end(true)
+      .into(),
   )?;
 
   Ok(())

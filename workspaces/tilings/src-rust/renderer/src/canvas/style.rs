@@ -4,7 +4,7 @@ use wasm_bindgen::JsValue;
 
 use super::Scale;
 
-#[derive(Clone, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Style {
@@ -13,6 +13,8 @@ pub struct Style {
   line_dash: Option<Vec<f64>>,
   line_thickness: Option<f64>,
   point_radius: Option<f64>,
+  shadow_color: Option<String>,
+  shadow_blur: Option<f64>,
   stroke_color: Option<String>,
   stroke_width: Option<f64>,
   opacity: Option<f64>,
@@ -26,8 +28,9 @@ impl Style {
       .unwrap_or(0.0)
   }
 
-  pub fn get_fill(&self) -> Option<String> {
-    self.fill.clone()
+  pub fn get_fill(&self) -> String {
+    let default_fill_style = "transparent".to_string();
+    self.fill.as_ref().cloned().unwrap_or(default_fill_style)
   }
 
   pub fn get_line_dash(&self, scale: &Scale) -> Option<Vec<f64>> {
@@ -46,11 +49,24 @@ impl Style {
       .unwrap_or(0.0)
   }
 
+  pub fn get_opacity(&self) -> f64 {
+    self.opacity.unwrap_or(1.0)
+  }
+
   pub fn get_point_radius(&self, scale: &Scale) -> f64 {
     self
       .point_radius
       .map(|v| scale.scale_value_to_content(v))
       .unwrap_or(0.0)
+  }
+
+  pub fn get_shadow_blur(&self, _scale: &Scale) -> f64 {
+    self.shadow_blur.unwrap_or(0.0)
+  }
+
+  pub fn get_shadow_color(&self) -> String {
+    let default_shadow_color = "transparent".to_string();
+    self.shadow_color.clone().unwrap_or(default_shadow_color)
   }
 
   pub fn get_stroke_color(&self) -> String {
@@ -75,7 +91,7 @@ impl Style {
     let mut style = self.clone();
     style.line_dash = line_dash.map(|v| {
       v.into_iter()
-        .map(|v| scale.scale_value_to_content(v))
+        .map(|v| scale.scale_value_to_canvas(v))
         .collect()
     });
     style
@@ -90,6 +106,18 @@ impl Style {
   pub fn set_point_radius(&self, scale: &Scale, point_radius: Option<f64>) -> Self {
     let mut style = self.clone();
     style.point_radius = point_radius.map(|v| scale.scale_value_to_canvas(v));
+    style
+  }
+
+  pub fn set_shadow_blur(&self, shadow_blur: Option<f64>) -> Self {
+    let mut style = self.clone();
+    style.shadow_blur = shadow_blur;
+    style
+  }
+
+  pub fn set_shadow_color(&self, shadow_color: Option<String>) -> Self {
+    let mut style = self.clone();
+    style.shadow_color = shadow_color;
     style
   }
 
@@ -116,20 +144,33 @@ impl Style {
     self.apply_line_dash(context, scale)?;
     self.apply_fill(context);
     self.apply_stroke(context, scale);
+    self.apply_shadow(context, scale);
 
     Ok(())
   }
 
   fn apply_fill(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
-    let default_fill_style = "transparent".to_string();
-    let fill_style = self.fill.as_ref().unwrap_or(&default_fill_style);
+    let fill = self.get_fill();
 
-    context.set_fill_style(&fill_style.into());
+    context.set_fill_style(&fill.into());
   }
 
   fn apply_opacity(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
     let opacity = self.opacity.unwrap_or(1.0);
     context.set_global_alpha(opacity);
+  }
+
+  fn apply_shadow(&self, context: &web_sys::OffscreenCanvasRenderingContext2d, scale: &Scale) {
+    let shadow_color = self.get_shadow_color();
+    let shadow_blur = self.get_shadow_blur(scale);
+
+    if shadow_blur > 0.0 {
+      context.set_shadow_color(&shadow_color);
+      context.set_shadow_blur(shadow_blur);
+    } else {
+      context.set_shadow_color("transparent");
+      context.set_shadow_blur(0.0);
+    }
   }
 
   fn apply_stroke(&self, context: &web_sys::OffscreenCanvasRenderingContext2d, scale: &Scale) {

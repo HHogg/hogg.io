@@ -3,20 +3,20 @@ import { ColorMode, ScaleMode } from '../../types';
 import {
   Settings,
   SettingsContext,
-  defaultOptions,
+  defaultSettings,
 } from './useSettingsContext';
 
 export type SettingsProviderProps = {
-  options?: Partial<Settings>;
+  settings?: Partial<Settings>;
 };
 
 export default function SettingsProvider({
-  options,
+  settings,
   ...rest
 }: PropsWithChildren<SettingsProviderProps>) {
   const initialState = {
-    ...defaultOptions,
-    ...options,
+    ...defaultSettings,
+    ...settings,
   };
 
   const [autoRotate, setAutoRotate] = useState(initialState.autoRotate);
@@ -26,10 +26,7 @@ export default function SettingsProvider({
   );
   const [scaleMode, setScaleMode] = useState<ScaleMode>(initialState.scaleMode);
   const [scaleSize, setScaleSize] = useState<number>(initialState.scaleSize);
-  const [showAnnotations, setShowAnnotations] = useState(
-    initialState.showAnnotations
-  );
-  const [showDebug, setShowDebug] = useState(initialState.showDebug);
+  const [showLayers, setShowLayers] = useState(initialState.showLayers);
   const [showSettings, setShowSettings] = useState(false);
 
   const toggleSettings = () => setShowSettings(!showSettings);
@@ -40,15 +37,13 @@ export default function SettingsProvider({
     expansionPhases,
     scaleMode,
     scaleSize,
-    showAnnotations,
-    showDebug,
+    showLayers,
     setAutoRotate,
     setColorMode,
     setExpansionPhases,
     setScaleMode,
     setScaleSize,
-    setShowAnnotations,
-    setShowDebug,
+    setShowLayers,
     setShowSettings,
     toggleSettings,
     elapsed: 0,

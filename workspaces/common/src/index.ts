@@ -22,6 +22,7 @@ export { default as Lines } from './Lines/Lines';
 export { default as SvgLabel } from './SvgLabels/SvgLabel';
 export { default as SvgLabelsProvider } from './SvgLabels/SvgLabelsProvider';
 export { default as useSvgLabelsContext } from './SvgLabels/useSvgLabelsContext';
+export { type Point } from './SvgLabels/types';
 
 export { default as PatternBackground } from './ProjectWindow/PatternBackground';
 
@@ -36,6 +37,8 @@ export { useProjectPageContext } from './ProjectPage/useProjectPageContext';
 export { default as ProjectControl } from './ProjectWindow/ProjectControl';
 export { default as ProjectControlGroup } from './ProjectWindow/ProjectControlGroup';
 export { default as ProjectControls } from './ProjectWindow/ProjectControls';
+export { default as ProjectHeader } from './ProjectWindow/ProjectHeader';
+export { default as ProjectHeaderGroup } from './ProjectWindow/ProjectHeaderGroup';
 export { default as ProjectProgressBar } from './ProjectWindow/ProjectProgressBar';
 export { default as ProjectTab } from './ProjectWindow/ProjectTab';
 export { default as ProjectTabs } from './ProjectWindow/ProjectTabs';

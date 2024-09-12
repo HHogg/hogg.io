@@ -72,8 +72,8 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
     .bind(has_12)
     .bind(path_index)
     .bind(t.transform_index)
-    .bind(t.uniform)
-    .bind(t.hash)
+    // .bind(t.uniform) // TODO: implement uniform or remove from db
+    // .bind(t.hash) // TODO: implement hash or remove from db
     .execute(pool)
   });
 

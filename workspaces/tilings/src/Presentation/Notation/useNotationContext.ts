@@ -4,6 +4,7 @@ type NotationContextProps = {
   notation: string;
   notationRef: React.MutableRefObject<string>;
   path: string;
+  transforms: string[];
   isValid?: boolean;
   setNotation: (notation: string) => void;
   previousNotation: () => void;
@@ -16,6 +17,7 @@ export const NotationContext = createContext<NotationContextProps>({
   notation: '',
   notationRef: { current: '' },
   path: '',
+  transforms: [],
   setNotation: () => {},
   previousNotation: () => {},
   nextNotation: () => {},

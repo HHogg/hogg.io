@@ -1,21 +1,35 @@
 use tiling::geometry::BBox;
 
-use super::{Component, Draw, Style};
+use super::{Draw, Style};
 use crate::canvas::collision::Theia;
 use crate::canvas::Scale;
 use crate::Error;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Default)]
 pub struct Polygon {
-  pub polygon: tiling::geometry::Polygon,
-  pub style: Style,
+  polygon: tiling::geometry::Polygon,
+  style: Style,
+  interactive: Option<bool>,
+}
+
+impl Polygon {
+  pub fn non_interactive(mut self) -> Self {
+    self.interactive = Some(false);
+    self
+  }
+
+  pub fn with_polygon(mut self, polygon: tiling::geometry::Polygon) -> Self {
+    self.polygon = polygon;
+    self
+  }
+
+  pub fn with_style(mut self, style: Style) -> Self {
+    self.style = style;
+    self
+  }
 }
 
 impl Draw for Polygon {
-  fn component(&self) -> Component {
-    self.clone().into()
-  }
-
   fn style(&self) -> &Style {
     &self.style
   }
@@ -26,8 +40,15 @@ impl Draw for Polygon {
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,
-  ) -> Result<BBox, Error> {
-    Ok(self.polygon.bbox)
+  ) -> BBox {
+    let min = self.polygon.bbox.min();
+    let max = self.polygon.bbox.max();
+
+    BBox::from_min_max(min, max)
+  }
+
+  fn component(&self) -> super::Component {
+    self.clone().into()
   }
 
   fn draw(
@@ -47,10 +68,20 @@ impl Draw for Polygon {
       }
     }
 
-    context.line_to(self.polygon.points[0].x, self.polygon.points[0].y);
+    let first_point = self
+      .polygon
+      .points
+      .first()
+      .expect("First point for polygon not found");
+
+    context.line_to(first_point.x, first_point.y);
 
     self.draw_end(context);
 
     Ok(())
+  }
+
+  fn interactive(&self) -> Option<bool> {
+    self.interactive
   }
 }

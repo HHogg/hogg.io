@@ -2,18 +2,34 @@ use std::f64::consts::PI;
 
 use tiling::geometry::BBox;
 
-use super::{Component, Draw, Style};
+use super::{Draw, Style};
 use crate::canvas::collision::Theia;
 use crate::canvas::Scale;
 use crate::Error;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Default)]
 pub struct Point {
-  pub point: tiling::geometry::Point,
-  pub style: Style,
+  point: tiling::geometry::Point,
+  interactive: Option<bool>,
+  style: Style,
 }
 
 impl Point {
+  pub fn non_interactive(mut self) -> Self {
+    self.interactive = Some(false);
+    self
+  }
+
+  pub fn with_point(mut self, point: tiling::geometry::Point) -> Self {
+    self.point = point;
+    self
+  }
+
+  pub fn with_style(mut self, style: Style) -> Self {
+    self.style = style;
+    self
+  }
+
   fn draw_path(
     &self,
     context: &web_sys::OffscreenCanvasRenderingContext2d,
@@ -39,7 +55,7 @@ impl Point {
 }
 
 impl Draw for Point {
-  fn component(&self) -> Component {
+  fn component(&self) -> super::Component {
     self.clone().into()
   }
 
@@ -53,20 +69,20 @@ impl Draw for Point {
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     scale: &Scale,
-  ) -> Result<BBox, Error> {
+  ) -> BBox {
     let radius = self.style.get_point_radius(scale);
 
     let min = self
       .point
       .clone()
-      .translate(&tiling::geometry::Point::default().with_xy(-radius, -radius));
+      .translate(&tiling::geometry::Point::at(-radius, -radius));
 
     let max = self
       .point
       .clone()
-      .translate(&tiling::geometry::Point::default().with_xy(radius, radius));
+      .translate(&tiling::geometry::Point::at(radius, radius));
 
-    Ok(BBox { min, max })
+    BBox::from_min_max(min, max)
   }
 
   fn draw(
@@ -94,5 +110,9 @@ impl Draw for Point {
     self.draw_path(context, scale, &self.style.set_stroke_width(scale, None))?;
 
     Ok(())
+  }
+
+  fn interactive(&self) -> Option<bool> {
+    self.interactive
   }
 }

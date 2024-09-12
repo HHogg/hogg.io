@@ -52,6 +52,7 @@ export default function ArticleFigCodeBlock({
           borderSize="x1"
           flex="vertical"
           grow
+          padding="x6"
           minWidth="0px"
         >
           {presentation}
@@ -69,13 +70,10 @@ export default function ArticleFigCodeBlock({
         <Text basis="0" flex="horizontal" grow minWidth={0} size="x3">
           <Motion
             basis="0"
-            // animate={{ height: isExpanded ? 'auto' : '300px' }}
-            // initial={{ height: '300px' }}
             flex="vertical"
             grow
             overflow="auto"
             ref={refCodeBlock}
-            // maxHeight="300px"
           >
             <CodeBlock grow language={language} padding="x6">
               {contents}

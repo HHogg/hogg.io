@@ -19,7 +19,6 @@ const initialContext = {
 
 export const PlayerContext = createContext<UsePlayerResult>(initialContext);
 
-export const usePlayerContext = (enabled = true): UsePlayerResult => {
-  const context = useContext(PlayerContext);
-  return enabled ? context : initialContext;
+export const usePlayerContext = (): UsePlayerResult => {
+  return useContext(PlayerContext);
 };

@@ -43,10 +43,22 @@ export function formatDuration(
   });
 }
 
+export function formatMs(durationMs: number): string {
+  return Duration.fromMillis(durationMs).normalize().toHuman({
+    compactDisplay: 'short',
+    listStyle: 'narrow',
+    unitDisplay: 'narrow',
+  });
+}
+
 export function formatNumber(value?: number): string {
   return value === undefined
     ? '-'
     : new Intl.NumberFormat('en-uk').format(value);
+}
+
+export function formatPercent(number?: number) {
+  return number === undefined ? '' : `${(number * 100).toFixed(1)}%`;
 }
 
 export function titlecase(value: string): string {

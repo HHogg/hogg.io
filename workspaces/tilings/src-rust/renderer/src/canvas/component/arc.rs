@@ -2,22 +2,47 @@ use std::f64::consts::PI;
 
 use tiling::geometry::{BBox, Point};
 
-use super::{Chevron, Component, Draw, Style};
+use super::{Draw, Style};
 use crate::canvas::collision::Theia;
 use crate::canvas::Scale;
 use crate::Error;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Default)]
 pub struct Arc {
-  pub point: Point,
-  pub radius: f64,
-  pub start_angle: f64,
-  pub end_angle: f64,
-  pub style: Style,
+  point: Point,
+  radius: f64,
+  start_angle: f64,
+  end_angle: f64,
+  style: Style,
 }
 
 impl Arc {
-  fn get_radius(&self, scale: &Scale) -> f64 {
+  pub fn with_point(mut self, point: Point) -> Self {
+    self.point = point;
+    self
+  }
+
+  pub fn with_radius(mut self, radius: f64) -> Self {
+    self.radius = radius;
+    self
+  }
+
+  pub fn with_start_angle(mut self, start_angle: f64) -> Self {
+    self.start_angle = start_angle;
+    self
+  }
+
+  pub fn with_end_angle(mut self, end_angle: f64) -> Self {
+    self.end_angle = end_angle;
+    self
+  }
+
+  pub fn with_style(mut self, style: Style) -> Self {
+    self.style = style;
+    self
+  }
+
+  pub fn get_radius(&self, scale: &Scale) -> f64 {
     let line_thickness = self.style.get_line_thickness(scale);
     let chevron_size = self.style.get_chevron_size(scale);
     let stroke_width = self.style.get_stroke_width(scale);
@@ -32,17 +57,6 @@ impl Arc {
 
   fn get_end_angle(&self) -> f64 {
     self.end_angle - PI * 0.5
-  }
-
-  fn get_chevron(&self, scale: &Scale) -> Chevron {
-    Chevron {
-      point: self
-        .point
-        .translate(&Point::default().with_xy(0.0, -self.get_radius(scale)))
-        .rotate(self.end_angle, Some(&self.point)),
-      direction: self.end_angle,
-      style: self.style.clone(),
-    }
   }
 
   fn draw_path(
@@ -69,11 +83,11 @@ impl Arc {
 impl Draw for Arc {
   fn bbox(
     &self,
-    context: &web_sys::OffscreenCanvasRenderingContext2d,
-    canvas_bbox: &BBox,
-    content_bbox: &BBox,
-    scale: &Scale,
-  ) -> Result<BBox, Error> {
+    _context: &web_sys::OffscreenCanvasRenderingContext2d,
+    _canvas_bbox: &BBox,
+    _content_bbox: &BBox,
+    _scale: &Scale,
+  ) -> BBox {
     let aa = self.start_angle - PI * 0.5;
     let ea = self.end_angle - PI * 0.5;
 
@@ -106,20 +120,13 @@ impl Draw for Arc {
     let x_max = if abm * abe > 0.0 { ex } else { ax.max(bx) };
     let y_max = if abm * abn > 0.0 { ny } else { ay.max(by) };
 
-    let min = Point::default().with_xy(x_min, y_min);
-    let max = Point::default().with_xy(x_max, y_max);
-    let bbox = BBox::default().with_min(min).with_max(max);
+    let min = Point::at(x_min, y_min);
+    let max = Point::at(x_max, y_max);
 
-    Ok(
-      bbox.union(
-        &self
-          .get_chevron(scale)
-          .bbox(context, canvas_bbox, content_bbox, scale)?,
-      ),
-    )
+    BBox::from_min_max(min, max)
   }
 
-  fn component(&self) -> Component {
+  fn component(&self) -> super::Component {
     self.clone().into()
   }
 
@@ -130,10 +137,10 @@ impl Draw for Arc {
   fn draw(
     &self,
     context: &web_sys::OffscreenCanvasRenderingContext2d,
-    canvas_bbox: &BBox,
-    content_bbox: &BBox,
+    _canvas_bbox: &BBox,
+    _content_bbox: &BBox,
     scale: &Scale,
-    theia: &mut Theia,
+    _theia: &mut Theia,
   ) -> Result<(), Error> {
     let line_thickness = self.style.get_line_thickness(scale);
     let stroke_width = self.style.get_stroke_width(scale);
@@ -153,13 +160,9 @@ impl Draw for Arc {
       &self
         .style
         .set_fill(None)
-        .set_stroke_color(self.style.get_fill())
+        .set_stroke_color(Some(self.style.get_fill()))
         .set_stroke_width(scale, Some(line_thickness)),
     )?;
-
-    self
-      .get_chevron(scale)
-      .draw(context, canvas_bbox, content_bbox, scale, theia)?;
 
     Ok(())
   }

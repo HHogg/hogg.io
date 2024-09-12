@@ -20,6 +20,13 @@ impl SequenceStore {
     self.sequences.get(index as usize)
   }
 
+  pub fn get_index(&self, sequence: &Sequence) -> Option<u8> {
+    match self.get_match(sequence) {
+      Match::Exact(index) => Some(index),
+      _ => None,
+    }
+  }
+
   pub fn get_match(&self, sequence: &Sequence) -> Match {
     get_match(sequence, &self.sequences)
   }

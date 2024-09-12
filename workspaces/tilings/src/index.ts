@@ -8,9 +8,8 @@ export * from './types';
 export const meta: Project = {
   id: ProjectKey.tilings,
   image,
-  name: 'Searching and rendering Euclidean tilings with Rust and a multithreaded actor architecture',
-  description:
-    'Developing a notation used to reference unique regular polygon tilings, a searching algorithm to discover them and a renderer to display them for the web.',
+  name: 'Searching, generating, validating and rendering Euclidean tilings',
+  description: `A long term project to generate Euclidean tilings by developing a notation to describe them, a structure generator, a validator and a renderer.`,
   wip: true,
   deploy: true,
   tags: [

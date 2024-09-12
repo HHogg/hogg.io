@@ -2,23 +2,23 @@ import {
   type Options,
   type Tiling,
   type Transform,
-  ValidationFlag,
+  Flag,
+  Metrics,
 } from '@hogg/tilings/types';
 import {
   parse_notation as _parseNotation,
   parse_transform as _parseTransform,
   find_previous_tiling as _findPreviousTiling,
   find_next_tiling as _findNextTiling,
-  render_notation as _renderNotation,
+  generate_tiling as _generateTiling,
+  render_tiling as _renderTiling,
 } from '@hogg/wasm/pkg';
 
-const defaultValidations: ValidationFlag[] = [
-  ValidationFlag.Overlaps,
-  ValidationFlag.Gaps,
-  ValidationFlag.Expansion,
-  ValidationFlag.VertexTypes,
-  ValidationFlag.EdgeTypes,
-  ValidationFlag.ShapeTypes,
+const defaultValidations: Flag[] = [
+  Flag.Overlaps,
+  Flag.Gaps,
+  Flag.Expanded,
+  Flag.VertexTypes,
 ];
 
 const canvases = new Map<string, OffscreenCanvas>();
@@ -37,26 +37,35 @@ export function parseTransform(transform: string, path: string): Transform {
 
 export function findPreviousTiling(
   notation: string,
+  expansionPhases: number,
   validations = defaultValidations
 ): string | undefined {
-  return _findPreviousTiling(notation, validations);
+  return _findPreviousTiling(notation, expansionPhases, validations);
 }
 
 export function findNextTiling(
   notation: string,
+  expansionPhases: number,
   validations = defaultValidations
 ): string | undefined {
-  return _findNextTiling(notation, validations);
+  return _findNextTiling(notation, expansionPhases, validations);
 }
 
-export function renderNotation(
-  id: string,
+export function generateTiling(
   notation: string,
-  width: number,
-  height: number,
-  options?: Options,
+  expansionPhases: number,
   validations = defaultValidations
 ): Tiling {
+  return _generateTiling(notation, expansionPhases, validations);
+}
+
+export function renderTiling(
+  id: string,
+  tiling: Tiling,
+  width: number,
+  height: number,
+  options?: Options
+): Metrics {
   const canvas = canvases.get(id);
 
   if (!canvas) {
@@ -66,5 +75,5 @@ export function renderNotation(
   canvas.width = width;
   canvas.height = height;
 
-  return _renderNotation(canvas, notation, options, validations);
+  return _renderTiling(canvas, tiling, options);
 }

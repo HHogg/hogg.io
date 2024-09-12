@@ -1,7 +1,6 @@
 #![allow(clippy::approx_constant)]
 
 pub mod build;
-pub mod classification;
 mod error;
 pub mod geometry;
 pub mod notation;

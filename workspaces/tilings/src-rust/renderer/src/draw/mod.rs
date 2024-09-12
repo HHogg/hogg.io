@@ -2,49 +2,61 @@ mod layers;
 mod options;
 
 use anyhow::Result;
+use tiling::build::Metrics;
 use tiling::Tiling;
 use web_sys::OffscreenCanvas;
 
-use self::layers::{draw_axis, draw_shapes, draw_transform, draw_vertex_types, Layer};
-use self::options::Annotation;
+pub use self::layers::Layer;
+use self::layers::{
+  draw_axis, draw_grid_line_segment, draw_grid_polygon, draw_plane_outline, draw_shapes,
+  draw_transform, draw_transform_points,
+};
 pub use self::options::Options;
-use crate::canvas::{Canvas, Scale};
+use crate::canvas::Canvas;
 use crate::Error;
 
 pub fn draw(
   tiling: &Tiling,
   offscreen_canvas: OffscreenCanvas,
   options: Options,
-) -> Result<(), Error> {
-  let scale = Scale::default()
-    .with_auto_rotate(options.auto_rotate)
-    .with_padding(options.padding)
-    .with_mode(options.scale_mode);
+) -> Result<Metrics, Error> {
+  let mut metrics = Metrics::default();
+  let mut canvas = Canvas::new(offscreen_canvas, &options)?;
 
-  let mut canvas = Canvas::<Layer>::new(offscreen_canvas, scale)?;
+  let show_layers = options.show_layers.clone().unwrap_or_default();
 
-  let show_annotations = options.show_annotations.clone().unwrap_or_default();
-  let show_debug = options.show_debug.unwrap_or(false);
-
-  if show_debug {
-    canvas.draw_debug(&options.styles.debug);
-  }
-
+  metrics.start("draw");
   draw_shapes(&mut canvas, &options, tiling)?;
 
-  if show_annotations.get(&Annotation::AxisOrigin) == Some(&true) {
-    draw_axis(&mut canvas, &options, tiling)?;
+  if show_layers.get(&Layer::Axis) == Some(&true) {
+    draw_axis(&mut canvas, &options)?;
   }
 
-  if show_annotations.get(&Annotation::Transform) == Some(&true) {
+  if show_layers.get(&Layer::PlaneOutline) == Some(&true) {
+    draw_plane_outline(&mut canvas, &options, tiling)?;
+  }
+
+  if show_layers.get(&Layer::GridLineSegment) == Some(&true) {
+    draw_grid_line_segment(&mut canvas, &options, tiling)?;
+  }
+
+  if show_layers.get(&Layer::GridPolygon) == Some(&true) {
+    draw_grid_polygon(&mut canvas, &options, tiling)?;
+  }
+
+  if show_layers.get(&Layer::TransformPoints) == Some(&true) {
+    draw_transform_points(&mut canvas, &options, tiling)?;
+  }
+
+  if show_layers.get(&Layer::Transform) == Some(&true) {
     draw_transform(&mut canvas, &options, tiling)?;
   }
 
-  if show_annotations.get(&Annotation::VertexType) == Some(&true) {
-    draw_vertex_types(&mut canvas, &options, tiling)?;
-  }
+  metrics.finish("draw");
 
+  metrics.start("render");
   canvas.render()?;
+  metrics.finish("render");
 
-  Ok(())
+  Ok(metrics)
 }

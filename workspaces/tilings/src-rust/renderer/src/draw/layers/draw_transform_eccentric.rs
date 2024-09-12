@@ -4,12 +4,12 @@ use tiling::notation::{Operation, OriginIndex, OriginType};
 use tiling::Tiling;
 
 use super::Layer;
-use crate::canvas::{Arc, Canvas, LineSegment, LineSegmentArrows, Point, Style};
+use crate::canvas::{ArcArrow, Canvas, LineSegment, LineSegmentArrows, Point, Style};
 use crate::draw::Options;
 use crate::Error;
 
 pub fn draw_transform_eccentric(
-  canvas: &mut Canvas<Layer>,
+  canvas: &mut Canvas,
   options: &Options,
   tiling: &Tiling,
   operation: &Operation,
@@ -22,38 +22,37 @@ pub fn draw_transform_eccentric(
     .clone()
     .unwrap_or_default();
 
-  let origin_point = tiling
+  let origin_point = &tiling
     .plane
     .get_point_by_index_and_type(origin_type, origin_index)
     .ok_or(Error::InvalidTiling {
       reason: "transform origin not found",
     })?;
 
-  let reflection_line_segment = tiling
+  let transform_line_segment = tiling
     .plane
     .get_reflection_line(origin_index, origin_type)
     .ok_or(Error::InvalidTiling {
-      reason: "transform reflection line not found",
+      reason: "transform line segment not found",
     })?;
 
   canvas.add_component(
-    Layer::AnnotationLines,
-    LineSegment {
-      points: reflection_line_segment.into(),
-      extend_start: true,
-      extend_end: true,
-      style: transform_style.set_line_dash(&canvas.scale, None),
-    }
-    .into(),
+    Layer::Transform,
+    LineSegment::default()
+      .with_points(transform_line_segment.into())
+      .with_extend_start(true)
+      .with_extend_end(true)
+      .with_style(transform_style.set_line_dash(&canvas.scale, None))
+      .into(),
   )?;
 
   canvas.add_component(
-    Layer::AnnotationLines,
-    Point {
-      point: *origin_point,
-      style: transform_style.clone(),
-    }
-    .into(),
+    Layer::Transform,
+    Point::default()
+      .non_interactive()
+      .with_point(*origin_point)
+      .with_style(transform_style.clone())
+      .into(),
   )?;
 
   match operation {
@@ -61,7 +60,7 @@ pub fn draw_transform_eccentric(
       draw_transform_eccentric_reflect(
         canvas,
         origin_point,
-        reflection_line_segment,
+        transform_line_segment,
         &transform_style,
       )?;
     }
@@ -74,7 +73,7 @@ pub fn draw_transform_eccentric(
 }
 
 fn draw_transform_eccentric_reflect(
-  canvas: &mut Canvas<Layer>,
+  canvas: &mut Canvas,
   origin_point: &tiling::geometry::Point,
   line_segment: tiling::geometry::LineSegment,
   style: &Style,
@@ -88,34 +87,32 @@ fn draw_transform_eccentric_reflect(
     .with_end(line_segment.p2);
 
   canvas.add_component(
-    Layer::AnnotationArrows,
-    LineSegmentArrows {
-      line_segment: line_segment_p1,
-      extend_start: false,
-      extend_end: true,
-      direction: PI * 0.5,
-      style: style.clone(),
-    }
-    .into(),
+    Layer::Transform,
+    LineSegmentArrows::default()
+      .with_line_segment(line_segment_p1)
+      .with_extend_start(false)
+      .with_extend_end(true)
+      .with_direction(PI * 0.5)
+      .with_style(style.clone())
+      .into(),
   )?;
 
   canvas.add_component(
-    Layer::AnnotationArrows,
-    LineSegmentArrows {
-      line_segment: line_segment_p2,
-      extend_start: false,
-      extend_end: true,
-      direction: PI * -0.5,
-      style: style.clone(),
-    }
-    .into(),
+    Layer::Transform,
+    LineSegmentArrows::default()
+      .with_line_segment(line_segment_p2)
+      .with_extend_start(false)
+      .with_extend_end(true)
+      .with_direction(PI * -0.5)
+      .with_style(style.clone())
+      .into(),
   )?;
 
   Ok(())
 }
 
 fn draw_transform_eccentric_rotate(
-  canvas: &mut Canvas<Layer>,
+  canvas: &mut Canvas,
   tiling: &Tiling,
   origin_point: &tiling::geometry::Point,
   origin_type: &OriginType,
@@ -123,7 +120,7 @@ fn draw_transform_eccentric_rotate(
 ) -> Result<(), Error> {
   let start_angle = match origin_type {
     OriginType::MidPoint => {
-      if let Some(line_segment) = tiling.plane.line_segments_by_mid_point.get(origin_point) {
+      if let Some(line_segment) = tiling.plane.line_segments.get_value(&origin_point.into()) {
         line_segment.p2.radian_to(origin_point)
       } else {
         0.0
@@ -134,30 +131,28 @@ fn draw_transform_eccentric_rotate(
 
   let end_angle = start_angle + PI;
   let arc_angle_padding = PI * 0.05;
-  let radius = canvas.content_bbox().radius() + origin_point.distance_to_center();
+  let radius = canvas.content_bbox().radius_min();
 
   canvas.add_component(
-    Layer::AnnotationArrows,
-    Arc {
-      point: *origin_point,
-      radius,
-      start_angle: start_angle + arc_angle_padding,
-      end_angle: end_angle - arc_angle_padding,
-      style: style.set_line_dash(&canvas.scale, None),
-    }
-    .into(),
+    Layer::Transform,
+    ArcArrow::default()
+      .with_point(*origin_point)
+      .with_radius(radius)
+      .with_start_angle(start_angle + arc_angle_padding)
+      .with_end_angle(end_angle - arc_angle_padding)
+      .with_style(style.set_line_dash(&canvas.scale, None))
+      .into(),
   )?;
 
   canvas.add_component(
-    Layer::AnnotationArrows,
-    Arc {
-      point: *origin_point,
-      radius,
-      start_angle: start_angle + PI + arc_angle_padding,
-      end_angle: end_angle + PI - arc_angle_padding,
-      style: style.set_line_dash(&canvas.scale, None),
-    }
-    .into(),
+    Layer::Transform,
+    ArcArrow::default()
+      .with_point(*origin_point)
+      .with_radius(radius)
+      .with_start_angle(start_angle + PI + arc_angle_padding)
+      .with_end_angle(end_angle + PI - arc_angle_padding)
+      .with_style(style.set_line_dash(&canvas.scale, None))
+      .into(),
   )?;
 
   Ok(())

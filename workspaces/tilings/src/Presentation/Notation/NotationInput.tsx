@@ -35,7 +35,7 @@ export default function NotationInput() {
         backgroundColor="negative-shade-4"
         content={error}
         placement="bottom"
-        textColor="white"
+        textColor="light-shade-1"
         visible={!!error}
       >
         <Input

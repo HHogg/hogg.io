@@ -1,17 +1,17 @@
+use spatial_grid_map::{ResizeMethod, SpatialGridMap};
 use tiling::geometry::BBox;
 
 use super::component::{Component, Draw};
 use super::Scale;
-use crate::Error;
 
 pub struct Theia {
-  components: Vec<Component>,
+  components: SpatialGridMap<BBox>,
 }
 
 impl Theia {
   pub fn new() -> Self {
     Self {
-      components: Vec::new(),
+      components: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
     }
   }
 
@@ -22,21 +22,29 @@ impl Theia {
     content_bbox: &BBox,
     scale: &Scale,
     a: &Component,
-  ) -> Result<bool, Error> {
-    for b in self.components.iter() {
-      if a.bbox(context, canvas_bbox, content_bbox, scale)?
-        == b.bbox(context, canvas_bbox, content_bbox, scale)?
-      {
+  ) -> bool {
+    if a.interactive() == Some(false) {
+      return false;
+    }
+
+    let a_bbox = a.inner().bbox(context, canvas_bbox, content_bbox, scale);
+    let a_centroid: (f64, f64) = a_bbox.centroid().into();
+    let a_size = a_bbox.height().max(a_bbox.width());
+
+    let nearby_boxes = self.components.iter_values_around(&a_centroid, 1);
+
+    for b_bbox in nearby_boxes {
+      if a_bbox == *b_bbox {
         continue;
       }
 
-      if a.collides_with(context, canvas_bbox, content_bbox, scale, b)? {
-        return Ok(true);
+      if a_bbox.intersects(b_bbox) {
+        return true;
       }
     }
 
-    self.components.push(a.clone());
+    self.components.insert(a_centroid, a_size, a_bbox);
 
-    Ok(false)
+    false
   }
 }

@@ -8,6 +8,7 @@ export enum ProjectKey {
   evolution = 'evolution',
   line_segment_extending = 'line-segment-extending',
   snake = 'snake',
+  spatial_grid_map = 'spatial-grid-map',
   spirals = 'spirals',
   tilings = 'tilings',
   wasm = 'wasm',
@@ -19,7 +20,7 @@ export type Project = {
   description: string;
   created: string;
   updated: string;
-  image: string;
+  image?: string;
   tags: string[];
   href?: string;
   deploy?: boolean;

@@ -1,68 +1,68 @@
 mod arc;
+mod arc_arrow;
 mod arrow;
 mod chevron;
 mod draw;
+mod grid;
 mod line_segment;
 mod line_segment_arrows;
 mod point;
 mod polygon;
-mod rect;
 
 use tiling::geometry::BBox;
 
 pub use self::arc::Arc;
+pub use self::arc_arrow::ArcArrow;
 pub use self::arrow::Arrow;
 pub use self::chevron::Chevron;
 pub use self::draw::Draw;
+pub use self::grid::Grid;
 pub use self::line_segment::LineSegment;
 pub use self::line_segment_arrows::LineSegmentArrows;
 pub use self::point::Point;
 pub use self::polygon::Polygon;
-pub use self::rect::Rect;
 use super::collision::Theia;
 use super::Scale;
 pub use super::Style;
 use crate::Error;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Component {
   Arc(Arc),
+  ArcArrow(ArcArrow),
   Arrow(Arrow),
   Chevron(Chevron),
+  Grid(Grid),
   LineSegment(LineSegment),
   LineSegmentArrows(LineSegmentArrows),
   Point(Point),
   Polygon(Polygon),
-  Rect(Rect),
 }
 
 impl Component {
   pub fn inner(&self) -> &dyn Draw {
     match self {
       Self::Arc(d) => d,
+      Self::ArcArrow(d) => d,
       Self::Arrow(d) => d,
       Self::Chevron(d) => d,
+      Self::Grid(d) => d,
       Self::LineSegment(d) => d,
       Self::LineSegmentArrows(d) => d,
       Self::Point(d) => d,
       Self::Polygon(d) => d,
-      Self::Rect(d) => d,
     }
   }
 }
 
 impl Draw for Component {
-  fn collides_with(
+  fn children(
     &self,
-    context: &web_sys::OffscreenCanvasRenderingContext2d,
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
-    other: &Component,
-  ) -> Result<bool, Error> {
-    self
-      .inner()
-      .collides_with(context, canvas_bbox, content_bbox, scale, other)
+  ) -> Option<Vec<Box<dyn Draw>>> {
+    self.inner().children(canvas_bbox, content_bbox, scale)
   }
 
   fn component(&self) -> Component {
@@ -79,7 +79,7 @@ impl Draw for Component {
     canvas_bbox: &BBox,
     content_bbox: &BBox,
     scale: &Scale,
-  ) -> Result<BBox, Error> {
+  ) -> BBox {
     self.inner().bbox(context, canvas_bbox, content_bbox, scale)
   }
 
@@ -91,7 +91,7 @@ impl Draw for Component {
     scale: &Scale,
     theia: &mut Theia,
   ) -> Result<(), Error> {
-    if !theia.has_collision(context, canvas_bbox, content_bbox, scale, self)? {
+    if !theia.has_collision(context, canvas_bbox, content_bbox, scale, self) {
       self
         .inner()
         .draw(context, canvas_bbox, content_bbox, scale, theia)?;
@@ -112,11 +112,27 @@ impl Draw for Component {
       .inner()
       .draw_bbox(context, canvas_bbox, content_bbox, scale, style)
   }
+
+  fn interactive(&self) -> Option<bool> {
+    self.inner().interactive()
+  }
+}
+
+impl Default for Component {
+  fn default() -> Self {
+    Self::Polygon(Polygon::default())
+  }
 }
 
 impl From<Arc> for Component {
   fn from(arc: Arc) -> Self {
     Self::Arc(arc)
+  }
+}
+
+impl From<ArcArrow> for Component {
+  fn from(arc_arrow: ArcArrow) -> Self {
+    Self::ArcArrow(arc_arrow)
   }
 }
 
@@ -129,6 +145,12 @@ impl From<Arrow> for Component {
 impl From<Chevron> for Component {
   fn from(chevron: Chevron) -> Self {
     Self::Chevron(chevron)
+  }
+}
+
+impl From<Grid> for Component {
+  fn from(value: Grid) -> Self {
+    Self::Grid(value)
   }
 }
 
@@ -153,11 +175,5 @@ impl From<Point> for Component {
 impl From<Polygon> for Component {
   fn from(shape: Polygon) -> Self {
     Self::Polygon(shape)
-  }
-}
-
-impl From<Rect> for Component {
-  fn from(shape: Rect) -> Self {
-    Self::Rect(shape)
   }
 }

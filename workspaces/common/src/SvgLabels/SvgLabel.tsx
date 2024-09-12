@@ -20,7 +20,7 @@ type SvgLabelProps = Omit<
   paddingHorizontal?: number;
   paddingVertical?: number;
   margin?: number;
-  text: string;
+  text: JSX.Element | string;
   offsetX?: number;
   offsetY?: number;
   targetX: number;
@@ -127,7 +127,7 @@ export default function SvgLabel({
             y={-1}
             width={width}
             height={height}
-            fill={`var(--color-${backgroundColor}`}
+            fill={backgroundColor ? `var(--color-${backgroundColor}` : 'none'}
             stroke={stroke}
             strokeDasharray="4 4"
             strokeWidth="1"
@@ -135,19 +135,19 @@ export default function SvgLabel({
             ry={borderRadius}
           />
 
-          <Text
-            {...rest}
-            alignmentBaseline="middle"
-            textAnchor="middle"
-            tag="text"
-            fill="currentColor"
-            style={{ userSelect: 'none' }}
-            ref={setSize}
-            x={width * 0.5}
-            y={height * 0.5}
-          >
-            {text}
-          </Text>
+          <g transform={`translate(${width * 0.5} ${height * 0.5})`}>
+            <Text
+              {...rest}
+              alignmentBaseline="middle"
+              textAnchor="middle"
+              tag="text"
+              fill="currentColor"
+              style={{ userSelect: 'none' }}
+              ref={setSize}
+            >
+              {text}
+            </Text>
+          </g>
         </motion.g>
       </g>
     </motion.g>

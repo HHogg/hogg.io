@@ -5,7 +5,6 @@ const Presentation = ({}: {}) => {
   return (
     <ProjectWindow
       controls={<div />}
-      controlsPosition="top"
       padding="x0"
       tabs={
         <ProjectTabs>

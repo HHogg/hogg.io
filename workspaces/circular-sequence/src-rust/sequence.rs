@@ -1,7 +1,10 @@
+use typeshare::typeshare;
+
 #[path = "./sequence_tests.rs"]
 #[cfg(test)]
 mod tests;
 
+#[typeshare]
 pub type Sequence = [u8; 12];
 
 /// Returns the length of a sequence.

@@ -34,7 +34,7 @@ export default function AboutMe() {
         I've worked all parts of the stack; product, design and engineering.
         I've lead 5 <Strong>design system</Strong> projects,{' '}
         <Strong>Scala dataflow</Strong> pipelines, a <Strong>Rust</Strong>{' '}
-        network euclidean tiling search and renderer, a{' '}
+        network tiling search and renderer system, a{' '}
         <Strong>realtime collaborative</Strong> book editor,{' '}
         <Strong>GIS</Strong> infrastructure management, a{' '}
         <Strong>drag and drop</Strong> email editor, <Strong>WebGL</Strong>,{' '}

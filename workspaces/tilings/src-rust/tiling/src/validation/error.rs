@@ -14,4 +14,6 @@ pub enum Error {
   Gaps,
   #[error("Shapes overlap")]
   Overlaps,
+  #[error("Invalid vertex type -> {sequence}")]
+  VertexType { sequence: String },
 }

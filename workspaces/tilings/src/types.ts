@@ -4,6 +4,8 @@
 
 export type NodeId = string;
 
+export type Sequence = [number, number, number, number, number, number, number, number, number, number, number, number];
+
 export interface Error {
 	tiling: string;
 	reason: string;
@@ -133,6 +135,8 @@ export interface Style {
 	lineDash?: number[];
 	lineThickness?: number;
 	pointRadius?: number;
+	shadowColor?: string;
+	shadowBlur?: number;
 	strokeColor?: string;
 	strokeWidth?: number;
 	opacity?: number;
@@ -151,35 +155,43 @@ export enum ScaleMode {
 	WithinBounds = "WithinBounds",
 }
 
-export enum Annotation {
-	AxisOrigin = "AxisOrigin",
+/**
+ * The layers of the components in the canvas.
+ * This order is used to determine the order in which the components are drawn.
+ */
+export enum Layer {
+	ShapeFill = "ShapeFill",
+	ShapeBorder = "ShapeBorder",
+	PlaneOutline = "PlaneOutline",
+	Axis = "Axis",
+	GridLineSegment = "GridLineSegment",
+	GridPolygon = "GridPolygon",
 	Transform = "Transform",
-	VertexType = "VertexType",
+	TransformPoints = "TransformPoints",
+	BoundingBoxes = "BoundingBoxes",
 }
 
 export interface Styles {
 	axis?: Style;
-	debug?: Style;
+	boundingBoxes?: Style;
 	grid?: Style;
+	planeOutline?: Style;
 	shape?: Style;
 	transformContinuous?: Style;
 	transformEccentric?: Style;
-	vertexType?: Style;
+	transformPoints?: Style;
 }
 
 export interface Options {
-	activeTransformIndex?: number;
 	autoRotate?: boolean;
 	colorMode?: ColorMode;
-	fadeUnmatchedShapeTypes?: boolean;
-	expansionPhases?: number;
 	isValid?: boolean;
 	maxStage?: number;
 	padding?: number;
 	scaleMode?: ScaleMode;
 	scaleSize?: number;
-	showAnnotations?: Record<Annotation, boolean>;
-	showDebug?: boolean;
+	showLayers?: Record<Layer, boolean>;
+	showTransformIndex?: number;
 	styles: Styles;
 }
 
@@ -199,13 +211,25 @@ export interface ApplicationError {
 	reason: string;
 }
 
+export interface Event {
+	key: string;
+	counters: Map<string, number>;
+	duration: number;
+}
+
+export interface Metrics {
+	events: Event[];
+	eventsPending: Record<string, Event>;
+}
+
 export interface Result {
 	notation: string;
-	hash: string;
 	transformIndex: number;
-	uniform: number;
 	timestamp: string;
-	buildTimeMs: number;
+	metrics: Metrics;
+	vertexTypes: string[];
+	edgeTypes: string[];
+	shapeTypes: string[];
 }
 
 export interface Context {
@@ -214,41 +238,35 @@ export interface Context {
 	results: Result[];
 }
 
+export enum ResizeMethod {
+	First = "First",
+	Fixed = "Fixed",
+	Maximum = "Maximum",
+	Minimum = "Minimum",
+}
+
+export interface SpatialGridMap<TEntryValue> {
+	/**
+	 * Default of "2" as 2 * 2 * 64 = 256 bits or a 16x16 grid.
+	 * The reason we start with 4 blocks as opposed to 1 block
+	 * is to avoid the case of shifting a single block over the center
+	 * of 4 blocks which would require some block splitting.
+	 */
+	blocks_dimension: number;
+	/** Sorted set of all occupied locations in the grid. */
+	locations: Location[];
+	/** Resizing */
+	resize_method: ResizeMethod;
+	/** Bucket store. */
+	store: Map<number[], Bucket<TEntryValue>>;
+	/** The amount of space each bit represents in the grid. */
+	spacing?: number;
+}
+
 export interface Point {
 	x: number;
 	y: number;
-	vertex_type?: number;
-}
-
-export interface BBox {
-	min: Point;
-	max: Point;
-}
-
-export interface EdgeTypeStore {
-	edgeTypes: string[];
-}
-
-export interface ShapeTypeStore {
-	shapeTypes: string[];
-}
-
-export interface VertexTypeStore {
-	vertexTypes: string[];
-}
-
-export interface Classifier {
-	edgeTypeStore: EdgeTypeStore;
-	shapeTypeStore: ShapeTypeStore;
-	vertexTypeStore: VertexTypeStore;
-}
-
-export interface Plane {
-	bbox: BBox;
-	scale: number;
-	stages: number;
-	stageAddedPolygon: boolean;
-	classifier: Classifier;
+	index: number;
 }
 
 export interface LineSegment {
@@ -256,44 +274,89 @@ export interface LineSegment {
 	p2: Point;
 }
 
+export interface Entry {
+	point: Point;
+	value: number;
+	radians: number;
+}
+
+export interface PointSequence {
+	sequence: Sequence;
+	center: Point;
+	entries: Entry[];
+	size: number;
+}
+
+export interface BBox {
+	center: Point;
+	width: number;
+	height: number;
+	rotation: number;
+}
+
 export enum Offset {
 	Center = "Center",
 }
 
-export enum Phase {
-	Seed = "Seed",
-	Placement = "Placement",
-	Transform = "Transform",
-}
+export type Phase = 
+	| { type: "Seed", index?: undefined }
+	| { type: "Placement", index?: undefined }
+	| { type: "Transform", index: number };
 
 export interface Polygon {
 	bbox: BBox;
 	centroid: Point;
-	line_segments: LineSegment[];
-	notation_index: number;
+	index: number;
+	lineSegments: LineSegment[];
 	offset: Offset;
 	phase: Phase;
 	points: Point[];
 	shape: Shape;
-	shape_type?: number;
-	stage_index: number;
+	stageIndex: number;
 }
 
-export interface Notation {
-	optionLinkPaths: boolean;
-	optionTypeAhead: boolean;
-	optionWithFirstTransform: boolean;
-	path: string;
-	transforms: string;
-}
+export type Stage = 
+	| { type: "Placement", index?: undefined }
+	| { type: "Transform", index: number };
 
-export interface OriginIndex {
-	value: number;
+export interface Plane {
+	expansionPhases: number;
+	lineSegments: SpatialGridMap<LineSegment>;
+	metrics: Metrics;
+	pointsCenter: SpatialGridMap<PointSequence>;
+	pointsEnd: SpatialGridMap<PointSequence>;
+	pointsMid: SpatialGridMap<PointSequence>;
+	polygons: SpatialGridMap<Polygon>;
+	polygonsPlacement: SpatialGridMap<Polygon>;
+	seedPolygon?: Polygon;
+	stages: Stage[];
 }
 
 export interface Path {
 	option_type_ahead: boolean;
 	nodes: Node[];
+}
+
+export type Transform = 
+	| { type: "continuous", content: TransformContinuous }
+	| { type: "eccentric", content: TransformEccentric };
+
+export interface Transforms {
+	path: Path;
+	index: number;
+	list: Transform[];
+}
+
+export interface Notation {
+	option_link_paths: boolean;
+	option_type_ahead: boolean;
+	option_with_first_transform: boolean;
+	path: Path;
+	transforms: Transforms;
+}
+
+export interface OriginIndex {
+	value: number;
 }
 
 export interface Seed {
@@ -330,25 +393,22 @@ export interface TransformEccentric {
 	originIndex: OriginIndex;
 }
 
-export type Transform = 
-	| { type: "continuous", content: TransformContinuous }
-	| { type: "eccentric", content: TransformEccentric };
-
-export interface Transforms {
-	path: Path;
-	index: number;
-	list: Transform[];
-}
-
 export interface Tiling {
-	optionExpansionPhases: number;
-	optionLinkPaths: boolean;
-	optionWithFirstTransform: boolean;
-	optionTypeAhead: boolean;
-	notation: Notation;
+	notation: string;
 	plane: Plane;
 	buildContext: Context;
 	error: string;
+}
+
+export interface BucketEntry<TEntryValue> {
+	point: number[];
+	size: number;
+	value: TEntryValue;
+	counters: Record<string, number>;
+}
+
+export interface Bucket<TEntryValue> {
+	entries: BucketEntry<TEntryValue>[];
 }
 
 export enum Separator {
@@ -363,14 +423,15 @@ export type ValidationError =
 }}
 	| { type: "Expansion", content?: undefined }
 	| { type: "Gaps", content?: undefined }
-	| { type: "Overlaps", content?: undefined };
+	| { type: "Overlaps", content?: undefined }
+	| { type: "VertexType", content: {
+	sequence: string;
+}};
 
-export enum ValidationFlag {
+export enum Flag {
 	Overlaps = "Overlaps",
 	Gaps = "Gaps",
-	Expansion = "Expansion",
+	Expanded = "Expanded",
 	VertexTypes = "VertexTypes",
-	EdgeTypes = "EdgeTypes",
-	ShapeTypes = "ShapeTypes",
 }
 

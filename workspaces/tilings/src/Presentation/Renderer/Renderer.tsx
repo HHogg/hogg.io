@@ -1,136 +1,56 @@
 import { useWasmApi } from '@hogg/wasm';
+import merge from 'lodash/merge';
 import {
   Box,
   BoxProps,
   Motion,
   Text,
-  colorBlack,
-  colorNegativeShade4,
   useResizeObserver,
   useThemeContext,
 } from 'preshape';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
-import { ColorMode, Options, ValidationFlag } from '../../types';
+import { Options, Flag } from '../../types';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
-import { usePlayerContext } from '../Player/usePlayerContext';
-import { useSettingsContext } from '../Settings/useSettingsContext';
+import {
+  defaultExpansionPhases,
+  getDefaultOptionsWithStyles,
+} from './defaultOptions';
 
 export type RendererProps = {
+  expansionPhases?: number;
   options?: Partial<Options>;
   scale?: number;
-  shadow?: boolean;
-  validations?: ValidationFlag[];
+  validations?: Flag[];
   withPlayer?: boolean;
 };
 
 export default function Renderer({
-  options: optionsProp,
+  expansionPhases = defaultExpansionPhases,
+  options: optionsProps,
   scale = 1,
-  shadow,
   validations,
-  withPlayer = false,
   ...rest
 }: BoxProps & RendererProps) {
-  const { colors: themeColors, theme } = useThemeContext();
+  const { colors: themeColors } = useThemeContext();
   const refCanvas = useRef<HTMLCanvasElement>(null);
   const refCanvasTransferred = useRef<boolean>(false);
   const refUuid = useRef(v4());
   const [error, setError] = useState('');
-  const { api, loading } = useWasmApi();
+  const { api } = useWasmApi();
   const { notation } = useNotationContext();
-  const { setTiling } = useArrangementContext();
-  const { isPlaying, maxStage } = usePlayerContext(withPlayer);
-  const {
-    autoRotate,
-    expansionPhases,
-    colorMode,
-    scaleMode,
-    scaleSize,
-    showAnnotations,
-    showDebug,
-  } = useSettingsContext();
+  const { tiling, setTiling, setRenderMetrics } = useArrangementContext();
   const [size, setSize] = useResizeObserver<HTMLDivElement>();
   const { height, width } = size;
 
-  const showLoading = !isPlaying && loading.renderNotation;
-
+  const defaultOptions = useMemo<Options>(
+    () => getDefaultOptionsWithStyles(themeColors),
+    [themeColors]
+  );
   const options = useMemo<Options>(
-    () => ({
-      autoRotate,
-      colorMode,
-      expansionPhases,
-      maxStage,
-      showAnnotations,
-      showDebug,
-      padding: 10,
-      scaleMode,
-      scaleSize,
-      ...optionsProp,
-      styles: {
-        axis: {
-          fill: themeColors.colorTextShade1,
-          lineThickness: 3,
-          pointRadius: 6,
-          strokeColor: themeColors.colorBackgroundShade1,
-          strokeWidth: 2,
-          ...optionsProp?.styles?.axis,
-        },
-        debug: {
-          strokeColor: colorNegativeShade4,
-          strokeWidth: 2,
-          ...optionsProp?.styles?.debug,
-        },
-        shape: {
-          fill: themeColors.colorTextShade1,
-          strokeColor:
-            (optionsProp?.colorMode ?? colorMode) === ColorMode.None
-              ? themeColors.colorBackgroundShade1
-              : colorBlack,
-          strokeWidth: 3,
-          ...optionsProp?.styles?.shape,
-        },
-        transformContinuous: {
-          chevronSize: 12,
-          fill: themeColors.colorTextShade1,
-          lineDash: [20, 30],
-          lineThickness: 4,
-          pointRadius: 12,
-          strokeColor: themeColors.colorBackgroundShade1,
-          strokeWidth: 3,
-          ...optionsProp?.styles?.transformContinuous,
-        },
-        transformEccentric: {
-          chevronSize: 12,
-          fill: themeColors.colorTextShade1,
-          lineDash: [20, 30],
-          lineThickness: 4,
-          pointRadius: 12,
-          strokeColor: themeColors.colorBackgroundShade1,
-          strokeWidth: 3,
-          ...optionsProp?.styles?.transformEccentric,
-        },
-        vertexType: {
-          pointRadius: 6,
-          strokeColor: themeColors.colorBackgroundShade1,
-          strokeWidth: 2,
-          ...optionsProp?.styles?.vertexType,
-        },
-      },
-    }),
-    [
-      autoRotate,
-      expansionPhases,
-      colorMode,
-      optionsProp,
-      maxStage,
-      scaleMode,
-      scaleSize,
-      showAnnotations,
-      showDebug,
-      themeColors,
-    ]
+    () => merge({}, defaultOptions, optionsProps),
+    [defaultOptions, optionsProps]
   );
 
   // Transfer the canvas to the worker
@@ -142,48 +62,45 @@ export default function Renderer({
     }
   }, [api]);
 
+  // Generate the tiling
+  useEffect(() => {
+    try {
+      api
+        .generateTiling([notation, expansionPhases, validations])
+        .then(setTiling);
+    } catch (error) {
+      setError((error as Error).message);
+    }
+  }, [api, notation, expansionPhases, setError, setTiling, validations]);
+
   // Render the tiling
   useEffect(() => {
     try {
       const scaledWidth = width * window.devicePixelRatio * scale;
       const scaledHeight = height * window.devicePixelRatio * scale;
 
-      if (!scaledWidth || !scaledHeight) {
+      if (!scaledWidth || !scaledHeight || !tiling) {
         return;
       }
 
       api
-        .renderNotation([
+        .renderTiling([
           refUuid.current,
-          notation,
+          tiling,
           scaledWidth,
           scaledHeight,
           options,
-          validations,
         ])
-        .then(setTiling);
+        .then(setRenderMetrics);
     } catch (error) {
       setError((error as Error).message);
     }
-  }, [
-    api,
-    notation,
-    scale,
-    width,
-    height,
-    options,
-    setError,
-    setTiling,
-    validations,
-  ]);
+  }, [api, width, height, scale, tiling, options, setRenderMetrics]);
 
   return (
     <Box {...rest} flex="vertical" grow>
       <Box basis="0" container grow ref={setSize}>
-        <Motion
-          animate={{ scale: showLoading ? 0.95 : 1 }}
-          initial={{ scale: 1 }}
-        >
+        <Motion initial={{ scale: 1 }}>
           <Box
             absolute="edge-to-edge"
             ref={refCanvas}
@@ -191,18 +108,8 @@ export default function Renderer({
             style={{
               height: `${height * scale}px`,
               width: `${width * scale}px`,
-              opacity: showLoading ? 0.5 : 1,
               transformOrigin: 'top left',
               transform: `scale(${1 / scale})`,
-              filter: shadow
-                ? `drop-shadow(5px 5px ${
-                    Math.max(width, height) / 7
-                  }px rgba(20, 0, 20, ${
-                    theme === 'night' ? 0.8 : 0.2
-                  })) drop-shadow(1px 3px ${2}px rgba(20, 0, 20, ${
-                    theme === 'night' ? 0.8 : 0.4
-                  }))`
-                : undefined,
             }}
           ></Box>
         </Motion>

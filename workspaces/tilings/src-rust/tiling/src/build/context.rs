@@ -1,4 +1,3 @@
-use chrono::TimeDelta;
 use serde::Serialize;
 use typeshare::typeshare;
 
@@ -19,9 +18,8 @@ impl Context {
   pub(crate) fn add_result(
     &mut self,
     notation: &Notation,
-    plane: &Plane,
     result: &Result<(), TilingError>,
-    duration: TimeDelta,
+    plane: &Plane,
   ) {
     self.count_total_tilings += 1;
 
@@ -32,16 +30,17 @@ impl Context {
           reason: reason.clone(),
         });
       }
-      Ok(()) => {
+      _ => {
         self.results.push(
           super::Result::default()
             .with_notation(notation.to_string())
-            .with_hash(plane.classifier.get_unique_key())
             .with_transform_index(notation.transforms.index)
-            .with_build_time_ms(duration.num_milliseconds() as i32),
+            .with_metrics(plane.metrics.clone())
+            .with_vertex_types(plane.get_vertex_types())
+            .with_edge_types(plane.get_edge_types())
+            .with_shape_types(plane.get_shape_types()),
         );
       }
-      _ => {}
     }
   }
 }

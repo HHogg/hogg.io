@@ -1,5 +1,9 @@
 import { createContext, useContext } from 'react';
-import { Annotation, ColorMode, ScaleMode } from '../../types';
+import { ColorMode, Layer, ScaleMode } from '../../types';
+import {
+  defaultExpansionPhases,
+  defaultOptions,
+} from '../Renderer/defaultOptions';
 
 export type Settings = {
   autoRotate: boolean;
@@ -7,8 +11,7 @@ export type Settings = {
   expansionPhases: number;
   scaleMode: ScaleMode;
   scaleSize: number;
-  showAnnotations: Record<Annotation, boolean>;
-  showDebug: boolean;
+  showLayers: Record<Layer, boolean>;
 };
 
 export type SettingsContextValue = Settings & {
@@ -17,26 +20,16 @@ export type SettingsContextValue = Settings & {
   setExpansionPhases: (count: number) => void;
   setScaleMode: (scaleMode: ScaleMode) => void;
   setScaleSize: (scaleSize: number) => void;
-  setShowAnnotations: (annotations: Record<Annotation, boolean>) => void;
-  setShowDebug: (debug: boolean) => void;
+  setShowLayers: (layers: Record<Layer, boolean>) => void;
   setShowSettings: (show: boolean) => void;
   toggleSettings: () => void;
   expansionPhases: number;
   showSettings: boolean;
 };
 
-export const defaultOptions: Settings = {
-  autoRotate: false,
-  colorMode: ColorMode.VaporWaveRandom,
-  expansionPhases: 3,
-  scaleMode: ScaleMode.WithinBounds,
-  scaleSize: 20,
-  showAnnotations: {
-    [Annotation.AxisOrigin]: false,
-    [Annotation.Transform]: false,
-    [Annotation.VertexType]: false,
-  },
-  showDebug: false,
+export const defaultSettings: Settings = {
+  ...defaultOptions,
+  expansionPhases: defaultExpansionPhases,
 };
 
 const noop = () => {
@@ -44,15 +37,14 @@ const noop = () => {
 };
 
 export const SettingsContext = createContext<SettingsContextValue>({
-  ...defaultOptions,
+  ...defaultSettings,
   showSettings: false,
   setAutoRotate: noop,
   setColorMode: noop,
   setExpansionPhases: noop,
   setScaleMode: noop,
   setScaleSize: noop,
-  setShowAnnotations: noop,
-  setShowDebug: noop,
+  setShowLayers: noop,
   setShowSettings: noop,
   toggleSettings: noop,
 });

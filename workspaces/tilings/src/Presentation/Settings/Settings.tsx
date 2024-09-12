@@ -1,8 +1,7 @@
 import {
-  BugIcon,
   GaugeIcon,
   HashIcon,
-  HighlighterIcon,
+  LayersIcon,
   PaletteIcon,
   Repeat1Icon,
   RotateCwIcon,
@@ -16,12 +15,12 @@ import {
   MenuConfigEntryNumber,
   MenuConfigEntryOneOf,
 } from 'preshape';
-import { Annotation, ColorMode, ScaleMode } from '../../types';
+import { ColorMode, Layer, ScaleMode } from '../../types';
 import { SPEEDS, Speed } from '../Player/usePlayer';
 import { usePlayerContext } from '../Player/usePlayerContext';
 import { useSettingsContext } from './useSettingsContext';
 
-const annotationOptions = Object.values(Annotation);
+const layersOptions = Object.values(Layer).sort((a, b) => a.localeCompare(b));
 
 export default function Settings() {
   const {
@@ -30,27 +29,25 @@ export default function Settings() {
     expansionPhases,
     scaleMode,
     scaleSize,
-    showAnnotations,
-    showDebug,
+    showLayers,
     showSettings,
     setAutoRotate,
-    setScaleMode,
-    setScaleSize,
-    setShowAnnotations,
     setColorMode,
     setExpansionPhases,
-    setShowDebug,
+    setScaleMode,
+    setScaleSize,
+    setShowLayers,
   } = useSettingsContext();
   const { speed, setSpeed } = usePlayerContext();
 
-  const handleAnnotationsChange = (annotations: Annotation[]) => {
-    setShowAnnotations(
-      annotationOptions.reduce(
-        (acc, annotation) => ({
+  const handleLayersChange = (layers: Layer[]) => {
+    setShowLayers(
+      layersOptions.reduce(
+        (acc, layer) => ({
           ...acc,
-          [annotation]: annotations.includes(annotation),
+          [layer]: layers.includes(layer),
         }),
-        {} as typeof showAnnotations
+        {} as typeof showLayers
       )
     );
   };
@@ -61,8 +58,8 @@ export default function Settings() {
     type: 'number',
     value: expansionPhases,
     min: 0,
-    max: 10,
-    step: 1,
+    max: 20,
+    step: 5,
     onChange: setExpansionPhases,
   };
 
@@ -74,17 +71,6 @@ export default function Settings() {
     options: SPEEDS,
     formatter: (value) => value * 100 + '%',
     onChange: setSpeed,
-  };
-
-  const annotationsConfig: MenuConfigEntryManyOf<Annotation> = {
-    label: 'Annotations',
-    icon: HighlighterIcon,
-    type: 'manyOf',
-    value: Object.keys(showAnnotations).filter(
-      (key) => showAnnotations[key as Annotation]
-    ) as Annotation[],
-    options: annotationOptions,
-    onChange: handleAnnotationsChange,
   };
 
   const colorModeConfig: MenuConfigEntryOneOf<ColorMode> = {
@@ -127,14 +113,15 @@ export default function Settings() {
     onChange: setScaleSize,
   };
 
-  const debugConfig: MenuConfigEntryBoolean = {
-    label: 'Debug',
-    icon: BugIcon,
-    type: 'boolean',
-    value: showDebug,
-    labelTrue: 'On',
-    labelFalse: 'Off',
-    onChange: setShowDebug,
+  const showLayersConfig: MenuConfigEntryManyOf<Layer> = {
+    label: 'Layers',
+    icon: LayersIcon,
+    type: 'manyOf',
+    value: Object.keys(showLayers).filter(
+      (key) => showLayers[key as Layer]
+    ) as Layer[],
+    options: layersOptions,
+    onChange: handleLayersChange,
   };
 
   return (
@@ -147,15 +134,14 @@ export default function Settings() {
     >
       <ConfigMenu
         config={[
-          expansionPhasesConfig,
-          speedConfig,
-          annotationsConfig,
-          colorModeConfig,
           autoRotateConfig,
+          colorModeConfig,
+          expansionPhasesConfig,
+          showLayersConfig,
           scaleModeConfig,
           scaleSizeConfig,
-          debugConfig,
-        ]}
+          speedConfig,
+        ].sort((a, b) => a.label.localeCompare(b.label))}
         visible={showSettings}
       />
     </Box>

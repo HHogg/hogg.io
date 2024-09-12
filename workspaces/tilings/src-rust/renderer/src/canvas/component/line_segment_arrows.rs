@@ -1,33 +1,53 @@
 use tiling::geometry::{BBox, LineSegment, LineSegmentOrigin};
 
-use super::{Arrow, Component, Draw, Style};
-use crate::canvas::collision::Theia;
+use super::{Arrow, Draw, Style};
 use crate::canvas::Scale;
-use crate::Error;
 
 const GAP_BETWEEN_ARROWS_MULTIPLIER: f64 = 10.0;
 const GAP_FROM_LINE_SEGMENT: f64 = 2.0;
 const ARROW_LENGTH: f64 = 2.5;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Default)]
 pub struct LineSegmentArrows {
-  pub line_segment: LineSegment,
-  pub extend_start: bool,
-  pub extend_end: bool,
-  pub direction: f64,
-  pub style: Style,
+  line_segment: LineSegment,
+  extend_start: bool,
+  extend_end: bool,
+  direction: f64,
+  style: Style,
 }
 
 impl LineSegmentArrows {
-  fn get_extended_line_segment(&self, bbox: &BBox) -> LineSegment {
+  pub fn with_line_segment(mut self, line_segment: LineSegment) -> Self {
+    self.line_segment = line_segment;
     self
-      .line_segment
-      .extend_to_bbox(bbox, self.extend_start, self.extend_end)
+  }
+
+  pub fn with_extend_start(mut self, extend_start: bool) -> Self {
+    self.extend_start = extend_start;
+    self
+  }
+
+  pub fn with_extend_end(mut self, extend_end: bool) -> Self {
+    self.extend_end = extend_end;
+    self
+  }
+
+  pub fn with_direction(mut self, direction: f64) -> Self {
+    self.direction = direction;
+    self
+  }
+
+  pub fn with_style(mut self, style: Style) -> Self {
+    self.style = style;
+    self
   }
 
   fn get_arrows(&self, _canvas_bbox: &BBox, content_bbox: &BBox, scale: &Scale) -> Vec<Arrow> {
     let chevron_size = self.style.get_chevron_size(scale);
-    let line_segment = self.get_extended_line_segment(content_bbox);
+    let line_segment =
+      self
+        .line_segment
+        .extend_to_bbox(content_bbox, self.extend_start, self.extend_end);
 
     let gap_between_arrows = chevron_size * GAP_BETWEEN_ARROWS_MULTIPLIER;
     let gap_from_line_segment = chevron_size * GAP_FROM_LINE_SEGMENT;
@@ -59,10 +79,11 @@ impl LineSegmentArrows {
         LineSegmentOrigin::End,
       );
 
-      arrows.push(Arrow {
-        line_segment: arrow_line_segment,
-        style: self.style.clone(),
-      });
+      arrows.push(
+        Arrow::default()
+          .with_line_segment(arrow_line_segment)
+          .with_style(self.style.clone()),
+      );
 
       shift += gap_between_arrows;
     }
@@ -72,63 +93,26 @@ impl LineSegmentArrows {
 }
 
 impl Draw for LineSegmentArrows {
-  fn component(&self) -> Component {
+  fn children(
+    &self,
+    canvas_bbox: &BBox,
+    content_bbox: &BBox,
+    scale: &Scale,
+  ) -> Option<Vec<Box<dyn Draw>>> {
+    Some(
+      self
+        .get_arrows(canvas_bbox, content_bbox, scale)
+        .into_iter()
+        .map(|arrow| Box::new(arrow) as Box<dyn Draw>)
+        .collect::<Vec<_>>(),
+    )
+  }
+
+  fn component(&self) -> super::Component {
     self.clone().into()
   }
 
   fn style(&self) -> &Style {
     &self.style
-  }
-
-  fn bbox(
-    &self,
-    context: &web_sys::OffscreenCanvasRenderingContext2d,
-    canvas_bbox: &BBox,
-    content_bbox: &BBox,
-    scale: &Scale,
-  ) -> Result<BBox, Error> {
-    let mut bbox = self
-      .get_arrows(canvas_bbox, content_bbox, scale)
-      .iter()
-      .map(|arrow| {
-        arrow
-          .bbox(context, canvas_bbox, content_bbox, scale)
-          .unwrap_or_default()
-      })
-      .reduce(|a, b| a.union(&b))
-      .unwrap_or_default();
-
-    bbox = bbox.union(&self.get_extended_line_segment(canvas_bbox).bbox());
-    Ok(bbox)
-  }
-
-  fn draw_bbox(
-    &self,
-    context: &web_sys::OffscreenCanvasRenderingContext2d,
-    canvas_bbox: &BBox,
-    content_bbox: &BBox,
-    scale: &Scale,
-    style: &Style,
-  ) -> Result<(), Error> {
-    for arrow in self.get_arrows(canvas_bbox, content_bbox, scale).iter() {
-      arrow.draw_bbox(context, canvas_bbox, content_bbox, scale, style)?;
-    }
-
-    Ok(())
-  }
-
-  fn draw(
-    &self,
-    context: &web_sys::OffscreenCanvasRenderingContext2d,
-    canvas_bbox: &BBox,
-    content_bbox: &BBox,
-    scale: &Scale,
-    theia: &mut Theia,
-  ) -> Result<(), Error> {
-    for arrow in self.get_arrows(canvas_bbox, content_bbox, scale).iter() {
-      arrow.draw(context, canvas_bbox, content_bbox, scale, theia)?;
-    }
-
-    Ok(())
   }
 }

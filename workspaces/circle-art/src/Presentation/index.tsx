@@ -16,7 +16,6 @@ const Presentation = ({
     <EditorProvider data={data} onChange={onChange}>
       <ProjectWindow
         controls={<EditorControls />}
-        controlsPosition="top"
         padding="x0"
         tabs={
           <ProjectTabs>

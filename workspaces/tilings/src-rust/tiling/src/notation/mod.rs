@@ -36,16 +36,13 @@ use crate::build::Plane;
 use crate::TilingError;
 
 #[derive(Clone, Debug, Default, Serialize)]
-#[serde(rename_all = "camelCase")]
+#[serde(into = "String")]
 #[typeshare]
 pub struct Notation {
   pub option_link_paths: bool,
   pub option_type_ahead: bool,
   pub option_with_first_transform: bool,
-
-  #[typeshare(serialized_as = "String")]
   pub path: Path,
-  #[typeshare(serialized_as = "String")]
   pub transforms: Transforms,
 }
 
@@ -80,6 +77,14 @@ impl Notation {
 
   pub fn set_transforms(&mut self, transforms: Transforms) {
     self.transforms = transforms;
+  }
+
+  pub fn get_seed_shape(&self) -> Option<Shape> {
+    self.path.get_seed().map(|seed| seed.shape)
+  }
+
+  pub fn iter_shapes(&self) -> impl Iterator<Item = &Shape> {
+    self.path.iter_shapes()
   }
 
   pub fn get_transform_count(&self) -> usize {
@@ -197,5 +202,11 @@ impl Display for Notation {
     }
 
     write!(f, "{}", self.path)
+  }
+}
+
+impl From<Notation> for String {
+  fn from(notation: Notation) -> Self {
+    notation.to_string()
   }
 }

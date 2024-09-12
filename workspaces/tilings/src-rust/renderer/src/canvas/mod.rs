@@ -3,39 +3,44 @@ mod component;
 mod scale;
 mod style;
 
-use std::collections::BTreeMap;
-use std::hash::Hash;
+use std::collections::{BTreeMap, HashMap, VecDeque};
 
 use anyhow::Result;
 use tiling::geometry::BBox;
 use wasm_bindgen::JsCast;
 
 use self::collision::Theia;
-pub use self::component::{Arc, LineSegment, LineSegmentArrows, Point, Polygon};
-use self::component::{Component, Draw, Rect};
+pub use self::component::{ArcArrow, Grid, LineSegment, LineSegmentArrows, Point, Polygon};
+use self::component::{Component, Draw};
 pub use self::scale::{Scale, ScaleMode};
 pub use self::style::Style;
-use crate::Error;
+use crate::draw::Layer;
+use crate::{Error, Options};
 
-pub struct Canvas<TLayer> {
+pub struct Canvas {
   pub scale: Scale,
 
   context: web_sys::OffscreenCanvasRenderingContext2d,
   content_bbox: BBox,
 
-  show_debug_layer: bool,
-  debug_style: Style,
+  draw_bounding_boxes: bool,
+  draw_bounding_boxes_style: Style,
 
-  layers: Option<BTreeMap<TLayer, Vec<Component>>>,
+  layers: Option<BTreeMap<Layer, Vec<Component>>>,
+  layers_enabled: HashMap<Layer, bool>,
+
   theia: Theia,
 }
 
-impl<TLayer> Canvas<TLayer>
-where
-  TLayer: Eq + Hash + Ord,
-{
-  pub fn new(canvas: web_sys::OffscreenCanvas, scale: Scale) -> Result<Self, Error> {
+impl Canvas {
+  pub fn new(canvas: web_sys::OffscreenCanvas, options: &Options) -> Result<Self, Error> {
     let context = canvas.get_context("2d");
+    let scale = Scale::default()
+      .with_auto_rotate(options.auto_rotate)
+      .with_padding(options.padding)
+      .with_mode(options.scale_mode);
+
+    let layers_enabled = options.show_layers.clone().unwrap_or_default();
 
     if context.is_err() {
       return Err(Error::ApplicationError {
@@ -77,10 +82,14 @@ where
       context,
       scale: scale.with_canvas_bbox(canvas_bbox),
 
-      show_debug_layer: false,
-      debug_style: Style::default(),
+      draw_bounding_boxes: layers_enabled
+        .get(&Layer::BoundingBoxes)
+        .cloned()
+        .unwrap_or(false),
+      draw_bounding_boxes_style: options.styles.bounding_boxes.clone().unwrap_or_default(),
 
       layers: None,
+      layers_enabled,
       theia: Theia::new(),
     })
   }
@@ -89,22 +98,32 @@ where
     &self.content_bbox
   }
 
-  pub fn draw_debug(&mut self, style: &Option<Style>) {
-    self.show_debug_layer = true;
-    self.debug_style = style.clone().unwrap_or_default();
-  }
-
-  pub fn add_component(&mut self, layer: TLayer, component: Component) -> Result<(), Error> {
+  pub fn add_component(&mut self, layer: Layer, component: Component) -> Result<(), Error> {
     let layers = self.layers.get_or_insert(BTreeMap::new());
-    let layer = layers.entry(layer).or_default();
+    let layer_components = layers.entry(layer).or_default();
     let canvas_bbox = &self.scale.scaled_canvas_bbox();
 
-    let component_bbox =
-      component.bbox(&self.context, canvas_bbox, &self.content_bbox, &self.scale)?;
+    let mut parents: VecDeque<Component> = VecDeque::new();
 
-    layer.push(component);
+    parents.push_front(component);
 
-    self.content_bbox = self.content_bbox.union(&component_bbox);
+    // Loop over the components, looking for the lowest children
+    // and adding them to the layer.
+    while let Some(parent) = parents.pop_front() {
+      if let Some(children) = parent.children(canvas_bbox, &self.content_bbox, &self.scale) {
+        parents.extend(children.iter().map(|c| c.component()));
+      } else {
+        layer_components.push(parent.component());
+
+        self.content_bbox = self.content_bbox.union(&parent.bbox(
+          &self.context,
+          canvas_bbox,
+          &self.content_bbox,
+          &self.scale,
+        ));
+      }
+    }
+
     self.rescale_canvas()?;
 
     Ok(())
@@ -120,25 +139,12 @@ where
   pub fn render(&mut self) -> Result<(), Error> {
     let layers = self.layers.take().unwrap_or_default();
 
-    if self.show_debug_layer {
-      let canvas_bbox = self.scale.scaled_canvas_bbox();
-
-      Rect {
-        min: canvas_bbox.min,
-        max: canvas_bbox.max,
-        style: self.debug_style.clone(),
+    for (layer, layer_components) in layers.iter() {
+      if self.layers_enabled.get(layer) != Some(&true) {
+        continue;
       }
-      .draw_bbox(
-        &self.context,
-        &canvas_bbox,
-        &self.content_bbox,
-        &self.scale,
-        &self.debug_style,
-      )?;
-    }
 
-    for (_, layer) in layers.iter() {
-      for component in layer.iter() {
+      for component in layer_components.iter() {
         self.render_component(component)?;
       }
     }
@@ -159,13 +165,13 @@ where
       &mut self.theia,
     )?;
 
-    if self.show_debug_layer {
+    if self.draw_bounding_boxes {
       component.draw_bbox(
         &self.context,
         &canvas_bbox,
         &self.content_bbox,
         &self.scale,
-        &self.debug_style,
+        &self.draw_bounding_boxes_style,
       )?;
     }
 

@@ -15,7 +15,6 @@ export default function PageBackButton({ path }: PageBackButtonProps) {
       borderColor="text-shade-1"
       borderSize="x0"
       gap="x2"
-      grow
       size="x4"
       textColor="text-shade-1"
       to={path}

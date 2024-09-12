@@ -1,11 +1,10 @@
 import {
+  type Project,
   Media,
-  Project,
   ProjectPageProps,
   ProjectPageProvider,
   getProjectRoutePath,
 } from '@hogg/common';
-import { Box } from 'preshape';
 import { ComponentType, useEffect } from 'react';
 import Header from '../../components/Header/Header';
 import Page from '../../components/Page/Page';
@@ -32,12 +31,12 @@ export default function Project({ Component, meta }: Props) {
         title={meta.name}
         description={meta.description}
         image={meta.image}
+        createdAt={meta.created}
+        updatedAt={meta.updated}
         gap="x16"
       >
-        <Header>
-          <Box flex="vertical">
-            <PageBackButton title="Home" path="/" />
-          </Box>
+        <Header alignChildrenVertical="middle">
+          <PageBackButton title="Home" path="/" />
         </Header>
 
         <Media lessThan="desktop">

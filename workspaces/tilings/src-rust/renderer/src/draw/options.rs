@@ -5,22 +5,21 @@ use typeshare::typeshare;
 
 use crate::canvas::{ScaleMode, Style};
 
+use super::layers::Layer;
+
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Options {
-  pub active_transform_index: Option<u32>,
   pub auto_rotate: Option<bool>,
   pub color_mode: Option<ColorMode>,
-  pub fade_unmatched_shape_types: Option<bool>,
-  pub expansion_phases: Option<u8>,
   pub is_valid: Option<bool>,
   pub max_stage: Option<u16>,
   pub padding: Option<f64>,
   pub scale_mode: Option<ScaleMode>,
   pub scale_size: Option<u8>,
-  pub show_annotations: Option<HashMap<Annotation, bool>>,
-  pub show_debug: Option<bool>,
+  pub show_layers: Option<HashMap<Layer, bool>>,
+  pub show_transform_index: Option<u32>,
   pub styles: Styles,
 }
 
@@ -29,20 +28,13 @@ pub struct Options {
 #[typeshare]
 pub struct Styles {
   pub axis: Option<Style>,
-  pub debug: Option<Style>,
+  pub bounding_boxes: Option<Style>,
   pub grid: Option<Style>,
+  pub plane_outline: Option<Style>,
   pub shape: Option<Style>,
   pub transform_continuous: Option<Style>,
   pub transform_eccentric: Option<Style>,
-  pub vertex_type: Option<Style>,
-}
-
-#[derive(Clone, Deserialize, Hash, PartialEq, Eq, Serialize)]
-#[typeshare]
-pub enum Annotation {
-  AxisOrigin,
-  Transform,
-  VertexType,
+  pub transform_points: Option<Style>,
 }
 
 #[derive(Clone, Deserialize, Serialize)]

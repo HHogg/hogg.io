@@ -1,4 +1,4 @@
-use tiling::geometry::BBox;
+use tiling::geometry::{BBox, Point};
 
 use super::{Component, Style};
 use crate::canvas::collision::Theia;
@@ -12,24 +12,20 @@ pub trait Draw {
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,
-  ) -> Result<BBox, Error> {
-    Ok(BBox::default())
+  ) -> BBox {
+    BBox::default()
   }
 
-  fn component(&self) -> Component;
-
-  fn style(&self) -> &Style;
-
-  fn collides_with(
+  fn children(
     &self,
-    _context: &web_sys::OffscreenCanvasRenderingContext2d,
     _canvas_bbox: &BBox,
     _content_bbox: &BBox,
     _scale: &Scale,
-    _other: &Component,
-  ) -> Result<bool, Error> {
-    Ok(false)
+  ) -> Option<Vec<Box<dyn Draw>>> {
+    None
   }
+
+  fn component(&self) -> Component;
 
   fn draw_start(
     &self,
@@ -57,11 +53,20 @@ pub trait Draw {
     scale: &Scale,
     style: &Style,
   ) -> Result<(), Error> {
-    let bbox = self.bbox(context, canvas_bbox, content_bbox, scale)?;
+    let bbox = self.bbox(context, canvas_bbox, content_bbox, scale);
+    let points: [Point; 4] = (&bbox).into();
 
-    style.apply(context, scale)?;
-    context.begin_path();
-    context.rect(bbox.min.x, bbox.min.y, bbox.width(), bbox.height());
+    self.draw_start(context, scale, style)?;
+
+    for (index, point) in points.iter().enumerate() {
+      match index {
+        0 => context.move_to(point.x, point.y),
+        _ => context.line_to(point.x, point.y),
+      }
+    }
+
+    context.line_to(points[0].x, points[0].y);
+
     self.draw_end(context);
 
     Ok(())
@@ -77,4 +82,10 @@ pub trait Draw {
   ) -> Result<(), Error> {
     Ok(())
   }
+
+  fn interactive(&self) -> Option<bool> {
+    Some(true)
+  }
+
+  fn style(&self) -> &Style;
 }
