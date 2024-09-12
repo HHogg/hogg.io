@@ -1,12 +1,11 @@
-use chrono::TimeDelta;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::Plane;
 use crate::notation::Notation;
 use crate::{ApplicationError, TilingError};
 
-#[derive(Clone, Debug, Default, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Context {
@@ -19,9 +18,8 @@ impl Context {
   pub(crate) fn add_result(
     &mut self,
     notation: &Notation,
-    plane: &Plane,
     result: &Result<(), TilingError>,
-    duration: TimeDelta,
+    plane: &Plane,
   ) {
     self.count_total_tilings += 1;
 
@@ -32,16 +30,14 @@ impl Context {
           reason: reason.clone(),
         });
       }
-      Ok(()) => {
+      _ => {
         self.results.push(
           super::Result::default()
             .with_notation(notation.to_string())
-            .with_hash(plane.classifier.get_unique_key())
             .with_transform_index(notation.transforms.index)
-            .with_build_time_ms(duration.num_milliseconds() as i32),
+            .with_metrics(plane.metrics.clone()),
         );
       }
-      _ => {}
     }
   }
 }

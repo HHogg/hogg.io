@@ -29,6 +29,7 @@ export type WasmWorkerMessagesStoreEntry = {
 export type WasmWorkerState = {
   errors: Partial<Record<WasmApiKey | '_init', string>>;
   loading: Partial<Record<WasmApiKey | '_init', boolean>>;
+  isLoading: boolean;
 };
 
 export type WasmWorkerStateListener = (state: WasmWorkerState) => void;
@@ -41,21 +42,25 @@ const errors: WasmWorkerState['errors'] = {};
 const loading: WasmWorkerState['loading'] = { _init: true };
 const listeners: Record<string, WasmWorkerStateListener> = {};
 
-export function getMessage(
+function getMessage(
   response: WasmWorkerMessageResponse
 ): WasmWorkerMessagesStoreEntry {
   return messages[response.id] ?? messages[response.key];
 }
 
 export function getState(): WasmWorkerState {
-  return { errors, loading };
+  return { errors, loading, isLoading: getIsLoading(loading) };
 }
 
-export function setError(key: WasmApiKey, error: string) {
+function getIsLoading(loading: WasmWorkerState['loading']): boolean {
+  return Object.values(loading).every((l) => l);
+}
+
+function setError(key: WasmApiKey, error: string) {
   errors[key] = error;
 }
 
-export function removeError(key: WasmApiKey) {
+function removeError(key: WasmApiKey) {
   delete errors[key];
 }
 
@@ -63,9 +68,8 @@ function removeMessage(id: string) {
   delete messages[id];
 }
 
-export function setLoading(key: WasmApiKey, value: boolean) {
+function setLoading(key: WasmApiKey, value: boolean) {
   loading[key] = value;
-  notifyListeners();
 }
 
 function notifyListeners() {
@@ -98,6 +102,7 @@ export function createRequest(
   };
 
   setLoading(key, true);
+  notifyListeners();
 
   return { id, key, args };
 }
@@ -126,4 +131,5 @@ export function handleMessageResponse(response: WasmWorkerMessageResponse) {
 
   setLoading(response.key, false);
   removeMessage(response.id);
+  notifyListeners();
 }

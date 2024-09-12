@@ -72,8 +72,8 @@ impl Draw for LineSegment {
     content_bbox: &BBox,
     scale: &Scale,
   ) -> Result<BBox, Error> {
-    let mut min = Point::default().with_xy(f64::INFINITY, f64::INFINITY);
-    let mut max = Point::default().with_xy(f64::NEG_INFINITY, f64::NEG_INFINITY);
+    let mut min = Point::at(f64::INFINITY, f64::INFINITY);
+    let mut max = Point::at(f64::NEG_INFINITY, f64::NEG_INFINITY);
 
     for point in self.get_points(content_bbox) {
       if point.x < min.x {
@@ -99,8 +99,8 @@ impl Draw for LineSegment {
 
     Ok(
       BBox::default()
-        .with_min(min.translate(&Point::default().with_xy(-offset, -offset)))
-        .with_max(max.translate(&Point::default().with_xy(offset, offset))),
+        .with_min(min.translate(&Point::at(-offset, -offset)))
+        .with_max(max.translate(&Point::at(offset, offset))),
     )
   }
 
@@ -166,6 +166,7 @@ pub fn get_extended_points_to_bbox(
         .with_start(points[points.len() - 2])
         .with_end(points[points.len() - 1])
         .extend_to_bbox(bbox, false, extend_end);
+
       point = line_segment.p2;
     }
 

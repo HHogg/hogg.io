@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'url';
@@ -9,17 +10,21 @@ const template = fs.readFileSync(toAbsolute('dist/client/index.html'), 'utf-8');
 
 const routesToPrerender = [
   '/',
-  '/projects/circle-intersections',
   '/projects/circle-art',
+  '/projects/circle-intersections',
+  '/projects/circular-sequence',
+  // '/projects/evolution',
+  '/projects/line-segment-extending',
   '/projects/snake',
+  // '/projects/spatial-grid-map',
   '/projects/spirals',
   '/projects/tilings',
-  '/projects/circular-sequence',
-  '/projects/line-segment-extending',
 ];
 
 // pre-render each route...
 for (const url of routesToPrerender) {
+  console.log('Rendering:', url);
+
   const { html: htmlContent, helmetContext, mediaStyle } = render(url);
   const metaContent = helmetContext.helmet.priority.toString();
 
@@ -35,4 +40,6 @@ for (const url of routesToPrerender) {
 
   fs.mkdirSync(fileDir, { recursive: true });
   fs.writeFileSync(filePath, contents);
+
+  console.log('Saved contents to: ', filePath);
 }

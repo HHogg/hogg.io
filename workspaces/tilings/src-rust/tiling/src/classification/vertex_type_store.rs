@@ -23,33 +23,33 @@ pub struct VertexTypeStore {
 
 impl VertexTypeStore {
   pub fn add_polygon(&mut self, polygon: &mut Polygon) -> Result<(), TilingError> {
-    for point in polygon.points.iter_mut() {
-      let node = self
-        .vertex_types_by_point
-        .entry(*point)
-        .or_insert_with(|| GeoNode::default().with_point(*point));
+    // for point in polygon.points.iter_mut() {
+    //   let node = self
+    //     .vertex_types_by_point
+    //     .entry(*point)
+    //     .or_insert_with(|| GeoNode::default().with_point(*point));
 
-      node.connect(
-        ShapeLocation::default()
-          .with_point(polygon.centroid)
-          .with_shape(polygon.shape),
-      )?;
+    //   node.connect(
+    //     ShapeLocation::default()
+    //       .with_point(polygon.centroid)
+    //       .with_shape(polygon.shape),
+    //   )?;
 
-      match self.valid_vertex_types.get_match(&node.sequence) {
-        Match::Exact(index) => {
-          if let Some(vertex_type) = self.valid_vertex_types.get(index) {
-            let inserted_index = self.vertex_types.insert(*vertex_type);
-            point.vertex_type = Some(inserted_index);
-          }
-        }
-        Match::None => {
-          return Err(TilingError::InvalidVertexType {
-            value: format!("{:?}", node.sequence),
-          });
-        }
-        _ => {}
-      }
-    }
+    //   match self.valid_vertex_types.get_match(&node.sequence) {
+    //     Match::Exact(index) => {
+    //       if let Some(vertex_type) = self.valid_vertex_types.get(index) {
+    //         let inserted_index = self.vertex_types.insert(*vertex_type);
+    //         point.vertex_type = Some(inserted_index);
+    //       }
+    //     }
+    //     Match::None => {
+    //       return Err(TilingError::InvalidVertexType {
+    //         value: format!("{:?}", node.sequence),
+    //       });
+    //     }
+    //     _ => {}
+    //   }
+    // }
 
     Ok(())
   }

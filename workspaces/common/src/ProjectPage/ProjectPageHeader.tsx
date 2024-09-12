@@ -1,8 +1,12 @@
 import { Box, BoxProps, Text } from 'preshape';
+import { formateDate } from '../utils';
 import { useProjectPageContext } from './useProjectPageContext';
 
 export default function ProjectPageHeader(props: BoxProps) {
-  const { name, description, wip } = useProjectPageContext();
+  const { name, description, created, updated, wip } = useProjectPageContext();
+  const createdString = formateDate(created);
+  const updatedString = formateDate(updated);
+  const showUpdated = createdString !== updatedString;
 
   return (
     <Box {...props}>
@@ -14,7 +18,7 @@ export default function ProjectPageHeader(props: BoxProps) {
         {description}
       </Text>
 
-      {wip && (
+      {wip ? (
         <Text
           backgroundColor="accent-shade-1"
           borderRadius="x1"
@@ -25,7 +29,11 @@ export default function ProjectPageHeader(props: BoxProps) {
           size="x3"
           weight="x3"
         >
-          WIP
+          Work In Progress
+        </Text>
+      ) : (
+        <Text size="x3" weight="x2">
+          Written {createdString} {showUpdated && `· Updated ${updatedString}`}
         </Text>
       )}
     </Box>

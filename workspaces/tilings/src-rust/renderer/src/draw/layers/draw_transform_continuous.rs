@@ -20,6 +20,20 @@ pub fn draw_transform_continuous(
     .clone()
     .unwrap_or_default();
 
+  canvas.add_component(
+    Layer::AnnotationLines,
+    LineSegment {
+      points: tiling::geometry::LineSegment::default()
+        .with_start(tiling::geometry::Point::default())
+        .with_end(tiling::geometry::Point::at(0.0, -10.0))
+        .into(),
+      extend_start: false,
+      extend_end: true,
+      style: style.set_line_dash(&canvas.scale, None),
+    }
+    .into(),
+  )?;
+
   match operation {
     Operation::Reflect => {
       draw_transform_continuous_reflect_transform(canvas, transform_value, &style)?
@@ -55,11 +69,7 @@ fn draw_transform_continuous_reflect_transform(
 
     let implicit_line_segment = tiling::geometry::LineSegment::default()
       .with_start(tiling::geometry::Point::default())
-      .with_end(
-        tiling::geometry::Point::default()
-          .with_xy(0.0, -1.0)
-          .rotate(value + PI, None),
-      );
+      .with_end(tiling::geometry::Point::at(0.0, -10.0).rotate(value + PI, None));
 
     if !has_opposite {
       canvas.add_component(
@@ -88,11 +98,7 @@ fn draw_transform_continuous_reflect_transform(
 
     let line_segment = tiling::geometry::LineSegment::default()
       .with_start(tiling::geometry::Point::default())
-      .with_end(
-        tiling::geometry::Point::default()
-          .with_xy(0.0, -1.0)
-          .rotate(*value, None),
-      );
+      .with_end(tiling::geometry::Point::at(0.0, -10.0).rotate(*value, None));
 
     canvas.add_component(
       Layer::AnnotationLines,
@@ -135,29 +141,10 @@ fn draw_transform_continuous_rotate_transform(
   let arc_angle_padding = PI * 0.05;
   let mut previous_start_angle = 0.0;
 
-  let line_segment = tiling::geometry::LineSegment::default()
-    .with_start(tiling::geometry::Point::default())
-    .with_end(tiling::geometry::Point::default().with_xy(0.0, -1.0));
-
-  canvas.add_component(
-    Layer::AnnotationLines,
-    LineSegment {
-      points: line_segment.into(),
-      extend_start: false,
-      extend_end: true,
-      style: style.set_line_dash(&canvas.scale, None),
-    }
-    .into(),
-  )?;
-
   for value in transform_value.get_transform_values() {
     let line_segment = tiling::geometry::LineSegment::default()
       .with_start(tiling::geometry::Point::default())
-      .with_end(
-        tiling::geometry::Point::default()
-          .with_xy(0.0, -1.0)
-          .rotate(value, None),
-      );
+      .with_end(tiling::geometry::Point::at(0.0, -10.0).rotate(value, None));
 
     canvas.add_component(
       Layer::AnnotationLines,
@@ -184,6 +171,18 @@ fn draw_transform_continuous_rotate_transform(
 
     previous_start_angle = value;
   }
+
+  canvas.add_component(
+    Layer::AnnotationLines,
+    Arc {
+      point: origin,
+      radius,
+      start_angle: previous_start_angle + arc_angle_padding,
+      end_angle: PI * 2.0 - arc_angle_padding,
+      style: style.set_line_dash(&canvas.scale, None),
+    }
+    .into(),
+  )?;
 
   Ok(())
 }

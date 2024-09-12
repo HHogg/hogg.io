@@ -14,8 +14,8 @@ pub fn extend_line_segment(
 
   let dx = x2 - x1;
   let dy = y2 - y1;
-  let is_horizontal = dx.abs() < f64::EPSILON;
-  let is_vertical = dy.abs() < f64::EPSILON;
+  let is_horizontal = dy.abs() < f64::EPSILON;
+  let is_vertical = dx.abs() < f64::EPSILON;
 
   // For cases where the line is horizontal or vertical,
   // we can just use the min/max values of the bbox, and

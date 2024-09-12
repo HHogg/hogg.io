@@ -3,6 +3,7 @@ import {
   ProjectControlGroup,
   ProjectControl,
 } from '@hogg/common';
+import { WasmWorkerLabel } from '@hogg/wasm';
 import { SettingsIcon } from 'lucide-react';
 import { PointerEvent } from 'react';
 import { useLineSegmentContext } from './useLineSegmentContext';
@@ -16,7 +17,11 @@ export default function Controls() {
   };
 
   return (
-    <ProjectControls alignChildrenHorizontal="end">
+    <ProjectControls alignChildrenHorizontal="between">
+      <ProjectControlGroup>
+        <WasmWorkerLabel />
+      </ProjectControlGroup>
+
       <ProjectControlGroup>
         <ProjectControl
           Icon={SettingsIcon}

@@ -7,8 +7,13 @@
   "main": "./src/index.ts",
   "dependencies": {
     "@hogg/common": "workspace:^",
-    "lucide-react": "^0.294.0",
-    "preshape": "^19.1.0",
+    "@visx/axis": "^3.5.0",
+    "@visx/curve": "^3.3.0",
+    "@visx/scale": "^3.5.0",
+    "@visx/shape": "^3.5.0",
+    "@visx/xychart": "^3.5.1",
+    "lucide-react": "0.445.0",
+    "preshape": "^19.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1"

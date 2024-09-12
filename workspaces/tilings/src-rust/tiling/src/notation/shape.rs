@@ -11,7 +11,7 @@ use typeshare::typeshare;
 use super::Direction;
 use crate::TilingError;
 
-#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Hash, PartialEq, PartialOrd, Ord, Serialize)]
 #[typeshare]
 pub enum Shape {
   Skip,
@@ -67,6 +67,10 @@ impl Shape {
 
   pub fn get_internal_angle(&self) -> f64 {
     (PI * 2.0) / self.to_u8() as f64
+  }
+
+  pub fn get_side_length(&self) -> f64 {
+    2.0 * (PI / self.to_u8() as f64).sin()
   }
 
   pub fn previous(&self) -> Option<Self> {

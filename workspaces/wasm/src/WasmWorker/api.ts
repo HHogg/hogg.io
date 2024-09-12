@@ -40,7 +40,8 @@ const apisAvailable: Record<WasmApiKey, boolean> = {
   findPreviousTiling: true,
   parseNotation: true,
   parseTransform: true,
-  renderNotation: true,
+  generateTiling: true,
+  renderTiling: true,
   transferCanvas: true,
 };
 

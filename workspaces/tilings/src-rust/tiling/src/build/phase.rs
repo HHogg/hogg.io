@@ -1,20 +1,21 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq, PartialOrd, Ord, Deserialize, Serialize)]
 #[typeshare]
+#[serde(tag = "type", content = "index")]
 pub enum Phase {
   Seed,
   Placement,
-  Transform,
+  Transform(u32),
 }
 
 impl Phase {
   pub fn next(&self) -> Option<Self> {
     match self {
       Self::Seed => Some(Self::Placement),
-      Self::Placement => Some(Self::Transform),
-      Self::Transform => None,
+      Self::Placement => Some(Self::Transform(0)),
+      Self::Transform(index) => Some(Self::Transform(index + 1)),
     }
   }
 }

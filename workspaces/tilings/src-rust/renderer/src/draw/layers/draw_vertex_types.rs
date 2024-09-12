@@ -20,22 +20,22 @@ pub fn draw_vertex_types(
       }
     }
 
-    for point in polygon.points.iter() {
-      point.vertex_type.map(|vertex_type| {
-        canvas.add_component(
-          Layer::AnnotationPoints,
-          Point {
-            point: *point,
-            style: style.clone().set_fill(
-              VAPOR_WAVE_COLOR_PALETTE
-                .get(vertex_type as usize)
-                .map(|s| s.to_string()),
-            ),
-          }
-          .into(),
-        )
-      });
-    }
+    // for point in polygon.points.iter() {
+    //   point.vertex_type.map(|vertex_type| {
+    //     canvas.add_component(
+    //       Layer::AnnotationPoints,
+    //       Point {
+    //         point: *point,
+    //         style: style.clone().set_fill(
+    //           VAPOR_WAVE_COLOR_PALETTE
+    //             .get(vertex_type as usize)
+    //             .map(|s| s.to_string()),
+    //         ),
+    //       }
+    //       .into(),
+    //     )
+    //   });
+    // }
   }
 
   Ok(())

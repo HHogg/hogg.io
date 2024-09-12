@@ -3,7 +3,6 @@
 mod tests;
 
 use std::cmp::Ordering;
-use std::hash::{Hash, Hasher};
 
 use line_segment_extending::extend_line_segment;
 use serde::{Deserialize, Serialize};
@@ -17,7 +16,7 @@ fn get_point_at_percentage(p1: Point, p2: Point, percentage: f64, offset: f64) -
   let x = p1.x + (p2.x - p1.x) * percentage + offset;
   let y = p1.y + (p2.y - p1.y) * percentage + offset;
 
-  Point::default().with_xy(x, y)
+  Point::at(x, y)
 }
 
 pub enum LineSegmentOrigin {
@@ -45,8 +44,8 @@ impl LineSegment {
   }
 
   pub fn bbox(&self) -> BBox {
-    let mut min = Point::default().with_xy(0.0, 0.0);
-    let mut max = Point::default().with_xy(0.0, 0.0);
+    let mut min = Point::at(0.0, 0.0);
+    let mut max = Point::at(0.0, 0.0);
 
     if self.p1.x < self.p2.x {
       min.x = self.p1.x;
@@ -147,6 +146,12 @@ impl LineSegment {
       .with_end(self.p2.rotate(theta, origin))
   }
 
+  pub fn scale(&self, scale: f64) -> Self {
+    Self::default()
+      .with_start(self.p1.scale(scale))
+      .with_end(self.p2.scale(scale))
+  }
+
   pub fn extend_to_bbox(&self, bbox: &BBox, extend_start: bool, extend_end: bool) -> Self {
     let (x1, y1, x2, y2) = extend_line_segment(
       (self.p1.x, self.p1.y, self.p2.x, self.p2.y),
@@ -156,31 +161,11 @@ impl LineSegment {
     );
 
     Self::default()
-      .with_start(Point::default().with_xy(x1, y1))
-      .with_end(Point::default().with_xy(x2, y2))
+      .with_start(Point::at(x1, y1))
+      .with_end(Point::at(x2, y2))
   }
 
-  pub fn intersects_bbox(&self, other: &BBox) -> bool {
-    let top_line_segment = LineSegment::default()
-      .with_start(other.min)
-      .with_end(Point::default().with_xy(other.max.x, other.min.y));
-    let right_line_segment = LineSegment::default()
-      .with_start(Point::default().with_xy(other.max.x, other.min.y))
-      .with_end(other.max);
-    let bottom_line_segment = LineSegment::default()
-      .with_start(other.max)
-      .with_end(Point::default().with_xy(other.min.x, other.max.y));
-    let left_line_segment = LineSegment::default()
-      .with_start(other.min)
-      .with_end(Point::default().with_xy(other.min.x, other.max.y));
-
-    self.intersects_line_segment(&top_line_segment)
-      || self.intersects_line_segment(&right_line_segment)
-      || self.intersects_line_segment(&bottom_line_segment)
-      || self.intersects_line_segment(&left_line_segment)
-  }
-
-  pub fn intersects_line_segment(&self, other: &LineSegment) -> bool {
+  pub fn intersects(&self, other: &LineSegment) -> bool {
     // If any of the points are the same, then we say
     // they don't intersect. This is because line segments
     // make up shapes, and 2 sibling line segments would share
@@ -209,6 +194,26 @@ impl LineSegment {
     let x_numerator = ((b - d) * (r - a) + (c - a) * (s - b)) / denominator;
 
     (0.0 < y_numerator) && (y_numerator < 1.0) && (0.0 < x_numerator) && (x_numerator < 1.0)
+  }
+
+  pub fn intersects_bbox(&self, other: &BBox) -> bool {
+    let top_line_segment = LineSegment::default()
+      .with_start(other.min)
+      .with_end(Point::at(other.max.x, other.min.y));
+    let right_line_segment = LineSegment::default()
+      .with_start(Point::at(other.max.x, other.min.y))
+      .with_end(other.max);
+    let bottom_line_segment = LineSegment::default()
+      .with_start(other.max)
+      .with_end(Point::at(other.min.x, other.max.y));
+    let left_line_segment = LineSegment::default()
+      .with_start(other.min)
+      .with_end(Point::at(other.min.x, other.max.y));
+
+    self.intersects(&top_line_segment)
+      || self.intersects(&right_line_segment)
+      || self.intersects(&bottom_line_segment)
+      || self.intersects(&left_line_segment)
   }
 }
 
@@ -245,13 +250,6 @@ impl Ord for LineSegment {
 impl PartialOrd for LineSegment {
   fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
     Some(self.cmp(other))
-  }
-}
-
-impl Hash for LineSegment {
-  fn hash<H: Hasher>(&self, state: &mut H) {
-    self.p1.hash(state);
-    self.p2.hash(state);
   }
 }
 

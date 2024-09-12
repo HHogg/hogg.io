@@ -5,30 +5,35 @@ import {
   Motion,
   Text,
   colorBlack,
+  colorNegativeShade3,
   colorNegativeShade4,
   useResizeObserver,
   useThemeContext,
 } from 'preshape';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
-import { ColorMode, Options, ValidationFlag } from '../../types';
+import { ColorMode, Options, Flag } from '../../types';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
 import { usePlayerContext } from '../Player/usePlayerContext';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 
 export type RendererProps = {
+  expansionPhases?: number;
   options?: Partial<Options>;
   scale?: number;
   shadow?: boolean;
-  validations?: ValidationFlag[];
+  showTransformIndex?: number;
+  validations?: Flag[];
   withPlayer?: boolean;
 };
 
 export default function Renderer({
+  expansionPhases: expansionPhasesProp,
   options: optionsProp,
   scale = 1,
   shadow,
+  showTransformIndex,
   validations,
   withPlayer = false,
   ...rest
@@ -40,11 +45,11 @@ export default function Renderer({
   const [error, setError] = useState('');
   const { api, loading } = useWasmApi();
   const { notation } = useNotationContext();
-  const { setTiling } = useArrangementContext();
+  const { tiling, setTiling, setRenderMetrics } = useArrangementContext();
   const { isPlaying, maxStage } = usePlayerContext(withPlayer);
   const {
     autoRotate,
-    expansionPhases,
+    expansionPhases: expansionPhasesContext,
     colorMode,
     scaleMode,
     scaleSize,
@@ -54,15 +59,17 @@ export default function Renderer({
   const [size, setSize] = useResizeObserver<HTMLDivElement>();
   const { height, width } = size;
 
-  const showLoading = !isPlaying && loading.renderNotation;
+  const expansionPhases = expansionPhasesProp ?? expansionPhasesContext;
+  const showLoading =
+    !isPlaying && (loading.generateTiling || loading.renderTiling);
 
-  const options = useMemo<Options>(
+  const renderOptions = useMemo<Options>(
     () => ({
       autoRotate,
       colorMode,
-      expansionPhases,
       maxStage,
       showAnnotations,
+      showTransformIndex,
       showDebug,
       padding: 10,
       scaleMode,
@@ -71,16 +78,29 @@ export default function Renderer({
       styles: {
         axis: {
           fill: themeColors.colorTextShade1,
-          lineThickness: 3,
-          pointRadius: 6,
+          lineThickness: window.devicePixelRatio * 3,
+          pointRadius: window.devicePixelRatio * 3,
           strokeColor: themeColors.colorBackgroundShade1,
-          strokeWidth: 2,
+          strokeWidth: window.devicePixelRatio,
           ...optionsProp?.styles?.axis,
         },
         debug: {
           strokeColor: colorNegativeShade4,
-          strokeWidth: 2,
+          lineDash: [window.devicePixelRatio * 3, window.devicePixelRatio * 3],
+          strokeWidth: window.devicePixelRatio,
           ...optionsProp?.styles?.debug,
+        },
+        grid: {
+          opacity: 0.4,
+          fill: themeColors.colorBackgroundShade2,
+          strokeColor: themeColors.colorAccentShade3,
+          strokeWidth: window.devicePixelRatio,
+          ...optionsProp?.styles?.grid,
+        },
+        planeOutline: {
+          strokeColor: colorNegativeShade3,
+          strokeWidth: window.devicePixelRatio * 1.5,
+          ...optionsProp?.styles?.planeOutline,
         },
         shape: {
           fill: themeColors.colorTextShade1,
@@ -88,7 +108,7 @@ export default function Renderer({
             (optionsProp?.colorMode ?? colorMode) === ColorMode.None
               ? themeColors.colorBackgroundShade1
               : colorBlack,
-          strokeWidth: 3,
+          strokeWidth: window.devicePixelRatio,
           ...optionsProp?.styles?.shape,
         },
         transformContinuous: {
@@ -98,17 +118,17 @@ export default function Renderer({
           lineThickness: 4,
           pointRadius: 12,
           strokeColor: themeColors.colorBackgroundShade1,
-          strokeWidth: 3,
+          strokeWidth: window.devicePixelRatio,
           ...optionsProp?.styles?.transformContinuous,
         },
         transformEccentric: {
-          chevronSize: 12,
+          chevronSize: window.devicePixelRatio * 6,
           fill: themeColors.colorTextShade1,
           lineDash: [20, 30],
-          lineThickness: 4,
-          pointRadius: 12,
+          lineThickness: window.devicePixelRatio * 2,
+          pointRadius: window.devicePixelRatio * 6,
           strokeColor: themeColors.colorBackgroundShade1,
-          strokeWidth: 3,
+          strokeWidth: window.devicePixelRatio,
           ...optionsProp?.styles?.transformEccentric,
         },
         vertexType: {
@@ -121,14 +141,14 @@ export default function Renderer({
     }),
     [
       autoRotate,
-      expansionPhases,
       colorMode,
-      optionsProp,
       maxStage,
+      optionsProp,
       scaleMode,
       scaleSize,
       showAnnotations,
       showDebug,
+      showTransformIndex,
       themeColors,
     ]
   );
@@ -142,40 +162,42 @@ export default function Renderer({
     }
   }, [api]);
 
+  // Generate the tiling
+  useEffect(() => {
+    try {
+      api
+        .generateTiling([notation, expansionPhases, validations])
+        .then(setTiling);
+    } catch (error) {
+      setError((error as Error).message);
+    }
+  }, [api, notation, expansionPhases, setError, setTiling, validations]);
+
   // Render the tiling
   useEffect(() => {
     try {
       const scaledWidth = width * window.devicePixelRatio * scale;
       const scaledHeight = height * window.devicePixelRatio * scale;
 
-      if (!scaledWidth || !scaledHeight) {
+      if (!scaledWidth || !scaledHeight || !tiling) {
         return;
       }
 
+      console.log('Rendering', tiling, renderOptions);
+
       api
-        .renderNotation([
+        .renderTiling([
           refUuid.current,
-          notation,
+          tiling,
           scaledWidth,
           scaledHeight,
-          options,
-          validations,
+          renderOptions,
         ])
-        .then(setTiling);
+        .then(setRenderMetrics);
     } catch (error) {
       setError((error as Error).message);
     }
-  }, [
-    api,
-    notation,
-    scale,
-    width,
-    height,
-    options,
-    setError,
-    setTiling,
-    validations,
-  ]);
+  }, [api, width, height, scale, tiling, renderOptions, setRenderMetrics]);
 
   return (
     <Box {...rest} flex="vertical" grow>

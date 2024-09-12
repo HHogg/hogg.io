@@ -2,20 +2,21 @@
 #[cfg(test)]
 mod tests;
 
+use std::cmp::Ordering;
 use std::f64::consts::PI;
-use std::hash::{Hash, Hasher};
 use std::str::FromStr;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::{BBox, LineSegment, Point};
 use crate::notation::{Offset, Shape};
-use crate::utils::math;
+use crate::utils::math::{self, compare_coordinate, compare_f64};
 use crate::{build, TilingError};
 
-#[derive(Clone, Debug, Default, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
+#[serde(rename_all = "camelCase")]
 pub struct Polygon {
   pub bbox: BBox,
   pub centroid: Point,
@@ -32,8 +33,8 @@ pub struct Polygon {
 impl Polygon {
   pub fn with_points(mut self, points: Vec<Point>) -> Self {
     self.points = points;
-    self.centroid = self.points.clone().into();
-    self.bbox = self.points.clone().into();
+    self.centroid = (&self.points).into();
+    self.bbox = (&self.points).into();
     self.generate_line_segments();
     self
   }
@@ -63,8 +64,7 @@ impl Polygon {
     self
   }
 
-  pub fn at_center(self, scale: u8) -> Self {
-    let scale = scale.max(1) as f64;
+  pub fn at_center(self) -> Self {
     let sides = self.shape.to_u8();
     let radians = self.shape.get_internal_angle();
 
@@ -74,7 +74,7 @@ impl Polygon {
       let x = (radians * index as f64).cos();
       let y = (radians * index as f64).sin();
 
-      let mut point = Point::default().with_xy(x, y);
+      let mut point = Point::at(x, y);
 
       match self.shape {
         Shape::Triangle => {
@@ -86,7 +86,7 @@ impl Polygon {
         _ => {}
       }
 
-      points.push(point.scale(scale));
+      points.push(point);
     }
 
     let polygon = self.with_points(points);
@@ -97,7 +97,7 @@ impl Polygon {
         let max_y = polygon.bbox.max.y;
 
         polygon
-          .translate(Point::default().with_xy(max_x * -1.0, max_y * -1.0))
+          .translate(Point::at(max_x * -1.0, max_y * -1.0))
           .rotate(PI / 2.0, None)
       }
       (_, Offset::Center) => polygon,
@@ -118,7 +118,7 @@ impl Polygon {
       let x = previous.x + length * theta.cos();
       let y = previous.y + length * theta.sin();
 
-      points.push(Point::default().with_xy(x, y));
+      points.push(Point::at(x, y));
 
       theta += shape_radians;
     }
@@ -149,24 +149,12 @@ impl Polygon {
     self.line_segments = line_segments;
   }
 
-  pub fn contains_point(&self, point: &Point) -> bool {
-    for v in self.points.iter() {
-      if v == point {
-        return false;
-      }
-    }
+  fn get_apothem(&self) -> f64 {
+    let sides = self.shape.to_u8() as f64;
+    let side_length = self.line_segments[0].length();
+    let radius = side_length / (2.0 * (PI / sides).sin());
 
-    let mut delta = 0;
-    for line_segment in self.line_segments.iter() {
-      match line_segment.get_point_delta(point) {
-        d if delta == 1 && d == -1 => return false,
-        d if delta == -1 && d == 1 => return false,
-        0 => return false,
-        d => delta = d,
-      }
-    }
-
-    true
+    radius * (PI / sides).cos()
   }
 
   /// Returns true if the shape intersects with another shape.
@@ -186,27 +174,15 @@ impl Polygon {
   /// the line segments do not intersect, then the shapes do not
   /// intersect.
   pub fn intersects(&self, other: &Self) -> bool {
+    let self_apothem = self.get_apothem();
+    let other_apothem = other.get_apothem();
     let dist = self.centroid.distance_to(&other.centroid);
 
-    if dist > self.bbox.radius() + other.bbox.radius() {
-      return false;
+    match compare_coordinate(dist, self_apothem + other_apothem) {
+      Ordering::Greater => false,
+      Ordering::Equal => false,
+      Ordering::Less => true,
     }
-
-    for point in other.points.iter() {
-      if self.contains_point(point) {
-        return true;
-      }
-    }
-
-    for line_segment1 in other.line_segments.iter() {
-      for line_segment2 in self.line_segments.iter() {
-        if line_segment1.intersects_line_segment(line_segment2) {
-          return true;
-        }
-      }
-    }
-
-    false
   }
 
   pub fn reflect(self, line_segment: &LineSegment) -> Self {
@@ -248,17 +224,6 @@ impl FromStr for Polygon {
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
     Ok(Self::default().with_shape(Shape::from_str(s)?))
-  }
-}
-
-// Shape + Points
-impl Hash for Polygon {
-  fn hash<H: Hasher>(&self, state: &mut H) {
-    self.shape.hash(state);
-
-    for point in self.points.iter() {
-      point.hash(state);
-    }
   }
 }
 

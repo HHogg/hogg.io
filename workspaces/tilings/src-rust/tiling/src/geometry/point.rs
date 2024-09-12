@@ -4,13 +4,12 @@ mod point_tests;
 
 use std::cmp::Ordering;
 use std::fmt::{self, Display};
-use std::hash::{Hash, Hasher};
 
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use crate::utils::math::{
-  compare_coordinate, compare_radians, coordinate_equals, normalize_radian, round_coordinate,
+  compare_coordinate, compare_radians, coordinate_equals, normalize_radian,
 };
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
@@ -23,8 +22,8 @@ pub struct Point {
 }
 
 impl Point {
-  pub fn with_xy(self, x: f64, y: f64) -> Self {
-    self.with_x(x).with_y(y)
+  pub fn at(x: f64, y: f64) -> Self {
+    Self::default().with_x(x).with_y(y)
   }
 
   pub fn with_x(mut self, x: f64) -> Self {
@@ -38,11 +37,11 @@ impl Point {
   }
 
   pub fn theta(&self) -> f64 {
-    self.radian_to(&Self::default().with_xy(0.0, 0.0))
+    self.radian_to(&Self::at(0.0, 0.0))
   }
 
   pub fn abs(&self) -> Self {
-    Self::default().with_xy(self.x.abs(), self.y.abs())
+    Self::at(self.x.abs(), self.y.abs())
   }
 
   pub fn distance_to(&self, point: &Self) -> f64 {
@@ -50,7 +49,7 @@ impl Point {
   }
 
   pub fn distance_to_center(&self) -> f64 {
-    self.distance_to(&Self::default().with_xy(0.0, 0.0))
+    self.distance_to(&Self::at(0.0, 0.0))
   }
 
   pub fn radian_to(&self, point: &Self) -> f64 {
@@ -64,7 +63,7 @@ impl Point {
   }
 
   pub fn multiply(&self, scalar: f64) -> Self {
-    Self::default().with_xy(self.x * scalar, self.y * scalar)
+    Self::at(self.x * scalar, self.y * scalar)
   }
 
   pub fn reflect(&self, p1: &Self, p2: &Self) -> Self {
@@ -76,7 +75,7 @@ impl Point {
     let x = a * (self.x - p1.x) + b * (self.y - p1.y) + p1.x;
     let y = b * (self.x - p1.x) - a * (self.y - p1.y) + p1.y;
 
-    Self::default().with_xy(x, y)
+    Self::at(x, y)
   }
 
   pub fn rotate(&self, radians: f64, origin: Option<&Self>) -> Self {
@@ -89,28 +88,21 @@ impl Point {
     let x = cos * (self.x - origin.x) - sin * (self.y - origin.y) + origin.x;
     let y = sin * (self.x - origin.x) + cos * (self.y - origin.y) + origin.y;
 
-    Self::default().with_xy(x, y)
+    Self::at(x, y)
   }
 
   pub fn translate(&self, shift: &Self) -> Self {
-    Self::default().with_xy(self.x + shift.x, self.y + shift.y)
+    Self::at(self.x + shift.x, self.y + shift.y)
   }
 
   pub fn scale(&self, scale: f64) -> Self {
-    Self::default().with_xy(self.x * scale, self.y * scale)
+    Self::at(self.x * scale, self.y * scale)
   }
 }
 
 impl Display for Point {
   fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
     write!(fmt, "({}, {})", self.x, self.y)
-  }
-}
-
-impl Hash for Point {
-  fn hash<H: Hasher>(&self, state: &mut H) {
-    round_coordinate(self.x).to_string().hash(state);
-    round_coordinate(self.y).to_string().hash(state);
   }
 }
 
@@ -140,8 +132,20 @@ impl PartialEq for Point {
   }
 }
 
-impl From<Vec<Point>> for Point {
-  fn from(points: Vec<Point>) -> Self {
+impl From<Point> for (f64, f64) {
+  fn from(value: Point) -> Self {
+    (value.x, value.y)
+  }
+}
+
+impl From<&Point> for (f64, f64) {
+  fn from(value: &Point) -> Self {
+    (value.x, value.y)
+  }
+}
+
+impl From<&Vec<Point>> for Point {
+  fn from(points: &Vec<Point>) -> Self {
     let length = points.len() as f64;
     let mut x = 0.0;
     let mut y = 0.0;
@@ -151,6 +155,6 @@ impl From<Vec<Point>> for Point {
       y += point.y;
     }
 
-    Point::default().with_xy(x / length, y / length)
+    Point::at(x / length, y / length)
   }
 }

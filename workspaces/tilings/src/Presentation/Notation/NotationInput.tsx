@@ -1,6 +1,7 @@
 import { useWasmApi } from '@hogg/wasm';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { Box, ButtonAsync, Input, Tooltip } from 'preshape';
+import { useEffect } from 'react';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from './useNotationContext';
 
@@ -15,6 +16,16 @@ export default function NotationInput() {
     const value = e.target.value;
     setNotation(value);
   };
+
+  // useEffect(() => {
+  //   const timeout = window.setTimeout(() => {
+  //     nextNotation();
+  //   }, 500);
+
+  //   return () => {
+  //     window.clearTimeout(timeout);
+  //   };
+  // }, [tiling]);
 
   return (
     <Box flex="horizontal" alignChildrenVertical="middle">
@@ -35,7 +46,7 @@ export default function NotationInput() {
         backgroundColor="negative-shade-4"
         content={error}
         placement="bottom"
-        textColor="white"
+        textColor="light-shade-1"
         visible={!!error}
       >
         <Input

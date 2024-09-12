@@ -76,11 +76,11 @@ impl TransformValue {
 
   pub fn get_transform_values(&self) -> Vec<f64> {
     let mut value = self.value;
-    let mut values = vec![utils::math::degrees_to_radian(value)];
+    let mut values = vec![];
 
     while value < 360 {
-      value *= 2;
       values.push(utils::math::degrees_to_radian(value));
+      value *= 2;
     }
 
     values

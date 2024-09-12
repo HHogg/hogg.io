@@ -14,24 +14,34 @@ import {
   getLabelShifts,
 } from './utils/getLabelShifts';
 
+const defaultGetPoints = (
+  count: number,
+  width: number,
+  height: number
+): Point[] => {
+  return getArchimedesSpiral(count, [width * -1, width], [height * -1, height]);
+};
+
 type SvgLabelsProviderProps = {
   width: number;
   height: number;
+  getPoints?: typeof defaultGetPoints;
 };
 
 export default function SvgLabelsProvider({
   width,
   height,
+  getPoints = defaultGetPoints,
   ...props
 }: PropsWithChildren<SvgLabelsProviderProps>) {
-  const refTimeout = useRef<NodeJS.Timeout | null>(null);
+  const refTimeout = useRef<number | null>(null);
   const refLabels = useRef<Label[]>([]);
   const refObstacles = useRef<Obstacle[]>([]);
   const [shifts, setShifts] = useState<LabelShiftResult[]>([]);
 
   const points = useMemo<Point[]>(
-    () => getArchimedesSpiral(1000, [width * -1, width], [height * -1, height]),
-    [height, width]
+    () => getPoints(1000, width, height),
+    [getPoints, height, width]
   );
 
   const refreshLabelShifts = useCallback(() => {

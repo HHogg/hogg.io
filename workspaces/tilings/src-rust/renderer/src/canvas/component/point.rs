@@ -59,12 +59,12 @@ impl Draw for Point {
     let min = self
       .point
       .clone()
-      .translate(&tiling::geometry::Point::default().with_xy(-radius, -radius));
+      .translate(&tiling::geometry::Point::at(-radius, -radius));
 
     let max = self
       .point
       .clone()
-      .translate(&tiling::geometry::Point::default().with_xy(radius, radius));
+      .translate(&tiling::geometry::Point::at(radius, radius));
 
     Ok(BBox { min, max })
   }

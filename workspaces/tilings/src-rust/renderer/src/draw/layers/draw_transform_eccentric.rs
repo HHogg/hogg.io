@@ -22,19 +22,21 @@ pub fn draw_transform_eccentric(
     .clone()
     .unwrap_or_default();
 
-  let origin_point = tiling
+  let origin_point = &tiling
     .plane
     .get_point_by_index_and_type(origin_type, origin_index)
     .ok_or(Error::InvalidTiling {
       reason: "transform origin not found",
-    })?;
+    })?
+    .scale(options.scale_size.unwrap_or_default() as f64);
 
   let reflection_line_segment = tiling
     .plane
     .get_reflection_line(origin_index, origin_type)
     .ok_or(Error::InvalidTiling {
       reason: "transform reflection line not found",
-    })?;
+    })?
+    .scale(options.scale_size.unwrap_or_default() as f64);
 
   canvas.add_component(
     Layer::AnnotationLines,
@@ -123,7 +125,7 @@ fn draw_transform_eccentric_rotate(
 ) -> Result<(), Error> {
   let start_angle = match origin_type {
     OriginType::MidPoint => {
-      if let Some(line_segment) = tiling.plane.line_segments_by_mid_point.get(origin_point) {
+      if let Some(line_segment) = tiling.plane.line_segments.get_value(&origin_point.into()) {
         line_segment.p2.radian_to(origin_point)
       } else {
         0.0
@@ -134,7 +136,7 @@ fn draw_transform_eccentric_rotate(
 
   let end_angle = start_angle + PI;
   let arc_angle_padding = PI * 0.05;
-  let radius = canvas.content_bbox().radius() + origin_point.distance_to_center();
+  let radius = canvas.scale.scaled_canvas_bbox().radius_min();
 
   canvas.add_component(
     Layer::AnnotationArrows,

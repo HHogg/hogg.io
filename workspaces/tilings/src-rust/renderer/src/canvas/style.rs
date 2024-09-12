@@ -46,6 +46,10 @@ impl Style {
       .unwrap_or(0.0)
   }
 
+  pub fn get_opacity(&self) -> f64 {
+    self.opacity.unwrap_or(1.0)
+  }
+
   pub fn get_point_radius(&self, scale: &Scale) -> f64 {
     self
       .point_radius

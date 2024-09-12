@@ -9,11 +9,9 @@ use crate::canvas::{ScaleMode, Style};
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Options {
-  pub active_transform_index: Option<u32>,
   pub auto_rotate: Option<bool>,
   pub color_mode: Option<ColorMode>,
   pub fade_unmatched_shape_types: Option<bool>,
-  pub expansion_phases: Option<u8>,
   pub is_valid: Option<bool>,
   pub max_stage: Option<u16>,
   pub padding: Option<f64>,
@@ -21,6 +19,7 @@ pub struct Options {
   pub scale_size: Option<u8>,
   pub show_annotations: Option<HashMap<Annotation, bool>>,
   pub show_debug: Option<bool>,
+  pub show_transform_index: Option<u32>,
   pub styles: Styles,
 }
 
@@ -31,6 +30,7 @@ pub struct Styles {
   pub axis: Option<Style>,
   pub debug: Option<Style>,
   pub grid: Option<Style>,
+  pub plane_outline: Option<Style>,
   pub shape: Option<Style>,
   pub transform_continuous: Option<Style>,
   pub transform_eccentric: Option<Style>,
@@ -41,6 +41,9 @@ pub struct Styles {
 #[typeshare]
 pub enum Annotation {
   AxisOrigin,
+  GridLineSegment,
+  GridPolygon,
+  PlaneOutline,
   Transform,
   VertexType,
 }

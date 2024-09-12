@@ -11,7 +11,7 @@ use tiling::geometry::BBox;
 use wasm_bindgen::JsCast;
 
 use self::collision::Theia;
-pub use self::component::{Arc, LineSegment, LineSegmentArrows, Point, Polygon};
+pub use self::component::{Arc, Grid, LineSegment, LineSegmentArrows, Point, Polygon};
 use self::component::{Component, Draw, Rect};
 pub use self::scale::{Scale, ScaleMode};
 pub use self::style::Style;

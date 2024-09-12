@@ -8,6 +8,7 @@ use crate::Error;
 #[derive(Clone)]
 pub struct Polygon {
   pub polygon: tiling::geometry::Polygon,
+  pub scale: u8,
   pub style: Style,
 }
 
@@ -27,7 +28,7 @@ impl Draw for Polygon {
     _content_bbox: &BBox,
     _scale: &Scale,
   ) -> Result<BBox, Error> {
-    Ok(self.polygon.bbox)
+    Ok(self.polygon.bbox.mul(self.scale as f64))
   }
 
   fn draw(
@@ -41,13 +42,22 @@ impl Draw for Polygon {
     self.draw_start(context, scale, &self.style)?;
 
     for (index, point) in self.polygon.points.iter().enumerate() {
+      let point = point.scale(self.scale as f64);
+
       match index {
         0 => context.move_to(point.x, point.y),
         _ => context.line_to(point.x, point.y),
       }
     }
 
-    context.line_to(self.polygon.points[0].x, self.polygon.points[0].y);
+    let first_point = self
+      .polygon
+      .points
+      .first()
+      .unwrap()
+      .scale(self.scale as f64);
+
+    context.line_to(first_point.x, first_point.y);
 
     self.draw_end(context);
 

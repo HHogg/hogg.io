@@ -23,19 +23,19 @@ impl Theia {
     scale: &Scale,
     a: &Component,
   ) -> Result<bool, Error> {
-    for b in self.components.iter() {
-      if a.bbox(context, canvas_bbox, content_bbox, scale)?
-        == b.bbox(context, canvas_bbox, content_bbox, scale)?
-      {
-        continue;
-      }
+    // for b in self.components.iter() {
+    //   if a.bbox(context, canvas_bbox, content_bbox, scale)?
+    //     == b.bbox(context, canvas_bbox, content_bbox, scale)?
+    //   {
+    //     continue;
+    //   }
 
-      if a.collides_with(context, canvas_bbox, content_bbox, scale, b)? {
-        return Ok(true);
-      }
-    }
+    //   if a.collides_with(context, canvas_bbox, content_bbox, scale, b)? {
+    //     return Ok(true);
+    //   }
+    // }
 
-    self.components.push(a.clone());
+    // self.components.push(a.clone());
 
     Ok(false)
   }

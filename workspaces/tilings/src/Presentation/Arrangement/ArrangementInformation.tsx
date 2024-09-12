@@ -18,10 +18,10 @@ export default function ArrangementInformation() {
   const { tiling } = useArrangementContext();
 
   const validTiling = tiling?.buildContext.results[0];
-  const vertexTypes =
-    tiling?.plane.classifier.vertexTypeStore.vertexTypes ?? [];
-  const edgeTypes = tiling?.plane.classifier.edgeTypeStore.edgeTypes ?? [];
-  const shapeTypes = tiling?.plane.classifier.shapeTypeStore.shapeTypes ?? [];
+  // const vertexTypes =
+  //   tiling?.plane.classifier.vertexTypeStore.vertexTypes ?? [];
+  // const edgeTypes = tiling?.plane.classifier.edgeTypeStore.edgeTypes ?? [];
+  // const shapeTypes = tiling?.plane.classifier.shapeTypeStore.shapeTypes ?? [];
 
   return (
     <Box flex="vertical" gap="x8">
@@ -37,7 +37,7 @@ export default function ArrangementInformation() {
         </>
       )}
 
-      <Section title={vertexTypes.length ? 'Vertex types' : 'No vertex types'}>
+      {/* <Section title={vertexTypes.length ? 'Vertex types' : 'No vertex types'}>
         <Grid repeatWidth="80px" gap="x4">
           {vertexTypes.map((vertexType) => (
             <VertexType
@@ -63,7 +63,7 @@ export default function ArrangementInformation() {
             <ShapeType key={shapeType} shapeType={shapeType} height="80px" />
           ))}
         </Grid>
-      </Section>
+      </Section> */}
     </Box>
   );
 }

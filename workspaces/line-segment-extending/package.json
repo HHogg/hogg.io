@@ -14,8 +14,8 @@
     "@hogg/tilings": "workspace:^",
     "@hogg/wasm": "workspace:^",
     "framer-motion": "11.5.4",
-    "lucide-react": "0.439.0",
-    "preshape": "^19.1.0",
+    "lucide-react": "0.445.0",
+    "preshape": "^19.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

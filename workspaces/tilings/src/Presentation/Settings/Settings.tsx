@@ -61,8 +61,8 @@ export default function Settings() {
     type: 'number',
     value: expansionPhases,
     min: 0,
-    max: 10,
-    step: 1,
+    max: 20,
+    step: 5,
     onChange: setExpansionPhases,
   };
 

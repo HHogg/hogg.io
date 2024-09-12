@@ -6,6 +6,7 @@ import * as Evolution from '@hogg/evolution';
 import * as LineSegmentExtending from '@hogg/line-segment-extending';
 import * as Preshape from '@hogg/preshape';
 import * as Snake from '@hogg/snake';
+import * as SpatialGridMap from '@hogg/spatial-grid-map';
 import * as Spirals from '@hogg/spirals';
 import * as Tilings from '@hogg/tilings';
 import { ComponentType } from '@react-spring/web';
@@ -49,8 +50,13 @@ export const projects: {
     meta: Evolution.meta,
     Component: Evolution.Project,
   },
-  // Next: Performance benchmark difference between atan2 and hypot.
+  {
+    meta: SpatialGridMap.meta,
+    Component: SpatialGridMap.Project,
+  },
 ];
+
+projects.sort((a, b) => (a.meta.created > b.meta.created ? -1 : 1));
 
 export const shouldShowProject = (project: Project) => {
   return !import.meta.env.PROD || project.deploy;

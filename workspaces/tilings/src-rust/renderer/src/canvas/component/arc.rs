@@ -38,7 +38,7 @@ impl Arc {
     Chevron {
       point: self
         .point
-        .translate(&Point::default().with_xy(0.0, -self.get_radius(scale)))
+        .translate(&Point::at(0.0, -self.get_radius(scale)))
         .rotate(self.end_angle, Some(&self.point)),
       direction: self.end_angle,
       style: self.style.clone(),
@@ -106,8 +106,8 @@ impl Draw for Arc {
     let x_max = if abm * abe > 0.0 { ex } else { ax.max(bx) };
     let y_max = if abm * abn > 0.0 { ny } else { ay.max(by) };
 
-    let min = Point::default().with_xy(x_min, y_min);
-    let max = Point::default().with_xy(x_max, y_max);
+    let min = Point::at(x_min, y_min);
+    let max = Point::at(x_max, y_max);
     let bbox = BBox::default().with_min(min).with_max(max);
 
     Ok(

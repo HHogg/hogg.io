@@ -2,6 +2,7 @@ mod arc;
 mod arrow;
 mod chevron;
 mod draw;
+mod grid;
 mod line_segment;
 mod line_segment_arrows;
 mod point;
@@ -14,6 +15,7 @@ pub use self::arc::Arc;
 pub use self::arrow::Arrow;
 pub use self::chevron::Chevron;
 pub use self::draw::Draw;
+pub use self::grid::Grid;
 pub use self::line_segment::LineSegment;
 pub use self::line_segment_arrows::LineSegmentArrows;
 pub use self::point::Point;
@@ -29,6 +31,7 @@ pub enum Component {
   Arc(Arc),
   Arrow(Arrow),
   Chevron(Chevron),
+  Grid(Grid),
   LineSegment(LineSegment),
   LineSegmentArrows(LineSegmentArrows),
   Point(Point),
@@ -42,6 +45,7 @@ impl Component {
       Self::Arc(d) => d,
       Self::Arrow(d) => d,
       Self::Chevron(d) => d,
+      Self::Grid(d) => d,
       Self::LineSegment(d) => d,
       Self::LineSegmentArrows(d) => d,
       Self::Point(d) => d,
@@ -129,6 +133,12 @@ impl From<Arrow> for Component {
 impl From<Chevron> for Component {
   fn from(chevron: Chevron) -> Self {
     Self::Chevron(chevron)
+  }
+}
+
+impl From<Grid> for Component {
+  fn from(value: Grid) -> Self {
+    Self::Grid(value)
   }
 }
 

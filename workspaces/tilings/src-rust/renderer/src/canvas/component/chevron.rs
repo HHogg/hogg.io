@@ -18,12 +18,10 @@ impl Chevron {
   fn get_points(&self, scale: &Scale) -> Vec<Point> {
     let size = self.style.get_chevron_size(scale);
 
-    let point_1 = Point::default()
-      .with_xy(self.point.x - size, self.point.y - size)
+    let point_1 = Point::at(self.point.x - size, self.point.y - size)
       .rotate(self.direction - PI * 0.5, Some(&self.point));
-    let point_2 = Point::default().with_xy(self.point.x, self.point.y);
-    let point_3 = Point::default()
-      .with_xy(self.point.x + size, self.point.y - size)
+    let point_2 = Point::at(self.point.x, self.point.y);
+    let point_3 = Point::at(self.point.x + size, self.point.y - size)
       .rotate(self.direction - PI * 0.5, Some(&self.point));
 
     vec![point_1, point_2, point_3]

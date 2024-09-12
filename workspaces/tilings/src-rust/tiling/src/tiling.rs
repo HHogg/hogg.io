@@ -2,11 +2,14 @@
 #[cfg(test)]
 mod tests;
 
-use chrono::{TimeDelta, Utc};
-use serde::Serialize;
+use core::fmt;
+
+use serde::de::{self, MapAccess, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
 use serde_with::{serde_as, DisplayFromStr};
 use typeshare::typeshare;
 
+use crate::build::Metrics;
 use crate::notation::{Direction, Notation, Path, Transforms};
 use crate::{build, validation, TilingError};
 
@@ -15,23 +18,20 @@ use crate::{build, validation, TilingError};
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Tiling {
-  pub option_expansion_phases: u8,
-  pub option_link_paths: bool,
-  pub option_with_first_transform: bool,
-  pub option_type_ahead: bool,
-
-  #[typeshare]
+  #[typeshare(serialized_as = "String")]
   pub notation: Notation,
   pub plane: build::Plane,
+  #[serde(skip_deserializing)]
   pub build_context: build::Context,
   #[typeshare(serialized_as = "String")]
   #[serde_as(as = "DisplayFromStr")]
+  #[serde(skip_deserializing)]
   pub error: TilingError,
 }
 
 impl Tiling {
   pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
-    self.option_expansion_phases = expansion_phases;
+    self.plane.with_expansion_phases(expansion_phases);
     self
   }
 
@@ -59,11 +59,6 @@ impl Tiling {
     self
   }
 
-  pub fn with_scale(mut self, scale: u8) -> Self {
-    self.plane.with_scale(scale);
-    self
-  }
-
   pub fn with_transforms(mut self, transforms: Transforms) -> Self {
     self.notation.set_transforms(transforms);
     self
@@ -87,10 +82,28 @@ impl Tiling {
     self
   }
 
-  pub fn from_string(mut self, notation: String) -> Self {
+  pub fn with_metrics(mut self, metrics: Metrics) -> Self {
+    self.plane.with_metrics(metrics);
+    self
+  }
+
+  pub fn with_plane(mut self, plane: build::Plane) -> Self {
+    self.plane = plane;
+    self
+  }
+
+  pub fn with_notation(mut self, notation: String) -> Self {
     if let Err(err) = self.notation.from_string(notation.clone(), &self.plane) {
       self.error = err;
-    } else if let Err(err) = self.build() {
+    }
+
+    self
+  }
+
+  pub fn from_string(mut self, notation: String) -> Self {
+    self = self.with_notation(notation);
+
+    if let Err(err) = self.build() {
       self.error = err;
     }
 
@@ -146,19 +159,56 @@ impl Tiling {
   }
 
   pub fn build(&mut self) -> Result<(), TilingError> {
-    let start = Utc::now();
-
-    let build_result = self
-      .plane
-      .build(&self.notation, self.option_expansion_phases);
-
-    let end = Utc::now();
-    let duration: TimeDelta = end - start;
+    let build_result = self.plane.build(&self.notation);
 
     self
       .build_context
-      .add_result(&self.notation, &self.plane, &build_result, duration);
+      .add_result(&self.notation, &build_result, &self.plane);
 
     build_result
+  }
+}
+
+struct TilingDeserializerVisitor;
+
+impl<'de> Visitor<'de> for TilingDeserializerVisitor {
+  type Value = Tiling;
+
+  fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+    formatter.write_str("a JSON object with specific fields")
+  }
+
+  fn visit_map<V>(self, mut map: V) -> Result<Self::Value, V::Error>
+  where
+    V: MapAccess<'de>,
+  {
+    let mut notation: Option<String> = None;
+    let mut plane: Option<build::Plane> = None;
+
+    while let Some(key) = map.next_key()? {
+      let key: String = key;
+
+      match key.as_str() {
+        "notation" => notation = Some(map.next_value()?),
+        "plane" => plane = Some(map.next_value()?),
+        _ => {
+          let _: de::IgnoredAny = map.next_value()?;
+        }
+      }
+    }
+
+    let notation = notation.ok_or_else(|| de::Error::missing_field("notation"))?;
+    let plane = plane.ok_or_else(|| de::Error::missing_field("plane"))?;
+
+    Ok(Tiling::default().with_notation(notation).with_plane(plane))
+  }
+}
+
+impl<'de> Deserialize<'de> for Tiling {
+  fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+  where
+    D: Deserializer<'de>,
+  {
+    deserializer.deserialize_map(TilingDeserializerVisitor)
   }
 }

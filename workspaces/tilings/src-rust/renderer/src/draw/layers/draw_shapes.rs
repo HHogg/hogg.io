@@ -111,6 +111,7 @@ pub fn draw_shapes(
       Layer::ShapeFill,
       Polygon {
         polygon: shape.clone(),
+        scale: options.scale_size.unwrap_or(1),
         style: options
           .styles
           .shape
@@ -136,6 +137,7 @@ pub fn draw_shapes(
       Layer::ShapeBorder,
       Polygon {
         polygon: shape.clone(),
+        scale: options.scale_size.unwrap_or(1),
         style: options
           .styles
           .shape

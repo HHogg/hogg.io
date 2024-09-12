@@ -1,5 +1,6 @@
 import { useWasmApi } from '@hogg/wasm';
 import { PropsWithChildren, useCallback, useRef, useState } from 'react';
+import { useSettingsContext } from '../Settings/useSettingsContext';
 import { NotationContext } from './useNotationContext';
 
 export type NotationProviderProps = {
@@ -16,6 +17,7 @@ export default function NotationProvider({
 }: PropsWithChildren<NotationProviderProps>) {
   const { api } = useWasmApi();
   const [notation, setNotation] = useState(initialNotation);
+  const { expansionPhases } = useSettingsContext();
   const notationRef = useRef<string>(initialNotation);
 
   const handleSetNotation = useCallback(
@@ -30,25 +32,32 @@ export default function NotationProvider({
   const handlePreviousNotation = useCallback(async () => {
     const previousNotation = await api.findPreviousTiling([
       notationRef.current,
+      expansionPhases,
     ]);
 
     if (previousNotation) {
       handleSetNotation(previousNotation);
     }
-  }, [api, handleSetNotation]);
+  }, [api, expansionPhases, handleSetNotation]);
 
   const handleNextNotation = useCallback(async () => {
-    const nextNotation = await api.findNextTiling([notationRef.current]);
+    const nextNotation = await api.findNextTiling([
+      notationRef.current,
+      expansionPhases,
+    ]);
 
     if (nextNotation) {
       handleSetNotation(nextNotation);
     }
-  }, [api, handleSetNotation]);
+  }, [api, expansionPhases, handleSetNotation]);
+
+  const notationSplit = notation.split('/');
 
   const value = {
     notation,
     notationRef,
-    path: notation.split('/')[0],
+    path: notationSplit[0],
+    transforms: notationSplit.slice(1),
     isValid,
     setNotation: handleSetNotation,
     previousNotation: handlePreviousNotation,

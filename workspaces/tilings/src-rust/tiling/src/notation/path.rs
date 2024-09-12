@@ -97,6 +97,14 @@ impl Path {
     self.nodes.len() as u16
   }
 
+  pub fn iter_shapes(&self) -> impl Iterator<Item = &Shape> {
+    self.nodes.iter().filter_map(|node| match node {
+      Node::Shape(shape) => Some(shape),
+      Node::Seed(seed) => Some(&seed.shape),
+      _ => None,
+    })
+  }
+
   pub fn get_level(&self) -> usize {
     self.get_shape_count()
   }

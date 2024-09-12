@@ -1,0 +1,25 @@
+{
+  "name": "@hogg/spatial-grid-map",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts"
+  },
+  "dependencies": {
+    "@hogg/common": "workspace:^",
+    "lucide-react": "0.445.0",
+    "preshape": "^19.1.5",
+    "react": "^18.2.0",
+    "uuid": "10.0.0"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^8.1.0",
+    "@svgr/plugin-jsx": "^8.1.0",
+    "@types/react": "^18.0.28",
+    "typescript": "^5.0.4"
+  }
+}

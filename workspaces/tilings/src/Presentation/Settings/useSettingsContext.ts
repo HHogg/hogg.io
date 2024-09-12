@@ -27,12 +27,15 @@ export type SettingsContextValue = Settings & {
 
 export const defaultOptions: Settings = {
   autoRotate: false,
-  colorMode: ColorMode.VaporWaveRandom,
-  expansionPhases: 3,
+  colorMode: ColorMode.None,
+  expansionPhases: 6,
   scaleMode: ScaleMode.WithinBounds,
-  scaleSize: 20,
+  scaleSize: 10,
   showAnnotations: {
     [Annotation.AxisOrigin]: false,
+    [Annotation.GridLineSegment]: false,
+    [Annotation.GridPolygon]: false,
+    [Annotation.PlaneOutline]: false,
     [Annotation.Transform]: false,
     [Annotation.VertexType]: false,
   },

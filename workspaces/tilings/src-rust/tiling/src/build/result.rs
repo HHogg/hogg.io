@@ -1,8 +1,10 @@
 use chrono::{NaiveDateTime, Utc};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-#[derive(Clone, Debug, Serialize)]
+use super::Metrics;
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Result {
@@ -12,12 +14,12 @@ pub struct Result {
   pub uniform: i32,
   #[typeshare(serialized_as = "string")]
   pub timestamp: NaiveDateTime,
-  pub build_time_ms: i32,
+  pub metrics: Metrics,
 }
 
 impl Result {
-  pub fn with_build_time_ms(mut self, build_time_ms: i32) -> Self {
-    self.build_time_ms = build_time_ms;
+  pub fn with_metrics(mut self, metrics: Metrics) -> Self {
+    self.metrics = metrics;
     self
   }
 
@@ -45,7 +47,7 @@ impl Default for Result {
       transform_index: 0,
       uniform: 0,
       timestamp: Utc::now().naive_utc(),
-      build_time_ms: 0,
+      metrics: Metrics::default(),
     }
   }
 }

@@ -1,4 +1,9 @@
-import { ImageCover, Project, getProjectRoutePath } from '@hogg/common';
+import {
+  ImageCover,
+  Project,
+  formateDate,
+  getProjectRoutePath,
+} from '@hogg/common';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Box, Button, Link, Text } from 'preshape';
@@ -9,7 +14,7 @@ type Props = {
 };
 
 export default function ProjectCard({ project }: Props) {
-  const { name, description, href, image } = project;
+  const { name, description, href, image, created, wip } = project;
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -49,8 +54,8 @@ export default function ProjectCard({ project }: Props) {
             borderColor="background-shade-4"
             padding="x2"
           >
-            <Text size="x4" weight="x5">
-              WIP
+            <Text size="x3" weight="x5">
+              Work in progress
             </Text>
           </Box>
         )}
@@ -66,6 +71,10 @@ export default function ProjectCard({ project }: Props) {
           paddingHorizontal="x1"
         >
           {description}
+        </Text>
+
+        <Text margin="x3" size="x3" paddingHorizontal="x1">
+          {wip ? 'Work in progress' : formateDate(created)}
         </Text>
       </Box>
 

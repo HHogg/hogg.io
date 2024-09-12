@@ -1,7 +1,12 @@
+import { DateTime } from 'luxon';
 import { Project } from './types';
 
 export function getProjectRoutePath(project: Project): string {
   return `/projects/${project.id}`;
+}
+
+export function formateDate(date: string): string {
+  return DateTime.fromISO(date).toLocaleString(DateTime.DATE_FULL);
 }
 
 export function createLinearScale(

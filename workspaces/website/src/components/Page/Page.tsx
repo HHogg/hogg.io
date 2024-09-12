@@ -11,6 +11,8 @@ type PageProps = {
   description: string;
   image?: string;
   title: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export default function Page({
@@ -19,6 +21,8 @@ export default function Page({
   gap = 'x16',
   image,
   title,
+  createdAt,
+  updatedAt,
   ...rest
 }: PropsWithChildren<PageProps & BoxProps>) {
   const location = useLocation();
@@ -37,6 +41,14 @@ export default function Page({
           content={`https://hogg.io${location.pathname}`}
         />
         <meta property="og:image" content={image || DEFAULT_IMAGE} />
+
+        {createdAt && (
+          <meta property="og:article:published_time" content={createdAt} />
+        )}
+
+        {updatedAt && (
+          <meta property="og:article:modified_time" content={updatedAt} />
+        )}
       </Helmet>
 
       <Box {...rest} className="Page" flex="vertical" grow maxWidth="1600px">
