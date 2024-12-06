@@ -8,7 +8,7 @@ export const meta: Project = {
   id: ProjectKey.circular_sequence,
   name: 'Matching symmetric circular sequences with Knuth-Morris-Pratt (KMP)',
   description:
-    'identifying and comparing unique geometric shape arrangements without a defined start or endpoint using the Knuth-Morris-Pratt algorithm in Rust.',
+    'Identifying and comparing unique geometric shape arrangements without a defined start or endpoint using the Knuth-Morris-Pratt algorithm in Rust.',
   image,
   tags: ['algorithms', 'data structures', 'sequences', 'rust'],
   deploy: true,

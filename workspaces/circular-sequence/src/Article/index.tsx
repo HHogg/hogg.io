@@ -134,8 +134,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="get-length"
             description="Implementation to return the actual length of a sequence"
             language="rust"
-            startLineNumber={7}
-            endLineNumber={23}
+            startLineNumber={10}
+            endLineNumber={26}
           >
             {fileContentsSequence}
           </ArticleFigCodeBlock>
@@ -271,8 +271,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             id="is-symmetrical"
             description="Implementation to retrieve the starting index of the reverse sequence if it exists"
             language="rust"
-            startLineNumber={25}
-            endLineNumber={61}
+            startLineNumber={28}
+            endLineNumber={64}
           >
             {fileContentsSequence}
           </ArticleFigCodeBlock>

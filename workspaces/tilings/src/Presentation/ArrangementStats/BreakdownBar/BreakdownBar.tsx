@@ -1,10 +1,8 @@
 import { Point, SvgLabelsProvider } from '@hogg/common';
 import { Box, BoxProps, useResizeObserver } from 'preshape';
 import BreakdownBarSection from './BreakdownBarSection';
-import { barHeight } from './utils';
 
-const heightWithLabels = 50;
-const gap = barHeight * 0.5;
+const labelHeight = 46;
 
 // Even points will move to the left from half way to 0
 // Odd points will move to the right from half way to width
@@ -24,6 +22,7 @@ const toEitherSide = (count: number, width: number) => {
 };
 
 type BreakdownBarProps = BoxProps & {
+  height?: number;
   sections: {
     name?: string;
     color: string;
@@ -31,13 +30,19 @@ type BreakdownBarProps = BoxProps & {
   }[];
 };
 
-export default function BreakdownBar({ sections, ...rest }: BreakdownBarProps) {
+export default function BreakdownBar({
+  height = 6,
+  sections,
+  ...rest
+}: BreakdownBarProps) {
   const [size, ref] = useResizeObserver();
   const { width } = size;
 
+  const gap = height * 0.5;
+  const hasLabels = sections.some(({ name }) => name);
   const total = sections.reduce((acc, { value }) => acc + value, 0);
   const widths = sections.map(({ value }) =>
-    Math.max(barHeight, total ? (value / total) * width : 0)
+    Math.max(height, total ? (value / total) * width : 0)
   );
   const lefts = sections.map((_, i) =>
     widths.slice(0, i).reduce((acc, width) => acc + width + gap, 0)
@@ -47,18 +52,20 @@ export default function BreakdownBar({ sections, ...rest }: BreakdownBarProps) {
     (lefts[lefts.length - 1] ?? 0) + (widths[widths.length - 1] ?? 0);
   const offsetScaleX = width / totalWidth;
 
-  const height = sections.some(({ name }) => name)
-    ? heightWithLabels
-    : barHeight;
+  const heightWithLabels = hasLabels ? height + labelHeight : height;
 
   return (
     <Box {...rest} ref={ref}>
-      <SvgLabelsProvider width={width} height={height} getPoints={toEitherSide}>
+      <SvgLabelsProvider
+        width={width}
+        height={heightWithLabels}
+        getPoints={toEitherSide}
+      >
         <Box
           tag="svg"
-          height={height}
+          height={heightWithLabels}
           width={width}
-          viewBox={`0 0 ${width} ${height}`}
+          viewBox={`0 0 ${width} ${heightWithLabels}`}
           style={{
             shapeRendering: 'geometricPrecision',
           }}
@@ -67,6 +74,7 @@ export default function BreakdownBar({ sections, ...rest }: BreakdownBarProps) {
             <BreakdownBarSection
               color={section.color}
               first={index === 0}
+              height={height}
               key={index}
               last={index === sections.length - 1}
               name={section.name}

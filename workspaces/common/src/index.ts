@@ -30,6 +30,7 @@ export {
   default as ProjectPage,
   type ProjectPageProps,
 } from './ProjectPage/ProjectPage';
+export { default as ProjectPageWIP } from './ProjectPage/ProjectPageWIP';
 export { default as ProjectPageLink } from './ProjectPage/ProjectPageLink';
 export { default as ProjectPageProvider } from './ProjectPage/ProjectPageProvider';
 export { useProjectPageContext } from './ProjectPage/useProjectPageContext';

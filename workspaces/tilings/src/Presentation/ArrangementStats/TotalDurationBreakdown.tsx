@@ -18,10 +18,10 @@ export default function TotalDurationBreakdown() {
   const {
     totalDuration,
     transforms,
-    validations,
     stageDurationPlacement,
     stageDurationDraw,
     stageDurationRender,
+    stageDurationValidation,
   } = useArrangementStatsContext();
 
   return (
@@ -55,20 +55,15 @@ export default function TotalDurationBreakdown() {
             color: colorTransform,
             value: totalDuration,
           })),
-          ...Object.entries(validations).map(([flag, { totalDuration }]) => ({
-            name: flag.toLocaleLowerCase(),
-            color: colorValidation,
-            value: totalDuration,
-          })),
           {
-            name: 'draw',
-            color: colorRender,
-            value: stageDurationDraw,
+            name: 'validations',
+            color: colorValidation,
+            value: stageDurationValidation,
           },
           {
             name: 'render',
             color: colorRender,
-            value: stageDurationRender,
+            value: stageDurationDraw + stageDurationRender,
           },
         ]}
       />

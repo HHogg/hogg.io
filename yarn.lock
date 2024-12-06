@@ -896,6 +896,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@hogg/gap-validation@workspace:^, @hogg/gap-validation@workspace:workspaces/gap-validation":
+  version: 0.0.0-use.local
+  resolution: "@hogg/gap-validation@workspace:workspaces/gap-validation"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@types/react": ^18.0.28
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
+    react: ^18.2.0
+    typescript: ^5.0.4
+  languageName: unknown
+  linkType: soft
+
 "@hogg/line-segment-extending@workspace:^, @hogg/line-segment-extending@workspace:workspaces/line-segment-extending":
   version: 0.0.0-use.local
   resolution: "@hogg/line-segment-extending@workspace:workspaces/line-segment-extending"
@@ -1037,6 +1050,7 @@ __metadata:
     "@hogg/circle-art": "workspace:^"
     "@hogg/circle-intersections": "workspace:^"
     "@hogg/circular-sequence": "workspace:^"
+    "@hogg/gap-validation": "workspace:^"
     "@hogg/line-segment-extending": "workspace:^"
     "@hogg/preshape": "workspace:^"
     "@hogg/snake": "workspace:^"

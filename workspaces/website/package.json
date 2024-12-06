@@ -34,6 +34,7 @@
     "@hogg/circle-art": "workspace:^",
     "@hogg/circle-intersections": "workspace:^",
     "@hogg/circular-sequence": "workspace:^",
+    "@hogg/gap-validation": "workspace:^",
     "@hogg/line-segment-extending": "workspace:^",
     "@hogg/preshape": "workspace:^",
     "@hogg/snake": "workspace:^",

@@ -1,4 +1,3 @@
-import { Lines } from '@hogg/common';
 import { Box, BoxProps } from 'preshape';
 import PageChangeButton, { PageChangeButtonProps } from './PageChangeButton';
 
@@ -10,14 +9,6 @@ type Props = BoxProps & {
 export default function PageChangeButtons({ previous, next, ...rest }: Props) {
   return (
     <Box {...rest}>
-      <Lines
-        backgroundColor="text-shade-1"
-        count={2}
-        size={5}
-        grow
-        margin="x2"
-      />
-
       <Box alignChildrenVertical="middle" flex="horizontal" gap="x8" wrap>
         {previous && (
           <Box
@@ -36,14 +27,6 @@ export default function PageChangeButtons({ previous, next, ...rest }: Props) {
           </Box>
         )}
 
-        <Lines
-          backgroundColor="text-shade-1"
-          minWidth="300px"
-          size={5}
-          grow
-          count={3}
-        />
-
         {next && (
           <Box
             basis="0"
@@ -61,14 +44,6 @@ export default function PageChangeButtons({ previous, next, ...rest }: Props) {
           </Box>
         )}
       </Box>
-
-      <Lines
-        backgroundColor="text-shade-1"
-        count={2}
-        size={5}
-        grow
-        margin="x2"
-      />
     </Box>
   );
 }

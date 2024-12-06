@@ -20,7 +20,10 @@
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file"
   },
   "dependencies": {
+    "@hogg/circular-sequence": "workspace:^",
     "@hogg/common": "workspace:^",
+    "@hogg/gap-validation": "workspace:^",
+    "@hogg/spatial-grid-map": "workspace:^",
     "@hogg/wasm": "workspace:^",
     "@visx/axis": "^3.5.0",
     "@visx/curve": "^3.3.0",

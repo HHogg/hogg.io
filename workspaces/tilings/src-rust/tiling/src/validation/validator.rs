@@ -117,7 +117,7 @@ impl Validator {
 
     loop {
       let mid_point: (f64, f64) = current_line_segment.mid_point().into();
-      let near_by = line_segments.iter_values_around(&mid_point, 3);
+      let near_by = line_segments.iter_values_around(&mid_point, 1);
 
       let mut found = false;
 

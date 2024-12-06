@@ -1,6 +1,7 @@
 import {
   type Project,
   Media,
+  ProjectPageWIP,
   ProjectPageProps,
   ProjectPageProvider,
   getProjectRoutePath,
@@ -10,7 +11,11 @@ import Header from '../../components/Header/Header';
 import Page from '../../components/Page/Page';
 import PageBackButton from '../../components/Page/PageBackButton';
 import PageChangeButtons from '../../components/Page/PageChangeButtons';
-import { getNextProject, getPreviousProject } from '../../projects';
+import {
+  getNextProject,
+  getPreviousProject,
+  shouldShowProject,
+} from '../../projects';
 
 export type Props = {
   Component: ComponentType<ProjectPageProps>;
@@ -39,13 +44,19 @@ export default function Project({ Component, meta }: Props) {
           <PageBackButton title="Home" path="/" />
         </Header>
 
-        <Media lessThan="desktop">
-          <Component layout="vertical" gap="x16" />
-        </Media>
+        {shouldShowProject(meta) ? (
+          <>
+            <Media lessThan="desktop">
+              <Component layout="vertical" gap="x16" />
+            </Media>
 
-        <Media greaterThanOrEqual="desktop">
-          <Component layout="horizontal" gap="x24" />
-        </Media>
+            <Media greaterThanOrEqual="desktop">
+              <Component layout="horizontal" gap="x24" />
+            </Media>
+          </>
+        ) : (
+          <ProjectPageWIP />
+        )}
 
         <PageChangeButtons
           previous={

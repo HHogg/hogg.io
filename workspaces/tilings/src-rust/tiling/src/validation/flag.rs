@@ -24,10 +24,10 @@ impl Flag {
 impl From<Flag> for &'static str {
   fn from(flag: Flag) -> Self {
     match flag {
-      Flag::Overlaps => "validation_overlaps",
-      Flag::Gaps => "validation_gaps",
-      Flag::Expanded => "validation_expansion",
-      Flag::VertexTypes => "validation_vertex_types",
+      Flag::Overlaps => "validation_Overlaps",
+      Flag::Gaps => "validation_Gaps",
+      Flag::Expanded => "validation_Expanded",
+      Flag::VertexTypes => "validation_VertexTypes",
     }
   }
 }
