@@ -1,8 +1,10 @@
 import { Box, Separator, Text, useThemeContext } from 'preshape';
 import TransformDescription from '../Notation/TransformDescription';
 import { useNotationContext } from '../Notation/useNotationContext';
-import { formatMs, formatPercent } from '../utils/formatting';
+import { formatMs, formatNumber, formatPercent } from '../utils/formatting';
 import BreakdownBar from './BreakdownBar/BreakdownBar';
+import SeriesChart from './SeriesChart/SeriesChart';
+import SeriesChartLine from './SeriesChart/SeriesChartLine';
 import StageCard from './StageCard';
 import StageCards from './StageCards';
 import { colorTransform } from './constants';
@@ -56,7 +58,10 @@ export default function TransformDurationBreakdown() {
           {transforms
             .sort((a, b) => b.totalDuration - a.totalDuration)
             .map(
-              ({ totalDuration: transformTotalDuration }, transformIndex) => (
+              (
+                { totalDuration: transformTotalDuration, totalDurationSeries },
+                transformIndex
+              ) => (
                 <Text
                   borderBottom
                   borderColor="background-shade-4"
@@ -73,14 +78,52 @@ export default function TransformDurationBreakdown() {
                       {notationTransforms[transformIndex]}
                     </Text>
 
-                    <Text size="x2">
+                    <Text size="x2" margin="x1">
                       <TransformDescription
                         transform={notationTransforms[transformIndex]}
                       />
                     </Text>
+
+                    <Text size="x2" margin="x1">
+                      Polygons added:{' '}
+                      <Text tag="span" textColor="accent-shade-4">
+                        {formatNumber(transforms[transformIndex].polygonsAdded)}
+                      </Text>{' '}
+                      | Polygons skipped:{' '}
+                      <Text tag="span" textColor="negative-shade-4">
+                        {formatNumber(
+                          transforms[transformIndex].polygonsSkipped
+                        )}
+                      </Text>
+                    </Text>
                   </Text>
 
-                  <Text basis="0" grow="1" weight="x2">
+                  <Text
+                    alignChildrenVertical="end"
+                    container
+                    basis="0"
+                    flex="vertical"
+                    grow="1"
+                    weight="x2"
+                    zIndex={0}
+                  >
+                    <Box
+                      absolute="edge-to-edge"
+                      flex="horizontal"
+                      paddingBottom="x4"
+                      style={{ opacity: 0.5 }}
+                      zIndex={-1}
+                    >
+                      <SeriesChart>
+                        <SeriesChartLine
+                          color={colorTransform}
+                          id={`transform-${transformIndex}`}
+                          series={totalDurationSeries}
+                          withGradientArea
+                        />
+                      </SeriesChart>
+                    </Box>
+
                     <Text align="end" margin="x2">
                       {formatMs(transformTotalDuration)} |{' '}
                       {formatPercent(transformTotalDuration / totalDuration)}

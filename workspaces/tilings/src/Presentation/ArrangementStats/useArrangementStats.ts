@@ -14,6 +14,8 @@ export type ArrangementStats = {
   polygonsSkipped: number;
   polygonsSkippedSeries: number[];
   transforms: {
+    polygonsAdded: number;
+    polygonsSkipped: number;
     totalDuration: number;
     totalDurationSeries: number[];
   }[];
@@ -73,6 +75,8 @@ export default function useArrangementStats(): ArrangementStats {
 
         if (!stats.transforms[index]) {
           stats.transforms[index] = {
+            polygonsAdded: 0,
+            polygonsSkipped: 0,
             totalDuration: 0,
             totalDurationSeries: [],
           };
@@ -81,6 +85,9 @@ export default function useArrangementStats(): ArrangementStats {
         const transform = stats.transforms[index];
 
         if (transform) {
+          transform.polygonsAdded += event.counters.get('polygons_added') ?? 0;
+          transform.polygonsSkipped +=
+            event.counters.get('polygons_skipped') ?? 0;
           transform.totalDuration += event.duration;
           transform.totalDurationSeries.push(event.duration);
         }

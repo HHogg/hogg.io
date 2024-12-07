@@ -1,6 +1,7 @@
 import { Box } from 'preshape';
 import ArrangementStatsProvider from './ArrangementStatsProvider';
 import PolygonsBreakdown from './PolygonsBreakdown';
+import RenderDurationBreakdown from './RenderDurationBreakdown';
 import TotalDurationBreakdown from './TotalDurationBreakdown';
 import TransformDurationBreakdown from './TransformDurationBreakdown';
 import ValidationDurationBreakdown from './ValidationDurationBreakdown';
@@ -13,6 +14,7 @@ export default function ArrangementStats() {
         <PolygonsBreakdown />
         <TransformDurationBreakdown />
         <ValidationDurationBreakdown />
+        <RenderDurationBreakdown />
       </Box>
     </ArrangementStatsProvider>
   );

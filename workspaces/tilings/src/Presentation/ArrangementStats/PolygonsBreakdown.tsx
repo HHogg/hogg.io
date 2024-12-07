@@ -44,12 +44,16 @@ export default function PolygonsBreakdown() {
             <SeriesChart>
               <SeriesChartLine
                 color={colors.colorAccentShade4}
+                id="polygons-added"
                 series={polygonsAddedSeries}
+                withGradientArea
               />
 
               <SeriesChartLine
                 color={colorNegativeShade4}
+                id="polygons-skipped"
                 series={polygonsSkippedSeries}
+                withGradientArea
               />
             </SeriesChart>
           </Box>
