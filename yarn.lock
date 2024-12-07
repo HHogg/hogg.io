@@ -1002,7 +1002,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/tilings@workspace:workspaces/tilings"
   dependencies:
+    "@hogg/circular-sequence": "workspace:^"
     "@hogg/common": "workspace:^"
+    "@hogg/gap-validation": "workspace:^"
+    "@hogg/spatial-grid-map": "workspace:^"
     "@hogg/wasm": "workspace:^"
     "@swc-node/register": ^1.8.0
     "@swc/core": ^1.4.2

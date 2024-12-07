@@ -57,6 +57,47 @@ export function formatNumber(value?: number): string {
     : new Intl.NumberFormat('en-uk').format(value);
 }
 
+const ordinalOnes = [
+  'zeroth',
+  'first',
+  'second',
+  'third',
+  'fourth',
+  'fifth',
+  'sixth',
+  'seventh',
+  'eighth',
+  'ninth',
+  'tenth',
+  'eleventh',
+  'twelfth',
+  'thirteenth',
+  'fourteenth',
+  'fifteenth',
+  'sixteenth',
+  'seventeenth',
+  'eighteenth',
+  'nineteenth',
+];
+const ordinalTens = [
+  'twent',
+  'thirt',
+  'fort',
+  'fift',
+  'sixt',
+  'sevent',
+  'eight',
+  'ninet',
+];
+
+export function formatOrdinal(value: number): string {
+  if (value < 20) return ordinalOnes[value];
+  if (value % 10 === 0) return ordinalTens[Math.floor(value / 10) - 2] + 'ieth';
+  return (
+    ordinalTens[Math.floor(value / 10) - 2] + 'y-' + ordinalOnes[value % 10]
+  );
+}
+
 export function formatPercent(number?: number) {
   return number === undefined ? '' : `${(number * 100).toFixed(1)}%`;
 }

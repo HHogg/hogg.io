@@ -1,21 +1,5 @@
-import {
-  ArticleFig,
-  ArticleFigCodeBlock,
-  ArticleFigLink,
-  ArticleFigs,
-  ArticlePage,
-  ProjectPageLink,
-} from '@hogg/common';
-import { ColorMode, TilingRenderer, meta as tilingsMeta } from '@hogg/tilings';
-import {
-  ArticleHeading,
-  ArticleParagraph,
-  ArticleSection,
-  Code,
-  Link,
-  Text,
-  sizeX12Px,
-} from 'preshape';
+import { ArticlePage } from '@hogg/common';
+import { ArticleHeading, ArticleSection } from 'preshape';
 
 const Article = () => {
   return (
