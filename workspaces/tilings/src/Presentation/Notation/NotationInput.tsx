@@ -20,6 +20,12 @@ export default function NotationInput() {
     <Box flex="horizontal" alignChildrenVertical="middle">
       <Box>
         <ButtonAsync
+          disabled={
+            loading.findNextTiling ??
+            loading.findPreviousTiling ??
+            loading.renderTiling ??
+            false
+          }
           error={errors.findPreviousTiling}
           isError={!!errors.findPreviousTiling}
           isLoading={loading.findPreviousTiling ?? false}
@@ -58,6 +64,12 @@ export default function NotationInput() {
 
       <Box>
         <ButtonAsync
+          disabled={
+            loading.findNextTiling ??
+            loading.findPreviousTiling ??
+            loading.renderTiling ??
+            false
+          }
           error={errors.findNextTiling}
           isError={!!errors.findNextTiling}
           isLoading={loading.findNextTiling ?? false}

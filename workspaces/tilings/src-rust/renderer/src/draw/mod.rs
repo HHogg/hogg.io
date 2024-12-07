@@ -8,8 +8,8 @@ use web_sys::OffscreenCanvas;
 
 pub use self::layers::Layer;
 use self::layers::{
-  draw_axis, draw_grid_line_segment, draw_grid_polygon, draw_plane_outline, draw_shapes,
-  draw_transform, draw_transform_points,
+  draw_axis, draw_convex_hull, draw_grid_line_segment, draw_grid_polygon, draw_plane_outline,
+  draw_shapes, draw_transform, draw_transform_points,
 };
 pub use self::options::Options;
 use crate::canvas::Canvas;
@@ -21,7 +21,11 @@ pub fn draw(
   options: Options,
 ) -> Result<Metrics, Error> {
   let mut metrics = Metrics::default();
-  let mut canvas = Canvas::new(offscreen_canvas, &options)?;
+  let min_point = tiling
+    .plane
+    .get_nearest_edge_point()
+    .expect("No points in tiling");
+  let mut canvas = Canvas::new(offscreen_canvas, &options, min_point)?;
 
   let show_layers = options.show_layers.clone().unwrap_or_default();
 
@@ -34,6 +38,10 @@ pub fn draw(
 
   if show_layers.get(&Layer::PlaneOutline) == Some(&true) {
     draw_plane_outline(&mut canvas, &options, tiling)?;
+  }
+
+  if show_layers.get(&Layer::ConvexHull) == Some(&true) {
+    draw_convex_hull(&mut canvas, &options, tiling)?;
   }
 
   if show_layers.get(&Layer::GridLineSegment) == Some(&true) {

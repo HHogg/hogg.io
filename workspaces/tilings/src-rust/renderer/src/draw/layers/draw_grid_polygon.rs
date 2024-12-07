@@ -11,8 +11,7 @@ pub fn draw_grid_polygon(
   options: &Options,
   tiling: &Tiling,
 ) -> Result<(), Error> {
-  let scaled_spacing =
-    tiling.plane.polygons.get_spacing() * options.scale_size.unwrap_or_default() as f64;
+  let scaled_spacing = tiling.plane.polygons.get_spacing();
 
   canvas.add_component(
     Layer::GridPolygon,

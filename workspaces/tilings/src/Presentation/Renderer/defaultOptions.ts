@@ -1,36 +1,26 @@
-import {
-  ThemeColorMap,
-  colorNegativeShade4,
-  colorNegativeShade3,
-} from 'preshape';
+import { ThemeColorMap, colorNegativeShade4 } from 'preshape';
 import { ColorMode, Layer, Options, ScaleMode } from '../../types';
 
 type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
 };
 
-export const defaultExpansionPhases = 5;
+export const defaultExpansionPhases = 10;
 
 export const defaultOptions: Pick<
   NoUndefinedField<Options>,
-  | 'autoRotate'
-  | 'colorMode'
-  | 'padding'
-  | 'scaleMode'
-  | 'scaleSize'
-  | 'showLayers'
+  'autoRotate' | 'colorMode' | 'scaleMode' | 'showLayers'
 > = {
   autoRotate: false,
   colorMode: ColorMode.VaporWave,
-  padding: 10,
-  scaleMode: ScaleMode.WithinBounds,
-  scaleSize: 10,
+  scaleMode: ScaleMode.Cover,
   showLayers: {
     [Layer.Axis]: false,
     [Layer.BoundingBoxes]: false,
+    [Layer.ConvexHull]: false,
     [Layer.GridLineSegment]: false,
     [Layer.GridPolygon]: false,
-    [Layer.PlaneOutline]: false,
+    [Layer.PlaneOutline]: true,
     [Layer.ShapeBorder]: true,
     [Layer.ShapeFill]: true,
     [Layer.Transform]: false,
@@ -65,7 +55,7 @@ export const getDefaultOptionsWithStyles = (
       strokeWidth: window.devicePixelRatio,
     },
     planeOutline: {
-      strokeColor: colorNegativeShade3,
+      strokeColor: themeColors.colorTextShade1,
       strokeWidth: window.devicePixelRatio * 1.5,
     },
     shape: {

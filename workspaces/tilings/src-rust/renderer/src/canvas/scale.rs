@@ -1,5 +1,7 @@
+use core::f64;
+
 use serde::{Deserialize, Serialize};
-use tiling::geometry::BBox;
+use tiling::geometry::{BBox, LineSegment, Point};
 use typeshare::typeshare;
 
 use crate::Error;
@@ -7,23 +9,24 @@ use crate::Error;
 #[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[typeshare]
 pub enum ScaleMode {
-  Fixed,
-  WithinBounds,
+  Cover,
+  Contain,
 }
 
 impl Default for ScaleMode {
   fn default() -> Self {
-    Self::WithinBounds
+    Self::Contain
   }
 }
 
 #[derive(Clone, Debug)]
 pub struct Scale {
+  auto_rotate: bool,
   canvas_bbox: BBox,
   content_bbox: BBox,
-  padding: f64,
-  auto_rotate: bool,
+  min_point: Point,
   mode: ScaleMode,
+  padding: f64,
 
   scale: f64,
   translate_x: f64,
@@ -34,11 +37,12 @@ pub struct Scale {
 impl Default for Scale {
   fn default() -> Self {
     Self {
+      auto_rotate: false,
       canvas_bbox: BBox::default(),
       content_bbox: BBox::default(),
-      padding: 0.0,
-      auto_rotate: false,
+      min_point: Point::default(),
       mode: ScaleMode::default(),
+      padding: 0.0,
 
       scale: 1.0,
       translate_x: 0.0,
@@ -74,6 +78,12 @@ impl Scale {
 
   pub fn with_content_bbox(mut self, content_bbox: BBox) -> Self {
     self.content_bbox = content_bbox;
+    self.update();
+    self
+  }
+
+  pub fn with_min_point(mut self, min_point: Point) -> Self {
+    self.min_point = min_point;
     self.update();
     self
   }
@@ -151,18 +161,46 @@ impl Scale {
       0.0
     };
 
-    let is_zero_size = self.content_bbox.width() == 0.0
-      || self.content_bbox.height() == 0.0
-      || canvas_width == 0.0
-      || canvas_height == 0.0;
-
     // Scale the content to fit within the canvas.
-    self.scale = if self.mode == ScaleMode::Fixed || is_zero_size {
-      1.0
-    } else if self.rotate == 0.0 {
+    self.scale = if self.rotate == 0.0 {
       (canvas_height / content_height).min(canvas_width / content_width)
     } else {
       (canvas_width / content_height).min(canvas_height / content_width)
     };
+
+    // At this point, the scale is set to grow/shrink
+    // the contents so it's fully visible within the canvas
+    // and touching the bounds of the canvas.
+    //
+    // When the mode is set to cover, we want to scale the
+    // content so it covers the canvas, which means taking the
+    // distance of the scaled minimum point to the distance
+    // of the diagonal of the canvas.
+    if self.mode == ScaleMode::Cover {
+      if self.min_point.eq(&Point::default()) {
+        return;
+      }
+
+      let scaled_min_point = self.min_point.scale(self.scale);
+      let min_point_radians = scaled_min_point.radian_to(&Point::default());
+      let target_radians = std::f64::consts::PI * 0.25;
+
+      let shift_radians = target_radians - min_point_radians;
+      let rotated_min_point = scaled_min_point.rotate(shift_radians, None);
+
+      let line_segment_length = LineSegment::default()
+        .with_start(Point::default())
+        .with_end(rotated_min_point)
+        .length();
+
+      let diagonal_length = LineSegment::default()
+        .with_start(Point::default())
+        .with_end(Point::at(canvas_width, canvas_height))
+        .length();
+
+      let scale = diagonal_length / line_segment_length;
+
+      self.scale *= scale;
+    }
   }
 }

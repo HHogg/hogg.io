@@ -151,8 +151,8 @@ export enum ColorMode {
 }
 
 export enum ScaleMode {
-	Fixed = "Fixed",
-	WithinBounds = "WithinBounds",
+	Cover = "Cover",
+	Contain = "Contain",
 }
 
 /**
@@ -162,6 +162,7 @@ export enum ScaleMode {
 export enum Layer {
 	ShapeFill = "ShapeFill",
 	ShapeBorder = "ShapeBorder",
+	ConvexHull = "ConvexHull",
 	PlaneOutline = "PlaneOutline",
 	Axis = "Axis",
 	GridLineSegment = "GridLineSegment",
@@ -189,7 +190,6 @@ export interface Options {
 	maxStage?: number;
 	padding?: number;
 	scaleMode?: ScaleMode;
-	scaleSize?: number;
 	showLayers?: Record<Layer, boolean>;
 	showTransformIndex?: number;
 	styles: Styles;
@@ -269,29 +269,16 @@ export interface Point {
 	index: number;
 }
 
-export interface LineSegment {
-	p1: Point;
-	p2: Point;
-}
-
-export interface Entry {
-	point: Point;
-	value: number;
-	radians: number;
-}
-
-export interface PointSequence {
-	sequence: Sequence;
-	center: Point;
-	entries: Entry[];
-	size: number;
-}
-
 export interface BBox {
 	center: Point;
 	width: number;
 	height: number;
 	rotation: number;
+}
+
+export interface LineSegment {
+	p1: Point;
+	p2: Point;
 }
 
 export enum Offset {
@@ -315,20 +302,34 @@ export interface Polygon {
 	stageIndex: number;
 }
 
+export interface Entry {
+	point: Point;
+	value: number;
+	radians: number;
+}
+
+export interface PointSequence {
+	sequence: Sequence;
+	center: Point;
+	entries: Entry[];
+	size: number;
+}
+
 export type Stage = 
 	| { type: "Placement", index?: undefined }
 	| { type: "Transform", index: number };
 
 export interface Plane {
-	expansionPhases: number;
-	lineSegments: SpatialGridMap<LineSegment>;
-	metrics: Metrics;
-	pointsCenter: SpatialGridMap<PointSequence>;
-	pointsEnd: SpatialGridMap<PointSequence>;
-	pointsMid: SpatialGridMap<PointSequence>;
 	polygons: SpatialGridMap<Polygon>;
 	polygonsPlacement: SpatialGridMap<Polygon>;
 	seedPolygon?: Polygon;
+	convexHull: ConvexHull;
+	expansionPhases: number;
+	lineSegments: SpatialGridMap<LineSegment>;
+	pointsCenter: SpatialGridMap<PointSequence>;
+	pointsEnd: SpatialGridMap<PointSequence>;
+	pointsMid: SpatialGridMap<PointSequence>;
+	metrics: Metrics;
 	stages: Stage[];
 }
 

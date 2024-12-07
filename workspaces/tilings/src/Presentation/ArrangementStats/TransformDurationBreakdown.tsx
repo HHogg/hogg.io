@@ -16,6 +16,10 @@ export default function TransformDurationBreakdown() {
   const { transforms, totalDuration, stageDurationTransform } =
     useArrangementStatsContext();
 
+  if (notationTransforms.length === 0) {
+    return null;
+  }
+
   return (
     <Box>
       <StageCards>

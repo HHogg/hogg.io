@@ -13,7 +13,8 @@ pub fn compare_f64(a: f64, b: f64, precision: f64) -> Ordering {
     return Ordering::Equal;
   }
 
-  a.partial_cmp(&b).unwrap()
+  a.partial_cmp(&b)
+    .unwrap_or_else(|| panic!("Failed to compare {} and {}", a, b))
 }
 
 pub fn compare_radians(a: f64, b: f64) -> std::cmp::Ordering {

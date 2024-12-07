@@ -17,7 +17,6 @@ pub struct Options {
   pub max_stage: Option<u16>,
   pub padding: Option<f64>,
   pub scale_mode: Option<ScaleMode>,
-  pub scale_size: Option<u8>,
   pub show_layers: Option<HashMap<Layer, bool>>,
   pub show_transform_index: Option<u32>,
   pub styles: Styles,

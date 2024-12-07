@@ -1,4 +1,5 @@
 mod draw_axis;
+mod draw_convex_hull;
 mod draw_grid_line_segment;
 mod draw_grid_polygon;
 mod draw_plane_outline;
@@ -12,6 +13,7 @@ use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 pub use self::draw_axis::draw_axis;
+pub use self::draw_convex_hull::draw_convex_hull;
 pub use self::draw_grid_line_segment::draw_grid_line_segment;
 pub use self::draw_grid_polygon::draw_grid_polygon;
 pub use self::draw_plane_outline::draw_plane_outline;
@@ -28,6 +30,7 @@ pub use self::draw_transform_points::draw_transform_points;
 pub enum Layer {
   ShapeFill,
   ShapeBorder,
+  ConvexHull,
   PlaneOutline,
   Axis,
   GridLineSegment,

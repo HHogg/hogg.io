@@ -33,7 +33,11 @@ pub struct Canvas {
 }
 
 impl Canvas {
-  pub fn new(canvas: web_sys::OffscreenCanvas, options: &Options) -> Result<Self, Error> {
+  pub fn new(
+    canvas: web_sys::OffscreenCanvas,
+    options: &Options,
+    min_point: tiling::geometry::Point,
+  ) -> Result<Self, Error> {
     let context = canvas.get_context("2d");
     let scale = Scale::default()
       .with_auto_rotate(options.auto_rotate)
@@ -80,7 +84,9 @@ impl Canvas {
     Ok(Self {
       content_bbox: BBox::default(),
       context,
-      scale: scale.with_canvas_bbox(canvas_bbox),
+      scale: scale
+        .with_canvas_bbox(canvas_bbox)
+        .with_min_point(min_point),
 
       draw_bounding_boxes: layers_enabled
         .get(&Layer::BoundingBoxes)

@@ -3,13 +3,14 @@ use std::f64::consts::PI;
 
 use circular_sequence::SequenceStore;
 use serde::{Deserialize, Serialize};
+use spatial_grid_map::utils::compare_coordinate;
 use spatial_grid_map::{ResizeMethod, SpatialGridMap};
 use typeshare::typeshare;
 
 use super::phase::Phase;
 use super::vertex_types::VertexTypes;
 use super::{Metrics, PointSequence};
-use crate::geometry::{LineSegment, Point, Polygon};
+use crate::geometry::{ConvexHull, LineSegment, Point, Polygon};
 use crate::notation::{
   Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
   TransformContinuous, TransformEccentric, TransformValue,
@@ -21,15 +22,21 @@ use crate::TilingError;
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Plane {
-  pub expansion_phases: u8,
-  pub line_segments: SpatialGridMap<LineSegment>,
-  pub metrics: Metrics,
-  pub points_center: SpatialGridMap<PointSequence>,
-  pub points_end: SpatialGridMap<PointSequence>,
-  pub points_mid: SpatialGridMap<PointSequence>,
   pub polygons: SpatialGridMap<Polygon>,
   pub polygons_placement: SpatialGridMap<Polygon>,
   pub seed_polygon: Option<Polygon>,
+
+  // TODO: These shouldn't be needed for deserialization
+  // but can be rebuilt from the polygons. Would that be
+  // a more performant approach to lower the data going
+  // across workers?
+  pub convex_hull: ConvexHull,
+  pub expansion_phases: u8,
+  pub line_segments: SpatialGridMap<LineSegment>,
+  pub points_center: SpatialGridMap<PointSequence>,
+  pub points_end: SpatialGridMap<PointSequence>,
+  pub points_mid: SpatialGridMap<PointSequence>,
+  pub metrics: Metrics,
   pub stages: Vec<Stage>,
 
   #[serde(skip)]
@@ -58,6 +65,7 @@ impl Plane {
   }
 
   pub fn reset(&mut self) {
+    self.convex_hull = ConvexHull::default();
     self.line_segments = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
     self.line_segments_by_shape_group = Vec::new();
     self.points_center = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
@@ -108,6 +116,8 @@ impl Plane {
       self.validate_expanded()?;
       self.validate_gaps()?;
       self.validate_vertex_types()?;
+
+      self.convex_hull = ConvexHull::from_line_segments(self.get_line_segment_edges());
     }
 
     Ok(())
@@ -387,6 +397,19 @@ impl Plane {
     self
       .line_segments
       .filter(|line_segment| self.is_line_segment_available(line_segment))
+  }
+
+  pub fn get_nearest_edge_point(&self) -> Option<Point> {
+    self
+      .get_line_segment_edges()
+      .iter_values()
+      .flat_map(|line_segment| [line_segment.p1, line_segment.p2])
+      .min_by(|a, b| {
+        compare_coordinate(
+          a.distance_to(&Point::default()),
+          b.distance_to(&Point::default()),
+        )
+      })
   }
 
   /// Returns the line segments that only have a single shape
