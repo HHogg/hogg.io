@@ -283,7 +283,7 @@ impl Plane {
       self
         .line_segments
         .insert(mid_point_f64, line_segment.length(), *line_segment)
-        .increment_counter(&mid_point_f64, "count");
+        .increment_counter("count");
 
       // Check that the line segment is not intersecting with any
       // other line segments around it

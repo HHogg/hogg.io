@@ -11,7 +11,7 @@ export const defaultOptions: Pick<
   NoUndefinedField<Options>,
   'autoRotate' | 'colorMode' | 'scaleMode' | 'showLayers'
 > = {
-  autoRotate: false,
+  autoRotate: true,
   colorMode: ColorMode.VaporWave,
   scaleMode: ScaleMode.Cover,
   showLayers: {

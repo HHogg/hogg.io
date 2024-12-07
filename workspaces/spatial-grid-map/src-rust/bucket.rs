@@ -151,6 +151,11 @@ impl<TEntryValue: Default> BucketEntry<TEntryValue> {
     let (x, y) = self.point;
     normalize_radian(y.atan2(x))
   }
+
+  pub fn increment_counter(&mut self, key: &str) {
+    let counter = self.counters.entry(key.to_string()).or_insert(0);
+    *counter += 1;
+  }
 }
 
 impl<TEntryValue: Clone + Default> Eq for BucketEntry<TEntryValue> {}

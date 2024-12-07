@@ -157,28 +157,36 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self.get_value(point).is_some()
   }
 
-  fn insert_entry(&mut self, entry: BucketEntry<TEntryValue>) -> &mut Self {
+  fn insert_entry(&mut self, entry: BucketEntry<TEntryValue>) -> MutBucketEntry<TEntryValue> {
     match self.get_location(&entry.point) {
       None => {
         self.increase_size();
-        self.insert_entry(entry);
+        self.insert_entry(entry)
       }
       Some(location) => {
+        let point = entry.point;
         let size = entry.size;
 
         if self.store.entry(location.key).or_default().insert(entry) {
           self.locations.insert(location);
           self.update_spacing(size);
         }
-      }
-    };
 
-    self
+        self
+          .get_value_mut(&point)
+          .expect("Value not found after insert")
+      }
+    }
   }
 
   /// Inserts a point into the grid, returning false if it's already present.
   /// If the grid is too small, it will be increased to fit the new centroid.
-  pub fn insert(&mut self, point: (f64, f64), size: f64, value: TEntryValue) -> &mut Self {
+  pub fn insert(
+    &mut self,
+    point: (f64, f64),
+    size: f64,
+    value: TEntryValue,
+  ) -> MutBucketEntry<TEntryValue> {
     self.insert_entry(
       BucketEntry::default()
         .with_point(point)
