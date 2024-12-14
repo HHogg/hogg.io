@@ -17,7 +17,7 @@ import {
   shouldShowProject,
 } from '../../projects';
 
-export type Props = {
+type Props = {
   Component: ComponentType<ProjectPageProps>;
   meta: Project;
 };

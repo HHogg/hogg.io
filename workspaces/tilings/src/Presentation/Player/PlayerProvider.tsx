@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import { UsePlayerOptions, usePlayer } from './usePlayer';
 import { PlayerContext } from './usePlayerContext';
 
-export type PlayerProviderProps = {
+type PlayerProviderProps = {
   options?: Partial<UsePlayerOptions>;
 };
 

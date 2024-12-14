@@ -1,7 +1,7 @@
 module.exports = {
+  index: false,
   prettier: true,
   typescript: true,
-  indexTemplate: () => '',
   replaceAttrValues: {
     '#000000': 'var(--color-text-shade-1)',
     '#000001': 'var(--color-text-shade-2)',
@@ -13,7 +13,6 @@ module.exports = {
     '#FFFFFE': 'var(--color-background-shade-2)',
     '#FFFFFD': 'var(--color-background-shade-3)',
   },
-
   template: (variables, { tpl }) => {
     return tpl`
       ${variables.imports.slice(1)}

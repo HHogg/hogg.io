@@ -9,26 +9,16 @@
     "build": "yarn svgr -d ./src/Article/images ./src/Article/images --ext tsx --config-file ../common/.svgrrc.images.cjs"
   },
   "dependencies": {
-    "@floating-ui/react": "^0.26.3",
     "@hogg/common": "workspace:^",
-    "@hogg/spirals": "workspace:^",
     "bitset": "^5.1.1",
     "classnames": "^2.3.2",
-    "file-saver": "^2.0.5",
     "framer-motion": "11.5.6",
     "lucide-react": "0.445.0",
     "preshape": "^19.1.5",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "sat": "^0.9.0",
-    "uuid": "10.0.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@svgr/cli": "^8.1.0",
-    "@svgr/plugin-jsx": "^8.1.0",
-    "@swc/core": "^1.4.2",
-    "@types/file-saver": "^2.0.7",
-    "@types/sat": "^0.0.35",
-    "@types/uuid": "10.0.0"
+    "@svgr/cli": "^8.1.0"
   }
 }

@@ -31,7 +31,3 @@ export const expandNotationBlock = (notation: string): string[] => {
 
   return parts;
 };
-
-export const expandNotation = (notation: string) => {
-  return notation.split(';').map(expandNotationBlock);
-};

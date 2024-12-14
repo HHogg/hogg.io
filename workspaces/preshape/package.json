@@ -6,7 +6,6 @@
   "type": "module",
   "main": "./src/index.ts",
   "dependencies": {
-    "@hogg/common": "workspace:^",
-    "preshape": "^19.1.5"
+    "@hogg/common": "workspace:^"
   }
 }

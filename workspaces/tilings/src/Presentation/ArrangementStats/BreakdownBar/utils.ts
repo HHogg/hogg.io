@@ -1,5 +1,3 @@
-export const barHeight = 6;
-
 type CreateRectPathProps = {
   width: number;
   height: number;

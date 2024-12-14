@@ -14,12 +14,12 @@ export type WasmWorkerMessageResponse = {
   error?: string;
 };
 
-export type WasmWorkerMessagesStore = Record<
+type WasmWorkerMessagesStore = Record<
   string,
   WasmWorkerMessagesStoreEntry
 >;
 
-export type WasmWorkerMessagesStoreEntry = {
+type WasmWorkerMessagesStoreEntry = {
   key: WasmApiKey | '_init';
   initiated: number;
   reject?: (reason?: any) => void;
@@ -32,7 +32,7 @@ export type WasmWorkerState = {
   isLoading: boolean;
 };
 
-export type WasmWorkerStateListener = (state: WasmWorkerState) => void;
+type WasmWorkerStateListener = (state: WasmWorkerState) => void;
 
 const messages: WasmWorkerMessagesStore = {
   _init: { key: '_init', initiated: Date.now() },

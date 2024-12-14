@@ -1,7 +1,7 @@
 import { createLinearScale } from '../../utils';
 import { Point } from '../types';
 
-export const pointAlgorithmArchimedesSpiral = (i: number): Point => {
+const pointAlgorithmArchimedesSpiral = (i: number): Point => {
   const r = Math.sqrt(i) || 0;
   const a = i * (r && Math.asin(1 / r)) * Math.PI;
   const x = r * Math.cos(a);

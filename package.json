@@ -19,7 +19,7 @@
     "format": "prettier --write .",
     "lint": "yarn lint:css & yarn lint:js && yarn lint:rust",
     "lint:css": "stylelint workspaces/**/*.css",
-    "lint:js": "eslint 'workspaces/**/*.tsx' 'workspaces/**/*.ts' --fix",
+    "lint:js": "yarn tsc && yarn knip && eslint 'workspaces/**/*.tsx' 'workspaces/**/*.ts' --fix",
     "lint:rust": "yarn lint:rust:clippy && yarn lint:rust:fmt",
     "lint:rust:clippy": "cargo clippy --all-targets --all-features -- -D warnings",
     "lint:rust:fmt": "cargo fmt --all -- --check",
@@ -48,12 +48,8 @@
     "knip": "^5.0.1",
     "prettier": "^2.8.8",
     "stylelint": "^15.6.1",
-    "stylelint-config-prettier": "^8.0.2",
-    "stylelint-config-recommended": "^12.0.0",
     "stylelint-config-standard": "^33.0.0",
-    "typescript": "^5.0.4"
-  },
-  "dependencies": {
-    "preshape": "^19.1.5"
+    "typescript": "^5.0.4",
+    "vite": "^5.2.9"
   }
 }

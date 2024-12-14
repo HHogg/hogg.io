@@ -1,7 +1,7 @@
 import { Box, BoxProps } from 'preshape';
-import { FresnelMedial } from './MediaProvider';
+import { FresnelMedia } from './MediaProvider';
 
-type Props = BoxProps & typeof FresnelMedial.defaultProps;
+type Props = BoxProps & typeof FresnelMedia.defaultProps;
 
 export default function Media({
   children,
@@ -21,13 +21,13 @@ export default function Media({
   };
 
   return (
-    <FresnelMedial {...deleteEmptyProps(fresnelProps)}>
+    <FresnelMedia {...deleteEmptyProps(fresnelProps)}>
       {(className, renderChildren) => (
         <Box className={`fresnel-container ${className}`} {...rest}>
           {renderChildren ? children : undefined}
         </Box>
       )}
-    </FresnelMedial>
+    </FresnelMedia>
   );
 }
 

@@ -625,15 +625,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/core@npm:^1.4.2":
-  version: 1.5.0
-  resolution: "@floating-ui/core@npm:1.5.0"
-  dependencies:
-    "@floating-ui/utils": ^0.1.3
-  checksum: 54b4fe26b3c228746ac5589f97303abf158b80aa5f8b99027259decd68d1c2030c4c637648ebd33dfe78a4212699453bc2bd7537fd5a594d3bd3e63d362f666f
-  languageName: node
-  linkType: hard
-
 "@floating-ui/core@npm:^1.6.0":
   version: 1.6.8
   resolution: "@floating-ui/core@npm:1.6.8"
@@ -650,28 +641,6 @@ __metadata:
     "@floating-ui/core": ^1.6.0
     "@floating-ui/utils": ^0.2.8
   checksum: d6413759abd06a541edfad829c45313f930310fe76a3322e74a00eb655e283db33fe3e65b5265c4072eb54db7447e11225acd355a9a02cabd1d1b0d5fc8fc21d
-  languageName: node
-  linkType: hard
-
-"@floating-ui/dom@npm:^1.5.1":
-  version: 1.5.3
-  resolution: "@floating-ui/dom@npm:1.5.3"
-  dependencies:
-    "@floating-ui/core": ^1.4.2
-    "@floating-ui/utils": ^0.1.3
-  checksum: 00053742064aac70957f0bd5c1542caafb3bfe9716588bfe1d409fef72a67ed5e60450d08eb492a77f78c22ed1ce4f7955873cc72bf9f9caf2b0f43ae3561c21
-  languageName: node
-  linkType: hard
-
-"@floating-ui/react-dom@npm:^2.0.3":
-  version: 2.0.4
-  resolution: "@floating-ui/react-dom@npm:2.0.4"
-  dependencies:
-    "@floating-ui/dom": ^1.5.1
-  peerDependencies:
-    react: ">=16.8.0"
-    react-dom: ">=16.8.0"
-  checksum: 91b2369e25f84888486e48c1656117468248906034ed482d411bb9ed1061b908dd32435b4ca3d0cd0ca6083291510a98ce74d76c671d5cc25b0c41e5fa824bae
   languageName: node
   linkType: hard
 
@@ -701,24 +670,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/react@npm:^0.26.3":
-  version: 0.26.3
-  resolution: "@floating-ui/react@npm:0.26.3"
+"@floating-ui/react@npm:^0.27.0":
+  version: 0.27.0
+  resolution: "@floating-ui/react@npm:0.27.0"
   dependencies:
-    "@floating-ui/react-dom": ^2.0.3
-    "@floating-ui/utils": ^0.1.5
-    tabbable: ^6.0.1
+    "@floating-ui/react-dom": ^2.1.2
+    "@floating-ui/utils": ^0.2.8
+    tabbable: ^6.0.0
   peerDependencies:
-    react: ">=16.8.0"
-    react-dom: ">=16.8.0"
-  checksum: d15fbe68a727f6ff6c9ed1f795fcfb49b5bfd1eb732ecfff1a7525a616d938e663e6ee497256aedb59cc8b38f084352a5d78c01a89dfb2f66d18119e80bcd786
-  languageName: node
-  linkType: hard
-
-"@floating-ui/utils@npm:^0.1.3, @floating-ui/utils@npm:^0.1.5":
-  version: 0.1.6
-  resolution: "@floating-ui/utils@npm:0.1.6"
-  checksum: b34d4b5470869727f52e312e08272edef985ba5a450a76de0917ba0a9c6f5df2bdbeb99448e2c60f39b177fb8981c772ff1831424e75123471a27ebd5b52c1eb
+    react: ">=17.0.0"
+    react-dom: ">=17.0.0"
+  checksum: 9796019eae898975a438728fddc62975308882eef749eb318f1140e19daadf4ed7838e603cf67312cc72a7b3823c6eeb6898f03b93300df490ecc5faf1f1278f
   languageName: node
   linkType: hard
 
@@ -812,13 +774,20 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/circle-art@workspace:workspaces/circle-art"
   dependencies:
+    "@floating-ui/react": ^0.27.0
     "@hogg/circle-intersections": "workspace:^"
     "@hogg/common": "workspace:^"
+    "@types/file-saver": ^2.0.7
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
+    "@types/uuid": ^10.0.0
+    classnames: ^2.3.2
+    file-saver: ^2.0.5
+    lucide-react: 0.447.0
     preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
+    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -826,25 +795,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/circle-intersections@workspace:workspaces/circle-intersections"
   dependencies:
-    "@floating-ui/react": ^0.26.3
     "@hogg/common": "workspace:^"
-    "@hogg/spirals": "workspace:^"
     "@svgr/cli": ^8.1.0
-    "@svgr/plugin-jsx": ^8.1.0
-    "@swc/core": ^1.4.2
-    "@types/file-saver": ^2.0.7
-    "@types/sat": ^0.0.35
-    "@types/uuid": 10.0.0
     bitset: ^5.1.1
     classnames: ^2.3.2
-    file-saver: ^2.0.5
     framer-motion: 11.5.6
     lucide-react: 0.445.0
     preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
-    sat: ^0.9.0
-    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -853,14 +812,13 @@ __metadata:
   resolution: "@hogg/circular-sequence@workspace:workspaces/circular-sequence"
   dependencies:
     "@hogg/common": "workspace:^"
-    "@svgr/cli": ^8.1.0
-    "@svgr/plugin-jsx": ^8.1.0
+    "@hogg/tilings": "workspace:^"
+    "@hogg/wasm": "workspace:^"
     "@types/react": ^18.0.28
     lucide-react: 0.445.0
     preshape: ^19.1.5
     react: ^18.2.0
     typescript: ^5.0.4
-    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -868,6 +826,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/common@workspace:workspaces/common"
   dependencies:
+    "@artsy/fresnel": ^7.1.4
+    "@types/sat": ^0.0.35
     framer-motion: 11.5.6
     lucide-react: 0.445.0
     luxon: 3.5.0
@@ -881,18 +841,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hogg/evolution@workspace:workspaces/evolution":
+"@hogg/evolution@workspace:^, @hogg/evolution@workspace:workspaces/evolution":
   version: 0.0.0-use.local
   resolution: "@hogg/evolution@workspace:workspaces/evolution"
   dependencies:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
-    "@types/uuid": 10.0.0
     lucide-react: 0.445.0
     preshape: ^19.1.5
     react: ^18.2.0
     typescript: ^5.0.4
-    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -902,7 +860,6 @@ __metadata:
   dependencies:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
-    lucide-react: 0.445.0
     preshape: ^19.1.5
     react: ^18.2.0
     typescript: ^5.0.4
@@ -914,14 +871,10 @@ __metadata:
   resolution: "@hogg/grahams-scan@workspace:workspaces/graphams-scan"
   dependencies:
     "@hogg/common": "workspace:^"
-    "@svgr/cli": ^8.1.0
-    "@svgr/plugin-jsx": ^8.1.0
     "@types/react": ^18.0.28
-    lucide-react: 0.445.0
     preshape: ^19.1.5
     react: ^18.2.0
     typescript: ^5.0.4
-    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -947,7 +900,6 @@ __metadata:
   resolution: "@hogg/preshape@workspace:workspaces/preshape"
   dependencies:
     "@hogg/common": "workspace:^"
-    preshape: ^19.1.5
   languageName: unknown
   linkType: soft
 
@@ -963,8 +915,9 @@ __metadata:
     "@visx/scale": ^3.5.0
     "@visx/shape": ^3.5.0
     "@visx/xychart": ^3.5.1
-    caniuse-lite: ^1.0.30000697
+    lodash: ^4.17.21
     lucide-react: 0.445.0
+    numbro: ^2.5.0
     preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -978,14 +931,10 @@ __metadata:
   resolution: "@hogg/spatial-grid-map@workspace:workspaces/spatial-grid-map"
   dependencies:
     "@hogg/common": "workspace:^"
-    "@svgr/cli": ^8.1.0
-    "@svgr/plugin-jsx": ^8.1.0
     "@types/react": ^18.0.28
-    lucide-react: 0.445.0
     preshape: ^19.1.5
     react: ^18.2.0
     typescript: ^5.0.4
-    uuid: 10.0.0
   languageName: unknown
   linkType: soft
 
@@ -998,13 +947,12 @@ __metadata:
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@visx/axis": ^3.5.0
-    "@visx/curve": ^3.3.0
     "@visx/scale": ^3.5.0
     "@visx/shape": ^3.5.0
     "@visx/xychart": ^3.5.1
-    caniuse-lite: ^1.0.30000697
     gl-matrix: ^3.4.3
     lodash: ^4.17.21
+    numbro: ^2.5.0
     preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -1023,18 +971,17 @@ __metadata:
     "@hogg/gap-validation": "workspace:^"
     "@hogg/spatial-grid-map": "workspace:^"
     "@hogg/wasm": "workspace:^"
-    "@swc-node/register": ^1.8.0
-    "@swc/core": ^1.4.2
     "@types/lodash": ^4.17.10
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
-    "@visx/axis": ^3.5.0
     "@visx/curve": ^3.3.0
     "@visx/scale": ^3.5.0
     "@visx/shape": ^3.5.0
     "@visx/xychart": ^3.5.1
+    framer-motion: ^11.14.4
     lodash: ^4.17.21
     lucide-react: 0.447.0
+    luxon: ^3.5.0
     open-color: ^1.9.1
     preshape: ^19.1.5
     puppeteer: 23.3.0
@@ -1051,6 +998,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/wasm@workspace:workspaces/wasm"
   dependencies:
+    "@hogg/circular-sequence": "workspace:^"
+    "@hogg/common": "workspace:^"
+    "@hogg/line-segment-extending": "workspace:^"
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     lucide-react: 0.445.0
@@ -1065,10 +1015,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hogg/website@workspace:workspaces/website"
   dependencies:
-    "@artsy/fresnel": ^7.1.4
     "@hogg/circle-art": "workspace:^"
     "@hogg/circle-intersections": "workspace:^"
     "@hogg/circular-sequence": "workspace:^"
+    "@hogg/common": "workspace:^"
+    "@hogg/evolution": "workspace:^"
     "@hogg/gap-validation": "workspace:^"
     "@hogg/grahams-scan": "workspace:^"
     "@hogg/line-segment-extending": "workspace:^"
@@ -1079,21 +1030,13 @@ __metadata:
     "@hogg/tilings": "workspace:^"
     "@hogg/wasm": "workspace:^"
     "@react-spring/web": ^9.7.3
-    "@svgr/cli": ^8.1.0
-    "@svgr/plugin-jsx": ^8.1.0
-    "@swc/core": ^1.4.2
-    "@types/lodash": ^4.14.202
     "@types/luxon": ^3.4.1
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@vitejs/plugin-react-swc": ^3.0.0
-    bitset: ^5.1.1
-    caniuse-lite: ^1.0.30000697
     framer-motion: 11.5.6
-    lodash: ^4.17.21
     lucide-react: 0.447.0
     luxon: ^3.4.4
-    numbro: ^2.4.0
     preshape: ^19.1.5
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -2130,7 +2073,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@svgr/plugin-jsx@npm:8.1.0, @svgr/plugin-jsx@npm:^8.1.0":
+"@svgr/plugin-jsx@npm:8.1.0":
   version: 8.1.0
   resolution: "@svgr/plugin-jsx@npm:8.1.0"
   dependencies:
@@ -2169,53 +2112,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc-node/core@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "@swc-node/core@npm:1.12.0"
-  peerDependencies:
-    "@swc/core": ">= 1.3"
-    "@swc/types": ">= 0.1"
-  checksum: a6c9061b1c982d04d3904dbec89ed925e2c0ac8151f2ec384645e25100f6acc9d0148b9f347887d298c63c965877a50f9c4810dc3112c58d706c48df75944e69
-  languageName: node
-  linkType: hard
-
-"@swc-node/register@npm:^1.8.0":
-  version: 1.8.0
-  resolution: "@swc-node/register@npm:1.8.0"
-  dependencies:
-    "@swc-node/core": ^1.12.0
-    "@swc-node/sourcemap-support": ^0.4.0
-    colorette: ^2.0.20
-    debug: ^4.3.4
-    pirates: ^4.0.6
-    tslib: ^2.6.2
-  peerDependencies:
-    "@swc/core": ">= 1.3"
-    typescript: ">= 4.3"
-  checksum: e94cdfaaf41e3bc67caae0f03f7d2e8e4ebe241eb4c9498761d1a1e214acf3997d8229a701cb0fba4288355e29fe70dec4ddf89d4b3703bb5d900c3529e05a4f
-  languageName: node
-  linkType: hard
-
-"@swc-node/sourcemap-support@npm:^0.4.0":
-  version: 0.4.0
-  resolution: "@swc-node/sourcemap-support@npm:0.4.0"
-  dependencies:
-    source-map-support: ^0.5.21
-    tslib: ^2.6.2
-  checksum: a56f43e9e075c89e1d05948a1d86e73707d8655a2093a5ee98f6c52b6dc41cae4cc058cd660c0a094ed4d24fe148d9e3bbda1fc6505fe8b183fcc3014339c5fa
-  languageName: node
-  linkType: hard
-
 "@swc/core-darwin-arm64@npm:1.3.99":
   version: 1.3.99
   resolution: "@swc/core-darwin-arm64@npm:1.3.99"
-  conditions: os=darwin & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-darwin-arm64@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-darwin-arm64@npm:1.4.2"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
@@ -2227,30 +2126,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-darwin-x64@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-darwin-x64@npm:1.4.2"
-  conditions: os=darwin & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm-gnueabihf@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-linux-arm-gnueabihf@npm:1.4.2"
-  conditions: os=linux & cpu=arm
-  languageName: node
-  linkType: hard
-
 "@swc/core-linux-arm64-gnu@npm:1.3.99":
   version: 1.3.99
   resolution: "@swc/core-linux-arm64-gnu@npm:1.3.99"
-  conditions: os=linux & cpu=arm64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-arm64-gnu@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-linux-arm64-gnu@npm:1.4.2"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
@@ -2262,23 +2140,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-arm64-musl@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-linux-arm64-musl@npm:1.4.2"
-  conditions: os=linux & cpu=arm64 & libc=musl
-  languageName: node
-  linkType: hard
-
 "@swc/core-linux-x64-gnu@npm:1.3.99":
   version: 1.3.99
   resolution: "@swc/core-linux-x64-gnu@npm:1.3.99"
-  conditions: os=linux & cpu=x64 & libc=glibc
-  languageName: node
-  linkType: hard
-
-"@swc/core-linux-x64-gnu@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-linux-x64-gnu@npm:1.4.2"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
@@ -2290,23 +2154,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-linux-x64-musl@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-linux-x64-musl@npm:1.4.2"
-  conditions: os=linux & cpu=x64 & libc=musl
-  languageName: node
-  linkType: hard
-
 "@swc/core-win32-arm64-msvc@npm:1.3.99":
   version: 1.3.99
   resolution: "@swc/core-win32-arm64-msvc@npm:1.3.99"
-  conditions: os=win32 & cpu=arm64
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-arm64-msvc@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-win32-arm64-msvc@npm:1.4.2"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
@@ -2318,23 +2168,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core-win32-ia32-msvc@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-win32-ia32-msvc@npm:1.4.2"
-  conditions: os=win32 & cpu=ia32
-  languageName: node
-  linkType: hard
-
 "@swc/core-win32-x64-msvc@npm:1.3.99":
   version: 1.3.99
   resolution: "@swc/core-win32-x64-msvc@npm:1.3.99"
-  conditions: os=win32 & cpu=x64
-  languageName: node
-  linkType: hard
-
-"@swc/core-win32-x64-msvc@npm:1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core-win32-x64-msvc@npm:1.4.2"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -2382,63 +2218,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/core@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "@swc/core@npm:1.4.2"
-  dependencies:
-    "@swc/core-darwin-arm64": 1.4.2
-    "@swc/core-darwin-x64": 1.4.2
-    "@swc/core-linux-arm-gnueabihf": 1.4.2
-    "@swc/core-linux-arm64-gnu": 1.4.2
-    "@swc/core-linux-arm64-musl": 1.4.2
-    "@swc/core-linux-x64-gnu": 1.4.2
-    "@swc/core-linux-x64-musl": 1.4.2
-    "@swc/core-win32-arm64-msvc": 1.4.2
-    "@swc/core-win32-ia32-msvc": 1.4.2
-    "@swc/core-win32-x64-msvc": 1.4.2
-    "@swc/counter": ^0.1.2
-    "@swc/types": ^0.1.5
-  peerDependencies:
-    "@swc/helpers": ^0.5.0
-  dependenciesMeta:
-    "@swc/core-darwin-arm64":
-      optional: true
-    "@swc/core-darwin-x64":
-      optional: true
-    "@swc/core-linux-arm-gnueabihf":
-      optional: true
-    "@swc/core-linux-arm64-gnu":
-      optional: true
-    "@swc/core-linux-arm64-musl":
-      optional: true
-    "@swc/core-linux-x64-gnu":
-      optional: true
-    "@swc/core-linux-x64-musl":
-      optional: true
-    "@swc/core-win32-arm64-msvc":
-      optional: true
-    "@swc/core-win32-ia32-msvc":
-      optional: true
-    "@swc/core-win32-x64-msvc":
-      optional: true
-  peerDependenciesMeta:
-    "@swc/helpers":
-      optional: true
-  checksum: b17afda692b2627d3a82e589f1b29cef31bdee626a2dd997d78312dcbfc6eb701850fbab22e85f02b1261da39f0b0afb6a236c6065f6d0d7478cff939ca5a888
-  languageName: node
-  linkType: hard
-
 "@swc/counter@npm:^0.1.1":
   version: 0.1.2
   resolution: "@swc/counter@npm:0.1.2"
   checksum: 8427c594f1f0cf44b83885e9c8fe1e370c9db44ae96e07a37c117a6260ee97797d0709483efbcc244e77bac578690215f45b23254c4cd8a70fb25ddbb50bf33e
-  languageName: node
-  linkType: hard
-
-"@swc/counter@npm:^0.1.2":
-  version: 0.1.3
-  resolution: "@swc/counter@npm:0.1.3"
-  checksum: df8f9cfba9904d3d60f511664c70d23bb323b3a0803ec9890f60133954173047ba9bdeabce28cd70ba89ccd3fd6c71c7b0bd58be85f611e1ffbe5d5c18616598
   languageName: node
   linkType: hard
 
@@ -2910,7 +2693,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/uuid@npm:10.0.0":
+"@types/uuid@npm:^10.0.0":
   version: 10.0.0
   resolution: "@types/uuid@npm:10.0.0"
   checksum: e3958f8b0fe551c86c14431f5940c3470127293280830684154b91dc7eb3514aeb79fe3216968833cf79d4d1c67f580f054b5be2cd562bebf4f728913e73e944
@@ -4251,13 +4034,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer-from@npm:^1.0.0":
-  version: 1.1.2
-  resolution: "buffer-from@npm:1.1.2"
-  checksum: 0448524a562b37d4d7ed9efd91685a5b77a50672c556ea254ac9a6d30e3403a517d8981f10e565db24e8339413b43c97ca2951f10e399c6125a0d8911f5679bb
-  languageName: node
-  linkType: hard
-
 "buffer@npm:^5.2.1, buffer@npm:^5.5.0":
   version: 5.7.1
   resolution: "buffer@npm:5.7.1"
@@ -4376,13 +4152,6 @@ __metadata:
   version: 6.3.0
   resolution: "camelcase@npm:6.3.0"
   checksum: 8c96818a9076434998511251dcb2761a94817ea17dbdc37f47ac080bd088fc62c7369429a19e2178b993497132c8cbcf5cc1f44ba963e76782ba469c0474938d
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30000697":
-  version: 1.0.30001565
-  resolution: "caniuse-lite@npm:1.0.30001565"
-  checksum: 7621f358d0e1158557430a111ca5506008ae0b2c796039ef53aeebf4e2ba15e5241cb89def21ea3a633b6a609273085835b44a522165d871fa44067cdf29cccd
   languageName: node
   linkType: hard
 
@@ -4802,7 +4571,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"colorette@npm:^2.0.19, colorette@npm:^2.0.20":
+"colorette@npm:^2.0.19":
   version: 2.0.20
   resolution: "colorette@npm:2.0.20"
   checksum: 0c016fea2b91b733eb9f4bcdb580018f52c0bc0979443dad930e5037a968237ac53d9beb98e218d2e9235834f8eebce7f8e080422d6194e957454255bde71d3d
@@ -7221,6 +6990,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"framer-motion@npm:^11.14.4":
+  version: 11.14.4
+  resolution: "framer-motion@npm:11.14.4"
+  dependencies:
+    motion-dom: ^11.14.3
+    motion-utils: ^11.14.3
+    tslib: ^2.4.0
+  peerDependencies:
+    "@emotion/is-prop-valid": "*"
+    react: ^18.0.0 || ^19.0.0
+    react-dom: ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@emotion/is-prop-valid":
+      optional: true
+    react:
+      optional: true
+    react-dom:
+      optional: true
+  checksum: 7cb7dc78760e5284d848e9ac1f9560b5066e786cc8a7fa96b6aa726e29baa3a28a3de14815e1a33b7c8ac96467413c987ea639950ee83dd6f87bb596b5a93270
+  languageName: node
+  linkType: hard
+
 "framer-motion@npm:^11.2.11":
   version: 11.3.24
   resolution: "framer-motion@npm:11.3.24"
@@ -8112,13 +7903,11 @@ __metadata:
     eslint-plugin-react-refresh: ^0.4.1
     firebase-tools: ^13.3.0
     knip: ^5.0.1
-    preshape: ^19.1.5
     prettier: ^2.8.8
     stylelint: ^15.6.1
-    stylelint-config-prettier: ^8.0.2
-    stylelint-config-recommended: ^12.0.0
     stylelint-config-standard: ^33.0.0
     typescript: ^5.0.4
+    vite: ^5.2.9
   languageName: unknown
   linkType: soft
 
@@ -10060,7 +9849,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:3.5.0":
+"luxon@npm:3.5.0, luxon@npm:^3.5.0":
   version: 3.5.0
   resolution: "luxon@npm:3.5.0"
   checksum: f290fe5788c8e51e748744f05092160d4be12150dca70f9fadc0d233e53d60ce86acd82e7d909a114730a136a77e56f0d3ebac6141bbb82fd310969a4704825b
@@ -10976,6 +10765,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"motion-dom@npm:^11.14.3":
+  version: 11.14.3
+  resolution: "motion-dom@npm:11.14.3"
+  checksum: af9e6f6bfd1ff5c08ccd1138d10fb08a2f4b86e968a3eaf180cdcb80e9c8f7ed34dcedffc18c4bf99cf5b64d8938b5ba5e6b88e7f46ffe5ed7b1d4c23150cae2
+  languageName: node
+  linkType: hard
+
+"motion-utils@npm:^11.14.3":
+  version: 11.14.3
+  resolution: "motion-utils@npm:11.14.3"
+  checksum: 49ca9cd5731ce50a53b35f9d3f0b1858bcd24c6e602bfd6d64c9ec0006a1f87ee57be3872d55503233555c1fcfaf358fc4e18c6e2771d31a676f1243833352c4
+  languageName: node
+  linkType: hard
+
 "ms@npm:2.0.0":
   version: 2.0.0
   resolution: "ms@npm:2.0.0"
@@ -11294,12 +11097,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"numbro@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "numbro@npm:2.4.0"
+"numbro@npm:^2.5.0":
+  version: 2.5.0
+  resolution: "numbro@npm:2.5.0"
   dependencies:
     bignumber.js: ^8 || ^9
-  checksum: 25400b2dea487ab9033964e15ea2027b4dc32da21f473c04f68dfc23a96ecb9d5c0684af4e817454bced02b69ade790a379307af5c5820d26fb6abc65cb1ffe1
+  checksum: 0d0b228eeb6525c4557c273bb860f1425af53289f3be054ad768576ed83060552ae6e14a0d47debb8c7ce9ecf25685e34f1fd30ead7275948af85f94ecdca595
   languageName: node
   linkType: hard
 
@@ -11870,13 +11673,6 @@ __metadata:
   version: 3.0.0
   resolution: "pify@npm:3.0.0"
   checksum: 6cdcbc3567d5c412450c53261a3f10991665d660961e06605decf4544a61a97a54fefe70a68d5c37080ff9d6f4cf51444c90198d1ba9f9309a6c0d6e9f5c4fde
-  languageName: node
-  linkType: hard
-
-"pirates@npm:^4.0.6":
-  version: 4.0.6
-  resolution: "pirates@npm:4.0.6"
-  checksum: 46a65fefaf19c6f57460388a5af9ab81e3d7fd0e7bc44ca59d753cb5c4d0df97c6c6e583674869762101836d68675f027d60f841c105d72734df9dfca97cbcc6
   languageName: node
   linkType: hard
 
@@ -13597,16 +13393,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map-support@npm:^0.5.21":
-  version: 0.5.21
-  resolution: "source-map-support@npm:0.5.21"
-  dependencies:
-    buffer-from: ^1.0.0
-    source-map: ^0.6.0
-  checksum: 43e98d700d79af1d36f859bdb7318e601dfc918c7ba2e98456118ebc4c4872b327773e5a1df09b0524e9e5063bb18f0934538eace60cca2710d1fa687645d137
-  languageName: node
-  linkType: hard
-
 "source-map@npm:0.5.6":
   version: 0.5.6
   resolution: "source-map@npm:0.5.6"
@@ -13614,7 +13400,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:^0.6.0, source-map@npm:^0.6.1, source-map@npm:~0.6.1":
+"source-map@npm:^0.6.1, source-map@npm:~0.6.1":
   version: 0.6.1
   resolution: "source-map@npm:0.6.1"
   checksum: 59ce8640cf3f3124f64ac289012c2b8bd377c238e316fb323ea22fbfe83da07d81e000071d7242cad7a23cd91c7de98e4df8830ec3f133cb6133a5f6e9f67bc2
@@ -14077,18 +13863,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint-config-prettier@npm:^8.0.2":
-  version: 8.0.2
-  resolution: "stylelint-config-prettier@npm:8.0.2"
-  peerDependencies:
-    stylelint: ">=11.0.0"
-  bin:
-    stylelint-config-prettier: bin/check.js
-    stylelint-config-prettier-check: bin/check.js
-  checksum: 6a3bfdf840b7e0b01875e68a0b144d9c02495a1038167c32fc03b0f76d07d989bbe90dec1552b9f5f79119f27b4f1780acde05ee23d5034d7e1ffbdcb362c6d8
-  languageName: node
-  linkType: hard
-
 "stylelint-config-recommended@npm:^12.0.0":
   version: 12.0.0
   resolution: "stylelint-config-recommended@npm:12.0.0"
@@ -14346,7 +14120,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tabbable@npm:^6.0.0, tabbable@npm:^6.0.1":
+"tabbable@npm:^6.0.0":
   version: 6.2.0
   resolution: "tabbable@npm:6.2.0"
   checksum: f8440277d223949272c74bb627a3371be21735ca9ad34c2570f7e1752bd646ccfc23a9d8b1ee65d6561243f4134f5fbbf1ad6b39ac3c4b586554accaff4a1300
@@ -14650,7 +14424,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.4.0, tslib@npm:^2.6.2":
+"tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.4.0":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad

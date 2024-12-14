@@ -11,8 +11,6 @@ type NotationContextProps = {
   nextNotation: () => void;
 };
 
-export const FIRST_NOTATION = '3/m30/m(h2)';
-
 export const NotationContext = createContext<NotationContextProps>({
   notation: '',
   notationRef: { current: '' },

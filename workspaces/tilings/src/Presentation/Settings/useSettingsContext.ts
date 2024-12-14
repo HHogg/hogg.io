@@ -13,7 +13,7 @@ export type Settings = {
   showLayers: Record<Layer, boolean>;
 };
 
-export type SettingsContextValue = Settings & {
+type SettingsContextValue = Settings & {
   setAutoRotate: (autoRotate: boolean) => void;
   setColorMode: (colorMode: ColorMode) => void;
   setExpansionPhases: (count: number) => void;

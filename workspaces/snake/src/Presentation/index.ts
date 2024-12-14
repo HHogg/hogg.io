@@ -1,4 +1,4 @@
-export { default as SnakeProjectWindow } from './SnakeProjectWindow';
+export {  } from './SnakeProjectWindow';
 export { default as getAverage } from './utils/getAverage';
 export { default as getScore } from './utils/getScore';
 

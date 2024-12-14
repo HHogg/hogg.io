@@ -13,6 +13,9 @@
     "dev": "cargo watch -w ./src-rust -w ../circular-sequence/src-rust -w ../line-segment-extending/src-rust -w ../spatial-grid-map/src-rust -w ../tilings/src-rust -q -s 'yarn workspace @hogg/wasm run build'"
   },
   "dependencies": {
+    "@hogg/circular-sequence": "workspace:^",
+    "@hogg/common": "workspace:^",
+    "@hogg/line-segment-extending": "workspace:^",
     "lucide-react": "0.445.0",
     "preshape": "^19.1.5",
     "react": "^18.2.0",

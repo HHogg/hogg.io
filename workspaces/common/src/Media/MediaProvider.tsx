@@ -2,7 +2,7 @@ import { createMedia } from '@artsy/fresnel';
 
 export const {
   MediaContextProvider,
-  Media: FresnelMedial,
+  Media: FresnelMedia,
   createMediaStyle,
 } = createMedia({
   breakpoints: {

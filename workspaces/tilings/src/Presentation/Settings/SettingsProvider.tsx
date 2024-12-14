@@ -6,7 +6,7 @@ import {
   defaultSettings,
 } from './useSettingsContext';
 
-export type SettingsProviderProps = {
+type SettingsProviderProps = {
   settings?: Partial<Settings>;
 };
 
