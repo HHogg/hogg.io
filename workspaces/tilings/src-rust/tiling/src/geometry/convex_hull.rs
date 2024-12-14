@@ -1,11 +1,14 @@
+#[path = "./convex_hull_tests.rs"]
+#[cfg(test)]
+mod tests;
+
 use std::cmp::Ordering;
 
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::SpatialGridMap;
 
-use crate::utils::math::{compare_coordinate, compare_radians};
+use crate::utils::math::{compare_coordinate, compare_radians, is_between_radians};
 
-use super::{LineSegment, Point};
+use super::{BBox, LineSegment, Point};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct ConvexHull {
@@ -13,25 +16,30 @@ pub struct ConvexHull {
 }
 
 impl ConvexHull {
-  pub fn from_line_segments(line_segments: SpatialGridMap<LineSegment>) -> Self {
+  pub fn from_line_segments<'a>(line_segments: impl Iterator<Item = &'a LineSegment>) -> Self {
     let mut points = line_segments
-      .iter_values()
       // The second point of the line_segment will be the first point
       // of the next line_segment so we only need to take the first point
-      .map(|line_segment| line_segment.p1)
+      .map(|line_segment| line_segment.start)
       .collect::<Vec<_>>();
+
+    if points.len() < 3 {
+      return Self::default();
+    }
 
     // We'll perform the Graham's scan algorithm to find the convex hull
     // of the points
 
-    // Find the point with the lowest y-coordinate
+    // Find the point with the lowest y-coordinate, we could quite
+    // easily also use the centroid of all the points too.
     let lowest_point = points
       .iter()
       .cloned()
       .max_by(|a, b| compare_coordinate(a.y, b.y))
-      .expect("ConvexHull: there should be at least one point");
+      .expect("There should be at least one point");
 
-    // Sort the points by the angle they make with the lowest point
+    // Sort the points by their angle to the lowest point.
+    // This gets all the points in order around the polygon.
     points.sort_by(|a, b| {
       let a_radians = lowest_point.radian_to(a);
       let b_radians = lowest_point.radian_to(b);
@@ -59,6 +67,90 @@ impl ConvexHull {
     }
 
     ConvexHull { points: stack }
+  }
+
+  fn find_line_segment(&self, terminal_point: Point) -> Option<LineSegment> {
+    let radians = terminal_point.radian_to_center();
+    let points_count = self.points.len();
+
+    //    log::info!("Finding line segment for {}", terminal_point);
+    //log::info!("Radian: {}", radians);
+    //log::info!("Points: {:?}", self.points);
+
+    for i in 0..points_count {
+      let p1 = self.points[i];
+      let p2 = self.points[(i + 1) % points_count];
+
+      //log::info!("Checking line segment: {} -> {}", p1, p2);
+
+      let p1_radians = p1.radian_to_center();
+      let p2_radians = p2.radian_to_center();
+
+      //log::info!("Radian: {} -> {}", p1_radians, p2_radians);
+
+      if is_between_radians(p1_radians, radians, p2_radians) {
+        return Some(LineSegment::default().with_start(p1).with_end(p2));
+      } else {
+        //log::info!("Radian not between {} and {}", p1_radians, p2_radians);
+      }
+    }
+
+    None
+  }
+
+  pub fn get_bbox_scale_value(&self, bbox: &BBox) -> f64 {
+    if self.points.is_empty() {
+      return 1.0;
+    }
+
+    let bbox_points: [Point; 4] = bbox.into();
+
+    //log::info!("BBox points: {:?}", bbox_points);
+
+    bbox_points
+      .iter()
+      .map(|origin| {
+        // At this point, we're working with the assumption that the BBox is bigger
+        // than the convex hull so we need a vector that goes from the origin outwards.
+        let vector = LineSegment::default()
+          .with_start(Point::default())
+          // We scale the vector to the maximum radius of the BBox
+          // so that it will intersect with an edge of the bbox.
+          .with_end(*origin);
+
+        // Using radians, we can find the 2 points on either
+        // side of the vectors terminal point.
+        let line_segment = self
+          .find_line_segment(vector.end)
+          .expect("Line segment not found");
+
+        let intersection_point = line_segment
+          .get_intersection_point(&vector)
+          .expect("Intersection point not found");
+
+        let origin_distance = origin.distance_to(&Point::default());
+        let intersection_point_distance = intersection_point.distance_to(&Point::default());
+
+        origin_distance / intersection_point_distance
+      })
+      .max_by(|a, b| compare_coordinate(*a, *b))
+      .expect("There should be at least one point")
+  }
+
+  pub fn scale(&self, scale: f64) -> Self {
+    ConvexHull {
+      points: self.points.iter().map(|point| point.scale(scale)).collect(),
+    }
+  }
+
+  pub fn rotate(&self, theta: f64, origin: Option<&Point>) -> Self {
+    ConvexHull {
+      points: self
+        .points
+        .iter()
+        .map(|point| point.rotate(theta, origin))
+        .collect(),
+    }
   }
 }
 

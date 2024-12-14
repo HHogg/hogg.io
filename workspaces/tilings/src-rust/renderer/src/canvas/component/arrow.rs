@@ -25,8 +25,8 @@ impl Arrow {
   }
 
   fn get_chevron(&self, scale: &Scale) -> Chevron {
-    let direction = self.line_segment.p2.radian_to(&self.line_segment.p1) - PI * 0.5;
-    let point = self.line_segment.p2;
+    let direction = self.line_segment.end.radian_to(&self.line_segment.start) - PI * 0.5;
+    let point = self.line_segment.end;
 
     Chevron::default()
       .with_point(point)

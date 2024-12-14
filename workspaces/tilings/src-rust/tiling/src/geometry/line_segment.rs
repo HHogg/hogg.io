@@ -28,18 +28,18 @@ pub enum LineSegmentOrigin {
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct LineSegment {
-  pub p1: Point,
-  pub p2: Point,
+  pub start: Point,
+  pub end: Point,
 }
 
 impl LineSegment {
   pub fn with_start(mut self, p1: Point) -> Self {
-    self.p1 = p1;
+    self.start = p1;
     self
   }
 
   pub fn with_end(mut self, p2: Point) -> Self {
-    self.p2 = p2;
+    self.end = p2;
     self
   }
 
@@ -47,52 +47,52 @@ impl LineSegment {
     let mut min = Point::at(0.0, 0.0);
     let mut max = Point::at(0.0, 0.0);
 
-    if self.p1.x < self.p2.x {
-      min.x = self.p1.x;
-      max.x = self.p2.x;
+    if self.start.x < self.end.x {
+      min.x = self.start.x;
+      max.x = self.end.x;
     } else {
-      min.x = self.p2.x;
-      max.x = self.p1.x;
+      min.x = self.end.x;
+      max.x = self.start.x;
     }
 
-    if self.p1.y < self.p2.y {
-      min.y = self.p1.y;
-      max.y = self.p2.y;
+    if self.start.y < self.end.y {
+      min.y = self.start.y;
+      max.y = self.end.y;
     } else {
-      min.y = self.p2.y;
-      max.y = self.p1.y;
+      min.y = self.end.y;
+      max.y = self.start.y;
     }
 
     BBox::from_min_max(min, max)
   }
 
   pub fn mid_point(&self) -> Point {
-    get_point_at_percentage(self.p1, self.p2, 0.5, 0.0)
+    get_point_at_percentage(self.start, self.end, 0.5, 0.0)
   }
 
   pub fn length(&self) -> f64 {
-    self.p1.distance_to(&self.p2)
+    self.start.distance_to(&self.end)
   }
 
   pub fn theta(&self) -> f64 {
-    self.p2.radian_to(&self.p1)
+    self.end.radian_to(&self.start)
   }
 
   pub fn flip(&self) -> Self {
-    Self::default().with_start(self.p2).with_end(self.p1)
+    Self::default().with_start(self.end).with_end(self.start)
   }
 
   pub fn is_connected(&self, other: &Self) -> bool {
-    self.p2 == other.p1
+    self.end == other.start
   }
 
   pub fn get_point_delta(&self, point: &Point) -> isize {
     let x = point.x;
     let y = point.y;
-    let x0 = self.p1.x;
-    let y0 = self.p1.y;
-    let x1 = self.p2.x;
-    let y1 = self.p2.y;
+    let x0 = self.start.x;
+    let y0 = self.start.y;
+    let x1 = self.end.x;
+    let y1 = self.end.y;
 
     let pos = (y - y0) * (x1 - x0) - (x - x0) * (y1 - y0);
 
@@ -104,33 +104,33 @@ impl LineSegment {
   }
 
   pub fn get_point_at_percentage(&self, percentage: f64, offset: f64) -> Point {
-    get_point_at_percentage(self.p1, self.p2, percentage, offset)
+    get_point_at_percentage(self.start, self.end, percentage, offset)
   }
 
   pub fn set_length(&self, length: f64, origin: LineSegmentOrigin) -> Self {
-    let dx = self.p2.x - self.p1.x;
-    let dy = self.p2.y - self.p1.y;
+    let dx = self.end.x - self.start.x;
+    let dy = self.end.y - self.start.y;
     let theta = dy.atan2(dx);
 
-    let mut p1 = self.p1;
-    let mut p2 = self.p2;
+    let mut p1 = self.start;
+    let mut p2 = self.end;
 
     match origin {
       LineSegmentOrigin::Start => {
-        p2.x = self.p1.x + length * theta.cos();
-        p2.y = self.p1.y + length * theta.sin();
+        p2.x = self.start.x + length * theta.cos();
+        p2.y = self.start.y + length * theta.sin();
       }
       LineSegmentOrigin::Middle => {
         let half_length = length / 2.0;
 
-        p1.x = self.p2.x - half_length * theta.cos();
-        p1.y = self.p2.y - half_length * theta.sin();
-        p2.x = self.p1.x + half_length * theta.cos();
-        p2.y = self.p1.y + half_length * theta.sin();
+        p1.x = self.end.x - half_length * theta.cos();
+        p1.y = self.end.y - half_length * theta.sin();
+        p2.x = self.start.x + half_length * theta.cos();
+        p2.y = self.start.y + half_length * theta.sin();
       }
       LineSegmentOrigin::End => {
-        p1.x = self.p2.x - length * theta.cos();
-        p1.y = self.p2.y - length * theta.sin();
+        p1.x = self.end.x - length * theta.cos();
+        p1.y = self.end.y - length * theta.sin();
       }
     }
 
@@ -142,14 +142,14 @@ impl LineSegment {
     let origin = origin.or(Some(&mid_point));
 
     Self::default()
-      .with_start(self.p1.rotate(theta, origin))
-      .with_end(self.p2.rotate(theta, origin))
+      .with_start(self.start.rotate(theta, origin))
+      .with_end(self.end.rotate(theta, origin))
   }
 
   pub fn scale(&self, scale: f64) -> Self {
     Self::default()
-      .with_start(self.p1.scale(scale))
-      .with_end(self.p2.scale(scale))
+      .with_start(self.start.scale(scale))
+      .with_end(self.end.scale(scale))
   }
 
   pub fn extend_to_bbox(&self, bbox: &BBox, extend_start: bool, extend_end: bool) -> Self {
@@ -157,7 +157,7 @@ impl LineSegment {
     let bbox_max = bbox.max();
 
     let (x1, y1, x2, y2) = extend_line_segment(
-      (self.p1.x, self.p1.y, self.p2.x, self.p2.y),
+      (self.start.x, self.start.y, self.end.x, self.end.y),
       (bbox_min.x, bbox_min.y, bbox_max.x, bbox_max.y),
       extend_start,
       extend_end,
@@ -168,56 +168,58 @@ impl LineSegment {
       .with_end(Point::at(x2, y2))
   }
 
-  pub fn intersects(&self, other: &LineSegment) -> bool {
+  pub fn get_intersection_point(&self, other: &LineSegment) -> Option<Point> {
     // If any of the points are the same, then we say
     // they don't intersect. This is because line segments
     // make up shapes, and 2 sibling line segments would share
     // the same point, so we don't want to count that as an
     // intersection
-    if self.p1 == other.p1 || self.p1 == other.p2 || self.p2 == other.p1 || self.p2 == other.p2 {
-      return false;
+    if self.start == other.start || self.start == other.end {
+      return Some(self.start);
     }
 
-    let a = self.p1.x;
-    let b = self.p1.y;
-    let c = self.p2.x;
-    let d = self.p2.y;
-    let p = other.p1.x;
-    let q = other.p1.y;
-    let r = other.p2.x;
-    let s = other.p2.y;
+    if self.end == other.start || self.end == other.end {
+      return Some(self.end);
+    }
+
+    let a = self.start.x;
+    let b = self.start.y;
+    let c = self.end.x;
+    let d = self.end.y;
+    let p = other.start.x;
+    let q = other.start.y;
+    let r = other.end.x;
+    let s = other.end.y;
 
     let denominator = (c - a) * (s - q) - (r - p) * (d - b);
 
     if denominator == 0.0 {
-      return false;
+      return None;
     }
 
     let y_numerator = ((s - q) * (r - a) + (p - r) * (s - b)) / denominator;
     let x_numerator = ((b - d) * (r - a) + (c - a) * (s - b)) / denominator;
 
-    (0.0 < y_numerator) && (y_numerator < 1.0) && (0.0 < x_numerator) && (x_numerator < 1.0)
+    if (0.0 < y_numerator) && (y_numerator < 1.0) && (0.0 < x_numerator) && (x_numerator < 1.0) {
+      return Some(Point::at(
+        a + x_numerator * (c - a),
+        b + y_numerator * (d - b),
+      ));
+    }
+
+    None
   }
 
-  // pub fn intersects_bbox(&self, other: &BBox) -> bool {
-  //   let top_line_segment = LineSegment::default()
-  //     .with_start(other.min)
-  //     .with_end(Point::at(other.max.x, other.min.y));
-  //   let right_line_segment = LineSegment::default()
-  //     .with_start(Point::at(other.max.x, other.min.y))
-  //     .with_end(other.max);
-  //   let bottom_line_segment = LineSegment::default()
-  //     .with_start(other.max)
-  //     .with_end(Point::at(other.min.x, other.max.y));
-  //   let left_line_segment = LineSegment::default()
-  //     .with_start(other.min)
-  //     .with_end(Point::at(other.min.x, other.max.y));
+  pub fn is_intersection_with_polygon_line_segment(&self, other: &LineSegment) -> bool {
+    let intersection_point = self.get_intersection_point(other);
 
-  //   self.intersects(&top_line_segment)
-  //     || self.intersects(&right_line_segment)
-  //     || self.intersects(&bottom_line_segment)
-  //     || self.intersects(&left_line_segment)
-  // }
+    match intersection_point {
+      Some(p) if p == self.start => false,
+      Some(p) if p == self.end => false,
+      Some(_) => true,
+      None => false,
+    }
+  }
 }
 
 impl Ord for LineSegment {
@@ -260,12 +262,12 @@ impl Eq for LineSegment {}
 
 impl PartialEq for LineSegment {
   fn eq(&self, other: &Self) -> bool {
-    self.p1 == other.p1 && self.p2 == other.p2
+    self.start == other.start && self.end == other.end
   }
 }
 
 impl From<LineSegment> for Vec<Point> {
   fn from(line_segment: LineSegment) -> Self {
-    vec![line_segment.p1, line_segment.p2]
+    vec![line_segment.start, line_segment.end]
   }
 }

@@ -10,7 +10,6 @@ export type Settings = {
   colorMode: ColorMode;
   expansionPhases: number;
   scaleMode: ScaleMode;
-  scaleSize: number;
   showLayers: Record<Layer, boolean>;
 };
 

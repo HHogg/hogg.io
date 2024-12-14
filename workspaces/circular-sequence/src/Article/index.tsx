@@ -4,9 +4,16 @@ import {
   ArticleFigLink,
   ArticleFigs,
   ArticlePage,
+  DeepPartial,
   ProjectPageLink,
 } from '@hogg/common';
-import { ColorMode, TilingRenderer, meta as tilingsMeta } from '@hogg/tilings';
+import {
+  Layer,
+  Options,
+  ScaleMode,
+  TilingRenderer,
+  meta as tilingsMeta,
+} from '@hogg/tilings';
 import {
   ArticleHeading,
   ArticleParagraph,
@@ -14,13 +21,19 @@ import {
   Code,
   Link,
   Text,
-  sizeX12Px,
 } from 'preshape';
 import fileContentsGetMatch from '../../src-rust/get_match.rs?raw';
 import fileContentsMinPermutation from '../../src-rust/min_permutation.rs?raw';
 import fileContentsSequence from '../../src-rust/sequence.rs?raw';
 import ConcatenatedSequencesFig from './Figs/ConcatenatedSequencesFig';
 import MinPermutationFigWithWasApi from './Figs/MinPermutationFig';
+
+const tilingRendererOptions: DeepPartial<Options> = {
+  scaleMode: ScaleMode.Contain,
+  showLayers: {
+    [Layer.Transform]: true,
+  },
+};
 
 const Article = () => {
   return (
@@ -52,9 +65,7 @@ const Article = () => {
             <TilingRenderer
               height="200px"
               notation="12-3,4,6,4,3,4,6,4,3,4,6,4"
-              options={{
-                colorMode: ColorMode.None,
-              }}
+              options={tilingRendererOptions}
             />
           </ArticleFig>
         </ArticleFigs>
@@ -174,10 +185,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                 height="200px"
                 validations={[]}
                 notation="4-3,4,3,12"
-                options={{
-                  colorMode: ColorMode.None,
-                  padding: sizeX12Px,
-                }}
+                options={tilingRendererOptions}
               />
             }
             language="rust"
@@ -208,12 +216,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
               <TilingRenderer
                 height="200px"
                 notation="4-3,3,4,12"
-                validations={[]}
-                options={{
-                  colorMode: ColorMode.None,
-                  padding: sizeX12Px,
-                  isValid: true,
-                }}
+                options={tilingRendererOptions}
               />
             }
             language="rust"

@@ -80,11 +80,11 @@ fn draw_transform_eccentric_reflect(
 ) -> Result<(), Error> {
   let line_segment_p1 = tiling::geometry::LineSegment::default()
     .with_start(*origin_point)
-    .with_end(line_segment.p1);
+    .with_end(line_segment.start);
 
   let line_segment_p2 = tiling::geometry::LineSegment::default()
     .with_start(*origin_point)
-    .with_end(line_segment.p2);
+    .with_end(line_segment.end);
 
   canvas.add_component(
     Layer::Transform,
@@ -121,7 +121,7 @@ fn draw_transform_eccentric_rotate(
   let start_angle = match origin_type {
     OriginType::MidPoint => {
       if let Some(line_segment) = tiling.plane.line_segments.get_value(&origin_point.into()) {
-        line_segment.p2.radian_to(origin_point)
+        line_segment.end.radian_to(origin_point)
       } else {
         0.0
       }

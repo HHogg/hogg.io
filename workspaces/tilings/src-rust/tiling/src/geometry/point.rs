@@ -55,6 +55,10 @@ impl Point {
     get_radians_for_x_y(self.x - point.x, self.y - point.y)
   }
 
+  pub fn radian_to_center(&self) -> f64 {
+    self.radian_to(&Self::at(0.0, 0.0))
+  }
+
   pub fn multiply(&self, scalar: f64) -> Self {
     Self::at(self.x * scalar, self.y * scalar).with_index(self.index)
   }

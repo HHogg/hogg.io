@@ -144,7 +144,7 @@ impl BBox {
 
     for a_line_segment in a_line_segments.iter() {
       for b_line_segment in b_line_segments.iter() {
-        if a_line_segment.intersects(b_line_segment) {
+        if a_line_segment.is_intersection_with_polygon_line_segment(b_line_segment) {
           return true;
         }
       }

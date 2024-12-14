@@ -172,7 +172,7 @@ pub fn get_extended_points_to_bbox(
         .with_start(points[0])
         .with_end(points[1])
         .extend_to_bbox(bbox, extend_start, false);
-      point = line_segment.p1;
+      point = line_segment.start;
     }
 
     if extend_end && index == points.len() - 1 {
@@ -181,7 +181,7 @@ pub fn get_extended_points_to_bbox(
         .with_end(points[points.len() - 1])
         .extend_to_bbox(bbox, false, extend_end);
 
-      point = line_segment.p2;
+      point = line_segment.end;
     }
 
     extended_points.push(point);

@@ -1,3 +1,4 @@
+import { DeepPartial } from '@hogg/common';
 import { useWasmApi } from '@hogg/wasm';
 import merge from 'lodash/merge';
 import {
@@ -20,7 +21,7 @@ import {
 
 export type RendererProps = {
   expansionPhases?: number;
-  options?: Partial<Options>;
+  options?: DeepPartial<Options>;
   scale?: number;
   validations?: Flag[];
   withPlayer?: boolean;

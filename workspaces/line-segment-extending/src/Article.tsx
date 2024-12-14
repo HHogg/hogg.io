@@ -5,11 +5,13 @@ import {
   ArticleFigLink,
   ArticleFigs,
   ArticlePage,
+  DeepPartial,
   ProjectPageLink,
 } from '@hogg/common';
 import {
   Layer,
   Options,
+  ScaleMode,
   TilingRenderer,
   meta as tilingsMeta,
 } from '@hogg/tilings';
@@ -26,18 +28,11 @@ import {
 
 type Props = {};
 
-const tilingRendererOptions: Partial<Options> = {
+const tilingRendererOptions: DeepPartial<Options> = {
+  scaleMode: ScaleMode.Contain,
   showTransformIndex: 1,
   showLayers: {
-    [Layer.Axis]: false,
-    [Layer.BoundingBoxes]: false,
-    [Layer.GridLineSegment]: false,
-    [Layer.GridPolygon]: false,
-    [Layer.PlaneOutline]: false,
-    [Layer.ShapeBorder]: true,
-    [Layer.ShapeFill]: true,
     [Layer.Transform]: true,
-    [Layer.TransformPoints]: false,
   },
 };
 

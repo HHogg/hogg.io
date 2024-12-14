@@ -60,7 +60,7 @@ fn ordering() {
 }
 
 #[test]
-fn intersects() {
+fn is_intersection_with_polygon_line_segment() {
   let line_segment1 = LineSegment::default()
     .with_start(Point::at(0.0, 0.0))
     .with_end(Point::at(1.0, 1.0));
@@ -68,7 +68,7 @@ fn intersects() {
     .with_start(Point::at(0.0, 1.0))
     .with_end(Point::at(1.0, 0.0));
 
-  assert!(line_segment1.intersects(&line_segment2));
+  assert!(line_segment1.is_intersection_with_polygon_line_segment(&line_segment2));
 }
 
 #[test]

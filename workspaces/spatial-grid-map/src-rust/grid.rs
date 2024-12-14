@@ -6,11 +6,13 @@ use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use core::f64;
+use std::cmp::Ordering;
 use std::collections::{BTreeSet, HashMap};
 use std::mem;
 
 use crate::bucket::{Bucket, BucketEntry, MutBucketEntry};
 use crate::location::{self, Location};
+use crate::utils::compare_coordinate;
 use crate::visitor::Visitor;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
@@ -100,7 +102,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   fn get_bucket_by_point_mut(&mut self, point: &(f64, f64)) -> Option<&mut Bucket<TEntryValue>> {
     self
       .get_location(point)
-      .and_then(|location| self.store.get_mut(&location.key))
+      .and_then(|location| self.get_bucket_by_location_mut(&location))
   }
 
   pub fn get_value(&self, point: &(f64, f64)) -> Option<&TEntryValue> {
@@ -157,19 +159,26 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self.get_value(point).is_some()
   }
 
-  fn insert_entry(&mut self, entry: BucketEntry<TEntryValue>) -> MutBucketEntry<TEntryValue> {
+  fn insert_entry(
+    &mut self,
+    entry: BucketEntry<TEntryValue>,
+    update_size_check: bool,
+  ) -> MutBucketEntry<TEntryValue> {
     match self.get_location(&entry.point) {
       None => {
         self.increase_size();
-        self.insert_entry(entry)
+        self.insert_entry(entry, update_size_check)
       }
       Some(location) => {
         let point = entry.point;
         let size = entry.size;
 
         if self.store.entry(location.key).or_default().insert(entry) {
-          self.locations.insert(location);
-          self.update_spacing(size);
+          self.locations.insert(location.clone());
+
+          if update_size_check {
+            self.update_spacing(size);
+          }
         }
 
         self
@@ -192,6 +201,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
         .with_point(point)
         .with_value(value)
         .with_size(size as f32),
+      true,
     )
   }
 
@@ -264,14 +274,14 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
         return;
       }
       ResizeMethod::Maximum => {
-        if new_spacing > self.get_spacing() as f32 {
+        if compare_coordinate(new_spacing as f64, self.get_spacing()) == Ordering::Greater {
           self.spacing = Some(new_spacing);
         } else {
           return;
         }
       }
       ResizeMethod::Minimum => {
-        if new_spacing < self.get_spacing() as f32 {
+        if compare_coordinate(new_spacing as f64, self.get_spacing()) == Ordering::Less {
           self.spacing = Some(new_spacing);
         } else {
           return;
@@ -289,14 +299,16 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
         .get_mut(&location.key)
         .expect("Bucket not found while updating spacing");
       let bucket_entry = bucket
-        .take_entry(&location.point)
+        .remove(&location.point)
         .expect("Bucket entry not found while updating spacing");
 
       self.insert_entry(
         BucketEntry::default()
           .with_point(location.point)
           .with_value(bucket_entry.value)
+          .with_size(bucket_entry.size)
           .with_counters(bucket_entry.counters),
+        false,
       );
     }
   }

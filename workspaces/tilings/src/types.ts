@@ -277,8 +277,8 @@ export interface BBox {
 }
 
 export interface LineSegment {
-	p1: Point;
-	p2: Point;
+	start: Point;
+	end: Point;
 }
 
 export enum Offset {

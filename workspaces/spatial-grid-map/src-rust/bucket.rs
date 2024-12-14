@@ -1,25 +1,24 @@
 use std::{
-  cmp::Ordering,
-  collections::{BTreeSet, HashMap},
+  collections::HashMap,
   ops::{Deref, DerefMut},
 };
 
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::utils::{compare_coordinate, compare_radians, coordinate_equals, normalize_radian};
+use crate::utils::{coordinate_equals, normalize_radian};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct Bucket<TEntryValue: Clone + Default> {
   #[typeshare(serialized_as = "Vec<BucketEntry<TEntryValue>>")]
-  entries: BTreeSet<BucketEntry<TEntryValue>>,
+  pub entries: Vec<BucketEntry<TEntryValue>>,
 }
 
 impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
   pub fn new(point: (f64, f64), value: TEntryValue, size: f32) -> Self {
     Bucket {
-      entries: BTreeSet::from([BucketEntry {
+      entries: Vec::from([BucketEntry {
         point,
         value,
         size,
@@ -55,7 +54,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
   pub fn get_entry(&self, point: &(f64, f64)) -> Option<&BucketEntry<TEntryValue>> {
     self
       .get_entry_index(point)
-      .and_then(|index| self.entries.iter().nth(index))
+      .and_then(|index| self.entries.get(index))
   }
 
   pub fn get_entry_mut(&mut self, point: &(f64, f64)) -> Option<MutBucketEntry<'_, TEntryValue>> {
@@ -63,13 +62,6 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
       item: entry,
       parent: self,
     })
-  }
-
-  pub fn take_entry(&mut self, point: &(f64, f64)) -> Option<BucketEntry<TEntryValue>> {
-    self
-      .get_entry_index(point)
-      .and_then(|index| self.entries.iter().nth(index).cloned())
-      .and_then(|entry| self.entries.take(&entry))
   }
 
   pub fn get_value(&self, point: &(f64, f64)) -> Option<&TEntryValue> {
@@ -81,18 +73,18 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
   }
 
   pub fn insert(&mut self, entry: BucketEntry<TEntryValue>) -> bool {
-    if !self.contains(&entry.point) {
-      return self.entries.insert(entry);
+    if self.contains(&entry.point) {
+      return false;
     }
 
-    false
+    self.entries.push(entry);
+    true
   }
 
   pub fn remove(&mut self, point: &(f64, f64)) -> Option<BucketEntry<TEntryValue>> {
     self
-      .get_entry(point)
-      .cloned()
-      .and_then(|entry| self.entries.take(&entry))
+      .get_entry_index(point)
+      .map(|index| self.entries.remove(index))
   }
 
   pub fn increment_counter(&mut self, point: &(f64, f64), counter: &str) {
@@ -158,36 +150,10 @@ impl<TEntryValue: Default> BucketEntry<TEntryValue> {
   }
 }
 
-impl<TEntryValue: Clone + Default> Eq for BucketEntry<TEntryValue> {}
-
-impl<TEntryValue: Clone + Default> PartialEq for BucketEntry<TEntryValue> {
-  fn eq(&self, other: &Self) -> bool {
-    coordinate_equals(self.point.0, other.point.0) && coordinate_equals(self.point.0, other.point.0)
-  }
-}
-
-impl<TEntryValue: Clone + Default> Ord for BucketEntry<TEntryValue> {
-  fn cmp(&self, other: &Self) -> Ordering {
-    let theta_comparison = compare_radians(self.theta(), other.theta());
-
-    if theta_comparison != Ordering::Equal {
-      return theta_comparison;
-    }
-
-    compare_coordinate(self.distance_to_center(), other.distance_to_center())
-  }
-}
-
-impl<TEntryValue: Clone + Default> PartialOrd for BucketEntry<TEntryValue> {
-  fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-    Some(self.cmp(other))
-  }
-}
-
 // Helper struct to mimic a mutable reference
 pub struct MutBucketEntry<'a, TEntryValue: Clone + Default> {
-  item: BucketEntry<TEntryValue>,
-  parent: &'a mut Bucket<TEntryValue>,
+  pub item: BucketEntry<TEntryValue>,
+  pub parent: &'a mut Bucket<TEntryValue>,
 }
 
 impl<TEntryValue: Clone + Default> Deref for MutBucketEntry<'_, TEntryValue> {
@@ -208,6 +174,6 @@ impl<TEntryValue: Clone + Default> DerefMut for MutBucketEntry<'_, TEntryValue> 
 impl<TEntryValue: Clone + Default> Drop for MutBucketEntry<'_, TEntryValue> {
   fn drop(&mut self) {
     let item = std::mem::take(&mut self.item);
-    self.parent.entries.insert(item);
+    self.parent.entries.push(item);
   }
 }

@@ -63,16 +63,17 @@ impl LineSegmentArrows {
     while shift < line_segment.length() {
       let p1 = line_segment
         .set_length(line_segment.length() - shift, LineSegmentOrigin::End)
-        .p1;
+        .start;
 
       let p2 = line_segment
         .set_length(
           line_segment.length() - shift - length - gap_from_line_segment,
           LineSegmentOrigin::End,
         )
-        .p1;
+        .start;
 
-      let mut arrow_line_segment = LineSegment { p1, p2 }.rotate(self.direction, Some(&p1));
+      let mut arrow_line_segment =
+        LineSegment { start: p1, end: p2 }.rotate(self.direction, Some(&p1));
 
       arrow_line_segment = arrow_line_segment.set_length(
         arrow_line_segment.length() - gap_from_line_segment,

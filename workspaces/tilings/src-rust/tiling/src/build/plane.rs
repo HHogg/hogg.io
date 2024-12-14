@@ -66,7 +66,7 @@ impl Plane {
 
   pub fn reset(&mut self) {
     self.convex_hull = ConvexHull::default();
-    self.line_segments = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
+    self.line_segments = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
     self.line_segments_by_shape_group = Vec::new();
     self.points_center = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
     self.points_end = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
@@ -117,7 +117,8 @@ impl Plane {
       self.validate_gaps()?;
       self.validate_vertex_types()?;
 
-      self.convex_hull = ConvexHull::from_line_segments(self.get_line_segment_edges());
+      self.convex_hull =
+        ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values());
     }
 
     Ok(())
@@ -403,7 +404,7 @@ impl Plane {
     self
       .get_line_segment_edges()
       .iter_values()
-      .flat_map(|line_segment| [line_segment.p1, line_segment.p2])
+      .flat_map(|line_segment| [line_segment.start, line_segment.end])
       .min_by(|a, b| {
         compare_coordinate(
           a.distance_to(&Point::default()),

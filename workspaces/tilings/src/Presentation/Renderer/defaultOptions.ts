@@ -20,7 +20,7 @@ export const defaultOptions: Pick<
     [Layer.ConvexHull]: false,
     [Layer.GridLineSegment]: false,
     [Layer.GridPolygon]: false,
-    [Layer.PlaneOutline]: true,
+    [Layer.PlaneOutline]: false,
     [Layer.ShapeBorder]: true,
     [Layer.ShapeFill]: true,
     [Layer.Transform]: false,

@@ -1,0 +1,7 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/geometry/./convex_hull_tests.rs
+expression: "ConvexHull::from_line_segments([].iter())"
+---
+{
+  "points": []
+}

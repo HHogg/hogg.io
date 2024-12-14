@@ -7,6 +7,7 @@ use std::collections::{BTreeMap, HashMap, VecDeque};
 
 use anyhow::Result;
 use tiling::geometry::BBox;
+use tiling::Tiling;
 use wasm_bindgen::JsCast;
 
 use self::collision::Theia;
@@ -36,7 +37,7 @@ impl Canvas {
   pub fn new(
     canvas: web_sys::OffscreenCanvas,
     options: &Options,
-    min_point: tiling::geometry::Point,
+    tiling: &Tiling,
   ) -> Result<Self, Error> {
     let context = canvas.get_context("2d");
     let scale = Scale::default()
@@ -86,7 +87,7 @@ impl Canvas {
       context,
       scale: scale
         .with_canvas_bbox(canvas_bbox)
-        .with_min_point(min_point),
+        .with_convex_hull(tiling.plane.convex_hull.clone()),
 
       draw_bounding_boxes: layers_enabled
         .get(&Layer::BoundingBoxes)

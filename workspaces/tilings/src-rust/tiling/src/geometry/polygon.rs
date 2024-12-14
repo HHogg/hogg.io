@@ -105,11 +105,11 @@ impl Polygon {
 
   pub fn on_line_segment(self, line_segment: &LineSegment, point_index_offset: u8) -> Self {
     let sides = self.shape as u8;
-    let length = line_segment.p1.distance_to(&line_segment.p2);
+    let length = line_segment.start.distance_to(&line_segment.end);
     let shape_radians = self.shape.get_internal_angle();
-    let mut theta = line_segment.p1.radian_to(&line_segment.p2) + shape_radians + PI * 0.5;
+    let mut theta = line_segment.start.radian_to(&line_segment.end) + shape_radians + PI * 0.5;
 
-    let mut points = vec![line_segment.p1, line_segment.p2];
+    let mut points = vec![line_segment.start, line_segment.end];
     points.reserve_exact(sides as usize);
 
     for i in 2..sides {
@@ -174,7 +174,7 @@ impl Polygon {
     points.reserve_exact(self.points.len());
 
     for point in &self.points {
-      points.push(point.reflect(&line_segment.p1, &line_segment.p2));
+      points.push(point.reflect(&line_segment.start, &line_segment.end));
     }
 
     self.with_points(points)

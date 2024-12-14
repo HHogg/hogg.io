@@ -1,15 +1,19 @@
-import { PatternBackground } from '@hogg/common';
+import { DeepPartial, PatternBackground } from '@hogg/common';
 import { Box, Text } from 'preshape';
 import TilingRenderer, { TilingRendererProps } from '../../TilingRenderer';
-import { ColorMode, Options } from '../../types';
+import { ColorMode, Layer, Options, ScaleMode } from '../../types';
 
 export type ArrangementCardProps = Omit<TilingRendererProps, 'notation'> & {
   label: string;
   notation: string;
 };
 
-const options: Partial<Options> = {
+const options: DeepPartial<Options> = {
   colorMode: ColorMode.None,
+  scaleMode: ScaleMode.Contain,
+  showLayers: {
+    [Layer.ConvexHull]: false,
+  },
 };
 
 export default function ArrangementCard({

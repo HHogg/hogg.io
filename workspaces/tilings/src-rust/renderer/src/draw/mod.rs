@@ -21,11 +21,7 @@ pub fn draw(
   options: Options,
 ) -> Result<Metrics, Error> {
   let mut metrics = Metrics::default();
-  let min_point = tiling
-    .plane
-    .get_nearest_edge_point()
-    .expect("No points in tiling");
-  let mut canvas = Canvas::new(offscreen_canvas, &options, min_point)?;
+  let mut canvas = Canvas::new(offscreen_canvas, &options, tiling)?;
 
   let show_layers = options.show_layers.clone().unwrap_or_default();
 

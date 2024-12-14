@@ -50,7 +50,7 @@ impl Validator {
     // If a line segment intersects with another line segment
     // then it's overlapping with another line segment
     for nearby_line_segment in nearby_line_segments {
-      if line_segment.intersects(nearby_line_segment) {
+      if line_segment.is_intersection_with_polygon_line_segment(nearby_line_segment) {
         return Err(Error::Overlaps {});
       }
     }
