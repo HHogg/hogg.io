@@ -7,10 +7,9 @@ export const meta: Project = {
   name: 'Genes to Phenotype visualisation',
   description:
     'Representing the complexity of how genes are expressed in an organism as its phenotype.',
-  // image,
   tags: ['simulation', 'rust'],
   deploy: false,
   wip: true,
-  created: '2024-05-04',
-  updated: '2024-05-04',
+  created: '2099-12-12',
+  updated: '2099-12-12',
 };

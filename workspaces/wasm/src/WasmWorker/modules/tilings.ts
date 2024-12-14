@@ -1,11 +1,4 @@
 import {
-  type Options,
-  type Tiling,
-  type Transform,
-  Flag,
-  Metrics,
-} from '@hogg/tilings/types';
-import {
   parse_notation as _parseNotation,
   parse_transform as _parseTransform,
   find_previous_tiling as _findPreviousTiling,
@@ -13,6 +6,7 @@ import {
   generate_tiling as _generateTiling,
   render_tiling as _renderTiling,
 } from '@hogg/wasm/pkg';
+import { Flag, Metrics, Options, Tiling, Transform } from '../../types';
 
 const defaultValidations: Flag[] = [
   Flag.Overlaps,

@@ -1,5 +1,5 @@
+import { Options, ColorMode, ScaleMode, Layer } from '@hogg/wasm';
 import { ThemeColorMap, colorNegativeShade4 } from 'preshape';
-import { ColorMode, Layer, Options, ScaleMode } from '../../types';
 
 type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;

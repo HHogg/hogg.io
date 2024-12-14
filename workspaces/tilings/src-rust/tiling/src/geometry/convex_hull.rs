@@ -5,12 +5,15 @@ mod tests;
 use std::cmp::Ordering;
 
 use serde::{Deserialize, Serialize};
+use typeshare::typeshare;
 
 use crate::utils::math::{compare_coordinate, compare_radians, is_between_radians};
 
 use super::{BBox, LineSegment, Point};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+#[typeshare]
 pub struct ConvexHull {
   pub points: Vec<Point>,
 }
@@ -73,25 +76,15 @@ impl ConvexHull {
     let radians = terminal_point.radian_to_center();
     let points_count = self.points.len();
 
-    //    log::info!("Finding line segment for {}", terminal_point);
-    //log::info!("Radian: {}", radians);
-    //log::info!("Points: {:?}", self.points);
-
     for i in 0..points_count {
       let p1 = self.points[i];
       let p2 = self.points[(i + 1) % points_count];
 
-      //log::info!("Checking line segment: {} -> {}", p1, p2);
-
       let p1_radians = p1.radian_to_center();
       let p2_radians = p2.radian_to_center();
 
-      //log::info!("Radian: {} -> {}", p1_radians, p2_radians);
-
       if is_between_radians(p1_radians, radians, p2_radians) {
         return Some(LineSegment::default().with_start(p1).with_end(p2));
-      } else {
-        //log::info!("Radian not between {} and {}", p1_radians, p2_radians);
       }
     }
 
@@ -104,8 +97,6 @@ impl ConvexHull {
     }
 
     let bbox_points: [Point; 4] = bbox.into();
-
-    //log::info!("BBox points: {:?}", bbox_points);
 
     bbox_points
       .iter()

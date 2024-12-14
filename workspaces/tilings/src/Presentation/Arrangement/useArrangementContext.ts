@@ -1,5 +1,5 @@
+import { Metrics, Result, Tiling } from '@hogg/wasm';
 import { createContext, useContext } from 'react';
-import { Metrics, Result, Tiling } from '../../types';
 
 type ArrangementContextProps = {
   renderMetrics: Metrics | null;

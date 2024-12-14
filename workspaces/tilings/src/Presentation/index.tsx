@@ -26,7 +26,6 @@ function PresentationInner(props: RendererProps) {
     expansionPhases,
     colorMode,
     scaleMode,
-    scaleSize,
     showLayers,
   } = useSettingsContext();
   const { maxStage } = usePlayerContext();
@@ -37,10 +36,9 @@ function PresentationInner(props: RendererProps) {
       colorMode,
       maxStage,
       scaleMode,
-      scaleSize,
       showLayers,
     }),
-    [autoRotate, colorMode, maxStage, scaleMode, scaleSize, showLayers]
+    [autoRotate, colorMode, maxStage, scaleMode, showLayers]
   );
 
   return (

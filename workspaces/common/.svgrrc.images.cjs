@@ -29,6 +29,7 @@ module.exports = {
     `;
   },
   svgoConfig: {
+    prettier: true,
     plugins: [
       {
         name: 'addAttributesToSVGElement',
@@ -38,6 +39,12 @@ module.exports = {
               className: 'SvgImage',
             },
           ],
+        },
+      },
+      {
+        name: 'removeAttrs',
+        params: {
+          attrs: ['id'],
         },
       },
     ],

@@ -1,5 +1,5 @@
 import { DeepPartial } from '@hogg/common';
-import { useWasmApi } from '@hogg/wasm';
+import { Flag, Options, useWasmApi } from '@hogg/wasm';
 import merge from 'lodash/merge';
 import {
   Box,
@@ -11,7 +11,6 @@ import {
 } from 'preshape';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
-import { Options, Flag } from '../../types';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
 import {

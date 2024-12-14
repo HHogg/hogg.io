@@ -6,6 +6,7 @@ export enum ProjectKey {
   circle_intersections = 'circle-intersections',
   circular_sequence = 'circular-sequence',
   gap_validation = 'gap-validation',
+  grahams_scan = 'grahams-scan',
   evolution = 'evolution',
   line_segment_extending = 'line-segment-extending',
   snake = 'snake',

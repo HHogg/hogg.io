@@ -1,7 +1,7 @@
 import { DeepPartial, PatternBackground } from '@hogg/common';
+import { Options, ColorMode, ScaleMode, Layer } from '@hogg/wasm';
 import { Box, Text } from 'preshape';
 import TilingRenderer, { TilingRendererProps } from '../../TilingRenderer';
-import { ColorMode, Layer, Options, ScaleMode } from '../../types';
 
 export type ArrangementCardProps = Omit<TilingRendererProps, 'notation'> & {
   label: string;

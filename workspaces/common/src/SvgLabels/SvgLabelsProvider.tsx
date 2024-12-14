@@ -34,7 +34,7 @@ export default function SvgLabelsProvider({
   getPoints = defaultGetPoints,
   ...props
 }: PropsWithChildren<SvgLabelsProviderProps>) {
-  const refTimeout = useRef<number | null>(null);
+  const refTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const refLabels = useRef<Label[]>([]);
   const refObstacles = useRef<Obstacle[]>([]);
   const [shifts, setShifts] = useState<LabelShiftResult[]>([]);

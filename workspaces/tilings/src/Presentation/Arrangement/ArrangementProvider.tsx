@@ -1,5 +1,5 @@
+import { Tiling, Result, Metrics } from '@hogg/wasm';
 import { PropsWithChildren, useCallback, useState } from 'react';
-import { Metrics, Result, Tiling } from '../../types';
 import { ArrangementContext } from './useArrangementContext';
 
 export default function ArrangementProvider({

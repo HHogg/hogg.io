@@ -1,12 +1,11 @@
-import { ColorMode, Options, ScaleMode, TilingRenderer } from '@hogg/tilings';
+import { TilingRenderer } from '@hogg/tilings';
+import { ColorMode, Options, ScaleMode } from '@hogg/wasm';
 import { useSearchParams } from 'react-router-dom';
 
 const options: Options = {
   autoRotate: true,
   colorMode: ColorMode.VaporWaveRandom,
-  expansionPhases: 6,
-  scaleMode: ScaleMode.Fixed,
-  scaleSize: 20,
+  scaleMode: ScaleMode.Cover,
   styles: {},
 };
 
@@ -14,5 +13,11 @@ export default function TilingGenerationPage() {
   const [params] = useSearchParams();
   const notation = params.get('notation') ?? '';
 
-  return <TilingRenderer notation={notation} options={options} />;
+  return (
+    <TilingRenderer
+      expansionPhases={10}
+      notation={notation}
+      options={options}
+    />
+  );
 }

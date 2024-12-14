@@ -1,6 +1,6 @@
+import { Result } from '@hogg/wasm';
 import groupBy from 'lodash/groupBy';
 import uniqueTilings from '../../../results/output.json';
-import { Result } from '../../types';
 
 export type ImageModule = { default: string };
 

@@ -10,6 +10,6 @@ export const meta: Project = {
   tags: ['algorithms', 'data structures', 'sequences', 'rust'],
   deploy: false,
   wip: true,
-  created: '2024-03-17',
-  updated: '2024-04-10',
+  created: '2099-12-12',
+  updated: '2099-12-12',
 };

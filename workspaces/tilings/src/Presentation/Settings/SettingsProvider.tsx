@@ -1,5 +1,5 @@
+import { ColorMode, ScaleMode } from '@hogg/wasm';
 import { PropsWithChildren, useState } from 'react';
-import { ColorMode, ScaleMode } from '../../types';
 import {
   Settings,
   SettingsContext,
@@ -25,7 +25,6 @@ export default function SettingsProvider({
     initialState.expansionPhases
   );
   const [scaleMode, setScaleMode] = useState<ScaleMode>(initialState.scaleMode);
-  const [scaleSize, setScaleSize] = useState<number>(initialState.scaleSize);
   const [showLayers, setShowLayers] = useState(initialState.showLayers);
   const [showSettings, setShowSettings] = useState(false);
 
@@ -36,13 +35,11 @@ export default function SettingsProvider({
     colorMode,
     expansionPhases,
     scaleMode,
-    scaleSize,
     showLayers,
     setAutoRotate,
     setColorMode,
     setExpansionPhases,
     setScaleMode,
-    setScaleSize,
     setShowLayers,
     setShowSettings,
     toggleSettings,

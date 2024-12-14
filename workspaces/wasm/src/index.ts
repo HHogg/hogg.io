@@ -6,6 +6,8 @@ export { default as WasmApiLoadingScreen } from './WasmApi/WasmApiLoadingScreen'
 export { default as WasmApiProvider } from './WasmApi/WasmApiProvider';
 export { default as WasmWorkerLabel } from './WasmWorker/WasmWorkerLabel';
 
+export * from './types';
+
 export const meta: Project = {
   id: ProjectKey.wasm,
   name: 'Using rust in the browser',

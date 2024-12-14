@@ -3,7 +3,6 @@ import image from './image.webp';
 
 export { default as Project } from './Project';
 export { default as TilingRenderer } from './TilingRenderer';
-export * from './types';
 
 export const meta: Project = {
   id: ProjectKey.tilings,

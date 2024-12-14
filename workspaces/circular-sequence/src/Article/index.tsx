@@ -7,13 +7,8 @@ import {
   DeepPartial,
   ProjectPageLink,
 } from '@hogg/common';
-import {
-  Layer,
-  Options,
-  ScaleMode,
-  TilingRenderer,
-  meta as tilingsMeta,
-} from '@hogg/tilings';
+import { TilingRenderer, meta as tilingsMeta } from '@hogg/tilings';
+import { Options, ScaleMode, Layer } from '@hogg/wasm';
 import {
   ArticleHeading,
   ArticleParagraph,

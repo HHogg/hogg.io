@@ -1,5 +1,5 @@
+import { Flag } from '@hogg/wasm';
 import { useMemo } from 'react';
-import { Flag } from '../../types';
 import { useArrangementContext } from '../Arrangement/useArrangementContext';
 
 export type ArrangementStats = {

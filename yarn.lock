@@ -909,6 +909,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@hogg/grahams-scan@workspace:^, @hogg/grahams-scan@workspace:workspaces/graphams-scan":
+  version: 0.0.0-use.local
+  resolution: "@hogg/grahams-scan@workspace:workspaces/graphams-scan"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@svgr/cli": ^8.1.0
+    "@svgr/plugin-jsx": ^8.1.0
+    "@types/react": ^18.0.28
+    lucide-react: 0.445.0
+    preshape: ^19.1.5
+    react: ^18.2.0
+    typescript: ^5.0.4
+    uuid: 10.0.0
+  languageName: unknown
+  linkType: soft
+
 "@hogg/line-segment-extending@workspace:^, @hogg/line-segment-extending@workspace:workspaces/line-segment-extending":
   version: 0.0.0-use.local
   resolution: "@hogg/line-segment-extending@workspace:workspaces/line-segment-extending"
@@ -1054,6 +1070,7 @@ __metadata:
     "@hogg/circle-intersections": "workspace:^"
     "@hogg/circular-sequence": "workspace:^"
     "@hogg/gap-validation": "workspace:^"
+    "@hogg/grahams-scan": "workspace:^"
     "@hogg/line-segment-extending": "workspace:^"
     "@hogg/preshape": "workspace:^"
     "@hogg/snake": "workspace:^"
@@ -1067,7 +1084,6 @@ __metadata:
     "@swc/core": ^1.4.2
     "@types/lodash": ^4.14.202
     "@types/luxon": ^3.4.1
-    "@types/node": 22.5.4
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     "@vitejs/plugin-react-swc": ^3.0.0
@@ -2752,15 +2768,6 @@ __metadata:
   version: 13.7.1
   resolution: "@types/node@npm:13.7.1"
   checksum: 03fd4dec2c26f05e008f074679189af3b1a8423e00d8ca41a548a4fe3daf40a402a726ff76a97c7ba5f23380d71409d9508204880d98d6d20543e107a3e14f70
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:22.5.4":
-  version: 22.5.4
-  resolution: "@types/node@npm:22.5.4"
-  dependencies:
-    undici-types: ~6.19.2
-  checksum: 77ac225c38c428200036780036da0bc6764e2721cfa8f528c7e7da7cfefe01a32a5791e28a54efbeedbc977949058d7db902b2e00139298225d4686cee4ae6db
   languageName: node
   linkType: hard
 
@@ -14864,13 +14871,6 @@ __metadata:
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
   checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~6.19.2":
-  version: 6.19.8
-  resolution: "undici-types@npm:6.19.8"
-  checksum: de51f1b447d22571cf155dfe14ff6d12c5bdaec237c765085b439c38ca8518fc360e88c70f99469162bf2e14188a7b0bcb06e1ed2dc031042b984b0bb9544017
   languageName: node
   linkType: hard
 

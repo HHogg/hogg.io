@@ -25,7 +25,6 @@ export default function Settings() {
     setShowLineSegment,
   } = useLineSegmentContext();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const showBoundsConfig: MenuConfigEntryManyOf<BoundFlag> = {
     label: 'Bounds',
     icon: BoxSelectIcon,
@@ -35,7 +34,6 @@ export default function Settings() {
     options: [BoundFlag.TOP, BoundFlag.RIGHT, BoundFlag.BOTTOM, BoundFlag.LEFT],
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const showLineSegmentConfig: MenuConfigEntryBoolean = {
     label: 'Line segment',
     icon: MinusIcon,
@@ -76,8 +74,8 @@ export default function Settings() {
     >
       <ConfigMenu
         config={[
-          // showBoundsConfig,
-          // showLineSegmentConfig,
+          showBoundsConfig,
+          showLineSegmentConfig,
           showExtendStartConfig,
           showExtendEndConfig,
         ]}

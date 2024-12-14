@@ -33,7 +33,7 @@ export default function ArrangementInformation() {
       {result && (
         <>
           <Section title="Notation">
-            <CopyToClipboardCard text={notation} size="x2" />
+            <CopyToClipboardCard text={notation} size="x3" />
           </Section>
         </>
       )}

@@ -1,15 +1,8 @@
+import { Result } from '@hogg/wasm';
 import { createContext, useContext } from 'react';
-import { Result } from '../../types';
 import { results } from '../utils/results';
 
-const FILTER_KEYS = [
-  'has_0',
-  'has_3',
-  'has_4',
-  'has_6',
-  'has_8',
-  'has_12',
-] as const;
+const FILTER_KEYS = [] as const;
 
 export type FilterKeys = (typeof FILTER_KEYS)[number];
 export type LibraryFilters = Record<FilterKeys, boolean>;
@@ -46,7 +39,7 @@ export const getFilteredResults = (
       Object.entries(filters)
         // .filter(([, selected]) => selected)
         .every(([key, value]) => {
-          return result[key as keyof Result] === value;
+          return result[key as FilterKeys] === value;
         })
     );
   });

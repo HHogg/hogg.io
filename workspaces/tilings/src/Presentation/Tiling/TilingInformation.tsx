@@ -1,6 +1,6 @@
 import { BoxProps, Text } from 'preshape';
-import { formatUniform } from '../utils/formatting';
-import { resultsByNotation } from '../utils/results';
+// import { formatUniform } from '../utils/formatting';
+// import { resultsByNotation } from '../utils/results';
 
 type Props = {
   notation: string;
@@ -19,7 +19,7 @@ export default function TilingInformation(props: BoxProps & Props) {
     withUniqueKey = false,
     ...rest
   } = props;
-  const information = resultsByNotation[notation];
+  // const information = resultsByNotation[notation];
   const withLabels =
     +withGomJauHogg + +withCundyRollett + +withUniform + +withUniqueKey > 1;
 
@@ -41,14 +41,14 @@ export default function TilingInformation(props: BoxProps & Props) {
           </Text>
         )}
 
-        {withUniform && (
+        {/* {withUniform && (
           <Text shrink>
             {withLabels && 'Uniform '}
             <Text weight="x2" tag="span" breakOn="all">
               {formatUniform(information.uniform)}
             </Text>
           </Text>
-        )}
+        )} */}
       </Text>
     </Text>
   );

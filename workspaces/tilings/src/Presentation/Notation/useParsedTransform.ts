@@ -1,6 +1,5 @@
-import { useWasmApi } from '@hogg/wasm';
+import { Transform, useWasmApi } from '@hogg/wasm';
 import { useEffect, useState } from 'react';
-import { Transform } from '../../types';
 import { useNotationContext } from '../Notation/useNotationContext';
 
 export default function useParsedTransform(transformString: string) {

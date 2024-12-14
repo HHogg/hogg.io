@@ -4,6 +4,7 @@ import * as CircularSequence from '@hogg/circular-sequence';
 import { Project, ProjectKey, ProjectPageProps } from '@hogg/common';
 import * as Evolution from '@hogg/evolution';
 import * as GapValidation from '@hogg/gap-validation';
+import * as GrahamsScan from '@hogg/grahams-scan';
 import * as LineSegmentExtending from '@hogg/line-segment-extending';
 import * as Preshape from '@hogg/preshape';
 import * as Snake from '@hogg/snake';
@@ -58,6 +59,10 @@ export const projects: {
   {
     meta: GapValidation.meta,
     Component: GapValidation.Project,
+  },
+  {
+    meta: GrahamsScan.meta,
+    Component: GrahamsScan.Project,
   },
 ];
 

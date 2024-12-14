@@ -1,5 +1,5 @@
+import { Operation, OriginType } from '@hogg/wasm';
 import { Text } from 'preshape';
-import { Operation, OriginType } from '../../types';
 import { formatOrdinal } from '../utils/formatting';
 import useParsedTransform from './useParsedTransform';
 

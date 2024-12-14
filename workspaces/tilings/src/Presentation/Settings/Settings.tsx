@@ -1,6 +1,6 @@
+import { ColorMode, Layer, ScaleMode } from '@hogg/wasm';
 import {
   GaugeIcon,
-  HashIcon,
   LayersIcon,
   PaletteIcon,
   Repeat1Icon,
@@ -15,7 +15,6 @@ import {
   MenuConfigEntryNumber,
   MenuConfigEntryOneOf,
 } from 'preshape';
-import { ColorMode, Layer, ScaleMode } from '../../types';
 import { SPEEDS, Speed } from '../Player/usePlayer';
 import { usePlayerContext } from '../Player/usePlayerContext';
 import { useSettingsContext } from './useSettingsContext';
@@ -28,14 +27,12 @@ export default function Settings() {
     colorMode,
     expansionPhases,
     scaleMode,
-    scaleSize,
     showLayers,
     showSettings,
     setAutoRotate,
     setColorMode,
     setExpansionPhases,
     setScaleMode,
-    setScaleSize,
     setShowLayers,
   } = useSettingsContext();
   const { speed, setSpeed } = usePlayerContext();
@@ -101,18 +98,6 @@ export default function Settings() {
     onChange: setScaleMode,
   };
 
-  const scaleSizeConfig: MenuConfigEntryNumber = {
-    label: 'Scale size',
-    icon: HashIcon,
-    type: 'number',
-    value: scaleSize,
-    disabled: scaleMode !== ScaleMode.Fixed,
-    min: 10,
-    max: 100,
-    step: 10,
-    onChange: setScaleSize,
-  };
-
   const showLayersConfig: MenuConfigEntryManyOf<Layer> = {
     label: 'Layers',
     icon: LayersIcon,
@@ -139,7 +124,6 @@ export default function Settings() {
           expansionPhasesConfig,
           showLayersConfig,
           scaleModeConfig,
-          scaleSizeConfig,
           speedConfig,
         ].sort((a, b) => a.label.localeCompare(b.label))}
         visible={showSettings}

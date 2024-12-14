@@ -1,5 +1,5 @@
+import { ColorMode, ScaleMode, Layer } from '@hogg/wasm';
 import { createContext, useContext } from 'react';
-import { ColorMode, Layer, ScaleMode } from '../../types';
 import {
   defaultExpansionPhases,
   defaultOptions,
@@ -18,7 +18,6 @@ export type SettingsContextValue = Settings & {
   setColorMode: (colorMode: ColorMode) => void;
   setExpansionPhases: (count: number) => void;
   setScaleMode: (scaleMode: ScaleMode) => void;
-  setScaleSize: (scaleSize: number) => void;
   setShowLayers: (layers: Record<Layer, boolean>) => void;
   setShowSettings: (show: boolean) => void;
   toggleSettings: () => void;
@@ -42,7 +41,6 @@ export const SettingsContext = createContext<SettingsContextValue>({
   setColorMode: noop,
   setExpansionPhases: noop,
   setScaleMode: noop,
-  setScaleSize: noop,
   setShowLayers: noop,
   setShowSettings: noop,
   toggleSettings: noop,
