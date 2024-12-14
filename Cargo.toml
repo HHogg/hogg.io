@@ -26,13 +26,13 @@ console_error_panic_hook = "0.1.7"
 console_log = "1.0.0"
 futures = "0.3.27"
 futures-util = "0.3.31"
-insta = { version = "1.41.1", features = ["json"] }
+insta = { version = "1.41.1", features = ["json", "redactions"] }
 log = "0.4.22"
 pretty_assertions = "1.4.1"
 rand = "0.8.4"
 serde = { version = "1.0.216", features = ["derive"] }
 serde_arrays = "0.1.0"
-serde_json = "1.0.133"
+serde_json = { version = "1.0.133", features = ["arbitrary_precision"] }
 serde-wasm-bindgen = "0.6.5"
 serde_with = "3.11.0"
 sqlx = { version = "0.8.2", features = [

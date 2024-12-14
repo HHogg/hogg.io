@@ -1,22 +1,22 @@
 ---
 source: workspaces/tilings/src-rust/tiling/src/geometry/./convex_hull_tests.rs
-expression: "ConvexHull::from_line_segments(polygon.line_segments.iter())"
+expression: convex_hull
 ---
 {
   "points": [
     {
-      "x": 0.00000000000000027755575615628914,
-      "y": -0.00000000000000000000000000000001699538841808614,
+      "x": 0.0,
+      "y": -0.0,
       "index": 0
     },
     {
-      "x": -0.00000000000000010605752387249068,
-      "y": -1.7320508075688772,
+      "x": -0.0,
+      "y": -1.73205,
       "index": 1
     },
     {
-      "x": 1.5000000000000002,
-      "y": -0.8660254037844394,
+      "x": 1.5,
+      "y": -0.86603,
       "index": 2
     }
   ]

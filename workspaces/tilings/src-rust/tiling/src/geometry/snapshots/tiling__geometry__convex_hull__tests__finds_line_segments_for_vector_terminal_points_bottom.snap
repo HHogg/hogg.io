@@ -1,6 +1,6 @@
 ---
 source: workspaces/tilings/src-rust/tiling/src/geometry/./convex_hull_tests.rs
-expression: "convex_hull.find_line_segment(Point::default().with_x(0.0).with_y(-1.0).rotate(f64::consts::PI,\nNone))"
+expression: line_segment
 ---
 {
   "start": {

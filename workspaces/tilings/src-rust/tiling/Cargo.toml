@@ -31,4 +31,4 @@ circular_sequence = { path = "../../../circular-sequence" }
 line_segment_extending = { path = "../../../line-segment-extending" }
 
 [dev-dependencies]
-insta = { workspace = true }
+insta = { workspace = true, features = ["redactions"] }
