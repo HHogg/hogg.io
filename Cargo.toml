@@ -20,20 +20,19 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-anyhow = "1.0.87"
-chrono = { version = "0.4.38", features = ["serde"] }
+anyhow = "1.0.94"
+chrono = { version = "0.4.39", features = ["serde"] }
 console_error_panic_hook = "0.1.7"
 console_log = "1.0.0"
-derivative = "2.2.0"
 futures = "0.3.27"
-futures-util = "0.3.27"
-insta = { version = "1.40.0", features = ["json"] }
+futures-util = "0.3.31"
+insta = { version = "1.41.1", features = ["json"] }
 log = "0.4.22"
-pretty_assertions = "1.3.0"
+pretty_assertions = "1.4.1"
 rand = "0.8.4"
-serde = { version = "1.0.210", features = ["derive"] }
+serde = { version = "1.0.216", features = ["derive"] }
 serde_arrays = "0.1.0"
-serde_json = "1.0.128"
+serde_json = "1.0.133"
 serde-wasm-bindgen = "0.6.5"
 serde_with = "3.11.0"
 sqlx = { version = "0.8.2", features = [
@@ -42,12 +41,12 @@ sqlx = { version = "0.8.2", features = [
   "postgres",
   "runtime-async-std-native-tls",
 ] }
-thiserror = "1.0.63"
-tokio = { version = "1.40.0", features = ["full"] }
-tokio-util = "0.7.12"
-tracing = { version = "0.1.37" }
+thiserror = "2.0.7"
+tokio = { version = "1.42.0", features = ["full"] }
+tokio-util = "0.7.13"
+tracing = { version = "0.1.41" }
 tracing-appender = "0.2"
-tracing-subscriber = "0.3"
-typeshare = { version = "1.0.3" }
-wasm-bindgen = "0.2.93"
-web-sys = { version = "0.3.70" }
+tracing-subscriber = "0.3.19"
+typeshare = { version = "1.0.4" }
+wasm-bindgen = "0.2.99"
+web-sys = { version = "0.3.76" }

@@ -152,7 +152,7 @@ impl Style {
   fn apply_fill(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
     let fill = self.get_fill();
 
-    context.set_fill_style(&fill.into());
+    context.set_fill_style_str(&fill);
   }
 
   fn apply_opacity(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
@@ -178,10 +178,10 @@ impl Style {
     let stroke_width = self.get_stroke_width(scale);
 
     if stroke_width > 0.0 {
-      context.set_stroke_style(&stroke_color.into());
+      context.set_stroke_style_str(&stroke_color);
       context.set_line_width(stroke_width);
     } else {
-      context.set_stroke_style(&"transparent".into());
+      context.set_stroke_style_str("transparent");
       context.set_line_width(0.0);
     }
   }
