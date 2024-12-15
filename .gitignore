@@ -7,4 +7,5 @@ logs
 node_modules
 public
 target
+tsconfig.tsbuildinfo
 yarn-error.log

@@ -243,6 +243,10 @@ impl Plane {
       .polygons
       .insert(polygon.centroid.into(), size, polygon.clone());
 
+    // We also add the polygon to the polygons to transform
+    // to picked up on the next transform stage
+    self.polygons_to_transform.push(polygon.clone());
+
     if polygon.phase <= Phase::Placement {
       // Store the polygon's center point
       // for looking up origins for transforms
@@ -589,12 +593,10 @@ impl Plane {
       let p2 = Point::at((value - PI * 0.5).cos(), (value - PI * 0.5).sin());
       let line_segment = LineSegment::default().with_start(p1).with_end(p2);
 
-      // TODO: We don't need to iterate over all of the polygons.
-
       self
-        .polygons
         .to_owned()
-        .iter_values()
+        .polygons_to_transform
+        .iter()
         .map(|polygon| {
           polygon
             .clone()
@@ -621,9 +623,9 @@ impl Plane {
       let stage_index = self.stages.len() as u16;
 
       self
-        .polygons
+        .polygons_to_transform
         .to_owned()
-        .iter_values()
+        .iter()
         .map(|polygon| {
           polygon
             .clone()
@@ -647,6 +649,8 @@ impl Plane {
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
+    let polygons = std::mem::take(&mut self.polygons_to_transform);
+
     let line_segment =
       self
         .get_reflection_line(origin_index, origin_type)
@@ -657,10 +661,8 @@ impl Plane {
 
     let stage_index = self.stages.len() as u16;
 
-    self
-      .to_owned()
-      .polygons
-      .iter_values()
+    polygons
+      .iter()
       .map(|polygon| {
         polygon
           .clone()
@@ -683,6 +685,8 @@ impl Plane {
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
+    let polygons = std::mem::take(&mut self.polygons_to_transform);
+
     let origin = self
       .get_point_by_index_and_type(origin_type, origin_index)
       .ok_or(TilingError::InvalidTransform {
@@ -692,10 +696,8 @@ impl Plane {
 
     let stage_index = self.stages.len() as u16;
 
-    self
-      .polygons
-      .to_owned()
-      .iter_values()
+    polygons
+      .iter()
       .map(|polygon| {
         polygon
           .clone()

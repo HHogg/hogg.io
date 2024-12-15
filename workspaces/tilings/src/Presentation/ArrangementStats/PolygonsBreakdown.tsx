@@ -20,7 +20,7 @@ export default function PolygonsBreakdown() {
   return (
     <StageCards>
       <StageCard>
-        <Box flex="horizontal" gap="x4">
+        <Box flex="horizontal" gap="x2">
           <Box>
             <Text align="start" padding="x6">
               <Text size="x3" weight="x2" margin="x2">
@@ -36,10 +36,11 @@ export default function PolygonsBreakdown() {
 
           <Box
             basis="0"
+            flex="horizontal"
+            gap="x2"
             grow
             paddingTop="x6"
             paddingBottom="x6"
-            flex="vertical"
           >
             <SeriesChart>
               <SeriesChartLine
@@ -48,7 +49,9 @@ export default function PolygonsBreakdown() {
                 series={polygonsAddedSeries}
                 withGradientArea
               />
+            </SeriesChart>
 
+            <SeriesChart style={{ transform: 'scaleX(-1)' }}>
               <SeriesChartLine
                 color={colorNegativeShade4}
                 id="polygons-skipped"
