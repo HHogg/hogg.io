@@ -12,7 +12,7 @@ use super::layers::Layer;
 #[typeshare]
 pub struct Options {
   pub auto_rotate: Option<bool>,
-  pub color_mode: Option<ColorMode>,
+  pub color_palette: Option<ColorPalette>,
   pub is_valid: Option<bool>,
   pub max_stage: Option<u16>,
   pub padding: Option<f64>,
@@ -38,15 +38,14 @@ pub struct Styles {
 
 #[derive(Clone, Deserialize, Serialize)]
 #[typeshare]
-pub enum ColorMode {
+pub enum ColorPalette {
   BlackAndWhite,
   None,
-  Validity,
   VaporWave,
   VaporWaveRandom,
 }
 
-impl Default for ColorMode {
+impl Default for ColorPalette {
   fn default() -> Self {
     Self::VaporWaveRandom
   }

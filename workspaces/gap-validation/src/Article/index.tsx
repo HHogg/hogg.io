@@ -32,7 +32,7 @@ const Article = () => {
               height="200px"
               notation="12-3,4,6,4,3,4,6,4,3,4,6,4"
               options={{
-                colorMode: ColorMode.None,
+                colorPalette: colorPalette.None,
               }}
             />
           </ArticleFig>

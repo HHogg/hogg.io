@@ -1,5 +1,5 @@
 import { DeepPartial, PatternBackground } from '@hogg/common';
-import { Options, ColorMode, ScaleMode, Layer } from '@hogg/wasm';
+import { Options, ColorPalette, ScaleMode, Layer } from '@hogg/wasm';
 import { Box, Text } from 'preshape';
 import TilingRenderer, { TilingRendererProps } from '../../TilingRenderer';
 
@@ -9,7 +9,7 @@ export type ArrangementCardProps = Omit<TilingRendererProps, 'notation'> & {
 };
 
 const options: DeepPartial<Options> = {
-  colorMode: ColorMode.None,
+  colorPalette: ColorPalette.None,
   scaleMode: ScaleMode.Contain,
   showLayers: {
     [Layer.ConvexHull]: false,

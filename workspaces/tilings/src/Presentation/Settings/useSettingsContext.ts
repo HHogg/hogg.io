@@ -1,4 +1,4 @@
-import { ColorMode, ScaleMode, Layer } from '@hogg/wasm';
+import { ColorPalette, ScaleMode, Layer } from '@hogg/wasm';
 import { createContext, useContext } from 'react';
 import {
   defaultExpansionPhases,
@@ -7,7 +7,7 @@ import {
 
 export type Settings = {
   autoRotate: boolean;
-  colorMode: ColorMode;
+  colorPalette: ColorPalette;
   expansionPhases: number;
   scaleMode: ScaleMode;
   showLayers: Record<Layer, boolean>;
@@ -15,7 +15,7 @@ export type Settings = {
 
 type SettingsContextValue = Settings & {
   setAutoRotate: (autoRotate: boolean) => void;
-  setColorMode: (colorMode: ColorMode) => void;
+  setColorPalette: (colorPalette: ColorPalette) => void;
   setExpansionPhases: (count: number) => void;
   setScaleMode: (scaleMode: ScaleMode) => void;
   setShowLayers: (layers: Record<Layer, boolean>) => void;
@@ -38,7 +38,7 @@ export const SettingsContext = createContext<SettingsContextValue>({
   ...defaultSettings,
   showSettings: false,
   setAutoRotate: noop,
-  setColorMode: noop,
+  setColorPalette: noop,
   setExpansionPhases: noop,
   setScaleMode: noop,
   setShowLayers: noop,

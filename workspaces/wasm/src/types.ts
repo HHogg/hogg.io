@@ -178,10 +178,9 @@ export interface Style {
 	opacity?: number;
 }
 
-export enum ColorMode {
+export enum ColorPalette {
 	BlackAndWhite = "BlackAndWhite",
 	None = "None",
-	Validity = "Validity",
 	VaporWave = "VaporWave",
 	VaporWaveRandom = "VaporWaveRandom",
 }
@@ -221,7 +220,7 @@ export interface Styles {
 
 export interface Options {
 	autoRotate?: boolean;
-	colorMode?: ColorMode;
+	colorPalette?: ColorPalette;
 	isValid?: boolean;
 	maxStage?: number;
 	padding?: number;

@@ -42,6 +42,8 @@ pub struct Plane {
   #[serde(skip)]
   pub line_segments_by_shape_group: Vec<BTreeSet<LineSegment>>,
   #[serde(skip)]
+  pub polygons_to_transform: Vec<Polygon>,
+  #[serde(skip)]
   pub stage_added_polygon: bool,
   #[serde(skip)]
   pub stage_started_transforms: bool,
@@ -73,6 +75,7 @@ impl Plane {
     self.points_mid = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
     self.polygons = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
     self.polygons_placement = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
+    self.polygons_to_transform = Vec::new();
     self.seed_polygon = None;
     self.stage_added_polygon = false;
     self.stages = Vec::new();
@@ -585,6 +588,8 @@ impl Plane {
       let p1 = Point::at(0.0, 0.0);
       let p2 = Point::at((value - PI * 0.5).cos(), (value - PI * 0.5).sin());
       let line_segment = LineSegment::default().with_start(p1).with_end(p2);
+
+      // TODO: We don't need to iterate over all of the polygons.
 
       self
         .polygons

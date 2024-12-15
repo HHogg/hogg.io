@@ -1,4 +1,4 @@
-import { ColorMode, ScaleMode } from '@hogg/wasm';
+import { ColorPalette, ScaleMode } from '@hogg/wasm';
 import { PropsWithChildren, useState } from 'react';
 import {
   Settings,
@@ -20,7 +20,9 @@ export default function SettingsProvider({
   };
 
   const [autoRotate, setAutoRotate] = useState(initialState.autoRotate);
-  const [colorMode, setColorMode] = useState<ColorMode>(initialState.colorMode);
+  const [colorPalette, setColorPalette] = useState<ColorPalette>(
+    initialState.colorPalette
+  );
   const [expansionPhases, setExpansionPhases] = useState(
     initialState.expansionPhases
   );
@@ -32,12 +34,12 @@ export default function SettingsProvider({
 
   const value = {
     autoRotate,
-    colorMode,
+    colorPalette,
     expansionPhases,
     scaleMode,
     showLayers,
     setAutoRotate,
-    setColorMode,
+    setColorPalette,
     setExpansionPhases,
     setScaleMode,
     setShowLayers,
