@@ -20,6 +20,7 @@ export default function SettingsProvider({
   };
 
   const [autoRotate, setAutoRotate] = useState(initialState.autoRotate);
+  const [colorMode, setColorMode] = useState(initialState.colorMode);
   const [colorPalette, setColorPalette] = useState<ColorPalette>(
     initialState.colorPalette
   );
@@ -34,11 +35,13 @@ export default function SettingsProvider({
 
   const value = {
     autoRotate,
+    colorMode,
     colorPalette,
     expansionPhases,
     scaleMode,
     showLayers,
     setAutoRotate,
+    setColorMode,
     setColorPalette,
     setExpansionPhases,
     setScaleMode,

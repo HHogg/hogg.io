@@ -178,6 +178,11 @@ export interface Style {
 	opacity?: number;
 }
 
+export enum ColorMode {
+	Placement = "Placement",
+	Stage = "Stage",
+}
+
 export enum ColorPalette {
 	BlackAndWhite = "BlackAndWhite",
 	None = "None",
@@ -220,6 +225,7 @@ export interface Styles {
 
 export interface Options {
 	autoRotate?: boolean;
+	colorMode?: ColorMode;
 	colorPalette?: ColorPalette;
 	isValid?: boolean;
 	maxStage?: number;

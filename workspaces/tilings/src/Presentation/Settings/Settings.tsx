@@ -1,7 +1,8 @@
-import { ColorPalette, Layer, ScaleMode } from '@hogg/wasm';
+import { ColorMode, ColorPalette, Layer, ScaleMode } from '@hogg/wasm';
 import {
   GaugeIcon,
   LayersIcon,
+  PaintBucketIcon,
   PaletteIcon,
   Repeat1Icon,
   RotateCwIcon,
@@ -24,12 +25,14 @@ const layersOptions = Object.values(Layer).sort((a, b) => a.localeCompare(b));
 export default function Settings() {
   const {
     autoRotate,
+    colorMode,
     colorPalette,
     expansionPhases,
     scaleMode,
     showLayers,
     showSettings,
     setAutoRotate,
+    setColorMode,
     setColorPalette,
     setExpansionPhases,
     setScaleMode,
@@ -68,6 +71,15 @@ export default function Settings() {
     options: SPEEDS,
     formatter: (value) => value * 100 + '%',
     onChange: setSpeed,
+  };
+
+  const colorModeConfig: MenuConfigEntryOneOf<ColorMode> = {
+    label: 'Color mode',
+    icon: PaintBucketIcon,
+    type: 'oneOf',
+    value: colorMode,
+    options: Object.values(ColorMode),
+    onChange: setColorMode,
   };
 
   const colorPaletteConfig: MenuConfigEntryOneOf<ColorPalette> = {
@@ -120,6 +132,7 @@ export default function Settings() {
       <ConfigMenu
         config={[
           autoRotateConfig,
+          colorModeConfig,
           colorPaletteConfig,
           expansionPhasesConfig,
           showLayersConfig,

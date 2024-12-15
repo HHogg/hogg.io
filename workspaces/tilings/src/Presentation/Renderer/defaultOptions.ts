@@ -1,4 +1,4 @@
-import { Options, ColorPalette, ScaleMode, Layer } from '@hogg/wasm';
+import { Options, ColorPalette, ScaleMode, Layer, ColorMode } from '@hogg/wasm';
 import { ThemeColorMap, colorNegativeShade4 } from 'preshape';
 
 type NoUndefinedField<T> = {
@@ -9,9 +9,10 @@ export const defaultExpansionPhases = 10;
 
 export const defaultOptions: Pick<
   NoUndefinedField<Options>,
-  'autoRotate' | 'colorPalette' | 'scaleMode' | 'showLayers'
+  'autoRotate' | 'colorMode' | 'colorPalette' | 'scaleMode' | 'showLayers'
 > = {
   autoRotate: true,
+  colorMode: ColorMode.Stage,
   colorPalette: ColorPalette.VaporWave,
   scaleMode: ScaleMode.Cover,
   showLayers: {

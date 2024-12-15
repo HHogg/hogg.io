@@ -8,7 +8,7 @@ use tiling::Tiling;
 
 use super::Layer;
 use crate::canvas::{Canvas, Polygon};
-use crate::draw::options::ColorPalette;
+use crate::draw::options::{ColorMode, ColorPalette};
 use crate::draw::Options;
 use crate::Error;
 
@@ -18,11 +18,16 @@ pub const VAPOR_WAVE_COLOR_PALETTE: [&str; 12] = [
 ];
 
 pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> Result<(), Error> {
-  let path_shape_count = tiling.notation.path.get_shape_count() as f32;
+  let color_mode = options.color_mode.clone().unwrap_or_default();
   let color_palette = options.color_palette.clone().unwrap_or_default();
   let shape_style = options.styles.shape.clone().unwrap_or_default();
 
-  if path_shape_count == 0.0 {
+  let color_domain = match color_mode {
+    ColorMode::Placement => tiling.notation.path.get_shape_count() as f32,
+    ColorMode::Stage => tiling.plane.stages.len() as f32,
+  };
+
+  if color_domain == 0.0 {
     return Ok(());
   }
 
@@ -32,14 +37,14 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
       ColorPalette::BlackAndWhite => Some(
         GradientBuilder::new()
           .html_colors(&["#000000", "#ffffff"])
-          .domain(&[0.0, path_shape_count])
+          .domain(&[0.0, color_domain])
           .mode(colorgrad::BlendMode::Rgb)
           .build()?,
       ),
       ColorPalette::VaporWave => Some(
         GradientBuilder::new()
           .html_colors(&VAPOR_WAVE_COLOR_PALETTE)
-          .domain(&[0.0, path_shape_count])
+          .domain(&[0.0, color_domain])
           .mode(colorgrad::BlendMode::Rgb)
           .build()?,
       ),
@@ -51,7 +56,7 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
         Some(
           GradientBuilder::new()
             .html_colors(&colors)
-            .domain(&[0.0, path_shape_count])
+            .domain(&[0.0, color_domain])
             .mode(colorgrad::BlendMode::Rgb)
             .build()?,
         )
@@ -91,6 +96,16 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
       }
     }
 
+    let color_index = match color_mode {
+      ColorMode::Placement => *shape_types_by_index.get(&shape.index).unwrap_or(&0) as f32,
+      ColorMode::Stage => shape.stage_index as f32,
+    };
+
+    let fill = gradient
+      .as_ref()
+      .map(|gradient| gradient.at(color_index).to_hex_string())
+      .or_else(|| Some(shape_style.get_fill()));
+
     canvas.add_component(
       Layer::ShapeFill,
       Polygon::default()
@@ -103,12 +118,7 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
             .clone()
             .unwrap_or_default()
             .set_stroke_width(&canvas.scale, None)
-            .set_fill(match (&gradient, shape_types_by_index.get(&shape.index)) {
-              (Some(gradient), Some(shape_type)) => {
-                Some(gradient.at(*shape_type as f32).to_hex_string())
-              }
-              _ => Some(shape_style.get_fill()),
-            }),
+            .set_fill(fill),
         )
         .into(),
     )?;

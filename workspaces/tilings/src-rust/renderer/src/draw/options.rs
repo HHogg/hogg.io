@@ -12,6 +12,7 @@ use super::layers::Layer;
 #[typeshare]
 pub struct Options {
   pub auto_rotate: Option<bool>,
+  pub color_mode: Option<ColorMode>,
   pub color_palette: Option<ColorPalette>,
   pub is_valid: Option<bool>,
   pub max_stage: Option<u16>,
@@ -34,6 +35,19 @@ pub struct Styles {
   pub transform_continuous: Option<Style>,
   pub transform_eccentric: Option<Style>,
   pub transform_points: Option<Style>,
+}
+
+#[derive(Clone, Deserialize, Serialize)]
+#[typeshare]
+pub enum ColorMode {
+  Placement,
+  Stage,
+}
+
+impl Default for ColorMode {
+  fn default() -> Self {
+    Self::Placement
+  }
 }
 
 #[derive(Clone, Deserialize, Serialize)]

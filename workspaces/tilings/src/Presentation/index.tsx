@@ -24,6 +24,7 @@ function PresentationInner(props: RendererProps) {
     setShowSettings,
     autoRotate,
     expansionPhases,
+    colorMode,
     colorPalette,
     scaleMode,
     showLayers,
@@ -33,12 +34,13 @@ function PresentationInner(props: RendererProps) {
   const options = useMemo(
     () => ({
       autoRotate,
+      colorMode,
       colorPalette,
       maxStage,
       scaleMode,
       showLayers,
     }),
-    [autoRotate, colorPalette, maxStage, scaleMode, showLayers]
+    [autoRotate, colorMode, colorPalette, maxStage, scaleMode, showLayers]
   );
 
   return (
