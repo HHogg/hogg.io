@@ -1,4 +1,3 @@
-mod context;
 mod metrics;
 mod phase;
 mod plane;
@@ -6,7 +5,6 @@ mod point_sequence;
 mod result;
 mod vertex_types;
 
-pub use context::Context;
 pub use metrics::Metrics;
 pub use phase::Phase;
 pub use plane::{Plane, Stage};

@@ -11,7 +11,7 @@ export default function ArrangementProvider({
 
   const handleSetTiling = useCallback((tiling: Tiling) => {
     setTiling(tiling);
-    setResult(tiling.buildContext.results[0] ?? null);
+    setResult(tiling.result ?? null);
   }, []);
 
   const value = {

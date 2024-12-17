@@ -2,7 +2,7 @@ use actix::prelude::*;
 use anyhow::Result;
 
 use super::PathResponse;
-use crate::datastore::{errors, tilings, visits};
+use crate::datastore::visits;
 use crate::issuer::{self, Issuer};
 use crate::visitor;
 
@@ -23,8 +23,8 @@ impl Handler<ProcessVisit> for Issuer {
   fn handle(&mut self, msg: ProcessVisit, _ctx: &mut Self::Context) -> Self::Result {
     let buffer_rx = self.buffer_rx.clone();
     let visits_store_addr = self.visits_store_addr.clone();
-    let tilings_store_addr = self.tilings_store_addr.clone();
-    let errors_store_addr = self.errors_store_addr.clone();
+    // let tilings_store_addr = self.tilings_store_addr.clone();
+    // let errors_store_addr = self.errors_store_addr.clone();
     let leases = self.leases.clone();
 
     Box::pin(async move {
@@ -55,24 +55,24 @@ impl Handler<ProcessVisit> for Issuer {
         )?;
 
       // Store the valid tilings found
-      tilings_store_addr
-        .try_send(tilings::messages::Insert {
-          path: msg.result.path.clone(),
-          path_index,
-          results: msg.result.build_context.results.clone(),
-        })
-        .inspect_err(
-          |error| tracing::error!(%error, path = %msg.result.path, "failed_to_store_tilings"),
-        )?;
+      // tilings_store_addr
+      //   .try_send(tilings::messages::Insert {
+      //     path: msg.result.path.clone(),
+      //     path_index,
+      //     results: msg.result.build_context.results.clone(),
+      //   })
+      //   .inspect_err(
+      //     |error| tracing::error!(%error, path = %msg.result.path, "failed_to_store_tilings"),
+      //   )?;
 
       // Store the application errors
-      errors_store_addr
-        .try_send(errors::messages::Insert {
-          errors: msg.result.build_context.application_errors.clone(),
-        })
-        .inspect_err(
-          |error| tracing::error!(%error, path = %msg.result.path, "failed_to_store_errors"),
-        )?;
+      // errors_store_addr
+      //   .try_send(errors::messages::Insert {
+      //     errors: msg.result.build_context.application_errors.clone(),
+      //   })
+      //   .inspect_err(
+      //     |error| tracing::error!(%error, path = %msg.result.path, "failed_to_store_errors"),
+      //   )?;
 
       tracing::info!(path = %msg.result.path, "processed_visit");
 

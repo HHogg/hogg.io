@@ -4,6 +4,7 @@ use wasm_bindgen::{JsCast, JsError, JsValue};
 use tiling::notation::{Path, Transform};
 use tiling::{validation, Tiling};
 use tiling_renderer::{draw, Options};
+use web_sys::js_sys::Function;
 use web_sys::OffscreenCanvas;
 
 #[wasm_bindgen]
@@ -25,21 +26,29 @@ pub fn parse_transform(transform: &str, path: &str) -> Result<JsValue, JsError> 
 pub fn find_previous_tiling(
   notation: &str,
   expansion_phases: u8,
-  validations: &JsValue,
+  callback: &JsValue,
 ) -> Result<Option<String>, JsError> {
-  let validations =
-    serde_wasm_bindgen::from_value::<Vec<validation::Flag>>(validations.to_owned())?;
+  let callback = callback.clone().dyn_into::<Function>().map_err(|e| {
+    JsError::new(&format!(
+      "find_previous_tiling callback conversion failed: {:?}",
+      e
+    ))
+  })?;
 
   let mut tiling = Tiling::default()
-    .with_validations(Some(validations))
+    .with_validations(Some(validation::Flag::all()))
     .with_expansion_phases(expansion_phases)
     .with_link_paths(true)
     .with_notation(notation.to_string());
 
   Ok(
     tiling
-      .find_previous_tiling()
-      .map(|t| t.notation.to_string()),
+      .find_previous_tiling(Some(&|notation| {
+        callback
+          .call1(&JsValue::NULL, &JsValue::from_str(&notation))
+          .unwrap();
+      }))
+      .map(|t| t.to_string()),
   )
 }
 
@@ -47,18 +56,30 @@ pub fn find_previous_tiling(
 pub fn find_next_tiling(
   notation: &str,
   expansion_phases: u8,
-  validations: &JsValue,
+  callback: &JsValue,
 ) -> Result<Option<String>, JsError> {
-  let validations =
-    serde_wasm_bindgen::from_value::<Vec<validation::Flag>>(validations.to_owned())?;
+  let callback = callback.clone().dyn_into::<Function>().map_err(|e| {
+    JsError::new(&format!(
+      "find_next_tiling callback conversion failed: {:?}",
+      e
+    ))
+  })?;
 
   let mut tiling = Tiling::default()
-    .with_validations(Some(validations))
+    .with_validations(Some(validation::Flag::all()))
     .with_expansion_phases(expansion_phases)
     .with_link_paths(true)
     .with_notation(notation.to_string());
 
-  Ok(tiling.find_next_tiling().map(|t| t.notation.to_string()))
+  Ok(
+    tiling
+      .find_next_tiling(Some(&|notation| {
+        callback
+          .call1(&JsValue::NULL, &JsValue::from_str(&notation))
+          .unwrap();
+      }))
+      .map(|t| t.to_string()),
+  )
 }
 
 #[wasm_bindgen]

@@ -2,6 +2,8 @@ import { WasmApi, WasmApiKey } from './WasmWorker';
 import {
   createRequest,
   handleMessageResponse,
+  handleMessageEvent,
+  isWorkerMessageResponse,
   WasmWorkerMessageResponse,
 } from './state';
 
@@ -61,7 +63,11 @@ for (const key of apiKeys) {
 
 if (worker) {
   worker.onmessage = ({ data }: MessageEvent<WasmWorkerMessageResponse>) => {
-    handleMessageResponse(data);
+    if (isWorkerMessageResponse(data)) {
+      handleMessageResponse(data);
+    } else {
+      handleMessageEvent(data);
+    }
   };
 }
 

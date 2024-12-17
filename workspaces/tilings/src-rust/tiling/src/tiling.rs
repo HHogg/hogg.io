@@ -21,8 +21,7 @@ pub struct Tiling {
   #[typeshare(serialized_as = "String")]
   pub notation: Notation,
   pub plane: build::Plane,
-  #[serde(skip_deserializing)]
-  pub build_context: build::Context,
+  pub result: Option<build::Result>,
   #[typeshare(serialized_as = "String")]
   #[serde_as(as = "DisplayFromStr")]
   #[serde(skip_deserializing)]
@@ -103,16 +102,16 @@ impl Tiling {
   pub fn from_string(mut self, notation: String) -> Self {
     self = self.with_notation(notation);
 
-    if let Err(err) = self.build() {
+    if let Err(err) = self.build(&None) {
       self.error = err;
     }
 
     self
   }
 
-  pub fn find_previous_tiling(&mut self) -> Option<Self> {
-    match self.go_to_previous() {
-      Ok(previous_tiling) => previous_tiling,
+  pub fn find_previous_tiling(&mut self, on_visit: Option<&dyn Fn(String)>) -> Option<Notation> {
+    match self.go_to_previous(&on_visit) {
+      Ok(notation) => notation,
       Err(err) => {
         self.error = err;
         None
@@ -120,9 +119,9 @@ impl Tiling {
     }
   }
 
-  pub fn find_next_tiling(&mut self) -> Option<Self> {
-    match self.go_to_next() {
-      Ok(next_tiling) => next_tiling,
+  pub fn find_next_tiling(&mut self, on_visit: Option<&dyn Fn(String)>) -> Option<Notation> {
+    match self.go_to_next(&on_visit) {
+      Ok(notation) => notation,
       Err(err) => {
         self.error = err;
         None
@@ -130,40 +129,48 @@ impl Tiling {
     }
   }
 
-  fn go_to_previous(&mut self) -> Result<Option<Self>, TilingError> {
+  fn go_to_previous(
+    &mut self,
+    on_visit: &Option<&dyn Fn(String)>,
+  ) -> Result<Option<Notation>, TilingError> {
     loop {
       if self.notation.previous(&self.plane)?.is_none() {
         return Ok(None);
       }
 
-      let build_result = self.build();
+      let build_result = self.build(on_visit);
 
       if build_result.is_ok() {
-        return Ok(Some(self.clone()));
+        return Ok(Some(self.notation.clone()));
       }
     }
   }
 
-  fn go_to_next(&mut self) -> Result<Option<Self>, TilingError> {
+  fn go_to_next(
+    &mut self,
+    on_visit: &Option<&dyn Fn(String)>,
+  ) -> Result<Option<Notation>, TilingError> {
     loop {
       if self.notation.next(&self.plane)?.is_none() {
         return Ok(None);
       }
 
-      let build_result = self.build();
+      let build_result = self.build(on_visit);
 
       if build_result.is_ok() {
-        return Ok(Some(self.clone()));
+        return Ok(Some(self.notation.clone()));
       }
     }
   }
 
-  pub fn build(&mut self) -> Result<(), TilingError> {
+  pub fn build(&mut self, on_visit: &Option<&dyn Fn(String)>) -> Result<(), TilingError> {
     let build_result = self.plane.build(&self.notation);
 
-    self
-      .build_context
-      .add_result(&self.notation, &build_result, &self.plane);
+    self.result = Some(self.into());
+
+    if let Some(on_visit) = on_visit {
+      on_visit(self.notation.to_string());
+    }
 
     build_result
   }

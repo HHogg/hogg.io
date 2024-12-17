@@ -21,6 +21,7 @@ typeshare.workspace = true
 wasm-bindgen.workspace = true
 web-sys = { workspace = true, features = [
   'console',
+  'CanvasGradient',
   'OffscreenCanvas',
   'OffscreenCanvasRenderingContext2d',
 ] }

@@ -4,7 +4,7 @@ mod worker;
 
 use actix::prelude::*;
 
-pub use self::messages::{Visit, VisitResult};
+pub use self::messages::Visit;
 use self::worker::Worker;
 
 pub struct Visitor {

@@ -33,7 +33,7 @@ impl Handler<Insert> for Store {
           session_id,
           path: result.path,
           path_index,
-          build_context: result.build_context,
+          // build_context: result.build_context,
         },
       )
       .await

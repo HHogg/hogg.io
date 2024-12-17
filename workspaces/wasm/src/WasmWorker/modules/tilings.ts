@@ -31,18 +31,26 @@ export function parseTransform(transform: string, path: string): Transform {
 
 export function findPreviousTiling(
   notation: string,
-  expansionPhases: number,
-  validations = defaultValidations
+  expansionPhases: number
 ): string | undefined {
-  return _findPreviousTiling(notation, expansionPhases, validations);
+  return _findPreviousTiling(notation, expansionPhases, (data: string) => {
+    postMessage({
+      key: 'findPreviousTiling',
+      data,
+    });
+  });
 }
 
 export function findNextTiling(
   notation: string,
-  expansionPhases: number,
-  validations = defaultValidations
+  expansionPhases: number
 ): string | undefined {
-  return _findNextTiling(notation, expansionPhases, validations);
+  return _findNextTiling(notation, expansionPhases, (data: string) => {
+    postMessage({
+      key: 'findNextTiling',
+      data,
+    });
+  });
 }
 
 export function generateTiling(

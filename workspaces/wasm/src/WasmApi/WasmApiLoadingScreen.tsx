@@ -7,9 +7,9 @@ export default function WasmApiLoadingScreen({
   children,
   ...props
 }: PropsWithChildren<AppearProps>) {
-  const { loading } = useWasmApi();
+  const { loadings } = useWasmApi();
 
-  if (loading._init) {
+  if (loadings._init) {
     return <Spinner>Wasm loading...</Spinner>;
   }
 

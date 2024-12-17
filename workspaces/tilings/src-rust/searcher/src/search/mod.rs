@@ -69,10 +69,10 @@ impl Handler<issuer::messages::PathResponse> for Client {
   fn handle(
     &mut self,
     msg: issuer::messages::PathResponse,
-    ctx: &mut Self::Context,
+    _ctx: &mut Self::Context,
   ) -> Self::Result {
     self.visitor.try_send(visitor::messages::Visit {
-      sender: ctx.address().recipient(),
+      // sender: ctx.address().recipient(),
       path: msg.path.clone(),
     })?;
 

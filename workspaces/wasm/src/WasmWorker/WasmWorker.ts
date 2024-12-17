@@ -17,7 +17,7 @@ export type WasmApiKey = keyof WasmApi;
 
 init({}).then(() => {
   ready = true;
-  postMessage({ key: '_init', ready });
+  postMessage({ key: '_init', result: ready });
 });
 
 onmessage = async ({ data }: MessageEvent<WasmWorkerMessageRequest>) => {
@@ -51,5 +51,11 @@ onmessage = async ({ data }: MessageEvent<WasmWorkerMessageRequest>) => {
   // @ts-ignore
   const result = fn(...args);
 
-  postMessage({ id, key, result });
+  const response: WasmWorkerMessageResponse = {
+    id,
+    key,
+    result,
+  };
+
+  postMessage(response);
 };

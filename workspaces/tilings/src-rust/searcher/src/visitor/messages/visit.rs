@@ -2,11 +2,11 @@ use actix::prelude::*;
 use anyhow::Result;
 use tiling::notation::Path;
 
-use super::VisitResult;
+// use super::VisitResult;
 use crate::visitor::Visitor;
 
 pub struct Visit {
-  pub sender: Recipient<VisitResult>,
+  // pub sender: Recipient<VisitResult>,
   pub path: Path,
 }
 

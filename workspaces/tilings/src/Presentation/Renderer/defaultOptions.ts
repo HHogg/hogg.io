@@ -14,7 +14,7 @@ export const defaultOptions: Pick<
   autoRotate: true,
   colorMode: ColorMode.Stage,
   colorPalette: ColorPalette.VaporWave,
-  scaleMode: ScaleMode.Cover,
+  scaleMode: ScaleMode.Contain,
   showLayers: {
     [Layer.Axis]: false,
     [Layer.BoundingBoxes]: false,

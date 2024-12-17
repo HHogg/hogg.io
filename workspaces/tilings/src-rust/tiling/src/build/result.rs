@@ -3,6 +3,8 @@ use circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 
+use crate::Tiling;
+
 use super::Metrics;
 
 #[derive(Clone, Debug, Serialize)]
@@ -52,6 +54,10 @@ impl Result {
     self.shape_types = shape_types;
     self
   }
+
+  pub fn create_hash(self) -> Self {
+    self
+  }
 }
 
 impl Default for Result {
@@ -65,5 +71,18 @@ impl Default for Result {
       edge_types: SequenceStore::default(),
       shape_types: SequenceStore::default(),
     }
+  }
+}
+
+impl From<&mut Tiling> for Result {
+  fn from(tiling: &mut Tiling) -> Self {
+    Self::default()
+      .with_notation(tiling.notation.to_string())
+      .with_transform_index(tiling.notation.transforms.index)
+      .with_metrics(tiling.plane.metrics.clone())
+      .with_vertex_types(tiling.plane.get_vertex_types())
+      .with_edge_types(tiling.plane.get_edge_types())
+      .with_shape_types(tiling.plane.get_shape_types())
+      .create_hash()
   }
 }

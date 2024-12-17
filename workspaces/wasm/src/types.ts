@@ -247,11 +247,6 @@ export interface Visit {
 	path: string;
 }
 
-export interface ApplicationError {
-	tiling: string;
-	reason: string;
-}
-
 export interface Event {
 	key: string;
 	counters: Map<string, number>;
@@ -261,22 +256,6 @@ export interface Event {
 export interface Metrics {
 	events: Event[];
 	eventsPending: Record<string, Event>;
-}
-
-export interface Result {
-	notation: string;
-	transformIndex: number;
-	timestamp: string;
-	metrics: Metrics;
-	vertexTypes: string[];
-	edgeTypes: string[];
-	shapeTypes: string[];
-}
-
-export interface Context {
-	applicationErrors: ApplicationError[];
-	countTotalTilings: number;
-	results: Result[];
 }
 
 export interface Point {
@@ -353,6 +332,21 @@ export interface Plane {
 	stages: Stage[];
 }
 
+export interface Result {
+	notation: string;
+	transformIndex: number;
+	timestamp: string;
+	metrics: Metrics;
+	vertexTypes: string[];
+	edgeTypes: string[];
+	shapeTypes: string[];
+}
+
+export interface ApplicationError {
+	tiling: string;
+	reason: string;
+}
+
 export interface Path {
 	option_type_ahead: boolean;
 	nodes: Node[];
@@ -417,7 +411,7 @@ export interface TransformEccentric {
 export interface Tiling {
 	notation: string;
 	plane: Plane;
-	buildContext: Context;
+	result?: Result;
 	error: string;
 }
 

@@ -16,7 +16,7 @@ import Settings from './Settings/Settings';
 import SettingsProvider from './Settings/SettingsProvider';
 import { useSettingsContext } from './Settings/useSettingsContext';
 
-const DEFAULT_NOTATION = '3-4,3-3,3,3/m60/m(c3)';
+const DEFAULT_NOTATION = '3-4,3-3,4-6/r60/r(c5)';
 // const DEFAULT_NOTATION = '3-4,3-3,3,3/r60/r(h3)';
 
 function PresentationInner(props: RendererProps) {
