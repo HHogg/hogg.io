@@ -25,7 +25,7 @@ impl Tree {
       children: vec![],
     };
 
-    for tiling_string in visit.valid_tilings.iter().cloned() {
+    for tiling_string in visit.valid_tilings.iter() {
       tree.insert(
         Tiling::default()
           .from_string(tiling_string)

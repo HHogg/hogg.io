@@ -9,8 +9,8 @@ use serde::{Deserialize, Deserializer, Serialize};
 use serde_with::{serde_as, DisplayFromStr};
 use typeshare::typeshare;
 
-use crate::build::Metrics;
-use crate::notation::{Direction, Notation, Path, Transforms};
+use crate::build::Plane;
+use crate::notation::{Direction, Notation, Path};
 use crate::{build, validation, TilingError};
 
 #[serde_as]
@@ -26,40 +26,30 @@ pub struct Tiling {
   #[serde_as(as = "DisplayFromStr")]
   #[serde(skip_deserializing)]
   pub error: TilingError,
+
+  option_expansion_phases: u8,
+  option_first_transform: bool,
+  option_link_paths: bool,
+  option_type_ahead: bool,
+  option_validations: Option<Vec<validation::Flag>>,
 }
 
 impl Tiling {
   pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
-    self.plane.with_expansion_phases(expansion_phases);
+    self.option_expansion_phases = expansion_phases;
     self
   }
 
   pub fn with_first_transform(mut self) -> Self {
-    self.notation.set_option_with_first_transform(true);
+    self.option_first_transform = true;
     self
   }
 
   /// Sets a flag to control the behaviour of calling
   /// next on a tiling so that when on the last transform
   /// the tiling ticks over to the next path with transforms
-  pub fn with_link_paths(mut self, link_paths: bool) -> Self {
-    self.notation.set_option_link_paths(link_paths);
-    self
-  }
-
-  pub fn with_path(mut self, path: Path) -> Self {
-    if let Err(err) = self
-      .notation
-      .set_path(path, &self.plane, &Direction::FromStart)
-    {
-      self.error = err;
-    }
-
-    self
-  }
-
-  pub fn with_transforms(mut self, transforms: Transforms) -> Self {
-    self.notation.set_transforms(transforms);
+  pub fn with_link_paths(mut self) -> Self {
+    self.option_link_paths = true;
     self
   }
 
@@ -67,8 +57,24 @@ impl Tiling {
   /// with a notation that is not fully valid. This is
   /// useful to silence certain errors that relate
   /// to an incomplete notation
-  pub fn with_type_ahead(mut self, type_ahead: bool) -> Self {
-    self.notation.set_option_type_ahead(type_ahead);
+  pub fn with_type_ahead(mut self) -> Self {
+    self.option_type_ahead = true;
+    self
+  }
+
+  /// Sets the path of the tiling to be built up
+  pub fn with_path(mut self, path: Path) -> Self {
+    let result =
+      self
+        .notation
+        .clone()
+        .with_path(path, Direction::FromStart, self.option_first_transform);
+
+    match result {
+      Ok(notation) => self.notation = notation,
+      Err(err) => self.error = err,
+    }
+
     self
   }
 
@@ -77,12 +83,7 @@ impl Tiling {
   /// used when the notation provided is known to be valid,
   /// and can be used to speed up the process of building.
   pub fn with_validations(mut self, validations: Option<Vec<validation::Flag>>) -> Self {
-    self.plane.with_validations(validations);
-    self
-  }
-
-  pub fn with_metrics(mut self, metrics: Metrics) -> Self {
-    self.plane.with_metrics(metrics);
+    self.option_validations = validations;
     self
   }
 
@@ -91,15 +92,22 @@ impl Tiling {
     self
   }
 
-  pub fn with_notation(mut self, notation: String) -> Self {
-    if let Err(err) = self.notation.from_string(notation.clone(), &self.plane) {
-      self.error = err;
+  pub fn with_notation(mut self, notation: &str) -> Self {
+    let notation = self.notation.clone().from_string(
+      notation,
+      self.option_first_transform,
+      self.option_type_ahead,
+    );
+
+    match notation {
+      Ok(notation) => self.notation = notation,
+      Err(err) => self.error = err,
     }
 
     self
   }
 
-  pub fn from_string(mut self, notation: String) -> Self {
+  pub fn from_string(mut self, notation: &str) -> Self {
     self = self.with_notation(notation);
 
     if let Err(err) = self.build(&None) {
@@ -134,14 +142,17 @@ impl Tiling {
     on_visit: &Option<&dyn Fn(String)>,
   ) -> Result<Option<Notation>, TilingError> {
     loop {
-      if self.notation.previous(&self.plane)?.is_none() {
+      if let Some(previous_notation) = self
+        .notation
+        .previous(self.option_first_transform, self.option_link_paths)?
+      {
+        self.notation = previous_notation;
+
+        if self.build(on_visit).is_ok() {
+          return Ok(Some(self.notation.clone()));
+        }
+      } else {
         return Ok(None);
-      }
-
-      let build_result = self.build(on_visit);
-
-      if build_result.is_ok() {
-        return Ok(Some(self.notation.clone()));
       }
     }
   }
@@ -151,28 +162,42 @@ impl Tiling {
     on_visit: &Option<&dyn Fn(String)>,
   ) -> Result<Option<Notation>, TilingError> {
     loop {
-      if self.notation.next(&self.plane)?.is_none() {
+      if let Some(next_notation) = self
+        .notation
+        .next(self.option_first_transform, self.option_link_paths)?
+      {
+        self.notation = next_notation;
+
+        if self.build(on_visit).is_ok() {
+          return Ok(Some(self.notation.clone()));
+        }
+      } else {
         return Ok(None);
-      }
-
-      let build_result = self.build(on_visit);
-
-      if build_result.is_ok() {
-        return Ok(Some(self.notation.clone()));
       }
     }
   }
 
   pub fn build(&mut self, on_visit: &Option<&dyn Fn(String)>) -> Result<(), TilingError> {
-    let build_result = self.plane.build(&self.notation);
-
-    self.result = Some(self.into());
+    let build_result = Plane::default()
+      .with_expansion_phases(self.option_expansion_phases)
+      .with_validations(self.option_validations.clone())
+      .build(&self.notation);
 
     if let Some(on_visit) = on_visit {
       on_visit(self.notation.to_string());
     }
 
-    build_result
+    match build_result {
+      Ok(plane) => {
+        self.plane = plane;
+        self.result = Some(self.into());
+        Ok(())
+      }
+      Err(err) => {
+        self.error = err.clone();
+        Err(err)
+      }
+    }
   }
 }
 
@@ -207,7 +232,11 @@ impl<'de> Visitor<'de> for TilingDeserializerVisitor {
     let notation = notation.ok_or_else(|| de::Error::missing_field("notation"))?;
     let plane = plane.ok_or_else(|| de::Error::missing_field("plane"))?;
 
-    Ok(Tiling::default().with_notation(notation).with_plane(plane))
+    Ok(
+      Tiling::default()
+        .with_notation(notation.as_str())
+        .with_plane(plane),
+    )
   }
 }
 

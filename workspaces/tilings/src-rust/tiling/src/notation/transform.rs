@@ -118,33 +118,31 @@ impl Transform {
     })
   }
 
-  pub fn previous(&mut self, polygons: &Plane) -> Option<Self> {
+  pub fn previous(&mut self, plane: &Plane) -> Option<Self> {
     match self {
       Self::Continuous(transform) => transform
         .previous_transform()
         .map(|transform| transform.into()),
-      Self::Eccentric(transform) => transform
-        .previous(polygons)
-        .map(|transform| transform.into()),
+      Self::Eccentric(transform) => transform.previous(plane).map(|transform| transform.into()),
     }
   }
 
-  pub fn next(&mut self, polygons: &Plane) -> Option<Self> {
+  pub fn next(&mut self, plane: &Plane) -> Option<Self> {
     match self {
       Self::Continuous(transform) => transform.next_transform().map(|transform| transform.into()),
-      Self::Eccentric(transform) => transform.next(polygons).map(|transform| transform.into()),
+      Self::Eccentric(transform) => transform.next(plane).map(|transform| transform.into()),
     }
   }
 
   pub fn reset(
     &mut self,
-    polygons: &Plane,
+    plane: &Option<&Plane>,
     path: &Path,
     direction: &Direction,
   ) -> Result<Self, TilingError> {
     match self {
       Self::Continuous(_) => Ok(TransformContinuous::first(path, direction)?.into()),
-      Self::Eccentric(_) => Ok(TransformEccentric::first(polygons, direction).into()),
+      Self::Eccentric(_) => Ok(TransformEccentric::first(plane, direction).into()),
     }
   }
 }

@@ -10,7 +10,7 @@ use web_sys::OffscreenCanvas;
 #[wasm_bindgen]
 pub fn parse_notation(notation: &str) -> Result<JsValue, JsError> {
   Ok(serde_wasm_bindgen::to_value(
-    &Tiling::default().from_string(notation.into()),
+    &Tiling::default().from_string(notation),
   )?)
 }
 
@@ -18,7 +18,7 @@ pub fn parse_notation(notation: &str) -> Result<JsValue, JsError> {
 pub fn parse_transform(transform: &str, path: &str) -> Result<JsValue, JsError> {
   Ok(serde_wasm_bindgen::to_value(&Transform::from_string(
     transform,
-    &Path::default().from_string(path)?,
+    &Path::default().from_string(path, false)?,
   )?)?)
 }
 
@@ -36,10 +36,11 @@ pub fn find_previous_tiling(
   })?;
 
   let mut tiling = Tiling::default()
-    .with_validations(Some(validation::Flag::all()))
     .with_expansion_phases(expansion_phases)
-    .with_link_paths(true)
-    .with_notation(notation.to_string());
+    .with_first_transform()
+    .with_link_paths()
+    .with_validations(Some(validation::Flag::all()))
+    .with_notation(notation);
 
   Ok(
     tiling
@@ -66,10 +67,11 @@ pub fn find_next_tiling(
   })?;
 
   let mut tiling = Tiling::default()
-    .with_validations(Some(validation::Flag::all()))
     .with_expansion_phases(expansion_phases)
-    .with_link_paths(true)
-    .with_notation(notation.to_string());
+    .with_first_transform()
+    .with_link_paths()
+    .with_validations(Some(validation::Flag::all()))
+    .with_notation(notation);
 
   Ok(
     tiling
@@ -93,9 +95,9 @@ pub fn generate_tiling(
 
   let tiling = Tiling::default()
     .with_validations(Some(validations))
-    .with_type_ahead(true)
+    .with_type_ahead()
     .with_expansion_phases(expansion_phases)
-    .from_string(notation.to_string());
+    .from_string(notation);
 
   Ok(serde_wasm_bindgen::to_value(&tiling)?)
 }

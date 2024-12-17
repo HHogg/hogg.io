@@ -16,23 +16,13 @@ use crate::{Tiling, TilingError};
 #[serde(into = "String", from = "String")]
 #[typeshare]
 pub struct Path {
-  pub option_type_ahead: bool,
   pub nodes: Vec<Node>,
 }
 
 impl Path {
-  /// Sets a flag that allows the tiling to be built up
-  /// with a notation that is not fully valid. This is
-  /// useful to silence certain errors that relate
-  /// to an incomplete notation
-  pub fn with_type_ahead(mut self, type_ahead: bool) -> Self {
-    self.option_type_ahead = type_ahead;
-    self
-  }
-
-  pub fn from_string(mut self, string: &str) -> Result<Self, TilingError> {
+  pub fn from_string(mut self, string: &str, with_type_ahead: bool) -> Result<Self, TilingError> {
     if string.is_empty() {
-      if self.option_type_ahead {
+      if with_type_ahead {
         return Ok(self);
       }
 
@@ -45,7 +35,7 @@ impl Path {
     for (group_index, group_string) in string.split('-').enumerate() {
       match group_index {
         0 => self.parse_seed_shape_group(group_string)?,
-        _ => self.parse_shape_group(group_string)?,
+        _ => self.parse_shape_group(group_string, with_type_ahead)?,
       }
     }
 
@@ -57,13 +47,13 @@ impl Path {
     Ok(())
   }
 
-  fn parse_shape_group(&mut self, group: &str) -> Result<(), TilingError> {
+  fn parse_shape_group(&mut self, group: &str, with_type_ahead: bool) -> Result<(), TilingError> {
     let shapes: Vec<_> = group.split(',').collect();
 
     self.nodes.push(Separator::Group.into());
 
     for (shape_index, shape) in shapes.iter().enumerate() {
-      if shape_index == shapes.len() - 1 && shape.is_empty() && self.option_type_ahead {
+      if shape_index == shapes.len() - 1 && shape.is_empty() && with_type_ahead {
         return Ok(());
       }
 
@@ -125,55 +115,59 @@ impl Path {
     })
   }
 
-  pub fn previous_path(&mut self) -> Option<Self> {
+  pub fn previous_path(&self) -> Option<Self> {
+    let mut cloned = self.clone();
+
     'previous: loop {
-      if self.nodes == vec![Seed::default().into()] {
+      if cloned.nodes == vec![Seed::default().into()] {
         return None;
       }
 
-      for (node_index, node) in self.nodes.iter().enumerate().rev() {
+      for (node_index, node) in cloned.nodes.iter().enumerate().rev() {
         if let Some(previous_node) = node.previous() {
-          self.replace_node(node_index, previous_node, Direction::FromEnd);
+          cloned.replace_node(node_index, previous_node, Direction::FromEnd);
 
-          if self.is_valid().is_ok() {
-            return Some(self.clone());
+          if cloned.is_valid().is_ok() {
+            return Some(cloned);
           }
 
           continue 'previous;
         }
       }
 
-      self.remove_layer(Direction::FromEnd);
+      cloned.remove_layer(Direction::FromEnd);
 
-      if self.is_valid().is_ok() {
-        return Some(self.clone());
+      if cloned.is_valid().is_ok() {
+        return Some(cloned);
       }
     }
   }
 
-  pub fn next_path(&mut self) -> Self {
+  pub fn next_path(&self) -> Self {
+    let mut cloned = self.clone();
+
     'next: loop {
-      if self.nodes.is_empty() {
-        self.nodes = vec![Seed::default().into()];
-        return self.clone();
+      if cloned.nodes.is_empty() {
+        cloned.nodes = vec![Seed::default().into()];
+        return cloned;
       }
 
-      for (node_index, node) in self.nodes.iter().enumerate().rev() {
+      for (node_index, node) in cloned.nodes.iter().enumerate().rev() {
         if let Some(next_node) = node.next() {
-          self.replace_node(node_index, next_node, Direction::FromStart);
+          cloned.replace_node(node_index, next_node, Direction::FromStart);
 
-          if self.is_valid().is_ok() {
-            return self.clone();
+          if cloned.is_valid().is_ok() {
+            return cloned;
           }
 
           continue 'next;
         }
       }
 
-      self.insert_layer(Direction::FromStart);
+      cloned.insert_layer(Direction::FromStart);
 
-      if self.is_valid().is_ok() {
-        return self.clone();
+      if cloned.is_valid().is_ok() {
+        return cloned;
       }
     }
   }
@@ -298,7 +292,6 @@ impl From<Shape> for Path {
   fn from(shape: Shape) -> Self {
     Self {
       nodes: vec![Seed::default().with_shape(shape).into()],
-      ..Self::default()
     }
   }
 }
@@ -322,7 +315,7 @@ impl FromStr for Path {
   type Err = TilingError;
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
-    Path::default().from_string(s)
+    Path::default().from_string(s, false)
   }
 }
 

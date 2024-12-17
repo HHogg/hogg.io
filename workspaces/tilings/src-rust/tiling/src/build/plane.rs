@@ -1,3 +1,7 @@
+#[path = "./plane_tests.rs"]
+#[cfg(test)]
+mod tests;
+
 use std::collections::BTreeSet;
 use std::f64::consts::PI;
 
@@ -18,7 +22,7 @@ use crate::notation::{
 use crate::validation::{self, Validator};
 use crate::TilingError;
 
-#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Plane {
@@ -46,39 +50,39 @@ pub struct Plane {
   #[serde(skip)]
   pub stage_added_polygon: bool,
   #[serde(skip)]
-  pub stage_started_transforms: bool,
-  #[serde(skip)]
   pub validator: Validator,
   #[serde(skip)]
   pub vertex_types: VertexTypes,
 }
 
 impl Plane {
-  pub fn with_expansion_phases(&mut self, expansion_phases: u8) {
+  pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
     self.expansion_phases = expansion_phases;
+    self
   }
 
-  pub fn with_validations(&mut self, validations: Option<Vec<validation::Flag>>) {
+  pub fn with_validations(mut self, validations: Option<Vec<validation::Flag>>) -> Self {
     self.validator = validations.into();
+    self
   }
 
-  pub fn with_metrics(&mut self, metrics: Metrics) {
-    self.metrics = metrics;
-  }
+  // pub fn reset(&mut self) {
+  //   self.convex_hull = ConvexHull::default();
+  //   self.line_segments = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
+  //   self.line_segments_by_shape_group = Vec::new();
+  //   self.points_center = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
+  //   self.points_end = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
+  //   self.points_mid = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
+  //   self.polygons = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
+  //   self.polygons_placement = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
+  //   self.polygons_to_transform = Vec::new();
+  //   self.seed_polygon = None;
+  //   self.stage_added_polygon = false;
+  //   self.stages = Vec::new();
+  // }
 
-  pub fn reset(&mut self) {
-    self.convex_hull = ConvexHull::default();
-    self.line_segments = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
-    self.line_segments_by_shape_group = Vec::new();
-    self.points_center = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
-    self.points_end = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
-    self.points_mid = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
-    self.polygons = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
-    self.polygons_placement = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
-    self.polygons_to_transform = Vec::new();
-    self.seed_polygon = None;
-    self.stage_added_polygon = false;
-    self.stages = Vec::new();
+  pub fn is_empty(&self) -> bool {
+    self.polygons.is_empty()
   }
 
   pub fn iter_polygons(&self) -> impl Iterator<Item = &Polygon> {
@@ -99,8 +103,7 @@ impl Plane {
       .chain(points_mid_iter)
   }
 
-  pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
-    self.reset();
+  pub fn build(mut self, notation: &Notation) -> Result<Self, TilingError> {
     self.apply_path(&notation.path)?;
 
     if !notation.transforms.list.is_empty() {
@@ -124,7 +127,7 @@ impl Plane {
         ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values());
     }
 
-    Ok(())
+    Ok(self)
   }
 
   pub fn apply_path(&mut self, path: &Path) -> Result<(), TilingError> {
@@ -744,6 +747,30 @@ impl Plane {
     let result = self.validator.validate_vertex_types(self);
     self.metrics.finish(validation::Flag::VertexTypes.into());
     result.map_err(|error| error.into())
+  }
+}
+
+impl Default for Plane {
+  fn default() -> Self {
+    Self {
+      convex_hull: ConvexHull::default(),
+      expansion_phases: 0,
+      metrics: Metrics::default(),
+      validator: Validator::default(),
+      vertex_types: VertexTypes::default(),
+
+      line_segments: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
+      line_segments_by_shape_group: Vec::new(),
+      points_center: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
+      points_end: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
+      points_mid: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
+      polygons: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
+      polygons_placement: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
+      polygons_to_transform: Vec::new(),
+      seed_polygon: None,
+      stage_added_polygon: false,
+      stages: Vec::new(),
+    }
   }
 }
 

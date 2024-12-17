@@ -348,7 +348,6 @@ export interface ApplicationError {
 }
 
 export interface Path {
-	option_type_ahead: boolean;
 	nodes: Node[];
 }
 
@@ -357,16 +356,13 @@ export type Transform =
 	| { type: "eccentric", content: TransformEccentric };
 
 export interface Transforms {
-	path: Path;
 	index: number;
 	list: Transform[];
 }
 
 export interface Notation {
-	option_link_paths: boolean;
-	option_type_ahead: boolean;
-	option_with_first_transform: boolean;
 	path: Path;
+	path_plane: Plane;
 	transforms: Transforms;
 }
 
@@ -408,11 +404,23 @@ export interface TransformEccentric {
 	originIndex: OriginIndex;
 }
 
+export enum Flag {
+	Overlaps = "Overlaps",
+	Gaps = "Gaps",
+	Expanded = "Expanded",
+	VertexTypes = "VertexTypes",
+}
+
 export interface Tiling {
 	notation: string;
 	plane: Plane;
 	result?: Result;
 	error: string;
+	optionExpansionPhases: number;
+	optionFirstTransform: boolean;
+	optionLinkPaths: boolean;
+	optionTypeAhead: boolean;
+	optionValidations?: Flag[];
 }
 
 export enum Separator {
@@ -431,11 +439,4 @@ export type ValidationError =
 	| { type: "VertexType", content: {
 	sequence: string;
 }};
-
-export enum Flag {
-	Overlaps = "Overlaps",
-	Gaps = "Gaps",
-	Expanded = "Expanded",
-	VertexTypes = "VertexTypes",
-}
 

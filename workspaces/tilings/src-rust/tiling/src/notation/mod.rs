@@ -39,44 +39,37 @@ use crate::TilingError;
 #[serde(into = "String")]
 #[typeshare]
 pub struct Notation {
-  pub option_link_paths: bool,
-  pub option_type_ahead: bool,
-  pub option_with_first_transform: bool,
   pub path: Path,
+  pub path_plane: Plane,
   pub transforms: Transforms,
 }
 
 impl Notation {
-  pub fn set_option_link_paths(&mut self, option_link_paths: bool) {
-    self.option_link_paths = option_link_paths;
-  }
-
-  pub fn set_option_type_ahead(&mut self, option_type_ahead: bool) {
-    self.option_type_ahead = option_type_ahead;
-  }
-
-  pub fn set_option_with_first_transform(&mut self, option_with_first_transform: bool) {
-    self.option_with_first_transform = option_with_first_transform;
-  }
-
-  pub fn set_path(
-    &mut self,
+  pub fn with_path(
+    mut self,
     path: Path,
-    plane: &Plane,
-    direction: &Direction,
-  ) -> Result<(), TilingError> {
-    self.path = path.clone();
-    self.transforms = if self.transforms.list.is_empty() {
-      Transforms::default().with_path(self.path.clone())
-    } else {
-      Transforms::first(path.clone(), plane, direction)?
-    };
+    direction: Direction,
+    with_first_transform: bool,
+  ) -> Result<Self, TilingError> {
+    self.path = path;
 
-    Ok(())
+    self.path_plane = Plane::default().build(&Notation {
+      path: self.path.clone(),
+      ..Self::default()
+    })?;
+
+    if with_first_transform {
+      self.transforms = Transforms::first(&self.path, &Some(&self.path_plane), &direction)?;
+    } else {
+      self.transforms = Transforms::default();
+    }
+
+    Ok(self)
   }
 
-  pub fn set_transforms(&mut self, transforms: Transforms) {
+  pub fn with_transforms(mut self, transforms: Transforms) -> Self {
     self.transforms = transforms;
+    self
   }
 
   pub fn get_seed_shape(&self) -> Option<Shape> {
@@ -95,13 +88,18 @@ impl Notation {
     self.transforms.list.get(index)
   }
 
-  pub fn from_string(&mut self, notation: String, plane: &Plane) -> Result<(), TilingError> {
+  pub fn from_string(
+    &mut self,
+    notation: &str,
+    with_first_transform: bool,
+    with_type_ahead: bool,
+  ) -> Result<Self, TilingError> {
     let mut sections = notation.split('/');
     let path_string = sections.next().unwrap();
 
     if path_string.is_empty() {
-      if self.option_type_ahead {
-        return Ok(());
+      if with_type_ahead {
+        return Ok(Self::default());
       }
 
       return Err(TilingError::InvalidNotation {
@@ -112,16 +110,12 @@ impl Notation {
 
     // Parse the first part of the notation into
     // a path, and then add it to the tiling.
-    let path = Path::default()
-      .with_type_ahead(self.option_type_ahead)
-      .from_string(path_string)?;
-
-    self.set_path(path.clone(), plane, &Direction::FromStart)?;
+    let path = Path::default().from_string(path_string, with_type_ahead)?;
 
     // Keep parsing transform sections, building up
     // a list of transforms, and then add them to the
     // tiling.
-    let mut transforms = Transforms::default().with_path(path);
+    let mut transforms = Transforms::default();
 
     for transform_string in sections {
       if transform_string.is_empty() {
@@ -131,58 +125,79 @@ impl Notation {
         });
       }
 
-      transforms.push_string(transform_string)?;
+      transforms.push_string(&path, transform_string)?;
     }
 
-    self.set_transforms(transforms);
-
-    Ok(())
+    Ok(
+      self
+        .clone()
+        .with_path(path, Direction::FromStart, with_first_transform)?
+        .with_transforms(transforms),
+    )
   }
 
-  pub fn next(&mut self, plane: &Plane) -> Result<Option<()>, TilingError> {
-    if !self.transforms.list.is_empty() || self.option_with_first_transform {
-      if self.path.is_empty() {
-        let next_path = self.path.next_path();
-        self.set_path(next_path, plane, &Direction::FromStart)?;
+  pub fn next(
+    &self,
+    with_first_transform: bool,
+    with_link_paths: bool,
+  ) -> Result<Option<Self>, TilingError> {
+    if self.path.is_empty() {
+      return self
+        .clone()
+        .with_path(
+          Path::default().next_path(),
+          Direction::FromStart,
+          with_first_transform,
+        )
+        .map(Some);
+    }
+
+    if !self.transforms.list.is_empty() || with_first_transform {
+      if let Some(next_transforms) = self.transforms.next(&self.path_plane, &self.path)? {
+        return Ok(Some(self.clone().with_transforms(next_transforms)));
       }
 
-      if let Some(next_transforms) = self.transforms.next(plane, &self.path)? {
-        self.set_transforms(next_transforms);
-        return Ok(Some(()));
-      }
-
-      if !self.option_link_paths {
+      if !with_link_paths {
         return Ok(None);
       }
     }
 
-    let next_path = self.path.next_path();
-    self.set_path(next_path, plane, &Direction::FromStart)?;
-
-    Ok(Some(()))
+    self
+      .clone()
+      .with_path(
+        self.path.next_path(),
+        Direction::FromStart,
+        with_first_transform,
+      )
+      .map(Some)
   }
 
-  pub fn previous(&mut self, plane: &Plane) -> Result<Option<()>, TilingError> {
-    if !self.transforms.list.is_empty() || self.option_with_first_transform {
+  pub fn previous(
+    &self,
+    with_first_transform: bool,
+    with_link_paths: bool,
+  ) -> Result<Option<Self>, TilingError> {
+    if !self.transforms.list.is_empty() || with_first_transform {
       if self.path.is_empty() {
         return Err(TilingError::Application {
           reason: "cannot call previous on a tiling without a path".into(),
         });
       }
 
-      if let Some(previous_transforms) = self.transforms.previous(plane, &self.path)? {
-        self.set_transforms(previous_transforms);
-        return Ok(Some(()));
+      if let Some(previous_transforms) = self.transforms.previous(&self.path_plane, &self.path)? {
+        return Ok(Some(self.clone().with_transforms(previous_transforms)));
       }
 
-      if !self.option_link_paths {
+      if !with_link_paths {
         return Ok(None);
       }
     }
 
     if let Some(previous_path) = self.path.previous_path() {
-      self.set_path(previous_path, plane, &Direction::FromEnd)?;
-      return Ok(Some(()));
+      return self
+        .clone()
+        .with_path(previous_path, Direction::FromEnd, with_first_transform)
+        .map(Some);
     }
 
     Ok(None)

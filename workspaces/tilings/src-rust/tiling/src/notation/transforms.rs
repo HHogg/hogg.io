@@ -15,84 +15,88 @@ use crate::TilingError;
 #[serde(into = "String", from = "String")]
 #[typeshare]
 pub struct Transforms {
-  pub path: Path,
   pub index: i32,
   pub list: Vec<Transform>,
 }
 
 impl Transforms {
-  pub fn first(path: Path, polygons: &Plane, direction: &Direction) -> Result<Self, TilingError> {
+  pub fn first(
+    path: &Path,
+    plane: &Option<&Plane>,
+    direction: &Direction,
+  ) -> Result<Self, TilingError> {
     Ok(Self {
-      path: path.clone(),
       index: 0,
       list: vec![
-        TransformContinuous::first(&path, direction)?.into(),
-        TransformEccentric::first(polygons, direction).into(),
+        TransformContinuous::first(path, direction)?.into(),
+        TransformEccentric::first(plane, direction).into(),
       ],
     })
   }
 
-  pub fn with_path(mut self, path: Path) -> Self {
-    self.path = path;
-    self.list = vec![];
-    self
-  }
-
-  pub fn from_string(mut self, string: &str) -> Result<Self, TilingError> {
+  pub fn from_string(mut self, path: &Path, string: &str) -> Result<Self, TilingError> {
     string
       .split(Separator::Transform.to_string().as_str())
-      .try_for_each(|s| self.push_string(s))?;
+      .try_for_each(|s| self.push_string(path, s))?;
 
     Ok(self)
   }
 
-  pub fn push_string(&mut self, string: &str) -> Result<(), TilingError> {
-    self.list.push(Transform::from_string(string, &self.path)?);
+  pub fn push_string(&mut self, path: &Path, string: &str) -> Result<(), TilingError> {
+    self.list.push(Transform::from_string(string, path)?);
     Ok(())
   }
 
-  pub fn previous(&mut self, polygons: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
+  pub fn previous(&self, plane: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
     if self.list.is_empty() {
-      return Ok(Some(Self::first(
-        path.clone(),
-        polygons,
-        &Direction::FromEnd,
-      )?));
+      return Ok(Some(Self::first(path, &Some(plane), &Direction::FromEnd)?));
     }
 
     for (transform_index, transform) in self.list.iter().enumerate().rev() {
-      if let Some(previous) = transform.clone().previous(polygons) {
-        self.replace_transform(
+      if let Some(previous) = transform.clone().previous(plane) {
+        let mut cloned = self.clone();
+
+        cloned.replace_transform(
           transform_index,
           previous,
-          polygons,
+          &Some(plane),
           path,
           &Direction::FromEnd,
         )?;
 
-        self.index -= 1;
+        cloned.index -= 1;
 
-        return Ok(Some(self.clone()));
+        return Ok(Some(cloned));
       }
     }
 
     Ok(None)
   }
 
-  pub fn next(&mut self, polygons: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
+  pub fn next(&self, plane: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
     if self.list.is_empty() {
       return Ok(Some(Self::first(
-        path.clone(),
-        polygons,
+        path,
+        &Some(plane),
         &Direction::FromStart,
       )?));
     }
 
     for (transform_index, transform) in self.list.iter().enumerate().rev() {
-      if let Some(next) = transform.clone().next(polygons) {
-        self.replace_transform(transform_index, next, polygons, path, &Direction::FromStart)?;
-        self.index += 1;
-        return Ok(Some(self.clone()));
+      if let Some(next) = transform.clone().next(plane) {
+        let mut cloned = self.clone();
+
+        cloned.replace_transform(
+          transform_index,
+          next,
+          &Some(plane),
+          path,
+          &Direction::FromStart,
+        )?;
+
+        cloned.index += 1;
+
+        return Ok(Some(cloned));
       }
     }
 
@@ -103,23 +107,23 @@ impl Transforms {
     &mut self,
     transform_index: usize,
     transform: Transform,
-    polygons: &Plane,
+    plane: &Option<&Plane>,
     path: &Path,
     direction: &Direction,
   ) -> Result<(), TilingError> {
     self.list[transform_index] = transform.clone();
-    self.reset_from(transform_index + 1, polygons, path, direction)
+    self.reset_from(transform_index + 1, plane, path, direction)
   }
 
   fn reset_from(
     &mut self,
     transform_index: usize,
-    polygons: &Plane,
+    plane: &Option<&Plane>,
     path: &Path,
     direction: &Direction,
   ) -> Result<(), TilingError> {
     for transform in self.list.iter_mut().skip(transform_index) {
-      *transform = transform.clone().reset(polygons, path, direction)?;
+      *transform = transform.clone().reset(plane, path, direction)?;
     }
 
     Ok(())
@@ -143,7 +147,9 @@ impl Display for Transforms {
 
 impl From<String> for Transforms {
   fn from(value: String) -> Self {
-    Self::default().from_string(value.as_str()).unwrap()
+    Self::default()
+      .from_string(&Path::default(), value.as_str())
+      .unwrap()
   }
 }
 

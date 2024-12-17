@@ -100,15 +100,15 @@ export function addEventListener(
   key: string,
   listener: WasmWorkerEventListener
 ): () => void {
-  const id = v4();
-
   if (!eventListeners[key]) {
     eventListeners[key] = [];
   }
 
   eventListeners[key].push(listener);
 
-  return () => delete eventListeners[id];
+  return () => {
+    eventListeners[key] = eventListeners[key].filter((l) => l !== listener);
+  };
 }
 
 export function createRequest(

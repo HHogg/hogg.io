@@ -16,63 +16,73 @@ pub struct TransformEccentric {
 }
 
 impl TransformEccentric {
-  pub fn first(polygons: &Plane, direction: &Direction) -> Self {
+  pub fn first(plane: &Option<&Plane>, direction: &Direction) -> Self {
     let mut transform = Self::default();
     transform.operation = Operation::first(direction);
     transform.origin_type = OriginType::first(direction);
-    transform.origin_index = OriginIndex::first(polygons, &transform.origin_type, direction);
+    transform.origin_index = OriginIndex::first(plane, &transform.origin_type, direction);
     transform
   }
 
-  pub fn previous(&mut self, polygons: &Plane) -> Option<Self> {
+  pub fn previous(&self, plane: &Plane) -> Option<Self> {
     if let Some(previous_origin_index) = self.origin_index.previous_index() {
-      if polygons
-        .get_point_by_index_and_type(&self.origin_type, &previous_origin_index)
-        .is_some()
-      {
-        self.origin_index = previous_origin_index;
-        return Some(self.clone());
-      }
+      return Some(Self {
+        operation: self.operation,
+        origin_type: self.origin_type,
+        origin_index: previous_origin_index,
+      });
     }
 
     if let Some(previous_origin_type) = self.origin_type.previous() {
-      self.origin_type = previous_origin_type;
-      self.origin_index = polygons.get_point_count_by_type(&self.origin_type).into();
-      return Some(self.clone());
+      return Some(Self {
+        operation: self.operation,
+        origin_type: previous_origin_type,
+        origin_index: OriginIndex::first(&Some(plane), &previous_origin_type, &Direction::FromEnd),
+      });
     }
 
     if let Some(previous_operation) = self.operation.previous() {
-      self.operation = previous_operation;
-      self.origin_type = OriginType::first(&Direction::FromEnd);
-      self.origin_index = polygons.get_point_count_by_type(&self.origin_type).into();
-      return Some(self.clone());
+      return Some(Self {
+        operation: previous_operation,
+        origin_type: OriginType::first(&Direction::FromEnd),
+        origin_index: OriginIndex::first(
+          &Some(plane),
+          &OriginType::first(&Direction::FromEnd),
+          &Direction::FromEnd,
+        ),
+      });
     }
 
     None
   }
 
-  pub fn next(&mut self, polygons: &Plane) -> Option<Self> {
-    let next_origin_index = self.origin_index.next_index();
-
-    if polygons
-      .get_point_by_index_and_type(&self.origin_type, &next_origin_index)
-      .is_some()
-    {
-      self.origin_index = next_origin_index;
-      return Some(self.clone());
+  pub fn next(&self, plane: &Plane) -> Option<Self> {
+    if let Some(next_origin_index) = self.origin_index.next_index(plane, &self.origin_type) {
+      return Some(Self {
+        operation: self.operation,
+        origin_type: self.origin_type,
+        origin_index: next_origin_index,
+      });
     }
 
     if let Some(next_origin_type) = self.origin_type.next() {
-      self.origin_type = next_origin_type;
-      self.origin_index = OriginIndex::first(polygons, &self.origin_type, &Direction::FromStart);
-      return Some(self.clone());
+      return Some(Self {
+        operation: self.operation,
+        origin_type: next_origin_type,
+        origin_index: OriginIndex::first(&Some(plane), &next_origin_type, &Direction::FromStart),
+      });
     }
 
     if let Some(next_operation) = self.operation.next() {
-      self.operation = next_operation;
-      self.origin_type = OriginType::first(&Direction::FromStart);
-      self.origin_index = OriginIndex::first(polygons, &self.origin_type, &Direction::FromStart);
-      return Some(self.clone());
+      return Some(Self {
+        operation: next_operation,
+        origin_type: OriginType::first(&Direction::FromStart),
+        origin_index: OriginIndex::first(
+          &Some(plane),
+          &OriginType::first(&Direction::FromStart),
+          &Direction::FromStart,
+        ),
+      });
     }
 
     None

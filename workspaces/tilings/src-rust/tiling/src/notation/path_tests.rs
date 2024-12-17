@@ -4,32 +4,32 @@ use super::*;
 
 #[test]
 fn empty_path() {
-  assert_debug_snapshot!(Path::default().from_string(""));
+  assert_debug_snapshot!(Path::default().from_string("", false));
 }
 
 #[test]
 fn empty_path_with_type_ahead() {
-  assert_debug_snapshot!(Path::default().with_type_ahead(true).from_string(""));
+  assert_debug_snapshot!(Path::default().from_string("", true));
 }
 
 #[test]
 fn empty_shape_group() {
-  assert_debug_snapshot!(Path::default().from_string("3-4,"));
+  assert_debug_snapshot!(Path::default().from_string("3-4,", false));
 }
 
 #[test]
 fn empty_shape_group_with_type_ahead() {
-  assert_debug_snapshot!(Path::default().with_type_ahead(true).from_string("3-"));
+  assert_debug_snapshot!(Path::default().from_string("3-", true));
 }
 
 #[test]
 fn invalid_seed_shape_group() {
-  assert_debug_snapshot!(Path::default().from_string("2"));
+  assert_debug_snapshot!(Path::default().from_string("2", false));
 }
 
 #[test]
 fn invalid_shape_group() {
-  assert_debug_snapshot!(Path::default().from_string("3-2"));
+  assert_debug_snapshot!(Path::default().from_string("3-2", false));
 }
 
 // #[test]
