@@ -4,7 +4,7 @@ use super::*;
 use crate::notation::{Notation, Shape};
 
 #[test]
-fn from_paths() {
+fn first_from_start() {
   let shapes = [
     Shape::Triangle,
     Shape::Square,
@@ -13,17 +13,21 @@ fn from_paths() {
     Shape::Dodecagon,
   ];
 
-  // assert_debug_snapshot!(shapes
-  //   .iter()
-  //   .map(|shape| {
-  //     let notation: Notation = Path::from(*shape).into();
-  //     let plane: Plane = notation.into();
+  assert_debug_snapshot!(shapes
+    .iter()
+    .map(|shape| {
+      let transforms = Notation::default()
+        .with_path((*shape).into(), Direction::FromStart, true)
+        .and_then(|notation| {
+          Transforms::first(
+            &notation.path,
+            &Some(&notation.path_plane),
+            &Direction::FromStart,
+          )
+        })
+        .map(|transforms| transforms.to_string());
 
-  //     (
-  //       *shape,
-  //       Transforms::first(Path::from(*shape), &Plane::default(), &Direction::FromStart)
-  //         .map(|transforms| transforms.to_string()),
-  //     )
-  //   })
-  //   .collect::<Vec<(Shape, Result<String, TilingError>)>>());
+      (*shape, transforms)
+    })
+    .collect::<Vec<(Shape, Result<String, TilingError>)>>());
 }

@@ -38,7 +38,7 @@ pub struct Visit {
 impl<'r> FromRow<'r, PgRow> for Visit {
   fn from_row(row: &'r PgRow) -> Result<Self, sqlx::Error> {
     let path = Path::default()
-      .from_string(row.try_get("path")?)
+      .from_string(row.try_get("path")?, false)
       .map_err(|e| sqlx::Error::ColumnDecode {
         index: "path".into(),
         source: e.into(),

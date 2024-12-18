@@ -96,8 +96,6 @@ impl Validator {
 
   /// Time: O(n)
   /// Space: O(n)
-  ///
-  /// TODO: Do gaps only appear on elements before transforms?
   pub fn validate_gaps(&self, plane: &Plane) -> Result<(), Error> {
     if !self.option_validate_gaps {
       return Ok(());

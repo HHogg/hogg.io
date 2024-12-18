@@ -79,7 +79,7 @@ impl Actor for Issuer {
         let mut leases = leases.lock().await;
 
         for path_string in INITIAL_BUFFER {
-          let path = Path::default().from_string(path_string).unwrap();
+          let path = Path::default().from_string(path_string, false).unwrap();
 
           state.path_index += 1;
           leases.insert(path.clone(), state.path_index);

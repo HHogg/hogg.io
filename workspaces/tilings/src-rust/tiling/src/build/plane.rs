@@ -66,21 +66,6 @@ impl Plane {
     self
   }
 
-  // pub fn reset(&mut self) {
-  //   self.convex_hull = ConvexHull::default();
-  //   self.line_segments = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
-  //   self.line_segments_by_shape_group = Vec::new();
-  //   self.points_center = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
-  //   self.points_end = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
-  //   self.points_mid = SpatialGridMap::default().with_resize_method(ResizeMethod::First);
-  //   self.polygons = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
-  //   self.polygons_placement = SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum);
-  //   self.polygons_to_transform = Vec::new();
-  //   self.seed_polygon = None;
-  //   self.stage_added_polygon = false;
-  //   self.stages = Vec::new();
-  // }
-
   pub fn is_empty(&self) -> bool {
     self.polygons.is_empty()
   }
@@ -91,16 +76,6 @@ impl Plane {
 
   pub fn iter_polygons_placement(&self) -> impl Iterator<Item = &Polygon> {
     self.polygons_placement.iter_values()
-  }
-
-  pub fn iter_points_placement(&self) -> impl Iterator<Item = &(f64, f64)> {
-    let points_center_iter = self.points_center.iter_points();
-    let points_end_iter = self.points_end.iter_points();
-    let points_mid_iter = self.points_mid.iter_points();
-
-    points_center_iter
-      .chain(points_end_iter)
-      .chain(points_mid_iter)
   }
 
   pub fn build(mut self, notation: &Notation) -> Result<Self, TilingError> {
@@ -596,18 +571,23 @@ impl Plane {
       let p2 = Point::at((value - PI * 0.5).cos(), (value - PI * 0.5).sin());
       let line_segment = LineSegment::default().with_start(p1).with_end(p2);
 
-      self
-        .to_owned()
-        .polygons_to_transform
-        .iter()
-        .map(|polygon| {
-          polygon
-            .clone()
-            .with_phase(Phase::Transform(index))
-            .with_stage_index(stage_index)
-            .reflect(&line_segment)
-        })
-        .try_for_each(|polygon| self.add_polygon(Stage::Transform(index), polygon))?;
+      for i in 0..self.polygons_to_transform.len() {
+        let polygon = self
+          .polygons_to_transform
+          .get(i)
+          .ok_or(TilingError::InvalidTransform {
+            transform: "reflect".into(),
+            reason: "polygon not found".into(),
+          })?;
+
+        let next_polygon = polygon
+          .clone()
+          .with_phase(Phase::Transform(index))
+          .with_stage_index(stage_index)
+          .reflect(&line_segment);
+
+        self.add_polygon(Stage::Transform(index), next_polygon)?;
+      }
 
       self.complete_stage(Stage::Transform(index));
     }
@@ -625,18 +605,23 @@ impl Plane {
     for value in transform_value.get_transform_values() {
       let stage_index = self.stages.len() as u16;
 
-      self
-        .polygons_to_transform
-        .to_owned()
-        .iter()
-        .map(|polygon| {
-          polygon
-            .clone()
-            .with_phase(Phase::Transform(index))
-            .with_stage_index(stage_index)
-            .rotate(value, None)
-        })
-        .try_for_each(|polygon| self.add_polygon(Stage::Transform(index), polygon))?;
+      for i in 0..self.polygons_to_transform.len() {
+        let polygon = self
+          .polygons_to_transform
+          .get(i)
+          .ok_or(TilingError::InvalidTransform {
+            transform: "rotate".into(),
+            reason: "polygon not found".into(),
+          })?;
+
+        let next_polygon = polygon
+          .clone()
+          .with_phase(Phase::Transform(index))
+          .with_stage_index(stage_index)
+          .rotate(value, None);
+
+        self.add_polygon(Stage::Transform(index), next_polygon)?;
+      }
 
       self.complete_stage(Stage::Transform(index));
     }
@@ -652,8 +637,6 @@ impl Plane {
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
-    let polygons = std::mem::take(&mut self.polygons_to_transform);
-
     let line_segment =
       self
         .get_reflection_line(origin_index, origin_type)
@@ -664,7 +647,7 @@ impl Plane {
 
     let stage_index = self.stages.len() as u16;
 
-    polygons
+    std::mem::take(&mut self.polygons_to_transform)
       .iter()
       .map(|polygon| {
         polygon
@@ -761,11 +744,11 @@ impl Default for Plane {
 
       line_segments: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
       line_segments_by_shape_group: Vec::new(),
-      points_center: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
+      points_center: SpatialGridMap::default().with_resize_method(ResizeMethod::Minimum),
       points_end: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
       points_mid: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
-      polygons: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
-      polygons_placement: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
+      polygons: SpatialGridMap::default().with_resize_method(ResizeMethod::Minimum),
+      polygons_placement: SpatialGridMap::default().with_resize_method(ResizeMethod::Minimum),
       polygons_to_transform: Vec::new(),
       seed_polygon: None,
       stage_added_polygon: false,

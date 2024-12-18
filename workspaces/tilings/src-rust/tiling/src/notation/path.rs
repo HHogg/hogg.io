@@ -288,14 +288,6 @@ impl Path {
   }
 }
 
-impl From<Shape> for Path {
-  fn from(shape: Shape) -> Self {
-    Self {
-      nodes: vec![Seed::default().with_shape(shape).into()],
-    }
-  }
-}
-
 impl Display for Path {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(
@@ -316,6 +308,14 @@ impl FromStr for Path {
 
   fn from_str(s: &str) -> Result<Self, Self::Err> {
     Path::default().from_string(s, false)
+  }
+}
+
+impl From<Shape> for Path {
+  fn from(shape: Shape) -> Self {
+    Self {
+      nodes: vec![Seed::default().with_shape(shape).into()],
+    }
   }
 }
 
