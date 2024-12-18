@@ -78,7 +78,7 @@ impl Plane {
     self.polygons_placement.iter_values()
   }
 
-  pub fn build(mut self, notation: &Notation) -> Result<Self, TilingError> {
+  pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
     self.apply_path(&notation.path)?;
 
     if !notation.transforms.list.is_empty() {
@@ -102,7 +102,7 @@ impl Plane {
         ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values());
     }
 
-    Ok(self)
+    Ok(())
   }
 
   pub fn apply_path(&mut self, path: &Path) -> Result<(), TilingError> {

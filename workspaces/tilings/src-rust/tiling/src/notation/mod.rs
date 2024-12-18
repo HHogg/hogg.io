@@ -53,7 +53,8 @@ impl Notation {
   ) -> Result<Self, TilingError> {
     self.path = path;
 
-    self.path_plane = Plane::default().build(&Notation {
+    self.path_plane = Plane::default();
+    self.path_plane.build(&Notation {
       path: self.path.clone(),
       ..Self::default()
     })?;

@@ -178,18 +178,18 @@ impl Tiling {
   }
 
   pub fn build(&mut self, on_visit: &Option<&dyn Fn(String)>) -> Result<(), TilingError> {
-    let build_result = Plane::default()
+    self.plane = Plane::default()
       .with_expansion_phases(self.option_expansion_phases)
-      .with_validations(self.option_validations.clone())
-      .build(&self.notation);
+      .with_validations(self.option_validations.clone());
+
+    let build_result = self.plane.build(&self.notation);
 
     if let Some(on_visit) = on_visit {
       on_visit(self.notation.to_string());
     }
 
     match build_result {
-      Ok(plane) => {
-        self.plane = plane;
+      Ok(_) => {
         self.result = Some(self.into());
         Ok(())
       }
