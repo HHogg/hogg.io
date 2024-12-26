@@ -25,13 +25,15 @@ export default function PlayerControls() {
   const { fullScreenEnter, fullScreenExit, isFullScreen } =
     useProjectWindowContext();
   const { toggleSettings } = useSettingsContext();
-  const { play, pause, forward, backward, toStart, toEnd, isPlaying } =
+  const { play, pause, forward, backward, toStart, toEnd, snapshot } =
     usePlayerContext();
 
   const handleSettingsClick = (event: React.PointerEvent) => {
     event.stopPropagation();
     toggleSettings();
   };
+
+  const { isPlaying } = snapshot;
 
   return (
     <ProjectControls>

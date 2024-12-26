@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
-import { WasmApi, WasmApiKey } from '../WasmWorker/WasmWorker';
-import { addEventListener } from '../WasmWorker/state';
+import {
+  addEventListener,
+  WasmWorkerEventByName,
+  WasmWorkerEventName,
+} from '../WasmWorker/state';
 
-export function useWasmAddEventListener(
-  key: WasmApiKey,
-  listener: (data: ReturnType<WasmApi[WasmApiKey]>) => void
+export function useWasmAddEventListener<TEventName extends WasmWorkerEventName>(
+  name: TEventName,
+  listener: (event: WasmWorkerEventByName<TEventName>) => void
 ) {
   useEffect(() => {
-    return addEventListener(key, listener);
-  }, [key, listener]);
+    return addEventListener(name, listener);
+  }, [name, listener]);
 }

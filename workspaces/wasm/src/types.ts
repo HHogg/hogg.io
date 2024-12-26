@@ -334,6 +334,8 @@ export interface Plane {
 
 export interface Result {
 	notation: string;
+	expansionPhases: number;
+	error?: string;
 	transformIndex: number;
 	timestamp: string;
 	metrics: Metrics;
@@ -423,6 +425,26 @@ export interface Tiling {
 	optionValidations?: Flag[];
 }
 
+export interface DrawStateSnapshot {
+	metrics: Metrics;
+}
+
+export interface WasmError {
+	message: string;
+}
+
+export interface PlayerStateSnapshot {
+	drawIndex: number;
+	maxIndex: number;
+	intervalMs: number;
+	isLooping: boolean;
+	isPlaying: boolean;
+}
+
+export interface RenderStateSnapshot {
+	result: Result;
+}
+
 export enum Separator {
 	Group = "Group",
 	Shape = "Shape",
@@ -439,4 +461,12 @@ export type ValidationError =
 	| { type: "VertexType", content: {
 	sequence: string;
 }};
+
+export type WasmWorkerEvent = 
+	| { name: "draw", data: DrawStateSnapshot }
+	| { name: "error", data: WasmError }
+	| { name: "findPreviousTiling", data: string }
+	| { name: "findNextTiling", data: string }
+	| { name: "player", data: PlayerStateSnapshot }
+	| { name: "render", data: RenderStateSnapshot };
 

@@ -1,204 +1,157 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useArrangementContext } from '../Arrangement/useArrangementContext';
+import {
+  useWasmApi,
+  addEventListener,
+  PlayerStateSnapshot,
+  Metrics,
+  Result,
+  Options,
+} from '@hogg/wasm';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNotationContext } from '../Notation/useNotationContext';
+import useRenderOptions from '../Renderer/useRenderOptions';
+import { useSettingsContext } from '../Settings/useSettingsContext';
 
-const DURATION = 8_000;
-
-export type Speed = 0.25 | 0.5 | 1 | 1.5 | 2;
-export const SPEEDS: Speed[] = [0.25, 0.5, 1, 1.5, 2];
-
-export type UsePlayerOptions = {
-  isPlaying: boolean;
-  speed: Speed;
+export type UsePlayerProps = {
+  uid: string;
+  expansionPhases?: number;
+  options?: Options;
 };
 
-export type UsePlayerResult = UsePlayerOptions & {
+export type UsePlayerResult = {
   play: () => void;
   pause: () => void;
   forward: () => void;
   backward: () => void;
-  setSpeed: (speed: Speed) => void;
   toStart: () => void;
   toEnd: () => void;
-  elapsed: number;
-  maxStage?: number;
+  uid: string;
+  error: string;
+  percent: number;
+  snapshot: PlayerStateSnapshot;
+  renderResult: Result | null;
+  renderMetrics: Metrics | null;
 };
 
-export const defaultOptions: UsePlayerOptions = {
-  isPlaying: false,
-  speed: 1,
-};
+const uid = 'tilings-player';
 
-export const usePlayer = (
-  opts: Partial<UsePlayerOptions> = {}
-): UsePlayerResult => {
-  const initialState = {
-    ...defaultOptions,
-    ...opts,
-  };
-
-  const { tiling } = useArrangementContext();
+export const usePlayer = (): UsePlayerResult => {
+  const { api } = useWasmApi();
   const { notation } = useNotationContext();
-  const [elapsedTime, setElapsedTime] = useState(0);
-  const [speed, setSpeed] = useState<Speed>(initialState.speed);
-  const [isPlaying, setIsPlaying] = useState(initialState.isPlaying);
+  const {
+    autoRotate,
+    expansionPhases,
+    colorMode,
+    colorPalette,
+    scaleMode,
+    showLayers,
+    speed,
+  } = useSettingsContext();
 
-  const refAnimationFrameRequest = useRef<number>();
-  const refTimeout = useRef<NodeJS.Timeout>();
+  const options = useRenderOptions(
+    useMemo(
+      () => ({
+        autoRotate,
+        colorMode,
+        colorPalette,
+        scaleMode,
+        showLayers,
+      }),
+      [autoRotate, colorMode, colorPalette, scaleMode, showLayers]
+    )
+  );
 
-  const stages = tiling?.plane.stages.length ?? 0;
-  const duration = DURATION / speed;
-  const durationOnEachStage = Math.min(duration / Math.max(1, stages));
-  const elapsed = duration > 1 ? Math.min(1, elapsedTime / duration) : 0;
+  const [snapshot, setSnapshot] = useState<PlayerStateSnapshot>({
+    drawIndex: 0,
+    intervalMs: 0,
+    isLooping: false,
+    isPlaying: false,
+    maxIndex: 0,
+  });
 
-  const getActiveStage = (elapsedTime: number) => {
-    if (Number.isFinite(elapsedTime) === false) {
-      return undefined;
-    }
-
-    const elapsedStage = elapsedTime / durationOnEachStage;
-    const activePartIndex = Math.floor(elapsedStage);
-
-    return activePartIndex;
-  };
-
-  const handleNextStage = () => {
-    setElapsedTime((prevElapsedTime) => {
-      const activePart = getActiveStage(prevElapsedTime);
-
-      if (activePart === undefined) {
-        return 0;
-      }
-
-      const nextPart = activePart + 1;
-
-      if (nextPart >= stages) {
-        return 0;
-      }
-
-      return (nextPart * durationOnEachStage) % duration;
-    });
-  };
-
-  const handlePreviousStage = () => {
-    setElapsedTime((prevElapsedTime) => {
-      let activePart = getActiveStage(prevElapsedTime);
-
-      if (activePart === undefined) {
-        activePart = stages;
-      }
-
-      const nextPart = activePart - 1;
-
-      if (nextPart < 0) {
-        return (stages - 1) * durationOnEachStage;
-      }
-
-      return (nextPart * durationOnEachStage) % duration;
-    });
-  };
-
-  const stopLoop = () => {
-    if (refAnimationFrameRequest.current) {
-      window.cancelAnimationFrame(refAnimationFrameRequest.current);
-    }
-
-    if (refTimeout.current) {
-      window.clearTimeout(refTimeout.current);
-    }
-  };
-
-  const startLoop = useCallback(() => {
-    let lastTime = Date.now();
-
-    const tick = () => {
-      const timeNow = Date.now();
-      const delta = timeNow - lastTime;
-
-      lastTime = timeNow;
-
-      setElapsedTime((elapsedTime) => {
-        if (elapsedTime >= duration) {
-          return 0;
-        }
-
-        return (elapsedTime += delta);
-      });
-
-      refTimeout.current = setTimeout(() => {
-        refAnimationFrameRequest.current = requestAnimationFrame(tick);
-      }, 1000 / 60);
-    };
-
-    stopLoop();
-    tick();
-  }, [duration]);
-
-  const play = () => {
-    setIsPlaying(true);
-  };
-
-  const pause = () => {
-    setIsPlaying(false);
-  };
-
-  const forward = () => {
-    setIsPlaying(false);
-    handleNextStage();
-  };
-
-  const backward = () => {
-    setIsPlaying(false);
-    handlePreviousStage();
-  };
-
-  const toStart = () => {
-    setIsPlaying(false);
-    setElapsedTime(0);
-  };
-
-  const toEnd = () => {
-    setIsPlaying(false);
-    setElapsedTime(duration);
-  };
+  const [error, setError] = useState('');
+  const [percent, setPercent] = useState(0);
+  const [renderResult, setRenderResult] = useState<Result | null>(null);
+  const [renderMetrics, setRenderMetrics] = useState<Metrics | null>(null);
+  const refUpdateRenderMetrics = useRef(true);
 
   useEffect(() => {
-    if (isPlaying) {
-      startLoop();
-    }
+    api.tilings.startPlayer([uid]);
 
     return () => {
-      stopLoop();
+      api.tilings.stopPlayer([]);
     };
-  }, [isPlaying, startLoop]);
+  }, [api]);
 
   useEffect(() => {
-    if (initialState.isPlaying) {
-      setElapsedTime(0);
-    } else {
-      setElapsedTime(duration);
-    }
-  }, [initialState.isPlaying, duration]);
+    api.tilings.setPlayerExpansionPhases([expansionPhases]);
+  }, [api, expansionPhases]);
 
   useEffect(() => {
-    if (isPlaying) {
-      setElapsedTime(0);
-    } else {
-      setElapsedTime(duration);
-    }
-  }, [notation, isPlaying, duration]);
+    api.tilings.setPlayerNotation([notation]);
+  }, [api, notation]);
+
+  useEffect(() => {
+    api.tilings.setPlayerRenderOptions([options]);
+  }, [api, options]);
+
+  useEffect(() => {
+    refUpdateRenderMetrics.current = true;
+    api.tilings.setPlayerNotation([notation]);
+  }, [api, notation]);
+
+  useEffect(() => {
+    api.tilings.setPlayerSpeed([speed]);
+  }, [api, speed]);
+
+  useEffect(() => {
+    return addEventListener('error', ({ data }) => {
+      setError(data.message);
+    });
+  }, []);
+
+  useEffect(() => {
+    return addEventListener('player', ({ data }) => {
+      setPercent(data.drawIndex / data.maxIndex);
+      setSnapshot(data);
+    });
+  }, []);
+
+  useEffect(() => {
+    return addEventListener('draw', ({ data }) => {
+      if (!refUpdateRenderMetrics.current) {
+        return;
+      }
+
+      refUpdateRenderMetrics.current = false;
+      setRenderMetrics(data.metrics);
+    });
+  }, []);
+
+  useEffect(() => {
+    return addEventListener('render', ({ data }) => {
+      setRenderResult(data.result);
+    });
+  }, []);
+
+  const play = () => api.tilings.controlPlayerPlay([]);
+  const pause = () => api.tilings.controlPlayerPause([]);
+  const forward = () => api.tilings.controlPlayerStepForward([]);
+  const backward = () => api.tilings.controlPlayerStepBackward([]);
+  const toStart = () => api.tilings.controlPlayerToStart([]);
+  const toEnd = () => api.tilings.controlPlayerToEnd([]);
 
   return {
+    play,
+    pause,
     backward,
     forward,
-    pause,
-    play,
-    setSpeed,
     toStart,
     toEnd,
-    elapsed,
-    isPlaying,
-    maxStage: getActiveStage(elapsedTime),
-    speed,
+    uid,
+    error,
+    percent,
+    renderResult,
+    renderMetrics,
+    snapshot,
   };
 };

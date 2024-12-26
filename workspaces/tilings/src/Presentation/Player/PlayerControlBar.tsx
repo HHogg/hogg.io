@@ -4,7 +4,7 @@ import { usePlayerContext } from './usePlayerContext';
 
 export default function PlayerControlBar() {
   const refInnerBar = useRef<HTMLDivElement>(null);
-  const { elapsed, isPlaying } = usePlayerContext();
+  const { percent } = usePlayerContext();
 
   useEffect(() => {
     if (!refInnerBar.current) {
@@ -13,12 +13,12 @@ export default function PlayerControlBar() {
 
     refInnerBar.current.style.transformOrigin = 'left';
 
-    if (Number.isFinite(elapsed)) {
-      refInnerBar.current.style.transform = `scaleX(${elapsed})`;
+    if (Number.isFinite(percent)) {
+      refInnerBar.current.style.transform = `scaleX(${percent})`;
     } else {
       refInnerBar.current.style.transform = `scaleX(100%)`;
     }
-  }, [elapsed, isPlaying]);
+  }, [percent]);
 
   return (
     <Box grow>

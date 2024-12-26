@@ -1,6 +1,6 @@
 import { Box, Text } from 'preshape';
-import { useArrangementContext } from '../Arrangement/useArrangementContext';
 import { useNotationContext } from '../Notation/useNotationContext';
+import { usePlayerContext } from '../Player/usePlayerContext';
 import { formatMs } from '../utils/formatting';
 import BreakdownBar from './BreakdownBar/BreakdownBar';
 import {
@@ -14,7 +14,7 @@ import { useArrangementStatsContext } from './useArrangementStatsContext';
 export default function TotalDurationBreakdown() {
   const { path: notationPath, transforms: notationTransforms } =
     useNotationContext();
-  const { tiling } = useArrangementContext();
+  const { renderResult } = usePlayerContext();
   const {
     totalDuration,
     transforms,
@@ -37,7 +37,7 @@ export default function TotalDurationBreakdown() {
           </Text>
 
           <Text align="middle" size="x2">
-            ({tiling?.plane.expansionPhases} repetitions)
+            ({renderResult?.expansionPhases} repetitions)
           </Text>
         </Box>
       </Box>

@@ -30,6 +30,7 @@ export default function SettingsProvider({
   const [scaleMode, setScaleMode] = useState<ScaleMode>(initialState.scaleMode);
   const [showLayers, setShowLayers] = useState(initialState.showLayers);
   const [showSettings, setShowSettings] = useState(false);
+  const [speed, setSpeed] = useState(initialState.speed);
 
   const toggleSettings = () => setShowSettings(!showSettings);
 
@@ -40,6 +41,7 @@ export default function SettingsProvider({
     expansionPhases,
     scaleMode,
     showLayers,
+    speed,
     setAutoRotate,
     setColorMode,
     setColorPalette,
@@ -47,6 +49,7 @@ export default function SettingsProvider({
     setScaleMode,
     setShowLayers,
     setShowSettings,
+    setSpeed,
     toggleSettings,
     elapsed: 0,
     showSettings,

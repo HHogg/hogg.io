@@ -1,6 +1,6 @@
 import { Flag } from '@hogg/wasm';
 import { useMemo } from 'react';
-import { useArrangementContext } from '../Arrangement/useArrangementContext';
+import { usePlayerContext } from '../Player/usePlayerContext';
 
 export type ArrangementStats = {
   totalDuration: number;
@@ -46,10 +46,14 @@ const createStats = (): ArrangementStats => ({
 });
 
 export default function useArrangementStats(): ArrangementStats {
-  const { result, renderMetrics } = useArrangementContext();
+  const { renderMetrics, renderResult } = usePlayerContext();
+
   const combinedMetricEvents = useMemo(
-    () => [...(result?.metrics.events ?? []), ...(renderMetrics?.events ?? [])],
-    [renderMetrics?.events, result]
+    () => [
+      ...(renderResult?.metrics.events ?? []),
+      ...(renderMetrics?.events ?? []),
+    ],
+    [renderMetrics?.events, renderResult]
   );
 
   return useMemo(() => {

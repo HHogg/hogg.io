@@ -68,19 +68,31 @@ export default function TotalDurationBreakdownSection({
         />
       )}
 
-      <g transform={`translate(${left} 0)`}>
+      <motion.g animate={{ x: left }} initial={{ x: left }}>
         <motion.path
-          d={createRectPath({
-            width,
-            height: height,
-            topLeftRadius: first ? height * 0.5 : 0,
-            topRightRadius: last ? height * 0.5 : 0,
-            bottomRightRadius: last ? height * 0.5 : 0,
-            bottomLeftRadius: first ? height * 0.5 : 0,
-          })}
+          animate={{
+            d: createRectPath({
+              width,
+              height: height,
+              topLeftRadius: first ? height * 0.5 : 0,
+              topRightRadius: last ? height * 0.5 : 0,
+              bottomRightRadius: last ? height * 0.5 : 0,
+              bottomLeftRadius: first ? height * 0.5 : 0,
+            }),
+          }}
+          initial={{
+            d: createRectPath({
+              width: 0,
+              height,
+              topLeftRadius: first ? height * 0.5 : 0,
+              topRightRadius: last ? height * 0.5 : 0,
+              bottomRightRadius: last ? height * 0.5 : 0,
+              bottomLeftRadius: first ? height * 0.5 : 0,
+            }),
+          }}
           fill={color}
         />
-      </g>
+      </motion.g>
     </g>
   );
 }

@@ -8,7 +8,7 @@ export default function useParsedTransform(transformString: string) {
   const [transform, setTransform] = useState<Transform | null>(null);
 
   useEffect(() => {
-    api.parseTransform([transformString, path]).then(setTransform);
+    api.tilings.parseTransform([transformString, path]).then(setTransform);
   }, [api, path, transformString]);
 
   return transform;

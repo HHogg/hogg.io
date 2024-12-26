@@ -1,20 +1,27 @@
 import { createContext, useContext } from 'react';
-import { UsePlayerResult, defaultOptions } from './usePlayer';
+import { UsePlayerResult } from './usePlayer';
 
 const noop = () => {
   throw new Error('usePlayerContext was not initialized');
 };
 
-const initialContext = {
-  ...defaultOptions,
-  elapsed: 0,
+const initialContext: UsePlayerResult = {
   backward: noop,
   forward: noop,
   pause: noop,
   play: noop,
-  setSpeed: noop,
   toStart: noop,
   toEnd: noop,
+  percent: 0,
+  renderMetrics: null,
+  renderResult: null,
+  snapshot: {
+    drawIndex: 0,
+    intervalMs: 0,
+    isPlaying: false,
+    isLooping: false,
+    maxIndex: 0,
+  },
 };
 
 export const PlayerContext = createContext<UsePlayerResult>(initialContext);

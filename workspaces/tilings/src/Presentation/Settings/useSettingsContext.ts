@@ -11,6 +11,7 @@ export type Settings = {
   colorPalette: ColorPalette;
   expansionPhases: number;
   scaleMode: ScaleMode;
+  speed: number;
   showLayers: Record<Layer, boolean>;
 };
 
@@ -22,6 +23,7 @@ type SettingsContextValue = Settings & {
   setScaleMode: (scaleMode: ScaleMode) => void;
   setShowLayers: (layers: Record<Layer, boolean>) => void;
   setShowSettings: (show: boolean) => void;
+  setSpeed: (speed: number) => void;
   toggleSettings: () => void;
   expansionPhases: number;
   showSettings: boolean;
@@ -30,6 +32,7 @@ type SettingsContextValue = Settings & {
 export const defaultSettings: Settings = {
   ...defaultOptions,
   expansionPhases: defaultExpansionPhases,
+  speed: 1,
 };
 
 const noop = () => {
@@ -46,6 +49,7 @@ export const SettingsContext = createContext<SettingsContextValue>({
   setScaleMode: noop,
   setShowLayers: noop,
   setShowSettings: noop,
+  setSpeed: noop,
   toggleSettings: noop,
 });
 

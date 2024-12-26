@@ -5,7 +5,7 @@ type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
 };
 
-export const defaultExpansionPhases = 10;
+export const defaultExpansionPhases = 4;
 
 export const defaultOptions: Pick<
   NoUndefinedField<Options>,

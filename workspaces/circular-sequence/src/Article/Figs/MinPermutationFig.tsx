@@ -16,7 +16,9 @@ const useMinPermutation = (sequence: Sequence) => {
   const [minPermutation, setMinPermutation] = useState<number[]>([]);
 
   useEffect(() => {
-    api.getSequenceMinPermutation([sequence]).then(setMinPermutation);
+    api.circularSequence
+      .getSequenceMinPermutation([sequence])
+      .then(setMinPermutation);
   }, [api, sequence]);
 
   return minPermutation;

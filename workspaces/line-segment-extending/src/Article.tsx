@@ -53,6 +53,7 @@ const Article = ({}: Props) => {
             description="Live rendered example of an annotated reflective transform"
           >
             <TilingRenderer
+              uid="article/line-segment-extending/reflective-tiling-transformation"
               height="300px"
               notation="12-4-3,6/m30/m(c4)"
               expansionPhases={1}
@@ -337,10 +338,11 @@ let intercepts_max_x = y_for_max_x >= min_y && y_for_max_x <= max_y;
             description="Live rendered example of an annotated rotational transform"
           >
             <TilingRenderer
+              uid="article/line-segment-extending/rotational-tiling-transformation"
               height="300px"
               options={tilingRendererOptions}
               expansionPhases={1}
-              notation="3-3-6-3-3,3/r(h16)/r60"
+              notation="3-3-6-3-3,3/r60/r(h16)"
             />
           </ArticleFig>
         </ArticleFigs>

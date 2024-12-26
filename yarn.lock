@@ -1001,8 +1001,10 @@ __metadata:
     "@hogg/circular-sequence": "workspace:^"
     "@hogg/common": "workspace:^"
     "@hogg/line-segment-extending": "workspace:^"
+    "@types/lodash.get": ^4.4.9
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
+    lodash.get: ^4.4.2
     lucide-react: 0.445.0
     preshape: ^19.1.5
     react: ^18.2.0
@@ -2469,6 +2471,22 @@ __metadata:
   version: 3.0.5
   resolution: "@types/linkify-it@npm:3.0.5"
   checksum: fac28f41a6e576282300a459d70ea0d33aab70dbb77c3d09582bb0335bb00d862b6de69585792a4d590aae4173fbab0bf28861e2d90ca7b2b1439b52688e9ff6
+  languageName: node
+  linkType: hard
+
+"@types/lodash.get@npm:^4.4.9":
+  version: 4.4.9
+  resolution: "@types/lodash.get@npm:4.4.9"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: d7e071d267e3d1bab58db14b6ce63fc51ca3c9c9697d3548cd5c0f16c08a7ce2188cff75dff1858b5623c3bd070836857211ebef4f364c53b82e31f3190fe0b4
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
+  version: 4.17.13
+  resolution: "@types/lodash@npm:4.17.13"
+  checksum: d0bf8fbd950be71946e0076b30fd40d492293baea75f05931b6b5b906fd62583708c6229abdb95b30205ad24ce1ed2f48bc9d419364f682320edd03405cc0c7e
   languageName: node
   linkType: hard
 
@@ -9545,6 +9563,13 @@ __metadata:
   version: 4.4.0
   resolution: "lodash.flatten@npm:4.4.0"
   checksum: 0ac34a393d4b795d4b7421153d27c13ae67e08786c9cbb60ff5b732210d46f833598eee3fb3844bb10070e8488efe390ea53bb567377e0cb47e9e630bf0811cb
+  languageName: node
+  linkType: hard
+
+"lodash.get@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "lodash.get@npm:4.4.2"
+  checksum: e403047ddb03181c9d0e92df9556570e2b67e0f0a930fcbbbd779370972368f5568e914f913e93f3b08f6d492abc71e14d4e9b7a18916c31fa04bd2306efe545
   languageName: node
   linkType: hard
 

@@ -1,4 +1,6 @@
+import { PropertyAtPath } from '@hogg/common';
 import { v4 } from 'uuid';
+import { WasmWorkerEvent } from '../types';
 import { WasmApi, WasmApiKey } from './WasmWorker';
 
 export type WasmWorkerMessageRequest = {
@@ -10,14 +12,16 @@ export type WasmWorkerMessageRequest = {
 export type WasmWorkerMessageResponse = {
   id: string;
   key: WasmApiKey;
-  result: ReturnType<WasmApi[WasmApiKey]>;
+  result: PropertyAtPath<WasmApi, WasmApiKey> | null;
   error?: string;
 };
 
-type WasmWorkerMessageEvent = {
-  key: WasmApiKey;
-  data: ReturnType<WasmApi[WasmApiKey]>;
-};
+export type WasmWorkerEventName = WasmWorkerEvent['name'] | '__all';
+
+export type WasmWorkerEventByName<TName extends WasmWorkerEventName> = Extract<
+  WasmWorkerEvent,
+  { name: TName }
+>;
 
 type WasmWorkerMessagesStore = Record<string, WasmWorkerMessagesStoreEntry>;
 
@@ -35,7 +39,9 @@ export type WasmWorkerState = {
 };
 
 type WasmWorkerStateListener = (state: WasmWorkerState) => void;
-type WasmWorkerEventListener = (event: WasmWorkerMessageEvent['data']) => void;
+type WasmWorkerEventListener<TEventName extends WasmWorkerEventName> = (
+  event: WasmWorkerEventByName<TEventName>
+) => void;
 
 const messages: WasmWorkerMessagesStore = {
   _init: { key: '_init', initiated: Date.now() },
@@ -43,11 +49,11 @@ const messages: WasmWorkerMessagesStore = {
 
 const errors: WasmWorkerState['errors'] = {};
 const loadings: WasmWorkerState['loadings'] = { _init: true };
-const eventListeners: Record<string, WasmWorkerEventListener[]> = {};
+const eventListeners: Record<string, WasmWorkerEventListener<any>[]> = {};
 const stateChangeListeners: Record<string, WasmWorkerStateListener> = {};
 
 export function isWorkerMessageResponse(
-  message: WasmWorkerMessageResponse | WasmWorkerMessageEvent
+  message: WasmWorkerMessageResponse | WasmWorkerEvent
 ): message is WasmWorkerMessageResponse {
   return 'result' in message;
 }
@@ -97,9 +103,23 @@ export function addStateChangeListener(
 }
 
 export function addEventListener(
-  key: string,
-  listener: WasmWorkerEventListener
+  listener: WasmWorkerEventListener<'__all'>
+): () => void;
+export function addEventListener<TName extends WasmWorkerEventName>(
+  key: TName,
+  listener: WasmWorkerEventListener<TName>
+): () => void;
+export function addEventListener<TName extends WasmWorkerEventName>(
+  arg1: WasmWorkerEventListener<TName> | TName,
+  arg2?: WasmWorkerEventListener<TName>
 ): () => void {
+  const key = typeof arg1 === 'string' ? arg1 : '__all';
+  const listener = typeof arg1 === 'function' ? arg1 : arg2;
+
+  if (!listener) {
+    throw new Error('Invalid arguments');
+  }
+
   if (!eventListeners[key]) {
     eventListeners[key] = [];
   }
@@ -159,10 +179,7 @@ export function handleMessageResponse(response: WasmWorkerMessageResponse) {
   notifyStateChangeListeners();
 }
 
-export function handleMessageEvent(response: WasmWorkerMessageEvent) {
-  const { key, data } = response;
-
-  if (eventListeners[key]) {
-    eventListeners[key].forEach((listener) => listener(data));
-  }
+export function handleMessageEvent(event: WasmWorkerEvent) {
+  eventListeners['__all']?.forEach((listener) => listener(event));
+  eventListeners[event.name]?.forEach((listener) => listener(event));
 }

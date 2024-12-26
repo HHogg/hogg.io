@@ -1,9 +1,12 @@
 mod circular_sequence;
+mod events;
 mod line_segment_extending;
+mod render_loop;
 mod tilings;
 
 use std::panic;
 
+pub use events::WasmWorkerEvent;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::JsError;
 

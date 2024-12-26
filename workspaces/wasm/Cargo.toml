@@ -19,12 +19,14 @@ log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 serde-wasm-bindgen.workspace = true
+typeshare.workspace = true
 wasm-bindgen.workspace = true
 web-sys = { workspace = true, features = [
   'console',
   'DedicatedWorkerGlobalScope',
   'OffscreenCanvas',
   'OffscreenCanvasRenderingContext2d',
+  'Window',
 ] }
 
 spatial_grid_map = { path = "../spatial-grid-map" }

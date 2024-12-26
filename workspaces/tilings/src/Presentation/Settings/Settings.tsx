@@ -16,8 +16,6 @@ import {
   MenuConfigEntryNumber,
   MenuConfigEntryOneOf,
 } from 'preshape';
-import { SPEEDS, Speed } from '../Player/usePlayer';
-import { usePlayerContext } from '../Player/usePlayerContext';
 import { useSettingsContext } from './useSettingsContext';
 
 const layersOptions = Object.values(Layer).sort((a, b) => a.localeCompare(b));
@@ -31,14 +29,15 @@ export default function Settings() {
     scaleMode,
     showLayers,
     showSettings,
+    speed,
     setAutoRotate,
     setColorMode,
     setColorPalette,
     setExpansionPhases,
     setScaleMode,
     setShowLayers,
+    setSpeed,
   } = useSettingsContext();
-  const { speed, setSpeed } = usePlayerContext();
 
   const handleLayersChange = (layers: Layer[]) => {
     setShowLayers(
@@ -59,16 +58,16 @@ export default function Settings() {
     value: expansionPhases,
     min: 0,
     max: 20,
-    step: 5,
+    step: 2,
     onChange: setExpansionPhases,
   };
 
-  const speedConfig: MenuConfigEntryOneOf<Speed> = {
+  const speedConfig: MenuConfigEntryOneOf<number> = {
     label: 'Speed',
     icon: GaugeIcon,
     type: 'oneOf',
     value: speed,
-    options: SPEEDS,
+    options: [0.25, 0.5, 1, 2, 4],
     formatter: (value) => value * 100 + '%',
     onChange: setSpeed,
   };

@@ -22,10 +22,10 @@ impl Message for Visit {
 impl Handler<Visit> for Client {
   type Result = Result<()>;
 
-  fn handle(&mut self, msg: Visit, _ctx: &mut Self::Context) -> Self::Result {
+  fn handle(&mut self, _msg: Visit, _ctx: &mut Self::Context) -> Self::Result {
     self.visitor.try_send(visitor::messages::Visit {
       // sender: ctx.address().recipient(),
-      path: msg.path.clone(),
+      // path: msg.path.clone(),
     })?;
 
     Ok(())

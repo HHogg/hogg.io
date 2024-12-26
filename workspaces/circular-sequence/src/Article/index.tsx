@@ -58,6 +58,7 @@ const Article = () => {
             description="Shape arrangement of a dodecagon at the center, with alternating triangles, squares and hexagons on it's edges."
           >
             <TilingRenderer
+              uid="article/circular-sequence/dodecagon-shape-arrangement"
               height="200px"
               notation="12-3,4,6,4,3,4,6,4,3,4,6,4"
               options={tilingRendererOptions}
@@ -177,8 +178,8 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             description="A symmetrical sequence, the same traversal is produced regardless of the direction."
             presentation={
               <TilingRenderer
+                uid="article/circular-sequence/sequence-34312"
                 height="200px"
-                validations={[]}
                 notation="4-3,4,3,12"
                 options={tilingRendererOptions}
               />
@@ -209,6 +210,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             description="An asymmetrical sequence, and it's differing traversals in either direction"
             presentation={
               <TilingRenderer
+                uid="article/circular-sequence/sequence-33412"
                 height="200px"
                 notation="4-3,3,4,12"
                 options={tilingRendererOptions}

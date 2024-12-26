@@ -117,29 +117,9 @@ impl Tiling {
     self
   }
 
-  pub fn find_previous_tiling(&mut self, on_visit: Option<&dyn Fn(String)>) -> Option<Notation> {
-    match self.go_to_previous(&on_visit) {
-      Ok(notation) => notation,
-      Err(err) => {
-        self.error = err;
-        None
-      }
-    }
-  }
-
-  pub fn find_next_tiling(&mut self, on_visit: Option<&dyn Fn(String)>) -> Option<Notation> {
-    match self.go_to_next(&on_visit) {
-      Ok(notation) => notation,
-      Err(err) => {
-        self.error = err;
-        None
-      }
-    }
-  }
-
-  fn go_to_previous(
+  pub fn find_previous_tiling(
     &mut self,
-    on_visit: &Option<&dyn Fn(String)>,
+    on_visit: Option<&dyn Fn(String)>,
   ) -> Result<Option<Notation>, TilingError> {
     loop {
       if let Some(previous_notation) = self
@@ -148,7 +128,7 @@ impl Tiling {
       {
         self.notation = previous_notation;
 
-        if self.build(on_visit).is_ok() {
+        if self.build(&on_visit).is_ok() {
           return Ok(Some(self.notation.clone()));
         }
       } else {
@@ -157,9 +137,9 @@ impl Tiling {
     }
   }
 
-  fn go_to_next(
+  pub fn find_next_tiling(
     &mut self,
-    on_visit: &Option<&dyn Fn(String)>,
+    on_visit: Option<&dyn Fn(String)>,
   ) -> Result<Option<Notation>, TilingError> {
     loop {
       if let Some(next_notation) = self
@@ -168,7 +148,7 @@ impl Tiling {
       {
         self.notation = next_notation;
 
-        if self.build(on_visit).is_ok() {
+        if self.build(&on_visit).is_ok() {
           return Ok(Some(self.notation.clone()));
         }
       } else {

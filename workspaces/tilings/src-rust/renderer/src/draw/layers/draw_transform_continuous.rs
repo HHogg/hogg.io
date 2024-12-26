@@ -154,6 +154,7 @@ fn draw_transform_continuous_rotate_transform(
   canvas.add_component(
     Layer::Transform,
     ArcArrow::default()
+      .non_interactive()
       .with_point(origin)
       .with_radius(radius)
       .with_start_angle(previous_start_angle + arc_angle_padding)

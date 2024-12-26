@@ -136,6 +136,7 @@ fn draw_transform_eccentric_rotate(
   canvas.add_component(
     Layer::Transform,
     ArcArrow::default()
+      .non_interactive()
       .with_point(*origin_point)
       .with_radius(radius)
       .with_start_angle(start_angle + arc_angle_padding)
@@ -147,6 +148,7 @@ fn draw_transform_eccentric_rotate(
   canvas.add_component(
     Layer::Transform,
     ArcArrow::default()
+      .non_interactive()
       .with_point(*origin_point)
       .with_radius(radius)
       .with_start_angle(start_angle + PI + arc_angle_padding)

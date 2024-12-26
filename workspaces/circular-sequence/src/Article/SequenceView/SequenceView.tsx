@@ -35,10 +35,10 @@ export default function SequenceView({ sequence, ...rest }: Props & BoxProps) {
 
   useEffect(() => {
     Promise.all([
-      api.isSequenceSymmetrical([sequence]),
-      api.getSequenceLength([sequence]),
-      api.getSequenceMinPermutation([sequence]),
-      api.getSequenceSymmetryIndex([sequence]),
+      api.circularSequence.isSequenceSymmetrical([sequence]),
+      api.circularSequence.getSequenceLength([sequence]),
+      api.circularSequence.getSequenceMinPermutation([sequence]),
+      api.circularSequence.getSequenceSymmetryIndex([sequence]),
     ]).then(([isSymmetrical, length, minPermutation, symmetryIndex = 0]) => {
       setSequenceInfo({
         isSymmetrical,

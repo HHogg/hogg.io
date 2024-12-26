@@ -1,12 +1,12 @@
 import { Box, Input, Tooltip } from 'preshape';
-import { useArrangementContext } from '../Arrangement/useArrangementContext';
+import { usePlayerContext } from '../Player/usePlayerContext';
 import NotationInputFindButton from './NotationInputFindButton';
 import { useNotationContext } from './useNotationContext';
 
 export default function NotationInput() {
   const { notation, setNotation } = useNotationContext();
-  const { tiling } = useArrangementContext();
-  const error = tiling?.error;
+  const { renderResult } = usePlayerContext();
+  const error = renderResult?.error ?? null;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -16,7 +16,7 @@ export default function NotationInput() {
   return (
     <Box flex="horizontal" alignChildrenVertical="middle">
       <Box>
-        <NotationInputFindButton id="findPreviousTiling" />
+        <NotationInputFindButton id="previous" />
       </Box>
 
       <Tooltip
@@ -45,7 +45,7 @@ export default function NotationInput() {
       </Tooltip>
 
       <Box>
-        <NotationInputFindButton id="findNextTiling" />
+        <NotationInputFindButton id="next" />
       </Box>
     </Box>
   );

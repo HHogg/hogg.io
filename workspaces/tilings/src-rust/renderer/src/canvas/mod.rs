@@ -35,7 +35,7 @@ pub struct Canvas {
 
 impl Canvas {
   pub fn new(
-    canvas: web_sys::OffscreenCanvas,
+    canvas: &web_sys::OffscreenCanvas,
     options: &Options,
     tiling: &Tiling,
   ) -> Result<Self, Error> {

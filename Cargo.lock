@@ -2963,6 +2963,7 @@ dependencies = [
  "spatial_grid_map",
  "tiling",
  "tiling-renderer",
+ "typeshare",
  "wasm-bindgen",
  "web-sys",
 ]

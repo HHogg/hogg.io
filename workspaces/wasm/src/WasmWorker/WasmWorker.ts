@@ -1,3 +1,5 @@
+import { type NestedKeyOf } from '@hogg/common';
+import get from 'lodash.get';
 import init from '@hogg/wasm/pkg';
 import * as circularSequence from './modules/circular-sequence';
 import * as lineSegmentExtending from './modules/line-segment-extending';
@@ -7,13 +9,13 @@ import { WasmWorkerMessageRequest, WasmWorkerMessageResponse } from './state';
 let ready = false;
 
 const wasmApi = {
-  ...circularSequence,
-  ...lineSegmentExtending,
-  ...tilings,
+  circularSequence,
+  lineSegmentExtending,
+  tilings,
 };
 
 export type WasmApi = typeof wasmApi;
-export type WasmApiKey = keyof WasmApi;
+export type WasmApiKey = NestedKeyOf<WasmApi>;
 
 init({}).then(() => {
   ready = true;
@@ -22,7 +24,7 @@ init({}).then(() => {
 
 onmessage = async ({ data }: MessageEvent<WasmWorkerMessageRequest>) => {
   const { id, args, key } = data;
-  const fn = wasmApi[key];
+  const fn = get(wasmApi, key);
 
   if (!ready) {
     const response: WasmWorkerMessageResponse = {

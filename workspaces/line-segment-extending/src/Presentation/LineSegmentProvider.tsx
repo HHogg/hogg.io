@@ -25,7 +25,9 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
   ] = useResizeObserver<HTMLDivElement>();
 
   const {
-    api: { getExtendedLineSegment },
+    api: {
+      lineSegmentExtending: { getExtendedLineSegment },
+    },
   } = useWasmApi();
   const [bounds, setBounds] = useState<LineSegmentContextValue['bounds']>([
     0, 0, 0, 0,

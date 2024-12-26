@@ -1,6 +1,5 @@
 import { WasmApiLoadingScreen } from '@hogg/wasm';
 import { BoxProps } from 'preshape';
-import ArrangementProvider from './Presentation/Arrangement/ArrangementProvider';
 import NotationProvider, {
   NotationProviderProps,
 } from './Presentation/Notation/NotationProvider';
@@ -15,20 +14,16 @@ export default function TilingRenderer({
   isValid,
   notation,
   options,
-  validations,
   ...rest
 }: TilingRendererProps) {
   return (
     <WasmApiLoadingScreen>
       <NotationProvider isValid={isValid} notation={notation}>
-        <ArrangementProvider>
-          <Renderer
-            {...rest}
-            expansionPhases={expansionPhases}
-            options={options}
-            validations={validations}
-          />
-        </ArrangementProvider>
+        <Renderer
+          {...rest}
+          expansionPhases={expansionPhases}
+          options={options}
+        />
       </NotationProvider>
     </WasmApiLoadingScreen>
   );

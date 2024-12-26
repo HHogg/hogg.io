@@ -1,13 +1,13 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::notation::Path;
+// use tiling::notation::Path;
 
 // use super::VisitResult;
 use crate::visitor::Visitor;
 
 pub struct Visit {
   // pub sender: Recipient<VisitResult>,
-  pub path: Path,
+  // pub path: Path,
 }
 
 impl Message for Visit {

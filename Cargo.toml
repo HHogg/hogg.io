@@ -48,5 +48,5 @@ tracing = { version = "0.1.41" }
 tracing-appender = "0.2"
 tracing-subscriber = "0.3.19"
 typeshare = { version = "1.0.4" }
-wasm-bindgen = "0.2.99"
+wasm-bindgen = { version = "0.2.99" }
 web-sys = { version = "0.3.76" }

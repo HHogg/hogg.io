@@ -3,7 +3,7 @@ use circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::Tiling;
+use crate::{Tiling, TilingError};
 
 use super::Metrics;
 
@@ -12,6 +12,8 @@ use super::Metrics;
 #[typeshare]
 pub struct Result {
   pub notation: String,
+  pub expansion_phases: u8,
+  pub error: Option<String>,
   pub transform_index: i32,
   #[typeshare(serialized_as = "string")]
   pub timestamp: NaiveDateTime,
@@ -32,6 +34,16 @@ impl Result {
 
   pub fn with_notation(mut self, notation: String) -> Self {
     self.notation = notation.clone();
+    self
+  }
+
+  pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
+    self.expansion_phases = expansion_phases;
+    self
+  }
+
+  pub fn with_error(mut self, error: TilingError) -> Self {
+    self.error = Some(error.to_string());
     self
   }
 
@@ -64,6 +76,8 @@ impl Default for Result {
   fn default() -> Self {
     Self {
       notation: String::new(),
+      error: None,
+      expansion_phases: 0,
       transform_index: 0,
       timestamp: Utc::now().naive_utc(),
       metrics: Metrics::default(),
@@ -78,6 +92,8 @@ impl From<&mut Tiling> for Result {
   fn from(tiling: &mut Tiling) -> Self {
     Self::default()
       .with_notation(tiling.notation.to_string())
+      .with_expansion_phases(tiling.plane.expansion_phases)
+      .with_error(tiling.error.clone())
       .with_transform_index(tiling.notation.transforms.index)
       .with_metrics(tiling.plane.metrics.clone())
       .with_vertex_types(tiling.plane.get_vertex_types())

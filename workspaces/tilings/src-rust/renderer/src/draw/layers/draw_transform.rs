@@ -12,7 +12,7 @@ pub fn draw_transform(
   options: &Options,
   tiling: &Tiling,
 ) -> Result<(), Error> {
-  let max_stage = options.max_stage.unwrap_or(0) - 1;
+  let max_stage = options.max_stage.unwrap_or(0);
   let transform_index = if let Some(index) = options.show_transform_index {
     Some(index)
   } else if let Some(build::Stage::Transform(index)) = tiling.plane.stages.get(max_stage as usize) {

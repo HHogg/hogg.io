@@ -1,7 +1,8 @@
 use colorgrad::GradientBuilderError;
+use serde::Serialize;
 use wasm_bindgen::JsValue;
 
-#[derive(Clone, Debug, thiserror::Error)]
+#[derive(Clone, Debug, thiserror::Error, Serialize)]
 pub enum Error {
   #[error("Application error: {reason}")]
   ApplicationError { reason: String },

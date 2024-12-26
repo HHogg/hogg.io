@@ -31,7 +31,12 @@ export default function ArrangementCard({
         borderColor="background-shade-4"
         width="100%"
       >
-        <TilingRenderer {...rest} notation={notation} options={options} />
+        <TilingRenderer
+          {...rest}
+          minHeight="60px"
+          notation={notation}
+          options={options}
+        />
       </PatternBackground>
 
       <Text size="x3" weight="x2">

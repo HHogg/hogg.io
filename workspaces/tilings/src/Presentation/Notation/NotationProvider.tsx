@@ -30,7 +30,7 @@ export default function NotationProvider({
   );
 
   const handlePreviousNotation = useCallback(async () => {
-    const previousNotation = await api.findPreviousTiling([
+    const previousNotation = await api.tilings.findPreviousTiling([
       notationRef.current,
       expansionPhases,
     ]);
@@ -41,7 +41,7 @@ export default function NotationProvider({
   }, [api, expansionPhases, handleSetNotation]);
 
   const handleNextNotation = useCallback(async () => {
-    const nextNotation = await api.findNextTiling([
+    const nextNotation = await api.tilings.findNextTiling([
       notationRef.current,
       expansionPhases,
     ]);

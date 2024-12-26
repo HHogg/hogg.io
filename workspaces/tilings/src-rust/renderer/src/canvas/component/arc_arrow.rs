@@ -10,9 +10,15 @@ pub struct ArcArrow {
   start_angle: f64,
   end_angle: f64,
   style: Style,
+  interactive: Option<bool>,
 }
 
 impl ArcArrow {
+  pub fn non_interactive(mut self) -> Self {
+    self.interactive = Some(false);
+    self
+  }
+
   pub fn with_point(mut self, point: Point) -> Self {
     self.point = point;
     self
@@ -104,6 +110,10 @@ impl Draw for ArcArrow {
     chevron.draw(context, canvas_bbox, content_bbox, scale, theia)?;
 
     Ok(())
+  }
+
+  fn interactive(&self) -> Option<bool> {
+    self.interactive
   }
 
   fn style(&self) -> &Style {

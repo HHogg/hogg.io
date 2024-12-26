@@ -7,7 +7,7 @@ import { formatNumber } from '../utils/formatting';
 import { useNotationContext } from './useNotationContext';
 
 type NotationInputFindButtonProps = {
-  id: 'findNextTiling' | 'findPreviousTiling';
+  id: 'previous' | 'next';
 };
 
 export default function NotationInputFindButton({
@@ -16,9 +16,14 @@ export default function NotationInputFindButton({
   const { previousNotation, nextNotation } = useNotationContext();
   const { errors, loadings } = useWasmApi();
 
-  const action = id === 'findNextTiling' ? nextNotation : previousNotation;
-  const error = errors[id];
-  const loading = loadings[id];
+  const actionId =
+    id === 'next' ? 'tilings.findNextTiling' : 'tilings.findPreviousTiling';
+  const eventName = id === 'next' ? 'findNextTiling' : 'findPreviousTiling';
+
+  const action = id === 'next' ? nextNotation : previousNotation;
+
+  const error = errors[actionId];
+  const loading = loadings[actionId];
 
   const [found, setFound] = useState(false);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
@@ -31,7 +36,7 @@ export default function NotationInputFindButton({
   };
 
   useWasmAddEventListener(
-    id,
+    eventName,
     useCallback(() => {
       setCount((prevCount) => prevCount + 1);
     }, [])
@@ -71,9 +76,9 @@ export default function NotationInputFindButton({
     >
       <ButtonAsync
         disabled={
-          loadings.findNextTiling ??
-          loadings.findPreviousTiling ??
-          loadings.renderTiling ??
+          loadings['tilings.findNextTiling'] ??
+          loadings['tilings.findPreviousTiling'] ??
+          loadings['tilings.renderTiling'] ??
           false
         }
         error={error}
@@ -83,7 +88,7 @@ export default function NotationInputFindButton({
         variant="tertiary"
         onClick={handleClick}
       >
-        {id === 'findNextTiling' ? (
+        {id === 'next' ? (
           <ChevronRightIcon size="2rem" />
         ) : (
           <ChevronLeftIcon size="2rem" />
