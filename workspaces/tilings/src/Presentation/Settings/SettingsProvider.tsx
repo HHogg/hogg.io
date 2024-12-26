@@ -1,5 +1,6 @@
 import { ColorPalette, ScaleMode } from '@hogg/wasm';
-import { PropsWithChildren, useState } from 'react';
+import { useLocalStorage } from 'preshape';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import {
   Settings,
   SettingsContext,
@@ -14,10 +15,13 @@ export default function SettingsProvider({
   settings,
   ...rest
 }: PropsWithChildren<SettingsProviderProps>) {
-  const initialState = {
-    ...defaultSettings,
-    ...settings,
-  };
+  const [initialState, setInitialState] = useLocalStorage(
+    'com.hogg.io.tilings.player.settings',
+    {
+      ...defaultSettings,
+      ...settings,
+    }
+  );
 
   const [autoRotate, setAutoRotate] = useState(initialState.autoRotate);
   const [colorMode, setColorMode] = useState(initialState.colorMode);
@@ -33,6 +37,27 @@ export default function SettingsProvider({
   const [speed, setSpeed] = useState(initialState.speed);
 
   const toggleSettings = () => setShowSettings(!showSettings);
+
+  useEffect(() => {
+    setInitialState({
+      autoRotate,
+      colorMode,
+      colorPalette,
+      expansionPhases,
+      scaleMode,
+      showLayers,
+      speed,
+    });
+  }, [
+    setInitialState,
+    autoRotate,
+    colorMode,
+    colorPalette,
+    expansionPhases,
+    scaleMode,
+    showLayers,
+    speed,
+  ]);
 
   const value = {
     autoRotate,

@@ -13,7 +13,7 @@ import Settings from './Settings/Settings';
 import SettingsProvider from './Settings/SettingsProvider';
 import { useSettingsContext } from './Settings/useSettingsContext';
 
-const DEFAULT_NOTATION = '3-3-6-3-3,3/r60/r(h16)';
+const DEFAULT_NOTATION = '6-3-3/m30/m(h3)';
 
 function PresentationInner() {
   const { setShowSettings } = useSettingsContext();
