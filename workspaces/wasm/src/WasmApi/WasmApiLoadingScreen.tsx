@@ -14,7 +14,14 @@ export default function WasmApiLoadingScreen({
   }
 
   return (
-    <Appear {...props} animation="Fade" flex="vertical" grow delay={200}>
+    <Appear
+      {...props}
+      animation="Fade"
+      flex="vertical"
+      grow
+      delay={200}
+      width="100%"
+    >
       {children}
     </Appear>
   );

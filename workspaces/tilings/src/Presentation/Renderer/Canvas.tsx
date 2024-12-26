@@ -1,5 +1,5 @@
 import { useWasmApi } from '@hogg/wasm';
-import { Box, BoxProps, Motion, Text } from 'preshape';
+import { Box, BoxProps, Text } from 'preshape';
 import { forwardRef, useEffect, useRef } from 'react';
 
 export type CanvasProps = {
@@ -26,21 +26,19 @@ const Canvas = forwardRef<HTMLDivElement, BoxProps & CanvasProps>(
     }, [api, uid]);
 
     return (
-      <Box {...rest} flex="vertical" grow>
+      <Box {...rest} flex="vertical" grow height={height}>
         <Box basis="0" container grow ref={ref}>
-          <Motion initial={{ scale: 1 }}>
-            <Box
-              absolute="edge-to-edge"
-              id={uid}
-              ref={refCanvas}
-              tag="canvas"
-              style={{
-                height: `${height}px`,
-                width: `${width}px`,
-                transformOrigin: 'top left',
-              }}
-            ></Box>
-          </Motion>
+          <Box
+            absolute="edge-to-edge"
+            id={uid}
+            ref={refCanvas}
+            tag="canvas"
+            style={{
+              height: `${height}px`,
+              width: `${width}px`,
+              transformOrigin: 'top left',
+            }}
+          ></Box>
 
           {error && (
             <Box absolute="center" maxWidth="300px">

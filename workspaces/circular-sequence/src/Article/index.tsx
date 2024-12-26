@@ -59,7 +59,7 @@ const Article = () => {
           >
             <TilingRenderer
               uid="article/circular-sequence/dodecagon-shape-arrangement"
-              height="200px"
+              height={200}
               notation="12-3,4,6,4,3,4,6,4,3,4,6,4"
               options={tilingRendererOptions}
             />
@@ -179,7 +179,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             presentation={
               <TilingRenderer
                 uid="article/circular-sequence/sequence-34312"
-                height="200px"
+                height={200}
                 notation="4-3,4,3,12"
                 options={tilingRendererOptions}
               />
@@ -211,7 +211,7 @@ let seq_2: Sequence = [6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             presentation={
               <TilingRenderer
                 uid="article/circular-sequence/sequence-33412"
-                height="200px"
+                height={200}
                 notation="4-3,3,4,12"
                 options={tilingRendererOptions}
               />

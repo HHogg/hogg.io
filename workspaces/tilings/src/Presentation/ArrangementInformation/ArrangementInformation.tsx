@@ -1,8 +1,10 @@
 import { CopyToClipboardCard } from '@hogg/common';
 import { Box, BoxProps, Grid, Text } from 'preshape';
+import { useNotationContext } from '../Notation/useNotationContext';
 import { usePlayerContext } from '../Player/usePlayerContext';
 import EdgeType from './EdgeType';
 import ShapeType from './ShapeType';
+import TransformCard from './TransformCard';
 import VertexType from './VertexType';
 
 const Section = ({ children, title, ...rest }: BoxProps) => (
@@ -15,6 +17,7 @@ const Section = ({ children, title, ...rest }: BoxProps) => (
 );
 
 export default function ArrangementInformation() {
+  const { path, transforms } = useNotationContext();
   const { renderResult } = usePlayerContext();
   const {
     notation = '',
@@ -40,7 +43,7 @@ export default function ArrangementInformation() {
               uid={`vertexType/${index}`}
               key={vertexType}
               vertexType={vertexType}
-              height="80px"
+              size={80}
             />
           ))}
         </Grid>
@@ -53,7 +56,7 @@ export default function ArrangementInformation() {
               uid={`edgeType/${index}`}
               key={edgeType}
               edgeType={edgeType}
-              height="80px"
+              size={80}
             />
           ))}
         </Grid>
@@ -66,7 +69,21 @@ export default function ArrangementInformation() {
               uid={`shapeType/${index}`}
               key={shapeType}
               shapeType={shapeType}
-              height="80px"
+              size={80}
+            />
+          ))}
+        </Grid>
+      </Section>
+
+      <Section title={transforms.length ? 'Transforms' : 'No transforms'}>
+        <Grid repeatWidth="160px" gap="x4">
+          {transforms.map((transform, index) => (
+            <TransformCard
+              uid={`transform/${index}`}
+              key={transform}
+              path={path}
+              transform={transform}
+              size={160}
             />
           ))}
         </Grid>

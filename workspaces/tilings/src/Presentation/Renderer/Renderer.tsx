@@ -11,12 +11,16 @@ export type RendererProps = {
   expansionPhases?: number;
   options?: DeepPartial<Options>;
   uid: string;
+  height?: number;
+  width?: number;
 };
 
 export default function Renderer({
   expansionPhases = defaultExpansionPhases,
   options: optionsProps,
   uid,
+  height: heightProps,
+  width: widthProps,
   ...rest
 }: BoxProps & RendererProps) {
   const { api } = useWasmApi();
@@ -24,7 +28,9 @@ export default function Renderer({
   const { notation } = useNotationContext();
   const [error, setError] = useState('');
   const [size, refSize] = useResizeObserver<HTMLDivElement>();
-  const { height, width } = size;
+
+  const height = heightProps || size.height || 0;
+  const width = widthProps || size.width || 0;
 
   useEffect(() => {
     try {
@@ -46,7 +52,7 @@ export default function Renderer({
     } catch (error) {
       setError((error as Error).message);
     }
-  }, [api, uid, width, height, notation, options, expansionPhases]);
+  }, [api, uid, height, width, notation, options, expansionPhases]);
 
   return (
     <Canvas
