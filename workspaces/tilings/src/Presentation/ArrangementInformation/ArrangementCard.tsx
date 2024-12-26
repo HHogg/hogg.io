@@ -4,6 +4,7 @@ import TilingRenderer, { TilingRendererProps } from '../../TilingRenderer';
 
 export type ArrangementCardProps = Omit<TilingRendererProps, 'notation'> & {
   label: string;
+  footer?: JSX.Element;
   notation: string;
 } & {
   size?: number;
@@ -11,18 +12,25 @@ export type ArrangementCardProps = Omit<TilingRendererProps, 'notation'> & {
 
 export default function ArrangementCard({
   label,
+  footer,
+  padding = 'x2',
   notation,
-  size = 80,
+  size,
   ...rest
 }: ArrangementCardProps) {
   return (
-    <Box flex="vertical" alignChildren="middle" gap="x2">
+    <Box flex="vertical" gap="x2" grow>
+      <Text align="middle" size="x3" weight="x2">
+        {label}
+      </Text>
+
       <Box flex="vertical" grow height={size} width={size}>
         <PatternBackground
           alignChildren="middle"
           flex="vertical"
+          gap={padding}
           grow
-          padding="x2"
+          padding={padding}
           backgroundColor="background-shade-2"
           borderRadius="x2"
           borderSize="x1"
@@ -30,12 +38,14 @@ export default function ArrangementCard({
           width="100%"
         >
           <TilingRenderer {...rest} notation={notation} />
+
+          {footer && (
+            <Text align="middle" size="x2" weight="x2">
+              {footer}
+            </Text>
+          )}
         </PatternBackground>
       </Box>
-
-      <Text size="x3" weight="x2">
-        {label}
-      </Text>
     </Box>
   );
 }

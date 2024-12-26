@@ -1,11 +1,40 @@
 import { CopyToClipboardCard } from '@hogg/common';
 import { Box, BoxProps, Grid, Text } from 'preshape';
+import { expandNotationBlock } from '../Arrangement/utils';
 import { useNotationContext } from '../Notation/useNotationContext';
 import { usePlayerContext } from '../Player/usePlayerContext';
-import EdgeType from './EdgeType';
-import ShapeType from './ShapeType';
+import ArrangementCard from './ArrangementCard';
 import TransformCard from './TransformCard';
-import VertexType from './VertexType';
+
+const parseEdgeType = (shapeType: string) =>
+  expandNotationBlock(shapeType).join('-');
+
+const parseShapeType = (shapeType: string) => {
+  const expanded = expandNotationBlock(shapeType);
+  return `${expanded.length}-${expanded.join(',')}`;
+};
+
+const parseVertexType = (vertexType: string) => {
+  const vertexToNotation: Record<string, string> = {
+    '3⁶': '3/m30',
+    '4⁴': '4-4,4-0,4',
+    '6³': '6-6,6',
+    '3⁴.6': '6-3,3-0,3-3',
+    '3³.4²': '3-3,4-0,3,4',
+    '3².4.3.4': '4-3,3-4,3',
+    '3².4.12': '12-4-0,3-0,3',
+    '3.4.3.12': '12-3-4-0,0,3',
+    '3².6²': '3-3,6-0,6',
+    '3.6.3.6': '6-3,3-6',
+    '3.4².6': '3-4-4-0,6',
+    '3.4.6.4': '3-4,4-0,0,6',
+    '3.12²': '3-12,12',
+    '4.6.12': '4-6,12',
+    '4.8²': '4-8,8',
+  };
+
+  return vertexToNotation[vertexType];
+};
 
 const Section = ({ children, title, ...rest }: BoxProps) => (
   <Box {...rest}>
@@ -36,13 +65,28 @@ export default function ArrangementInformation() {
         </>
       )}
 
+      <Section title={transforms.length ? 'Transforms' : 'No transforms'}>
+        <Box flex="horizontal" gap="x16">
+          {transforms.map((transform, index) => (
+            <TransformCard
+              uid={`transform/${index}`}
+              key={transform}
+              path={path}
+              transform={transform}
+              height={160}
+            />
+          ))}
+        </Box>
+      </Section>
+
       <Section title={vertexTypes.length ? 'Vertex types' : 'No vertex types'}>
         <Grid repeatWidth="80px" gap="x4">
           {vertexTypes.map((vertexType, index) => (
-            <VertexType
+            <ArrangementCard
               uid={`vertexType/${index}`}
+              label={vertexType}
               key={vertexType}
-              vertexType={vertexType}
+              notation={parseVertexType(vertexType)}
               size={80}
             />
           ))}
@@ -52,10 +96,11 @@ export default function ArrangementInformation() {
       <Section title={edgeTypes.length ? 'Edge types' : 'No edge types'}>
         <Grid repeatWidth="80px" gap="x4">
           {edgeTypes.map((edgeType, index) => (
-            <EdgeType
+            <ArrangementCard
               uid={`edgeType/${index}`}
+              label={edgeType}
               key={edgeType}
-              edgeType={edgeType}
+              notation={parseEdgeType(edgeType)}
               size={80}
             />
           ))}
@@ -65,25 +110,12 @@ export default function ArrangementInformation() {
       <Section title={shapeTypes.length ? 'Shape types' : 'No shape types'}>
         <Grid repeatWidth="80px" gap="x4">
           {shapeTypes.map((shapeType, index) => (
-            <ShapeType
+            <ArrangementCard
               uid={`shapeType/${index}`}
+              label={shapeType}
               key={shapeType}
-              shapeType={shapeType}
+              notation={parseShapeType(shapeType)}
               size={80}
-            />
-          ))}
-        </Grid>
-      </Section>
-
-      <Section title={transforms.length ? 'Transforms' : 'No transforms'}>
-        <Grid repeatWidth="160px" gap="x4">
-          {transforms.map((transform, index) => (
-            <TransformCard
-              uid={`transform/${index}`}
-              key={transform}
-              path={path}
-              transform={transform}
-              size={160}
             />
           ))}
         </Grid>

@@ -1,7 +1,9 @@
 import { DeepPartial } from '@hogg/common';
 import { Layer, Options } from '@hogg/wasm';
 import { TilingRendererProps } from '../../TilingRenderer';
+import useParsedTransform from '../Notation/useParsedTransform';
 import ArrangementCard from './ArrangementCard';
+import TransformLabel from './TransformLabel';
 
 type Props = {
   path: string;
@@ -17,15 +19,19 @@ const options: DeepPartial<Options> = {
 
 export default function TransformCard({
   path,
-  transform,
+  transform: transformString,
   ...rest
 }: Omit<TilingRendererProps, 'notation'> & Props) {
+  const transform = useParsedTransform(transformString);
+
   return (
     <ArrangementCard
       {...rest}
-      label={transform}
-      notation={`${path}/${transform}`}
+      label={transformString}
+      notation={`${path}/${transformString}`}
       options={options}
+      padding="x8"
+      footer={transform ? <TransformLabel transform={transform} /> : undefined}
     />
   );
 }

@@ -13,6 +13,7 @@ export type RendererProps = {
   uid: string;
   height?: number;
   width?: number;
+  square?: boolean;
 };
 
 export default function Renderer({
@@ -21,6 +22,7 @@ export default function Renderer({
   uid,
   height: heightProps,
   width: widthProps,
+  square,
   ...rest
 }: BoxProps & RendererProps) {
   const { api } = useWasmApi();
@@ -29,8 +31,13 @@ export default function Renderer({
   const [error, setError] = useState('');
   const [size, refSize] = useResizeObserver<HTMLDivElement>();
 
-  const height = heightProps || size.height || 0;
-  const width = widthProps || size.width || 0;
+  let height = heightProps || size.height || 0;
+  let width = widthProps || size.width || 0;
+
+  if (square) {
+    height = Math.max(height, width);
+    width = height;
+  }
 
   useEffect(() => {
     try {
