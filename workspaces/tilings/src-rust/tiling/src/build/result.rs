@@ -13,7 +13,8 @@ use super::Metrics;
 pub struct Result {
   pub notation: String,
   pub expansion_phases: u8,
-  pub error: Option<String>,
+  #[typeshare(serialized_as = "string")]
+  pub error: Option<TilingError>,
   pub transform_index: i32,
   #[typeshare(serialized_as = "string")]
   pub timestamp: NaiveDateTime,
@@ -27,11 +28,6 @@ pub struct Result {
 }
 
 impl Result {
-  pub fn with_metrics(mut self, metrics: Metrics) -> Self {
-    self.metrics = metrics;
-    self
-  }
-
   pub fn with_notation(mut self, notation: String) -> Self {
     self.notation = notation.clone();
     self
@@ -42,8 +38,13 @@ impl Result {
     self
   }
 
+  pub fn with_metrics(mut self, metrics: Metrics) -> Self {
+    self.metrics = metrics;
+    self
+  }
+
   pub fn with_error(mut self, error: TilingError) -> Self {
-    self.error = Some(error.to_string());
+    self.error = Some(error);
     self
   }
 
@@ -70,6 +71,10 @@ impl Result {
   pub fn create_hash(self) -> Self {
     self
   }
+
+  pub fn get_hash(&self) -> String {
+    String::new()
+  }
 }
 
 impl Default for Result {
@@ -93,7 +98,6 @@ impl From<&mut Tiling> for Result {
     Self::default()
       .with_notation(tiling.notation.to_string())
       .with_expansion_phases(tiling.plane.expansion_phases)
-      .with_error(tiling.error.clone())
       .with_transform_index(tiling.notation.transforms.index)
       .with_metrics(tiling.plane.metrics.clone())
       .with_vertex_types(tiling.plane.get_vertex_types())

@@ -38,9 +38,11 @@ impl Handler<StartIssuingTo> for Issuer {
 
         // Send the initial paths
         for _ in 0..msg.count {
-          msg.recipient.try_send(issuer::messages::PathResponse {
-            path: buffer_rx.recv().await?,
-          })?;
+          let path = buffer_rx.recv().await?;
+
+          msg
+            .recipient
+            .try_send(issuer::messages::PathResponse { path })?;
         }
 
         Ok(mailbox_size)

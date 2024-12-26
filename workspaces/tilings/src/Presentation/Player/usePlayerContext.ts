@@ -12,6 +12,8 @@ const initialContext: UsePlayerResult = {
   play: noop,
   toStart: noop,
   toEnd: noop,
+  uid: '',
+  error: undefined,
   percent: 0,
   renderMetrics: null,
   renderResult: null,

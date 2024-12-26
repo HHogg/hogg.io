@@ -1,6 +1,5 @@
 use std::cell::RefCell;
 use std::rc::Rc;
-use tiling::build;
 use tiling::build::Metrics;
 use tiling::validation::Flag;
 use tiling::Tiling;
@@ -19,15 +18,9 @@ use crate::events::RenderStateSnapshot;
 use crate::events::WasmWorkerEvent;
 
 fn post_render_event(tiling: &Tiling) {
-  if let Some(result) = tiling.result.as_ref() {
-    post_event(WasmWorkerEvent::Render(RenderStateSnapshot {
-      result: result.clone(),
-    }));
-  } else {
-    post_event(WasmWorkerEvent::Render(RenderStateSnapshot {
-      result: build::Result::default(),
-    }));
-  }
+  post_event(WasmWorkerEvent::Render(RenderStateSnapshot {
+    result: tiling.result.clone(),
+  }));
 }
 
 fn post_draw_event(metrics: Metrics) {

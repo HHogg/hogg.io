@@ -3,18 +3,21 @@ CREATE TABLE state (
   value VARCHAR NOT NULL
 );
 
+INSERT INTO state (key, value) VALUES ('path', '3');
+INSERT into state (key, value) VALUES ('path_index', '0');
+
 CREATE TABLE tilings (
   notation VARCHAR PRIMARY KEY,
+  hash VARCHAR(255) NOT NULL,
+  path VARCHAR NOT NULL,
+  path_index INTEGER NOT NULL,
+  transform_index INTEGER NOT NULL,
   has_0 BOOLEAN NOT NULL,
   has_3 BOOLEAN NOT NULL,
   has_4 BOOLEAN NOT NULL,
   has_6 BOOLEAN NOT NULL,
   has_8 BOOLEAN NOT NULL,
   has_12 BOOLEAN NOT NULL,
-  uniform INT NOT NULL,
-  hash VARCHAR(255) NOT NULL,
-  path_index INTEGER NOT NULL,
-  transform_index INTEGER NOT NULL,
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

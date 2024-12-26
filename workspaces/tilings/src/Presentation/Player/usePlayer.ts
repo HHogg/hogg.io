@@ -25,7 +25,7 @@ export type UsePlayerResult = {
   toStart: () => void;
   toEnd: () => void;
   uid: string;
-  error: string;
+  error?: string;
   percent: number;
   snapshot: PlayerStateSnapshot;
   renderResult: Result | null;

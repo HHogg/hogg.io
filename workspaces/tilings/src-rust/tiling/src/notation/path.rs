@@ -20,6 +20,12 @@ pub struct Path {
 }
 
 impl Path {
+  pub fn from_first() -> Self {
+    Self {
+      nodes: vec![Seed::default().into()],
+    }
+  }
+
   pub fn from_string(mut self, string: &str, with_type_ahead: bool) -> Result<Self, TilingError> {
     if string.is_empty() {
       if with_type_ahead {
@@ -236,8 +242,9 @@ impl Path {
     // Build the tiling and check for overlaps or that
     // line segments are available to place the shapes
     let tiling = Tiling::default().with_path(self.clone());
-    if !matches!(tiling.error, TilingError::Noop) {
-      return Err(tiling.error);
+
+    if let Some(error) = tiling.result.error {
+      return Err(error);
     }
 
     Ok(true)
@@ -266,7 +273,7 @@ impl Path {
 
   fn replace_node(&mut self, node_index: usize, node: Node, direction: Direction) {
     self.nodes[node_index] = node;
-    self.reset_from(node_index + 1, direction)
+    self.reset_from(node_index + 1, direction);
   }
 
   fn reset_from(&mut self, node_index: usize, direction: Direction) {

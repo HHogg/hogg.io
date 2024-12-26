@@ -8,7 +8,7 @@ use sqlx::FromRow;
 
 pub use self::get_facets::{get_facets, TilingsFacetsRequest};
 pub use self::get_paged::{get_paged, TilingsRequest};
-pub use self::insert::{insert, InsertRequest};
+pub use self::insert::{insert, InsertRequest, VisitResultValid};
 
 #[derive(FromRow, Serialize)]
 pub struct Tiling {

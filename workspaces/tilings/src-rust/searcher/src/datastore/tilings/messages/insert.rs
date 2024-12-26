@@ -1,14 +1,15 @@
 use actix::prelude::*;
 use anyhow::Result;
 use tiling::notation::Path;
-use tiling_datastore::tilings::{self, InsertRequest};
+use tiling_datastore::tilings::{self, InsertRequest, VisitResultValid};
 
 use crate::datastore::tilings::Store;
 
 pub struct Insert {
   pub path: Path,
   pub path_index: i32,
-  pub results: Vec<tiling::build::Result>,
+  pub count_total_tilings: u32,
+  pub valid_results: Vec<VisitResultValid>,
 }
 
 impl Message for Insert {
@@ -22,7 +23,8 @@ impl Handler<Insert> for Store {
     let Insert {
       path,
       path_index,
-      results,
+      count_total_tilings,
+      valid_results,
     } = message;
 
     let pool = self.pool.clone();
@@ -33,7 +35,8 @@ impl Handler<Insert> for Store {
         InsertRequest {
           path,
           path_index,
-          results,
+          count_total_tilings,
+          valid_results,
         },
       )
       .await

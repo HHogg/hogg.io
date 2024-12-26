@@ -37,8 +37,8 @@ pub fn find_previous_tiling(
 
   Ok(
     tiling
-      .find_previous_tiling(Some(&|notation| {
-        post_event(WasmWorkerEvent::FindPreviousTiling(notation));
+      .find_previous_tiling(Some(&|result| {
+        post_event(WasmWorkerEvent::FindPreviousTiling(result.notation.clone()));
       }))?
       .map(|t| t.to_string()),
   )
@@ -55,10 +55,10 @@ pub fn find_next_tiling(notation: &str, expansion_phases: u8) -> Result<Option<S
 
   Ok(
     tiling
-      .find_next_tiling(Some(&|notation| {
-        post_event(WasmWorkerEvent::FindNextTiling(notation));
+      .find_next_tiling(Some(&|result| {
+        post_event(WasmWorkerEvent::FindNextTiling(result.notation.clone()));
       }))?
-      .map(|t| t.to_string()),
+      .map(|result| result.notation.clone()),
   )
 }
 

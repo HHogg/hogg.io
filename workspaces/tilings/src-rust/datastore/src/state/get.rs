@@ -8,13 +8,13 @@ use super::State;
 
 pub async fn get(pool: &PgPool) -> Result<State> {
   let current_path: Option<Path> =
-    sqlx::query_scalar::<_, String>("SELECT value FROM state WHERE key='current_path';")
+    sqlx::query_scalar::<_, String>("SELECT value FROM state WHERE key='path';")
       .fetch_optional(pool)
       .await?
       .and_then(|current_path| Path::from_str(current_path.as_str()).ok());
 
   let current_path_index =
-    sqlx::query_scalar::<_, String>("SELECT value FROM state WHERE key='current_path_index';")
+    sqlx::query_scalar::<_, String>("SELECT value FROM state WHERE key='path_index';")
       .fetch_optional(pool)
       .await?;
 

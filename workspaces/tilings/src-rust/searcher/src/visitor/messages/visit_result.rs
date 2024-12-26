@@ -1,24 +1,38 @@
 use actix::prelude::*;
 use anyhow::Result;
 use serde::Serialize;
-use tiling::notation::Path;
+use tiling::{notation::Path, ApplicationError};
+use tiling_datastore::tilings;
 
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct VisitResult {
   pub path: Path,
-  // pub build_context: build::Context,
+  pub application_errors: Vec<ApplicationError>,
+  pub count_total_tilings: u32,
+  pub valid_results: Vec<tilings::VisitResultValid>,
 }
 
 impl VisitResult {
-  // pub fn with_path(mut self, path: Path) -> Self {
-  //   self.path = path;
-  //   self
-  // }
+  pub fn with_path(mut self, path: Path) -> Self {
+    self.path = path;
+    self
+  }
 
-  // pub fn with_build_context(self) -> Self {
-  //   self.build_context = build_context;
-  //   self
-  // }
+  pub fn increment_total_tilings(&mut self) {
+    self.count_total_tilings += 1;
+  }
+
+  pub fn add_application_error(&mut self, error: ApplicationError) {
+    self.application_errors.push(error);
+  }
+
+  pub fn add_valid_tiling(&mut self, result: &tiling::build::Result) {
+    self.valid_results.push(tilings::VisitResultValid {
+      notation: result.notation.to_string(),
+      hash: result.get_hash(),
+      transform_index: result.transform_index,
+    });
+  }
 }
 
 impl Message for VisitResult {

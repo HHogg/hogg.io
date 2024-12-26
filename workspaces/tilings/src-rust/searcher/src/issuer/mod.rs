@@ -18,9 +18,9 @@ const INITIAL_BUFFER: [&str; 0] = [];
 
 #[derive(Debug)]
 pub struct Issuer {
-  // errors_store_addr: Addr<errors::Store>,
+  errors_store_addr: Addr<errors::Store>,
   state_store_addr: Addr<state::Store>,
-  // tilings_store_addr: Addr<tilings::Store>,
+  tilings_store_addr: Addr<tilings::Store>,
   visits_store_addr: Addr<visits::Store>,
 
   state: Arc<Mutex<State>>,
@@ -34,9 +34,9 @@ pub struct Issuer {
 
 impl Issuer {
   pub async fn with_addresses(
-    _errors_store_addr: Addr<errors::Store>,
+    errors_store_addr: Addr<errors::Store>,
     state_store_addr: Addr<state::Store>,
-    _tilings_store_addr: Addr<tilings::Store>,
+    tilings_store_addr: Addr<tilings::Store>,
     traversal_store_addr: Addr<visits::Store>,
   ) -> Result<Self> {
     let (buffer_tx, buffer_rx) = async_channel::unbounded();
@@ -45,9 +45,9 @@ impl Issuer {
     tracing::info!(path = %state.path, "starting_from_path");
 
     Ok(Self {
-      // errors_store_addr,
+      errors_store_addr,
       state_store_addr,
-      // tilings_store_addr,
+      tilings_store_addr,
       visits_store_addr: traversal_store_addr,
 
       state: Arc::new(Mutex::new(state)),
@@ -96,8 +96,11 @@ impl Actor for Issuer {
 
         if buffer_rx.len() < buffer_size {
           let mut state = state.lock().await;
-          state.path.next_path();
+          let path = state.path.next_path();
+
+          state.path = path.clone();
           state.path_index += 1;
+
           leases
             .lock()
             .await

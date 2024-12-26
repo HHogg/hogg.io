@@ -335,7 +335,7 @@ export interface Plane {
 export interface Result {
 	notation: string;
 	expansionPhases: number;
-	error?: string;
+	error: string;
 	transformIndex: number;
 	timestamp: string;
 	metrics: Metrics;
@@ -416,8 +416,7 @@ export enum Flag {
 export interface Tiling {
 	notation: string;
 	plane: Plane;
-	result?: Result;
-	error: string;
+	result: Result;
 	optionExpansionPhases: number;
 	optionFirstTransform: boolean;
 	optionLinkPaths: boolean;

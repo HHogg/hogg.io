@@ -33,7 +33,12 @@ impl Handler<Insert> for Store {
           session_id,
           path: result.path,
           path_index,
-          // build_context: result.build_context,
+          count_total_tilings: result.count_total_tilings,
+          valid_notations: result
+            .valid_results
+            .iter()
+            .map(|result| result.notation.clone())
+            .collect(),
         },
       )
       .await

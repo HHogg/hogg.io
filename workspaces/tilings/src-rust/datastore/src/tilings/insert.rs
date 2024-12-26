@@ -1,20 +1,29 @@
 use anyhow::Result;
 use futures_util::future::try_join_all;
+use serde::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres};
-use tiling::build;
 use tiling::notation::{Path, Shape};
 
 pub struct InsertRequest {
   pub path: Path,
   pub path_index: i32,
-  pub results: Vec<build::Result>,
+  pub count_total_tilings: u32,
+  pub valid_results: Vec<VisitResultValid>,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
+pub struct VisitResultValid {
+  pub notation: String,
+  pub hash: String,
+  pub transform_index: i32,
 }
 
 pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()> {
   let InsertRequest {
     path,
     path_index,
-    results,
+    valid_results,
+    ..
   } = request;
 
   let has_0 = path.has_shape(&Shape::Skip);
@@ -24,20 +33,20 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
   let has_8 = path.has_shape(&Shape::Octagon);
   let has_12 = path.has_shape(&Shape::Dodecagon);
 
-  let futures_insert_results = results.iter().cloned().map(|t| {
+  let futures_insert_results = valid_results.iter().cloned().map(|result| {
     sqlx::query(
       "INSERT INTO tilings (
           notation,
+          hash,
+          path,
+          path_index,
+          transform_index,
           has_0,
           has_3,
           has_4,
           has_6,
           has_8,
-          has_12,
-          path_index,
-          transform_index,
-          uniform,
-          hash
+          has_12
         ) VALUES (
             $1,
             $2,
@@ -51,29 +60,29 @@ pub async fn insert(pool: &Pool<Postgres>, request: InsertRequest) -> Result<()>
             $10,
             $11
         ) ON CONFLICT (notation) DO UPDATE SET
-          has_0 = $2,
-          has_3 = $3,
-          has_4 = $4,
-          has_6 = $5,
-          has_8 = $6,
-          has_12 = $7,
-          path_index = $8,
-          transform_index = $9,
-          uniform = $10,
-          hash = $11
+          hash = $2,
+          path = $3,
+          path_index = $4,
+          transform_index = $5,
+          has_0 = $6,
+          has_3 = $7,
+          has_4 = $8,
+          has_6 = $9,
+          has_8 = $10,
+          has_12 = $11
       ",
     )
-    .bind(t.notation)
+    .bind(result.notation)
+    .bind(result.hash)
+    .bind(path.to_string())
+    .bind(path_index)
+    .bind(result.transform_index)
     .bind(has_0)
     .bind(has_3)
     .bind(has_4)
     .bind(has_6)
     .bind(has_8)
     .bind(has_12)
-    .bind(path_index)
-    .bind(t.transform_index)
-    // .bind(t.uniform) // TODO: implement uniform or remove from db
-    // .bind(t.hash) // TODO: implement hash or remove from db
     .execute(pool)
   });
 

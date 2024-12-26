@@ -40,20 +40,6 @@ pub enum TilingError {
   InvalidTransformValue { value: String, reason: String },
   #[error("Invalid vertex type \"{value}\"")]
   InvalidVertexType { value: String },
-  #[error("")]
-  Noop,
-}
-
-impl TilingError {
-  pub fn is_empty(&self) -> bool {
-    matches!(self, Self::Noop)
-  }
-}
-
-impl Default for TilingError {
-  fn default() -> Self {
-    Self::Noop
-  }
 }
 
 impl From<validation::Error> for TilingError {

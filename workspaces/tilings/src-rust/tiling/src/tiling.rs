@@ -6,7 +6,7 @@ use core::fmt;
 
 use serde::de::{self, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
-use serde_with::{serde_as, DisplayFromStr};
+use serde_with::serde_as;
 use typeshare::typeshare;
 
 use crate::build::Plane;
@@ -21,11 +21,7 @@ pub struct Tiling {
   #[typeshare(serialized_as = "String")]
   pub notation: Notation,
   pub plane: build::Plane,
-  pub result: Option<build::Result>,
-  #[typeshare(serialized_as = "String")]
-  #[serde_as(as = "DisplayFromStr")]
-  #[serde(skip_deserializing)]
-  pub error: TilingError,
+  pub result: build::Result,
 
   option_expansion_phases: u8,
   option_first_transform: bool,
@@ -72,7 +68,7 @@ impl Tiling {
 
     match result {
       Ok(notation) => self.notation = notation,
-      Err(err) => self.error = err,
+      Err(err) => self.result.error = Some(err),
     }
 
     self
@@ -101,7 +97,7 @@ impl Tiling {
 
     match notation {
       Ok(notation) => self.notation = notation,
-      Err(err) => self.error = err,
+      Err(err) => self.result.error = Some(err),
     }
 
     self
@@ -111,7 +107,7 @@ impl Tiling {
     self = self.with_notation(notation);
 
     if let Err(err) = self.build(&None) {
-      self.error = err;
+      self.result.error = Some(err);
     }
 
     self
@@ -119,7 +115,7 @@ impl Tiling {
 
   pub fn find_previous_tiling(
     &mut self,
-    on_visit: Option<&dyn Fn(String)>,
+    on_visit: Option<&dyn Fn(&build::Result)>,
   ) -> Result<Option<Notation>, TilingError> {
     loop {
       if let Some(previous_notation) = self
@@ -139,8 +135,8 @@ impl Tiling {
 
   pub fn find_next_tiling(
     &mut self,
-    on_visit: Option<&dyn Fn(String)>,
-  ) -> Result<Option<Notation>, TilingError> {
+    on_visit: Option<&dyn Fn(&build::Result)>,
+  ) -> Result<Option<&build::Result>, TilingError> {
     loop {
       if let Some(next_notation) = self
         .notation
@@ -149,7 +145,7 @@ impl Tiling {
         self.notation = next_notation;
 
         if self.build(&on_visit).is_ok() {
-          return Ok(Some(self.notation.clone()));
+          return Ok(Some(&self.result));
         }
       } else {
         return Ok(None);
@@ -157,27 +153,21 @@ impl Tiling {
     }
   }
 
-  pub fn build(&mut self, on_visit: &Option<&dyn Fn(String)>) -> Result<(), TilingError> {
+  pub fn build(&mut self, on_visit: &Option<&dyn Fn(&build::Result)>) -> Result<(), TilingError> {
     self.plane = Plane::default()
       .with_expansion_phases(self.option_expansion_phases)
       .with_validations(self.option_validations.clone());
 
     let build_result = self.plane.build(&self.notation);
 
+    self.result = self.into();
+    self.result.error = build_result.clone().err();
+
     if let Some(on_visit) = on_visit {
-      on_visit(self.notation.to_string());
+      on_visit(&self.result);
     }
 
-    match build_result {
-      Ok(_) => {
-        self.result = Some(self.into());
-        Ok(())
-      }
-      Err(err) => {
-        self.error = err.clone();
-        Err(err)
-      }
-    }
+    Ok(())
   }
 }
 

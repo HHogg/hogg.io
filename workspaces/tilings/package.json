@@ -10,7 +10,7 @@
     "./types": "./src/types.ts"
   },
   "scripts": {
-    "dev:searcher": "cargo watch -w workspaces/spatial-grid-map/src-rust -w workspaces/circular-sequence/src-rust-w workspaces/line-segment-extending/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --reset --migrations-dir=workspaces/tilings/migrations\"",
+    "dev:searcher": "cargo watch -w workspaces/spatial-grid-map/src-rust -w workspaces/circular-sequence/src-rust -w workspaces/line-segment-extending/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --reset --migrations-dir=workspaces/tilings/migrations\"",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file"
@@ -33,8 +33,7 @@
     "preshape": "^19.1.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.20.1",
-    "uuid": "10.0.0"
+    "react-router-dom": "^6.20.1"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.10",
