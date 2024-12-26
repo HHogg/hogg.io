@@ -4,6 +4,8 @@ use typeshare::typeshare;
 use crate::validation;
 
 #[derive(Clone, Debug, thiserror::Error, Serialize, Deserialize)]
+#[serde(tag = "name", content = "data")]
+#[typeshare]
 pub enum TilingError {
   #[error("Application error -> {reason}")]
   Application { reason: String },

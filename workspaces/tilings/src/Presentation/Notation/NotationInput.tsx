@@ -1,7 +1,16 @@
+import { TilingError } from '@hogg/wasm';
 import { Box, Input, Tooltip } from 'preshape';
 import { usePlayerContext } from '../Player/usePlayerContext';
 import NotationInputFindButton from './NotationInputFindButton';
 import { useNotationContext } from './useNotationContext';
+
+const tilingErrorToString = (error: TilingError | null) => {
+  if (!error) {
+    return '';
+  }
+
+  return `${error?.name}: {error?.message}`;
+};
 
 export default function NotationInput() {
   const { notation, setNotation } = useNotationContext();
@@ -21,7 +30,7 @@ export default function NotationInput() {
 
       <Tooltip
         backgroundColor="negative-shade-4"
-        content={error}
+        content={tilingErrorToString(error)}
         placement="bottom"
         textColor="light-shade-1"
         visible={!!error}

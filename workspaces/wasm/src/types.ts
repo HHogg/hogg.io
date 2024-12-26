@@ -332,10 +332,63 @@ export interface Plane {
 	stages: Stage[];
 }
 
+export type TilingError = 
+	| { name: "Application", data: {
+	reason: string;
+}}
+	| { name: "InvalidNotation", data: {
+	notation: string;
+	reason: string;
+}}
+	| { name: "InvalidOffset", data: {
+	offset: string;
+	reason: string;
+}}
+	| { name: "InvalidOperation", data: {
+	operation: string;
+	reason: string;
+}}
+	| { name: "InvalidOriginIndex", data: {
+	origin_index: string;
+	reason: string;
+}}
+	| { name: "InvalidOriginType", data: {
+	origin_type: string;
+	reason: string;
+}}
+	| { name: "InvalidShape", data: {
+	shape: string;
+	reason: string;
+}}
+	| { name: "InvalidShapeGroup", data: {
+	group: string;
+	reason: string;
+}}
+	| { name: "InvalidShapeInGroup", data: {
+	shape: string;
+	group: string;
+	reason: string;
+}}
+	| { name: "InvalidState", data: {
+	reason: string;
+}}
+	| { name: "InvalidTiling", data: Error }
+	| { name: "InvalidTransform", data: {
+	transform: string;
+	reason: string;
+}}
+	| { name: "InvalidTransformValue", data: {
+	value: string;
+	reason: string;
+}}
+	| { name: "InvalidVertexType", data: {
+	value: string;
+}};
+
 export interface Result {
 	notation: string;
 	expansionPhases: number;
-	error: string;
+	error?: TilingError;
 	transformIndex: number;
 	timestamp: string;
 	metrics: Metrics;

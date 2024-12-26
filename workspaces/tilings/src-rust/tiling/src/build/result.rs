@@ -13,7 +13,6 @@ use super::Metrics;
 pub struct Result {
   pub notation: String,
   pub expansion_phases: u8,
-  #[typeshare(serialized_as = "string")]
   pub error: Option<TilingError>,
   pub transform_index: i32,
   #[typeshare(serialized_as = "string")]
@@ -44,7 +43,7 @@ impl Result {
   }
 
   pub fn with_error(mut self, error: TilingError) -> Self {
-    self.error = Some(error);
+    self.error = Some(error.clone());
     self
   }
 

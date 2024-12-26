@@ -167,7 +167,7 @@ impl Tiling {
       on_visit(&self.result);
     }
 
-    Ok(())
+    build_result
   }
 }
 
