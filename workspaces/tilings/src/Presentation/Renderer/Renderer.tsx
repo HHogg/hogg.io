@@ -8,6 +8,7 @@ import { defaultExpansionPhases } from './defaultOptions';
 import useRenderOptions from './useRenderOptions';
 
 export type RendererProps = {
+  notation?: string;
   expansionPhases?: number;
   options?: DeepPartial<Options>;
   uid: string;
@@ -17,6 +18,7 @@ export type RendererProps = {
 };
 
 export default function Renderer({
+  notation: notationProps,
   expansionPhases = defaultExpansionPhases,
   options: optionsProps,
   uid,
@@ -27,9 +29,11 @@ export default function Renderer({
 }: BoxProps & RendererProps) {
   const { api } = useWasmApi();
   const options = useRenderOptions(optionsProps);
-  const { notation } = useNotationContext();
+  const { notation: notationContext } = useNotationContext();
   const [error, setError] = useState('');
   const [size, refSize] = useResizeObserver<HTMLDivElement>();
+
+  const notation = notationProps || notationContext;
 
   let height = heightProps || size.height || 0;
   let width = widthProps || size.width || 0;

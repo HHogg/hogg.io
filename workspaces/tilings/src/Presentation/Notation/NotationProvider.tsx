@@ -1,22 +1,24 @@
 import { useWasmApi } from '@hogg/wasm';
-import { PropsWithChildren, useCallback, useRef, useState } from 'react';
+import { useLocalStorage } from 'preshape';
+import { PropsWithChildren, useCallback, useRef } from 'react';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 import { NotationContext } from './useNotationContext';
 
 export type NotationProviderProps = {
   notation: string;
-  isValid?: boolean;
   onChange?: (notation: string) => void;
 };
 
 export default function NotationProvider({
   children,
   notation: initialNotation,
-  isValid,
   onChange,
 }: PropsWithChildren<NotationProviderProps>) {
   const { api } = useWasmApi();
-  const [notation, setNotation] = useState(initialNotation);
+  const [notation, setNotation] = useLocalStorage(
+    'com.hogg.io.notation.input',
+    initialNotation
+  );
   const { expansionPhases } = useSettingsContext();
   const notationRef = useRef<string>(initialNotation);
 
@@ -26,7 +28,7 @@ export default function NotationProvider({
       setNotation(notation);
       onChange?.(notation);
     },
-    [onChange]
+    [setNotation, onChange]
   );
 
   const handlePreviousNotation = useCallback(async () => {
@@ -58,7 +60,6 @@ export default function NotationProvider({
     notationRef,
     path: notationSplit[0],
     transforms: notationSplit.slice(1),
-    isValid,
     setNotation: handleSetNotation,
     previousNotation: handlePreviousNotation,
     nextNotation: handleNextNotation,

@@ -96,7 +96,7 @@ impl From<&mut Tiling> for Result {
   fn from(tiling: &mut Tiling) -> Self {
     Self::default()
       .with_notation(tiling.notation.to_string())
-      .with_expansion_phases(tiling.plane.expansion_phases)
+      .with_expansion_phases(tiling.plane.repetitions)
       .with_transform_index(tiling.notation.transforms.index)
       .with_metrics(tiling.plane.metrics.clone())
       .with_vertex_types(tiling.plane.get_vertex_types())

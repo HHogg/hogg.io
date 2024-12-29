@@ -1,6 +1,6 @@
 import { type NestedKeyOf } from '@hogg/common';
-import get from 'lodash.get';
 import init from '@hogg/wasm/pkg';
+import get from 'lodash.get';
 import * as circularSequence from './modules/circular-sequence';
 import * as lineSegmentExtending from './modules/line-segment-extending';
 import * as tilings from './modules/tilings';
@@ -50,14 +50,25 @@ onmessage = async ({ data }: MessageEvent<WasmWorkerMessageRequest>) => {
     return;
   }
 
-  // @ts-ignore
-  const result = fn(...args);
+  try {
+    // @ts-ignore
+    const result = fn(...args);
 
-  const response: WasmWorkerMessageResponse = {
-    id,
-    key,
-    result,
-  };
+    const response: WasmWorkerMessageResponse = {
+      id,
+      key,
+      result,
+    };
 
-  postMessage(response);
+    postMessage(response);
+  } catch (error) {
+    const response: WasmWorkerMessageResponse = {
+      id,
+      key,
+      error: (error as Error).message,
+      result: null,
+    };
+
+    postMessage(response);
+  }
 };

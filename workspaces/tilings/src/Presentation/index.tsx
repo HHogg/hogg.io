@@ -13,7 +13,7 @@ import Settings from './Settings/Settings';
 import SettingsProvider from './Settings/SettingsProvider';
 import { useSettingsContext } from './Settings/useSettingsContext';
 
-const DEFAULT_NOTATION = '6-3-3/m30/m(h3)';
+const DEFAULT_NOTATION = '6-3-4,4-3/m90/r(h7)';
 
 function PresentationInner() {
   const { setShowSettings } = useSettingsContext();
@@ -22,6 +22,7 @@ function PresentationInner() {
     <ProjectWindow
       controls={<PlayerControls />}
       onClick={() => setShowSettings(false)}
+      padding="x0"
       tabs={
         <ProjectTabs>
           <ProjectTab Icon={InfoIcon} name="Info">
@@ -38,8 +39,19 @@ function PresentationInner() {
         </ProjectTabs>
       }
     >
-      <Box flex="vertical" gap="x8" grow>
-        <NotationInput />
+      <Box container flex="vertical" gap="x8" grow>
+        <Box absolute="top" padding="x6" zIndex={1}>
+          <Box
+            backgroundColor="background-shade-2"
+            borderColor="background-shade-4"
+            borderSize="x1"
+            borderRadius="x3"
+            padding="x3"
+          >
+            <NotationInput />
+          </Box>
+        </Box>
+
         <RendererPlayer minHeight="500px" />
       </Box>
 

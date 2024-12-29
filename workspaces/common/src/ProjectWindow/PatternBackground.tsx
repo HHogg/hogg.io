@@ -16,6 +16,7 @@ export default function PatternBackground({
   patternGap: dotSpacing = 20,
   patternOpacity = pattern === 'dots' ? 0.2 : 0.05,
   patternSize: dotSize = 1,
+  style,
   ...rest
 }: PropsWithChildren<BoxProps & PatternBackgroundProps>) {
   const dotGradient =
@@ -40,6 +41,7 @@ export default function PatternBackground({
       {...rest}
       backgroundColor={backgroundColor}
       style={{
+        ...style,
         backgroundImage: backgroundImage || '',
         backgroundSize: backgroundSize || '',
       }}

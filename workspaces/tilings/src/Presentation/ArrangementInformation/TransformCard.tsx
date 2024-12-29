@@ -1,5 +1,5 @@
 import { DeepPartial } from '@hogg/common';
-import { Layer, Options } from '@hogg/wasm';
+import { Layer, Options, ScaleMode } from '@hogg/wasm';
 import { TilingRendererProps } from '../../TilingRenderer';
 import useParsedTransform from '../Notation/useParsedTransform';
 import ArrangementCard from './ArrangementCard';
@@ -11,6 +11,7 @@ type Props = {
 };
 
 const options: DeepPartial<Options> = {
+  scaleMode: ScaleMode.Contain,
   showTransformIndex: 0,
   showLayers: {
     [Layer.Transform]: true,

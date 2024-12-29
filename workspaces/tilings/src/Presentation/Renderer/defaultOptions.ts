@@ -5,16 +5,16 @@ type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
 };
 
-export const defaultExpansionPhases = 4;
+export const defaultExpansionPhases = 10;
 
 export const defaultOptions: Pick<
   NoUndefinedField<Options>,
   'autoRotate' | 'colorMode' | 'colorPalette' | 'scaleMode' | 'showLayers'
 > = {
-  autoRotate: true,
+  autoRotate: false,
   colorMode: ColorMode.Stage,
   colorPalette: ColorPalette.VaporWave,
-  scaleMode: ScaleMode.Contain,
+  scaleMode: ScaleMode.Cover,
   showLayers: {
     [Layer.Axis]: false,
     [Layer.BoundingBoxes]: false,

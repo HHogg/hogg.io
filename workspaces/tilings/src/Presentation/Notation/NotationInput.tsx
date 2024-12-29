@@ -9,7 +9,9 @@ const tilingErrorToString = (error: TilingError | null) => {
     return '';
   }
 
-  return `${error?.name}: {error?.message}`;
+  return `${error?.name}: ${Object.entries(error?.data)
+    .map(([key, value]) => `[${key}=${value}]`)
+    .join(' ')}`;
 };
 
 export default function NotationInput() {
@@ -40,16 +42,16 @@ export default function NotationInput() {
           backgroundColor="transparent"
           basis="0"
           borderColor={error ? 'negative-shade-4' : 'text-shade-1'}
-          borderBottom
-          borderSize="x3"
+          borderSize="x0"
           borderRadius="x0"
           grow
-          size="x6"
+          size="x5"
           onChange={handleInputChange}
           placeholder="Notation"
           placeholderTextColor="text-shade-3"
           value={notation}
           maxWidth="500px"
+          minWidth="300px"
         />
       </Tooltip>
 

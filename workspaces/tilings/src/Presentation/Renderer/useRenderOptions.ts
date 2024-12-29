@@ -6,7 +6,8 @@ import { useMemo } from 'react';
 import { getDefaultOptionsWithStyles } from './defaultOptions';
 
 export default function useRenderOptions(
-  optionsProps?: DeepPartial<Options>
+  optionsPropsA?: DeepPartial<Options>,
+  optionsPropsB?: DeepPartial<Options>
 ): Options {
   const { colors: themeColors } = useThemeContext();
 
@@ -16,8 +17,8 @@ export default function useRenderOptions(
   );
 
   const options = useMemo<Options>(
-    () => merge({}, defaultOptions, optionsProps),
-    [defaultOptions, optionsProps]
+    () => merge({}, defaultOptions, optionsPropsA, optionsPropsB),
+    [defaultOptions, optionsPropsA, optionsPropsB]
   );
 
   return options;

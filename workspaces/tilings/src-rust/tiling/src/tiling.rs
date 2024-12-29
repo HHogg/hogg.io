@@ -106,6 +106,10 @@ impl Tiling {
   pub fn from_string(mut self, notation: &str) -> Self {
     self = self.with_notation(notation);
 
+    if self.result.error.is_some() {
+      return self;
+    }
+
     if let Err(err) = self.build(&None) {
       self.result.error = Some(err);
     }

@@ -23,9 +23,9 @@ pub struct Polygon {
   pub index: u16,
   pub line_segments: Vec<LineSegment>,
   pub offset: Offset,
-  pub phase: build::Phase,
   pub points: Vec<Point>,
   pub shape: Shape,
+  pub stage: build::Stage,
   pub stage_index: u16,
 }
 
@@ -58,8 +58,8 @@ impl Polygon {
     self
   }
 
-  pub fn with_phase(mut self, phase: build::Phase) -> Self {
-    self.phase = phase;
+  pub fn with_stage(mut self, stage: build::Stage) -> Self {
+    self.stage = stage;
     self
   }
 

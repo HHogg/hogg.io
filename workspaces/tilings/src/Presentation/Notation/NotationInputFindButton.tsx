@@ -89,9 +89,9 @@ export default function NotationInputFindButton({
         onClick={handleClick}
       >
         {id === 'next' ? (
-          <ChevronRightIcon size="2rem" />
+          <ChevronRightIcon size="1.5rem" />
         ) : (
-          <ChevronLeftIcon size="2rem" />
+          <ChevronLeftIcon size="1.5rem" />
         )}
       </ButtonAsync>
     </Tooltip>

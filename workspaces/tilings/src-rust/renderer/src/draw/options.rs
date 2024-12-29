@@ -19,7 +19,7 @@ pub struct Options {
   pub padding: Option<f64>,
   pub scale_mode: Option<ScaleMode>,
   pub show_layers: Option<HashMap<Layer, bool>>,
-  pub show_transform_index: Option<u32>,
+  pub show_transform_index: Option<u8>,
   pub styles: Styles,
 }
 

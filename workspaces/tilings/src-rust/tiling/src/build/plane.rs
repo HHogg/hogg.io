@@ -11,9 +11,8 @@ use spatial_grid_map::utils::compare_coordinate;
 use spatial_grid_map::{ResizeMethod, SpatialGridMap};
 use typeshare::typeshare;
 
-use super::phase::Phase;
 use super::vertex_types::VertexTypes;
-use super::{Metrics, PointSequence};
+use super::{Metrics, PointSequence, Stage};
 use crate::geometry::{ConvexHull, LineSegment, Point, Polygon};
 use crate::notation::{
   Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
@@ -35,7 +34,7 @@ pub struct Plane {
   // a more performant approach to lower the data going
   // across workers?
   pub convex_hull: ConvexHull,
-  pub expansion_phases: u8,
+  pub repetitions: u8,
   pub line_segments: SpatialGridMap<LineSegment>,
   pub points_center: SpatialGridMap<PointSequence>,
   pub points_end: SpatialGridMap<PointSequence>,
@@ -57,7 +56,7 @@ pub struct Plane {
 
 impl Plane {
   pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
-    self.expansion_phases = expansion_phases;
+    self.repetitions = expansion_phases;
     self
   }
 
@@ -83,20 +82,34 @@ impl Plane {
 
     if !notation.transforms.list.is_empty() {
       for (index, transform) in notation.transforms.list.iter().enumerate() {
-        self.apply_initial_transform(index as u32, transform)?;
+        self.apply_transform(
+          transform,
+          Stage::Transform {
+            index: index as u8,
+            repetition_index: 0,
+          },
+        )?;
       }
 
-      if self.expansion_phases > 0 {
-        for _ in 0..self.expansion_phases {
+      if self.repetitions > 0 {
+        for repetition_index in 0..self.repetitions {
           for (index, transform) in notation.transforms.list.iter().enumerate() {
-            self.apply_transform(index as u32, transform)?;
+            self.apply_transform(
+              transform,
+              Stage::Transform {
+                index: index as u8,
+                repetition_index,
+              },
+            )?;
+          }
+
+          if repetition_index <= 1 {
+            self.validate_expanded()?;
+            self.validate_gaps()?;
+            self.validate_vertex_types()?;
           }
         }
       }
-
-      self.validate_expanded()?;
-      self.validate_gaps()?;
-      self.validate_vertex_types()?;
 
       self.convex_hull =
         ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values());
@@ -135,7 +148,7 @@ impl Plane {
         match node {
           Node::Seed(seed) => {
             let polygon = Polygon::default()
-              .with_phase(Phase::Seed)
+              .with_stage(Stage::Seed)
               .with_shape(seed.shape)
               .with_offset(seed.offset)
               .at_center();
@@ -164,7 +177,7 @@ impl Plane {
 
             let polygon = Polygon::default()
               .with_shape(*shape)
-              .with_phase(Phase::Placement)
+              .with_stage(Stage::Placement)
               .with_index(shape_counter)
               .with_stage_index(self.stages.len() as u16)
               .on_line_segment(&line_segment.flip(), points_counter - 1);
@@ -225,7 +238,7 @@ impl Plane {
     // to picked up on the next transform stage
     self.polygons_to_transform.push(polygon.clone());
 
-    if polygon.phase <= Phase::Placement {
+    if polygon.stage <= Stage::Placement {
       // Store the polygon's center point
       // for looking up origins for transforms
       self.points_center.insert(
@@ -248,7 +261,7 @@ impl Plane {
       let mid_point = line_segment.mid_point();
       let mid_point_f64: (f64, f64) = mid_point.into();
 
-      if polygon.phase <= Phase::Placement {
+      if polygon.stage <= Stage::Placement {
         // Store the line segments mid point
         // for looking up origins for transforms
         self.points_mid.insert(
@@ -272,14 +285,17 @@ impl Plane {
         .increment_counter("count");
 
       // Check that the line segment is not intersecting with any
-      // other line segments around it
+      // other line segments around it. However we should only need to do
+      // this up until the first transforms have been applied, after that
+      // any future line segments should be valid.
+
       self.validate_overlaps(&polygon, line_segment)?;
       self.update_edge_type(&polygon, line_segment);
       self.update_shape_type(&polygon, line_segment);
     }
 
     for point in polygon.points.iter() {
-      if polygon.phase <= Phase::Placement {
+      if polygon.stage <= Stage::Placement {
         let point_f64: (f64, f64) = point.into();
 
         // Store the polygon's end points
@@ -488,32 +504,28 @@ impl Plane {
       })
   }
 
-  pub fn apply_initial_transform(
-    &mut self,
-    _index: u32, // TODO: This is to support the efficient tiling, if you ever do it
-    transform: &Transform,
-  ) -> Result<(), TilingError> {
-    self.apply_transform(0, transform)
-  }
-
   /// Applies a transform to the tiling, routing
   /// continuous and eccentric transforms to their
   /// respective functions.
-  pub fn apply_transform(&mut self, index: u32, transform: &Transform) -> Result<(), TilingError> {
-    let metric_key = Stage::Transform(index).to_string();
+  pub fn apply_transform(
+    &mut self,
+    transform: &Transform,
+    stage: Stage,
+  ) -> Result<(), TilingError> {
+    let metric_key = stage.to_string();
     self.metrics.start(&metric_key);
     self.metrics.create(validation::Flag::Overlaps.into());
 
     match transform {
       Transform::Continuous(TransformContinuous { operation, value }) => {
-        self.apply_continuous_transform(index, transform, operation, value)?
+        self.apply_continuous_transform(transform, stage, operation, value)?
       }
       Transform::Eccentric(TransformEccentric {
         operation,
         origin_type,
         origin_index,
       }) => {
-        self.apply_eccentric_transform(index, transform, operation, origin_type, origin_index)?
+        self.apply_eccentric_transform(transform, stage, operation, origin_type, origin_index)?
       }
     }
 
@@ -527,14 +539,14 @@ impl Plane {
   /// routing the operation to the respective function.
   fn apply_continuous_transform(
     &mut self,
-    index: u32,
     transform: &Transform,
+    stage: Stage,
     operation: &Operation,
     value: &TransformValue,
   ) -> Result<(), TilingError> {
     match operation {
-      Operation::Reflect => self.apply_continuous_reflect_transform(index, transform, value),
-      Operation::Rotate => self.apply_continuous_rotate_transform(index, transform, value),
+      Operation::Reflect => self.apply_continuous_reflect_transform(transform, stage, value),
+      Operation::Rotate => self.apply_continuous_rotate_transform(transform, stage, value),
     }
   }
 
@@ -542,18 +554,18 @@ impl Plane {
   /// routing the operation to the respective function.
   fn apply_eccentric_transform(
     &mut self,
-    index: u32,
     transform: &Transform,
+    stage: Stage,
     operation: &Operation,
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
     match operation {
       Operation::Reflect => {
-        self.apply_eccentric_reflect_transform(index, transform, origin_type, origin_index)
+        self.apply_eccentric_reflect_transform(transform, stage, origin_type, origin_index)
       }
       Operation::Rotate => {
-        self.apply_eccentric_rotate_transform(index, transform, origin_type, origin_index)
+        self.apply_eccentric_rotate_transform(transform, stage, origin_type, origin_index)
       }
     }
   }
@@ -561,8 +573,8 @@ impl Plane {
   /// Applies an eccentric reflection transform to the tiling.
   fn apply_continuous_reflect_transform(
     &mut self,
-    index: u32,
     _transform: &Transform,
+    stage: Stage,
     transform_value: &TransformValue,
   ) -> Result<(), TilingError> {
     for value in transform_value.get_transform_values() {
@@ -582,14 +594,14 @@ impl Plane {
 
         let next_polygon = polygon
           .clone()
-          .with_phase(Phase::Transform(index))
+          .with_stage(stage)
           .with_stage_index(stage_index)
           .reflect(&line_segment);
 
-        self.add_polygon(Stage::Transform(index), next_polygon)?;
+        self.add_polygon(stage, next_polygon)?;
       }
 
-      self.complete_stage(Stage::Transform(index));
+      self.complete_stage(stage);
     }
 
     Ok(())
@@ -598,8 +610,8 @@ impl Plane {
   /// Applies an continuous rotation transform to the tiling.
   fn apply_continuous_rotate_transform(
     &mut self,
-    index: u32,
     _transform: &Transform,
+    stage: Stage,
     transform_value: &TransformValue,
   ) -> Result<(), TilingError> {
     for value in transform_value.get_transform_values() {
@@ -616,14 +628,14 @@ impl Plane {
 
         let next_polygon = polygon
           .clone()
-          .with_phase(Phase::Transform(index))
+          .with_stage(stage)
           .with_stage_index(stage_index)
           .rotate(value, None);
 
-        self.add_polygon(Stage::Transform(index), next_polygon)?;
+        self.add_polygon(stage, next_polygon)?;
       }
 
-      self.complete_stage(Stage::Transform(index));
+      self.complete_stage(stage);
     }
 
     Ok(())
@@ -632,8 +644,8 @@ impl Plane {
   /// Applies an eccentric reflection transform to the tiling.
   fn apply_eccentric_reflect_transform(
     &mut self,
-    index: u32,
     transform: &Transform,
+    stage: Stage,
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
@@ -652,13 +664,13 @@ impl Plane {
       .map(|polygon| {
         polygon
           .clone()
-          .with_phase(Phase::Transform(index))
+          .with_stage(stage)
           .with_stage_index(stage_index)
           .reflect(&line_segment)
       })
-      .try_for_each(|polygon| self.add_polygon(Stage::Transform(index), polygon))?;
+      .try_for_each(|polygon| self.add_polygon(stage, polygon))?;
 
-    self.complete_stage(Stage::Transform(index));
+    self.complete_stage(stage);
 
     Ok(())
   }
@@ -666,8 +678,8 @@ impl Plane {
   /// Applies an eccentric rotation transform to the tiling.
   fn apply_eccentric_rotate_transform(
     &mut self,
-    index: u32,
     transform: &Transform,
+    stage: Stage,
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
@@ -687,13 +699,13 @@ impl Plane {
       .map(|polygon| {
         polygon
           .clone()
-          .with_phase(Phase::Transform(index))
+          .with_stage(stage)
           .with_stage_index(stage_index)
           .rotate(PI, Some(&origin))
       })
-      .try_for_each(|polygon| self.add_polygon(Stage::Transform(index), polygon))?;
+      .try_for_each(|polygon| self.add_polygon(stage, polygon))?;
 
-    self.complete_stage(Stage::Transform(index));
+    self.complete_stage(stage);
 
     Ok(())
   }
@@ -737,7 +749,7 @@ impl Default for Plane {
   fn default() -> Self {
     Self {
       convex_hull: ConvexHull::default(),
-      expansion_phases: 0,
+      repetitions: 0,
       metrics: Metrics::default(),
       validator: Validator::default(),
       vertex_types: VertexTypes::default(),
@@ -757,19 +769,19 @@ impl Default for Plane {
   }
 }
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[typeshare]
-#[serde(tag = "type", content = "index")]
-pub enum Stage {
-  Placement,
-  Transform(u32),
-}
+// #[derive(Clone, Debug, Deserialize, Serialize)]
+// #[typeshare]
+// #[serde(tag = "type", content = "index")]
+// pub enum Stage {
+//   Placement,
+//   Transform(u32),
+// }
 
-impl std::fmt::Display for Stage {
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    match self {
-      Stage::Placement => write!(f, "placement"),
-      Stage::Transform(index) => write!(f, "transform_{}", index),
-    }
-  }
-}
+// impl std::fmt::Display for Stage {
+//   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+//     match self {
+//       Stage::Placement => write!(f, "placement"),
+//       Stage::Transform(index) => write!(f, "transform_{}", index),
+//     }
+//   }
+// }

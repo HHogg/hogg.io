@@ -280,10 +280,13 @@ export enum Offset {
 	Center = "Center",
 }
 
-export type Phase = 
+export type Stage = 
 	| { type: "Seed", index?: undefined }
 	| { type: "Placement", index?: undefined }
-	| { type: "Transform", index: number };
+	| { type: "Transform", index: {
+	index: number;
+	repetition_index: number;
+}};
 
 export interface Polygon {
 	bbox: BBox;
@@ -291,9 +294,9 @@ export interface Polygon {
 	index: number;
 	lineSegments: LineSegment[];
 	offset: Offset;
-	phase: Phase;
 	points: Point[];
 	shape: Shape;
+	stage: Stage;
 	stageIndex: number;
 }
 
@@ -314,16 +317,12 @@ export interface PointSequence {
 	size: number;
 }
 
-export type Stage = 
-	| { type: "Placement", index?: undefined }
-	| { type: "Transform", index: number };
-
 export interface Plane {
 	polygons: SpatialGridMap<Polygon>;
 	polygonsPlacement: SpatialGridMap<Polygon>;
 	seedPolygon?: Polygon;
 	convexHull: ConvexHull;
-	expansionPhases: number;
+	repetitions: number;
 	lineSegments: SpatialGridMap<LineSegment>;
 	pointsCenter: SpatialGridMap<PointSequence>;
 	pointsEnd: SpatialGridMap<PointSequence>;

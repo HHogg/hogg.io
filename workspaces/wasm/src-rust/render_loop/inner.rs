@@ -161,7 +161,9 @@ impl RenderLoopInner {
         }
       }
 
-      post_play_state(&tiling.as_ref(), &state);
+      if *needs_render || *needs_draw {
+        post_play_state(&tiling.as_ref(), &state);
+      }
     }) as Box<dyn FnMut()>);
 
     let global = js_sys::global()
@@ -205,7 +207,9 @@ impl RenderLoopInner {
   }
 
   fn set_draw_index(&self, index: u16) {
-    self.state.borrow_mut().draw_index = index;
+    let mut state = self.state.borrow_mut();
+    state.draw_index = index;
+    state.is_playing = false;
     self.set_draw();
   }
 

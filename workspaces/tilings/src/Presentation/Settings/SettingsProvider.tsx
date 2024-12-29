@@ -1,6 +1,6 @@
-import { ColorPalette, ScaleMode } from '@hogg/wasm';
+import { ColorMode, ColorPalette, Layer, ScaleMode } from '@hogg/wasm';
 import { useLocalStorage } from 'preshape';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { PropsWithChildren, useMemo, useState } from 'react';
 import {
   Settings,
   SettingsContext,
@@ -12,69 +12,53 @@ type SettingsProviderProps = {
 };
 
 export default function SettingsProvider({
-  settings,
+  settings: settingsProps,
   ...rest
 }: PropsWithChildren<SettingsProviderProps>) {
-  const [initialState, setInitialState] = useLocalStorage(
+  const [settings, setSettings] = useLocalStorage(
     'com.hogg.io.tilings.player.settings',
-    {
-      ...defaultSettings,
-      ...settings,
-    }
+    useMemo(
+      () => ({
+        ...defaultSettings,
+        ...settingsProps,
+      }),
+      [settingsProps]
+    )
   );
 
-  const [autoRotate, setAutoRotate] = useState(initialState.autoRotate);
-  const [colorMode, setColorMode] = useState(initialState.colorMode);
-  const [colorPalette, setColorPalette] = useState<ColorPalette>(
-    initialState.colorPalette
-  );
-  const [expansionPhases, setExpansionPhases] = useState(
-    initialState.expansionPhases
-  );
-  const [scaleMode, setScaleMode] = useState<ScaleMode>(initialState.scaleMode);
-  const [showLayers, setShowLayers] = useState(initialState.showLayers);
   const [showSettings, setShowSettings] = useState(false);
-  const [speed, setSpeed] = useState(initialState.speed);
-
   const toggleSettings = () => setShowSettings(!showSettings);
 
-  useEffect(() => {
-    setInitialState({
-      autoRotate,
-      colorMode,
-      colorPalette,
-      expansionPhases,
-      scaleMode,
-      showLayers,
-      speed,
-    });
-  }, [
-    setInitialState,
-    autoRotate,
-    colorMode,
-    colorPalette,
-    expansionPhases,
-    scaleMode,
-    showLayers,
-    speed,
-  ]);
+  const setAutoRotate = (autoRotate: boolean) =>
+    setSettings({ ...settings, autoRotate });
+
+  const setColorMode = (colorMode: ColorMode) =>
+    setSettings({ ...settings, colorMode });
+
+  const setColorPalette = (colorPalette: ColorPalette) =>
+    setSettings({ ...settings, colorPalette });
+
+  const setExpansionPhases = (expansionPhases: number) =>
+    setSettings({ ...settings, expansionPhases });
+
+  const setScaleMode = (scaleMode: ScaleMode) =>
+    setSettings({ ...settings, scaleMode });
+
+  const setShowLayers = (showLayers: Record<Layer, boolean>) =>
+    setSettings({ ...settings, showLayers });
+
+  const setSpeed = (speed: number) => setSettings({ ...settings, speed });
 
   const value = {
-    autoRotate,
-    colorMode,
-    colorPalette,
-    expansionPhases,
-    scaleMode,
-    showLayers,
-    speed,
+    ...settings,
     setAutoRotate,
     setColorMode,
     setColorPalette,
     setExpansionPhases,
     setScaleMode,
     setShowLayers,
-    setShowSettings,
     setSpeed,
+    setShowSettings,
     toggleSettings,
     elapsed: 0,
     showSettings,

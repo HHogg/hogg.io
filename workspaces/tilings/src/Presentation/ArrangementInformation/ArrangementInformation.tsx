@@ -1,4 +1,5 @@
-import { CopyToClipboardCard } from '@hogg/common';
+import { CopyToClipboardCard, DeepPartial } from '@hogg/common';
+import { ColorMode, ColorPalette, Options, ScaleMode } from '@hogg/wasm';
 import { Box, BoxProps, Grid, Text } from 'preshape';
 import { expandNotationBlock } from '../Arrangement/utils';
 import { useNotationContext } from '../Notation/useNotationContext';
@@ -34,6 +35,12 @@ const parseVertexType = (vertexType: string) => {
   };
 
   return vertexToNotation[vertexType];
+};
+
+const options: DeepPartial<Options> = {
+  colorMode: ColorMode.Placement,
+  colorPalette: ColorPalette.None,
+  scaleMode: ScaleMode.Contain,
 };
 
 const Section = ({ children, title, ...rest }: BoxProps) => (
@@ -88,6 +95,7 @@ export default function ArrangementInformation() {
               key={vertexType}
               notation={parseVertexType(vertexType)}
               size={80}
+              options={options}
             />
           ))}
         </Grid>
@@ -102,6 +110,7 @@ export default function ArrangementInformation() {
               key={edgeType}
               notation={parseEdgeType(edgeType)}
               size={80}
+              options={options}
             />
           ))}
         </Grid>
@@ -116,6 +125,7 @@ export default function ArrangementInformation() {
               key={shapeType}
               notation={parseShapeType(shapeType)}
               size={80}
+              options={options}
             />
           ))}
         </Grid>
