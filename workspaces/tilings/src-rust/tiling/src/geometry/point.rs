@@ -6,10 +6,10 @@ use std::cmp::Ordering;
 use std::fmt::{self, Display};
 
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::get_radians_for_x_y;
+use spatial_grid_map::utils::{
+  compare_coordinate, compare_radians, coordinate_equals, get_radians_for_x_y,
+};
 use typeshare::typeshare;
-
-use crate::utils::math::{compare_coordinate, compare_radians, coordinate_equals};
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
@@ -99,7 +99,7 @@ impl Point {
 
 impl Display for Point {
   fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-    write!(fmt, "({}, {})", self.x, self.y)
+    write!(fmt, "({:.2}, {:.2})", self.x, self.y)
   }
 }
 

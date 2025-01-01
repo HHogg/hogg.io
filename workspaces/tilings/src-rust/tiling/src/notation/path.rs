@@ -328,7 +328,7 @@ impl From<Shape> for Path {
 
 impl From<String> for Path {
   fn from(s: String) -> Self {
-    s.parse().unwrap()
+    s.parse().expect("Failed to parse path")
   }
 }
 

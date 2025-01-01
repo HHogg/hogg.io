@@ -79,7 +79,9 @@ impl Actor for Issuer {
         let mut leases = leases.lock().await;
 
         for path_string in INITIAL_BUFFER {
-          let path = Path::default().from_string(path_string, false).unwrap();
+          let path = Path::default()
+            .from_string(path_string, false)
+            .expect("Failed to parse path");
 
           state.path_index += 1;
           leases.insert(path.clone(), state.path_index);

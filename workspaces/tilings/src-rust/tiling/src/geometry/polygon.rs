@@ -7,11 +7,11 @@ use std::f64::consts::PI;
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
+use spatial_grid_map::utils::{compare_coordinate, compare_radians};
 use typeshare::typeshare;
 
 use super::{BBox, LineSegment, Point};
 use crate::notation::{Offset, Shape};
-use crate::utils::math::{self, compare_coordinate};
 use crate::{build, TilingError};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -130,7 +130,7 @@ impl Polygon {
       let theta1 = v1.radian_to(&self.centroid);
       let theta2 = v2.radian_to(&self.centroid);
 
-      math::compare_radians(theta1, theta2)
+      compare_radians(theta1, theta2)
     });
 
     let mut line_segments = Vec::new();

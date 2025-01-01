@@ -96,7 +96,7 @@ impl Notation {
     with_type_ahead: bool,
   ) -> Result<Self, TilingError> {
     let mut sections = notation.split('/');
-    let path_string = sections.next().unwrap();
+    let path_string = sections.next().expect("No first notation section");
 
     if path_string.is_empty() {
       if with_type_ahead {

@@ -1,5 +1,6 @@
 use circular_sequence::Sequence;
 use serde::{Deserialize, Serialize};
+use spatial_grid_map::utils::compare_radians;
 use typeshare::typeshare;
 
 use crate::geometry::Point;
@@ -32,7 +33,7 @@ impl PointSequence {
 
     self
       .entries
-      .sort_by(|a, b| a.radians.partial_cmp(&b.radians).unwrap());
+      .sort_by(|a, b| compare_radians(a.radians, b.radians));
 
     self.sequence = Sequence::default();
 

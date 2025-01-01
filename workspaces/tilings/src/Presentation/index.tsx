@@ -13,7 +13,8 @@ import Settings from './Settings/Settings';
 import SettingsProvider from './Settings/SettingsProvider';
 import { useSettingsContext } from './Settings/useSettingsContext';
 
-const DEFAULT_NOTATION = '6-3-4,4-3/m90/r(h7)';
+// const DEFAULT_NOTATION = '6-3-4,4-3/m90/r(h7)';
+const DEFAULT_NOTATION = '6-3-6-3,4';
 
 function PresentationInner() {
   const { setShowSettings } = useSettingsContext();
@@ -41,15 +42,7 @@ function PresentationInner() {
     >
       <Box container flex="vertical" gap="x8" grow>
         <Box absolute="top" padding="x6" zIndex={1}>
-          <Box
-            backgroundColor="background-shade-2"
-            borderColor="background-shade-4"
-            borderSize="x1"
-            borderRadius="x3"
-            padding="x3"
-          >
-            <NotationInput />
-          </Box>
+          <NotationInput />
         </Box>
 
         <RendererPlayer minHeight="500px" />

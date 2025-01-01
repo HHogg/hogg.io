@@ -2,15 +2,15 @@
 #[cfg(test)]
 mod tests;
 
-use std::cmp::Ordering;
+use std::{cmp::Ordering, fmt::Display};
 
 use line_segment_extending::extend_line_segment;
 use serde::{Deserialize, Serialize};
+use spatial_grid_map::utils::{compare_coordinate, compare_radians};
 use typeshare::typeshare;
 
 use super::point::Point;
 use super::BBox;
-use crate::utils::math::{compare_coordinate, compare_radians};
 
 fn get_point_at_percentage(p1: Point, p2: Point, percentage: f64, offset: f64) -> Point {
   let x = p1.x + (p2.x - p1.x) * percentage + offset;
@@ -219,6 +219,12 @@ impl LineSegment {
       Some(_) => true,
       None => false,
     }
+  }
+}
+
+impl Display for LineSegment {
+  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    write!(f, "({}, {})", self.start, self.end)
   }
 }
 

@@ -1,5 +1,6 @@
 import { TilingError } from '@hogg/wasm';
-import { Box, Input, Tooltip } from 'preshape';
+import { Appear, Box, Input, Text } from 'preshape';
+import { useRef } from 'react';
 import { usePlayerContext } from '../Player/usePlayerContext';
 import NotationInputFindButton from './NotationInputFindButton';
 import { useNotationContext } from './useNotationContext';
@@ -18,30 +19,34 @@ export default function NotationInput() {
   const { notation, setNotation } = useNotationContext();
   const { renderResult } = usePlayerContext();
   const error = renderResult?.error ?? null;
+  const refErrorString = useRef(tilingErrorToString(error));
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNotation(value);
   };
 
-  return (
-    <Box flex="horizontal" alignChildrenVertical="middle">
-      <Box>
-        <NotationInputFindButton id="previous" />
-      </Box>
+  if (error && refErrorString.current !== tilingErrorToString(error)) {
+    refErrorString.current = tilingErrorToString(error);
+  }
 
-      <Tooltip
-        backgroundColor="negative-shade-4"
-        content={tilingErrorToString(error)}
-        placement="bottom"
-        textColor="light-shade-1"
-        visible={!!error}
-      >
+  return (
+    <Box
+      backgroundColor="background-shade-2"
+      borderColor={error ? 'negative-shade-4' : 'background-shade-4'}
+      borderSize="x1"
+      borderRadius="x3"
+      padding="x3"
+    >
+      <Box flex="horizontal" alignChildrenVertical="middle">
+        <Box>
+          <NotationInputFindButton id="previous" />
+        </Box>
+
         <Input
           align="middle"
           backgroundColor="transparent"
           basis="0"
-          borderColor={error ? 'negative-shade-4' : 'text-shade-1'}
           borderSize="x0"
           borderRadius="x0"
           grow
@@ -52,12 +57,19 @@ export default function NotationInput() {
           value={notation}
           maxWidth="500px"
           minWidth="300px"
+          textColor={error ? 'negative-shade-4' : 'text-shade-1'}
         />
-      </Tooltip>
 
-      <Box>
-        <NotationInputFindButton id="next" />
+        <Box>
+          <NotationInputFindButton id="next" />
+        </Box>
       </Box>
+
+      <Appear animation="Expand" visible={!!error}>
+        <Text align="middle" size="x2" weight="x2" textColor="negative-shade-4">
+          {refErrorString.current}
+        </Text>
+      </Appear>
     </Box>
   );
 }

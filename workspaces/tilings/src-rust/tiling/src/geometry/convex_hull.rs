@@ -5,9 +5,8 @@ mod tests;
 use std::cmp::Ordering;
 
 use serde::{Deserialize, Serialize};
+use spatial_grid_map::utils::{compare_coordinate, compare_radians, is_between_radians};
 use typeshare::typeshare;
-
-use crate::utils::math::{compare_coordinate, compare_radians, is_between_radians};
 
 use super::{BBox, LineSegment, Point};
 
@@ -97,6 +96,7 @@ impl ConvexHull {
     }
 
     let bbox_points: [Point; 4] = bbox.into();
+    let mid_point: Point = (&self.points).into();
 
     bbox_points
       .iter()
@@ -104,7 +104,7 @@ impl ConvexHull {
         // At this point, we're working with the assumption that the BBox is bigger
         // than the convex hull so we need a vector that goes from the origin outwards.
         let vector = LineSegment::default()
-          .with_start(Point::default())
+          .with_start(Point::at(0.0, 0.0))
           // We scale the vector to the maximum radius of the BBox
           // so that it will intersect with an edge of the bbox.
           .with_end(*origin);
@@ -119,8 +119,8 @@ impl ConvexHull {
           .get_intersection_point(&vector)
           .expect("Intersection point not found");
 
-        let origin_distance = origin.distance_to(&Point::default());
-        let intersection_point_distance = intersection_point.distance_to(&Point::default());
+        let origin_distance = origin.distance_to(&mid_point);
+        let intersection_point_distance = intersection_point.distance_to(&mid_point);
 
         origin_distance / intersection_point_distance
       })

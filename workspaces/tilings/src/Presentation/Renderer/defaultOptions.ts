@@ -12,7 +12,7 @@ export const defaultOptions: Pick<
   'autoRotate' | 'colorMode' | 'colorPalette' | 'scaleMode' | 'showLayers'
 > = {
   autoRotate: false,
-  colorMode: ColorMode.Stage,
+  colorMode: ColorMode.Placement,
   colorPalette: ColorPalette.VaporWave,
   scaleMode: ScaleMode.Cover,
   showLayers: {

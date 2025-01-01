@@ -1,7 +1,7 @@
 use std::f64::consts::PI;
 
+use spatial_grid_map::utils::coordinate_equals;
 use tiling::notation::{Operation, TransformValue};
-use tiling::utils::math;
 
 use super::Layer;
 use crate::canvas::{ArcArrow, Canvas, LineSegment, LineSegmentArrows, Point, Style};
@@ -48,9 +48,9 @@ fn draw_transform_continuous_reflect_transform(
   let values = transform_value.get_transform_values();
 
   for value in &values {
-    let has_opposite = values.iter().any(|other| {
-      math::coordinate_equals(value - PI, *other) || math::coordinate_equals(value + PI, *other)
-    });
+    let has_opposite = values
+      .iter()
+      .any(|other| coordinate_equals(value - PI, *other) || coordinate_equals(value + PI, *other));
 
     let implicit_line_segment = tiling::geometry::LineSegment::default()
       .with_start(tiling::geometry::Point::at(0.0, -2.0).rotate(value + PI, None))

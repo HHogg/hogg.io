@@ -9,7 +9,7 @@ use sqlx::{ConnectOptions, PgPool};
 
 pub async fn get_pool(url: String, migrations_dir: String, do_reset: bool) -> Result<PgPool> {
   let options = PgConnectOptions::from_str(url.as_str())
-    .unwrap()
+    .expect("Failed to parse PgConnectOptions string")
     .disable_statement_logging()
     .clone();
 

@@ -32,6 +32,9 @@ pub struct Scale {
   translate_x: f64,
   translate_y: f64,
   rotate: f64,
+
+  has_error: bool,
+  has_transforms: bool,
 }
 
 impl Default for Scale {
@@ -48,6 +51,9 @@ impl Default for Scale {
       translate_x: 0.0,
       translate_y: 0.0,
       rotate: 0.0,
+
+      has_error: false,
+      has_transforms: false,
     }
   }
 }
@@ -85,6 +91,16 @@ impl Scale {
   pub fn with_convex_hull(mut self, convex_hull: ConvexHull) -> Self {
     self.convex_hull = convex_hull;
     self.update();
+    self
+  }
+
+  pub fn with_has_error(mut self, has_error: bool) -> Self {
+    self.has_error = has_error;
+    self
+  }
+
+  pub fn with_has_transforms(mut self, has_transforms: bool) -> Self {
+    self.has_transforms = has_transforms;
     self
   }
 
@@ -168,20 +184,24 @@ impl Scale {
       0.0
     };
 
-    self.scale = match self.mode {
-      // Scale the content to fit within the canvas.
-      ScaleMode::Contain => {
-        if self.rotate == 0.0 {
-          (canvas_height / content_height).min(canvas_width / content_width)
-        } else {
-          (canvas_width / content_height).min(canvas_height / content_width)
-        }
-      }
-      // Scale the content to cover the canvas.
-      ScaleMode::Cover => self
-        .convex_hull
-        .rotate(self.rotate, None)
-        .get_bbox_scale_value(&self.canvas_bbox),
+    let contain_scale = if self.rotate == 0.0 {
+      (canvas_height / content_height).min(canvas_width / content_width)
+    } else {
+      (canvas_width / content_height).min(canvas_height / content_width)
     };
+
+    if self.has_error || !self.has_transforms {
+      self.scale = contain_scale;
+    } else {
+      self.scale = match self.mode {
+        // Scale the content to fit within the canvas.
+        ScaleMode::Contain => contain_scale,
+        // Scale the content to cover the canvas.
+        ScaleMode::Cover => self
+          .convex_hull
+          .rotate(self.rotate, None)
+          .get_bbox_scale_value(&self.canvas_bbox),
+      };
+    }
   }
 }

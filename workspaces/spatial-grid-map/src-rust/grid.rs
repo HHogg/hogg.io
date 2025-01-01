@@ -128,10 +128,11 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   }
 
   pub fn iter_values(&self) -> impl Iterator<Item = &TEntryValue> {
-    self
-      .locations
-      .iter()
-      .map(|location| self.get_value_by_location(location).unwrap())
+    self.locations.iter().map(|location| {
+      self
+        .get_value_by_location(location)
+        .expect("Value not found for location")
+    })
   }
 
   pub fn iter_values_around(
@@ -230,7 +231,9 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       .get_bucket_by_point_mut(point)
       .map(|bucket| bucket.remove(point));
 
-    self.locations.remove(&self.get_location(point).unwrap());
+    self
+      .locations
+      .remove(&self.get_location(point).expect("Location not found"));
   }
 
   pub fn filter(&self, predicate: impl Fn(&TEntryValue) -> bool) -> Self {
@@ -247,7 +250,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
               .with_counters(entry.counters.clone()),
           );
 
-          locations.insert(self.get_location(&entry.point).unwrap());
+          locations.insert(self.get_location(&entry.point).expect("Location not found"));
         }
       }
     }

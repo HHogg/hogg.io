@@ -84,7 +84,7 @@ impl Validator {
     }
 
     for line_segment_group in &plane.line_segments_by_shape_group {
-      for line_segment in line_segment_group {
+      for line_segment in line_segment_group.iter_values() {
         if plane.is_line_segment_available(line_segment) {
           return Err(Error::Expansion);
         }

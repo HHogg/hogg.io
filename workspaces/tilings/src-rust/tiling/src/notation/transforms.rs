@@ -47,6 +47,10 @@ impl Transforms {
     Ok(())
   }
 
+  pub fn len(&self) -> usize {
+    self.list.len()
+  }
+
   pub fn previous(&self, plane: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
     if self.list.is_empty() {
       return Ok(Some(Self::first(path, &Some(plane), &Direction::FromEnd)?));
@@ -149,7 +153,7 @@ impl From<String> for Transforms {
   fn from(value: String) -> Self {
     Self::default()
       .from_string(&Path::default(), value.as_str())
-      .unwrap()
+      .expect("Failed to parse transforms")
   }
 }
 

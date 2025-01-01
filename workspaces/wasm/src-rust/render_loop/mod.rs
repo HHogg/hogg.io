@@ -30,7 +30,9 @@ impl RenderLoop {
   }
 
   pub fn set_canvas(&self, canvas: JsValue) {
-    let offscreen_canvas = canvas.dyn_into::<OffscreenCanvas>().unwrap();
+    let offscreen_canvas = canvas
+      .dyn_into::<OffscreenCanvas>()
+      .expect("Failed to convert canvas to offscreen canvas");
 
     self.inner.set_canvas(offscreen_canvas)
   }

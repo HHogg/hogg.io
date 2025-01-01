@@ -40,7 +40,7 @@ fn flatten_duplicates(content: Vec<String>, wrapper: Option<(&str, &str)>) -> Ve
     let current = &content[index];
     let next = content.get(index + 1);
 
-    if next.is_none() || current != next.unwrap() {
+    if next.is_none() || Some(current) != next {
       if count > 1 {
         flattened_content.push(format!(
           "{prefix}{current}{suffix}{}",
@@ -57,7 +57,7 @@ fn flatten_duplicates(content: Vec<String>, wrapper: Option<(&str, &str)>) -> Ve
 
     index += 1;
 
-    if next.is_none() || next.unwrap() == "0" {
+    if next.is_none() || next == Some(&"0".to_string()) {
       break;
     }
   }

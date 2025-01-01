@@ -17,6 +17,8 @@ use crate::events::PlayerStateSnapshot;
 use crate::events::RenderStateSnapshot;
 use crate::events::WasmWorkerEvent;
 
+static BASE_SPEED: f32 = 250.0;
+
 fn post_render_event(tiling: &Tiling) {
   post_event(WasmWorkerEvent::Render(RenderStateSnapshot {
     result: tiling.result.clone(),
@@ -70,7 +72,7 @@ pub struct RenderLoopState {
 
 impl RenderLoopState {
   fn get_interval_ms(&self) -> i32 {
-    ((1.0 / self.speed.clamp(0.25, 2.0)) * 500.0) as i32
+    ((1.0 / self.speed.clamp(0.25, 2.0)) * BASE_SPEED) as i32
   }
 }
 
@@ -139,7 +141,11 @@ impl RenderLoopInner {
         if let (Some(tiling), Some(canvas)) = (tiling.as_ref(), state.canvas.as_ref()) {
           draw(tiling, canvas, &state.render_options)
             .inspect(|metrics| post_draw_event(metrics.clone()))
-            .map_err(|e| console::error_1(&serde_wasm_bindgen::to_value(&e).unwrap()))
+            .map_err(|e| {
+              console::error_1(
+                &serde_wasm_bindgen::to_value(&e).expect("Failed to serialize error"),
+              )
+            })
             .ok();
         }
       }

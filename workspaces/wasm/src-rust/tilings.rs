@@ -69,7 +69,7 @@ pub fn render_tiling(
   expansion_phases: u8,
   options: &JsValue,
 ) -> Result<(), JsError> {
-  let offscreen_canvas: OffscreenCanvas = canvas.dyn_into().unwrap();
+  let offscreen_canvas: OffscreenCanvas = canvas.dyn_into().expect("Failed to convert canvas");
   let options = serde_wasm_bindgen::from_value::<Options>(options.to_owned())?;
 
   let tiling = Tiling::default()

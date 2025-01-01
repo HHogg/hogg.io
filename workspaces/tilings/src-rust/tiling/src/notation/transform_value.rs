@@ -5,10 +5,11 @@ mod tests;
 use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
+use spatial_grid_map::utils::degrees_to_radian;
 use typeshare::typeshare;
 
 use super::{Direction, Offset, Operation, Seed, Shape};
-use crate::{utils, TilingError};
+use crate::TilingError;
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq, Serialize)]
 #[typeshare]
@@ -61,7 +62,7 @@ impl TransformValue {
   }
 
   pub fn as_radian(&self) -> f64 {
-    utils::math::degrees_to_radian(self.value)
+    degrees_to_radian(self.value)
   }
 
   pub fn get_last_increment(&self) -> u16 {
@@ -79,7 +80,7 @@ impl TransformValue {
     let mut values = vec![];
 
     while value < 360 {
-      values.push(utils::math::degrees_to_radian(value));
+      values.push(degrees_to_radian(value));
       value *= 2;
     }
 

@@ -39,40 +39,21 @@ impl Canvas {
     options: &Options,
     tiling: &Tiling,
   ) -> Result<Self, Error> {
-    let context = canvas.get_context("2d");
+    let context = canvas
+      .get_context("2d")
+      .expect("Failed to get 2d context")
+      .expect("Context does not exist")
+      .dyn_into::<web_sys::OffscreenCanvasRenderingContext2d>()
+      .expect("Failed to convert to 2d context");
+
     let scale = Scale::default()
       .with_auto_rotate(options.auto_rotate)
       .with_padding(options.padding)
-      .with_mode(options.scale_mode);
+      .with_mode(options.scale_mode)
+      .with_has_error(tiling.result.error.is_some())
+      .with_has_transforms(tiling.notation.transforms.len() >= 2);
 
     let layers_enabled = options.show_layers.clone().unwrap_or_default();
-
-    if context.is_err() {
-      return Err(Error::ApplicationError {
-        reason: "Failed to get 2d context (error)".into(),
-      });
-    }
-
-    let context = context.unwrap();
-
-    if context.is_none() {
-      return Err(Error::ApplicationError {
-        reason: "Failed to get 2d context (empty)".into(),
-      });
-    }
-
-    let context = context
-      .unwrap()
-      .dyn_into::<web_sys::OffscreenCanvasRenderingContext2d>();
-
-    if context.is_err() {
-      return Err(Error::ApplicationError {
-        reason: "Failed to get 2d context (dyn_into error)".into(),
-      });
-    }
-
-    let context = context.unwrap();
-
     let width = canvas.width() as f64;
     let height = canvas.height() as f64;
 

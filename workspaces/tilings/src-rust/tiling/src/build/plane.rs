@@ -2,7 +2,6 @@
 #[cfg(test)]
 mod tests;
 
-use std::collections::BTreeSet;
 use std::f64::consts::PI;
 
 use circular_sequence::SequenceStore;
@@ -43,7 +42,7 @@ pub struct Plane {
   pub stages: Vec<Stage>,
 
   #[serde(skip)]
-  pub line_segments_by_shape_group: Vec<BTreeSet<LineSegment>>,
+  pub line_segments_by_shape_group: Vec<SpatialGridMap<LineSegment>>,
   #[serde(skip)]
   pub polygons_to_transform: Vec<Polygon>,
   #[serde(skip)]
@@ -78,6 +77,16 @@ impl Plane {
   }
 
   pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
+    let build_error = self.inner_build(notation);
+
+    // Build the convex hull from the line segments regardless
+    // of whether the build was successful or not.
+    self.convex_hull = ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values());
+
+    build_error
+  }
+
+  fn inner_build(&mut self, notation: &Notation) -> Result<(), TilingError> {
     self.apply_path(&notation.path)?;
 
     if !notation.transforms.list.is_empty() {
@@ -110,9 +119,6 @@ impl Plane {
           }
         }
       }
-
-      self.convex_hull =
-        ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values());
     }
 
     Ok(())
@@ -153,7 +159,9 @@ impl Plane {
               .with_offset(seed.offset)
               .at_center();
 
-            self.line_segments_by_shape_group.push(BTreeSet::new());
+            self
+              .line_segments_by_shape_group
+              .push(SpatialGridMap::default().with_resize_method(ResizeMethod::First));
             self.seed_polygon = Some(polygon.clone());
             self.add_polygon(Stage::Placement, polygon)?;
 
@@ -190,7 +198,9 @@ impl Plane {
             self.complete_stage(Stage::Placement);
           }
           Node::Separator(Separator::Group) => {
-            self.line_segments_by_shape_group.push(BTreeSet::new());
+            self
+              .line_segments_by_shape_group
+              .push(SpatialGridMap::default().with_resize_method(ResizeMethod::First));
             group_counter += 1;
             skip = 0;
           }
@@ -275,7 +285,13 @@ impl Plane {
         self
           .line_segments_by_shape_group
           .last_mut()
-          .map(|line_segments| line_segments.insert(*line_segment));
+          .map(|line_segments| {
+            line_segments.insert(
+              line_segment.mid_point().into(),
+              line_segment.length(),
+              *line_segment,
+            )
+          });
       }
 
       // Store the line segments for overlap validation.
@@ -423,7 +439,7 @@ impl Plane {
     group_index: usize,
   ) -> impl Iterator<Item = &LineSegment> {
     self.line_segments_by_shape_group[group_index]
-      .iter()
+      .iter_values()
       .filter(|line_segment| self.is_line_segment_available(line_segment))
   }
 
