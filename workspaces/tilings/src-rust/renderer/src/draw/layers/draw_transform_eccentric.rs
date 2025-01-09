@@ -120,7 +120,11 @@ fn draw_transform_eccentric_rotate(
 ) -> Result<(), Error> {
   let start_angle = match origin_type {
     OriginType::MidPoint => {
-      if let Some(line_segment) = tiling.plane.line_segments.get_value(&origin_point.into()) {
+      if let Some(line_segment) = tiling
+        .plane
+        .line_segments
+        .get_value(&(*origin_point).into())
+      {
         line_segment.end.radian_to(origin_point)
       } else {
         0.0

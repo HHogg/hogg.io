@@ -1,3 +1,4 @@
+use spatial_grid_map::location;
 use tiling::Tiling;
 
 use super::draw_shapes::VAPOR_WAVE_COLOR_PALETTE;
@@ -40,7 +41,7 @@ pub fn draw_transform_points(
 fn draw_transform_points_group<'a>(
   canvas: &mut Canvas,
   style: &Style,
-  points: impl Iterator<Item = &'a (f64, f64)>,
+  points: impl Iterator<Item = &'a location::Point>,
   color: &str,
 ) -> Result<(), Error> {
   for point in points {
@@ -48,7 +49,7 @@ fn draw_transform_points_group<'a>(
       Layer::TransformPoints,
       Point::default()
         .non_interactive()
-        .with_point(point.into())
+        .with_point((*point).into())
         .with_style(style.clone().set_fill(Some(color.to_string())))
         .into(),
     )?;

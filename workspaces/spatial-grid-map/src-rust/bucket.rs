@@ -6,7 +6,10 @@ use std::{
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::utils::{coordinate_equals, normalize_radian};
+use crate::{
+  location,
+  utils::{coordinate_equals, normalize_radian},
+};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
@@ -16,7 +19,7 @@ pub struct Bucket<TEntryValue: Clone + Default> {
 }
 
 impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
-  pub fn new(point: (f64, f64), value: TEntryValue, size: f32) -> Self {
+  pub fn new(point: location::Point, value: TEntryValue, size: f32) -> Self {
     Bucket {
       entries: Vec::from([BucketEntry {
         point,
@@ -35,40 +38,43 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
     self.entries.iter()
   }
 
-  pub fn iter_points(&self) -> impl Iterator<Item = &(f64, f64)> {
+  pub fn iter_points(&self) -> impl Iterator<Item = &location::Point> {
     self.entries.iter().map(|entry| &entry.point)
   }
 
   pub fn iter_values(&self) -> impl Iterator<Item = &TEntryValue> {
     self.entries.iter().map(|entry| &entry.value)
   }
-  pub fn get_entry_index(&self, point: &(f64, f64)) -> Option<usize> {
-    self
-      .entries
-      .iter()
-      .position(|BucketEntry { point: (x, y), .. }| {
-        coordinate_equals(*x, point.0) && coordinate_equals(*y, point.1)
-      })
+  pub fn get_entry_index(&self, point: &location::Point) -> Option<usize> {
+    self.entries.iter().position(
+      |BucketEntry {
+         point: location::Point(x, y),
+         ..
+       }| { coordinate_equals(*x, point.0) && coordinate_equals(*y, point.1) },
+    )
   }
 
-  pub fn get_entry(&self, point: &(f64, f64)) -> Option<&BucketEntry<TEntryValue>> {
+  pub fn get_entry(&self, point: &location::Point) -> Option<&BucketEntry<TEntryValue>> {
     self
       .get_entry_index(point)
       .and_then(|index| self.entries.get(index))
   }
 
-  pub fn get_entry_mut(&mut self, point: &(f64, f64)) -> Option<MutBucketEntry<'_, TEntryValue>> {
+  pub fn get_entry_mut(
+    &mut self,
+    point: &location::Point,
+  ) -> Option<MutBucketEntry<'_, TEntryValue>> {
     self.remove(point).map(|entry| MutBucketEntry {
       item: entry,
       parent: self,
     })
   }
 
-  pub fn get_value(&self, point: &(f64, f64)) -> Option<&TEntryValue> {
+  pub fn get_value(&self, point: &location::Point) -> Option<&TEntryValue> {
     self.get_entry(point).map(|entry| &entry.value)
   }
 
-  pub fn contains(&self, point: &(f64, f64)) -> bool {
+  pub fn contains(&self, point: &location::Point) -> bool {
     self.get_value(point).is_some()
   }
 
@@ -81,13 +87,13 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
     true
   }
 
-  pub fn remove(&mut self, point: &(f64, f64)) -> Option<BucketEntry<TEntryValue>> {
+  pub fn remove(&mut self, point: &location::Point) -> Option<BucketEntry<TEntryValue>> {
     self
       .get_entry_index(point)
       .map(|index| self.entries.remove(index))
   }
 
-  pub fn increment_counter(&mut self, point: &(f64, f64), counter: &str) {
+  pub fn increment_counter(&mut self, point: &location::Point, counter: &str) {
     let mut entry = self
       .get_entry_mut(point)
       .expect("No entry found to increment.");
@@ -96,7 +102,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
     *counter += 1;
   }
 
-  pub fn get_counter(&self, point: &(f64, f64), counter: &str) -> Option<&u32> {
+  pub fn get_counter(&self, point: &location::Point, counter: &str) -> Option<&u32> {
     self
       .get_entry(point)
       .and_then(|entry| entry.counters.get(counter))
@@ -107,14 +113,14 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
 #[typeshare]
 pub struct BucketEntry<TEntryValue: Default> {
   #[typeshare(serialized_as = "Vec<f64>")]
-  pub point: (f64, f64),
+  pub point: location::Point,
   pub size: f32,
   pub value: TEntryValue,
   pub counters: HashMap<String, u32>,
 }
 
 impl<TEntryValue: Default> BucketEntry<TEntryValue> {
-  pub fn with_point(mut self, point: (f64, f64)) -> Self {
+  pub fn with_point(mut self, point: location::Point) -> Self {
     self.point = point;
     self
   }
@@ -135,12 +141,12 @@ impl<TEntryValue: Default> BucketEntry<TEntryValue> {
   }
 
   pub fn distance_to_center(&self) -> f64 {
-    let (x, y) = self.point;
+    let location::Point(x, y) = self.point;
     (x * x + y * y).sqrt()
   }
 
   pub fn theta(&self) -> f64 {
-    let (x, y) = self.point;
+    let location::Point(x, y) = self.point;
     normalize_radian(y.atan2(x))
   }
 

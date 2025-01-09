@@ -1,4 +1,4 @@
-use spatial_grid_map::{ResizeMethod, SpatialGridMap};
+use spatial_grid_map::{location, ResizeMethod, SpatialGridMap};
 use tiling::geometry::BBox;
 
 use super::component::{Component, Draw};
@@ -28,7 +28,7 @@ impl Theia {
     }
 
     let a_bbox = a.inner().bbox(context, canvas_bbox, content_bbox, scale);
-    let a_centroid: (f64, f64) = a_bbox.centroid().into();
+    let a_centroid: location::Point = a_bbox.centroid().into();
     let a_size = a_bbox.height().max(a_bbox.width());
 
     let nearby_boxes = self.components.iter_values_around(&a_centroid, 1);

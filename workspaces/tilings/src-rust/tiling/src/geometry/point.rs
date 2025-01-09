@@ -6,6 +6,7 @@ use std::cmp::Ordering;
 use std::fmt::{self, Display};
 
 use serde::{Deserialize, Serialize};
+use spatial_grid_map::location;
 use spatial_grid_map::utils::{
   compare_coordinate, compare_radians, coordinate_equals, get_radians_for_x_y,
 };
@@ -129,15 +130,15 @@ impl PartialEq for Point {
   }
 }
 
-impl From<Point> for (f64, f64) {
+impl From<Point> for location::Point {
   fn from(value: Point) -> Self {
-    (value.x, value.y)
+    location::Point(value.x, value.y)
   }
 }
 
-impl From<&Point> for (f64, f64) {
-  fn from(value: &Point) -> Self {
-    (value.x, value.y)
+impl From<location::Point> for Point {
+  fn from(value: location::Point) -> Self {
+    Point::at(value.0, value.1)
   }
 }
 
@@ -153,11 +154,5 @@ impl From<&Vec<Point>> for Point {
     }
 
     Point::at(x / length, y / length)
-  }
-}
-
-impl From<&(f64, f64)> for Point {
-  fn from(value: &(f64, f64)) -> Self {
-    Point::at(value.0, value.1)
   }
 }

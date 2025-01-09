@@ -1,6 +1,8 @@
 mod bucket;
 mod grid;
-mod location;
+pub mod location;
+// mod precision_float;
+// mod radian;
 pub mod utils;
 mod visitor;
 

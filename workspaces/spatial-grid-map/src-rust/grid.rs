@@ -68,7 +68,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self.blocks_dimension *= 2;
   }
 
-  fn get_location(&self, point: &(f64, f64)) -> Option<Location> {
+  fn get_location(&self, point: &location::Point) -> Option<Location> {
     let location = self.get_location_unchecked(point);
 
     if location.contained {
@@ -78,7 +78,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     }
   }
 
-  fn get_location_unchecked(&self, point: &(f64, f64)) -> Location {
+  fn get_location_unchecked(&self, point: &location::Point) -> Location {
     Location::new(self.blocks_dimension, self.get_spacing(), *point)
   }
 
@@ -93,25 +93,28 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self.store.get_mut(&location.key)
   }
 
-  fn get_bucket_by_point(&self, point: &(f64, f64)) -> Option<&Bucket<TEntryValue>> {
+  fn get_bucket_by_point(&self, point: &location::Point) -> Option<&Bucket<TEntryValue>> {
     self
       .get_location(point)
       .and_then(|location| self.get_bucket_by_location(&location))
   }
 
-  fn get_bucket_by_point_mut(&mut self, point: &(f64, f64)) -> Option<&mut Bucket<TEntryValue>> {
+  fn get_bucket_by_point_mut(
+    &mut self,
+    point: &location::Point,
+  ) -> Option<&mut Bucket<TEntryValue>> {
     self
       .get_location(point)
       .and_then(|location| self.get_bucket_by_location_mut(&location))
   }
 
-  pub fn get_value(&self, point: &(f64, f64)) -> Option<&TEntryValue> {
+  pub fn get_value(&self, point: &location::Point) -> Option<&TEntryValue> {
     self
       .get_bucket_by_point(point)
       .and_then(|bucket| bucket.get_value(point))
   }
 
-  pub fn get_value_mut(&mut self, point: &(f64, f64)) -> Option<MutBucketEntry<TEntryValue>> {
+  pub fn get_value_mut(&mut self, point: &location::Point) -> Option<MutBucketEntry<TEntryValue>> {
     self
       .get_bucket_by_point_mut(point)
       .and_then(|bucket| bucket.get_entry_mut(point))
@@ -123,7 +126,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       .and_then(|bucket| bucket.get_value(&location.point))
   }
 
-  pub fn iter_points(&self) -> impl Iterator<Item = &(f64, f64)> {
+  pub fn iter_points(&self) -> impl Iterator<Item = &location::Point> {
     self.locations.iter().map(|location| &location.point)
   }
 
@@ -137,7 +140,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
 
   pub fn iter_values_around(
     &self,
-    point: &(f64, f64),
+    point: &location::Point,
     radius: u8,
   ) -> impl Iterator<Item = &TEntryValue> {
     let location = self.get_location_unchecked(point);
@@ -156,7 +159,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   }
 
   /// Checks if the grid contains the given centroid.
-  pub fn contains(&self, point: &(f64, f64)) -> bool {
+  pub fn contains(&self, point: &location::Point) -> bool {
     self.get_value(point).is_some()
   }
 
@@ -193,7 +196,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   /// If the grid is too small, it will be increased to fit the new centroid.
   pub fn insert(
     &mut self,
-    point: (f64, f64),
+    point: location::Point,
     size: f64,
     value: TEntryValue,
   ) -> MutBucketEntry<TEntryValue> {
@@ -206,19 +209,19 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     )
   }
 
-  pub fn get_counter(&self, point: &(f64, f64), counter: &str) -> Option<&u32> {
+  pub fn get_counter(&self, point: &location::Point, counter: &str) -> Option<&u32> {
     self
       .get_bucket_by_point(point)
       .and_then(|bucket| bucket.get_counter(point, counter))
   }
 
-  pub fn increment_counter(&mut self, point: &(f64, f64), counter: &str) {
+  pub fn increment_counter(&mut self, point: &location::Point, counter: &str) {
     if let Some(bucket) = self.get_bucket_by_point_mut(point) {
       bucket.increment_counter(point, counter)
     }
   }
 
-  pub fn remove(&mut self, point: &(f64, f64)) {
+  pub fn remove(&mut self, point: &location::Point) {
     if let Some(location) = self.get_location(point) {
       self
         .get_bucket_by_location_mut(&location)

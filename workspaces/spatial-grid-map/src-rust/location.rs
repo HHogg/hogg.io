@@ -13,12 +13,15 @@ pub(super) const TOLERANCE: f64 = 0.0001525;
 
 pub type Key = (i64, i64);
 
+#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
+pub struct Point(pub f64, pub f64);
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Location {
   pub key: Key,
   pub block_index: u64,
   pub bit_index: u64,
-  pub point: (f64, f64),
+  pub point: Point,
   pub distance: f64,
   pub radians: f64,
   pub contained: bool,
@@ -29,8 +32,8 @@ impl Location {
     (blocks_dimension as u64) * BLOCK_SIZE
   }
 
-  pub fn new(blocks_dimension: u32, spacing: f64, point: (f64, f64)) -> Self {
-    let (x, y) = point;
+  pub fn new(blocks_dimension: u32, spacing: f64, point: Point) -> Self {
+    let Point(x, y) = point;
     let grid_size = Self::get_grid_size(blocks_dimension);
     let grid_size_div2 = grid_size / 2;
 

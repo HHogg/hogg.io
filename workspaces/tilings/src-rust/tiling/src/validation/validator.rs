@@ -1,3 +1,5 @@
+use spatial_grid_map::location;
+
 use super::{Error, Flag};
 use crate::{
   build::Plane,
@@ -114,7 +116,7 @@ impl Validator {
     let mut current_line_segment = first_line_segment;
 
     loop {
-      let mid_point: (f64, f64) = current_line_segment.mid_point().into();
+      let mid_point: location::Point = current_line_segment.mid_point().into();
       let near_by = line_segments.iter_values_around(&mid_point, 1);
 
       let mut found = false;

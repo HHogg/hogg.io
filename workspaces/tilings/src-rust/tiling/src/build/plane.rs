@@ -7,7 +7,7 @@ use std::f64::consts::PI;
 use circular_sequence::SequenceStore;
 use serde::{Deserialize, Serialize};
 use spatial_grid_map::utils::compare_coordinate;
-use spatial_grid_map::{ResizeMethod, SpatialGridMap};
+use spatial_grid_map::{location, ResizeMethod, SpatialGridMap};
 use typeshare::typeshare;
 
 use super::vertex_types::VertexTypes;
@@ -269,13 +269,13 @@ impl Plane {
 
     for line_segment in polygon.line_segments.iter() {
       let mid_point = line_segment.mid_point();
-      let mid_point_f64: (f64, f64) = mid_point.into();
+      let mid_point_location: location::Point = mid_point.into();
 
       if polygon.stage <= Stage::Placement {
         // Store the line segments mid point
         // for looking up origins for transforms
         self.points_mid.insert(
-          mid_point_f64,
+          mid_point_location,
           line_segment.length(),
           PointSequence::default().with_center(mid_point).with_size(2),
         );
@@ -297,7 +297,7 @@ impl Plane {
       // Store the line segments for overlap validation.
       self
         .line_segments
-        .insert(mid_point_f64, line_segment.length(), *line_segment)
+        .insert(mid_point_location, line_segment.length(), *line_segment)
         .increment_counter("count");
 
       // Check that the line segment is not intersecting with any
@@ -312,13 +312,15 @@ impl Plane {
 
     for point in polygon.points.iter() {
       if polygon.stage <= Stage::Placement {
-        let point_f64: (f64, f64) = point.into();
+        let point_location: location::Point = (*point).into();
 
         // Store the polygon's end points
         // for looking up origins for transforms
-        self
-          .points_end
-          .insert(point_f64, 1.0, PointSequence::default().with_center(*point));
+        self.points_end.insert(
+          point_location,
+          1.0,
+          PointSequence::default().with_center(*point),
+        );
       }
 
       self.update_vertex_type(&polygon, point);
@@ -328,7 +330,9 @@ impl Plane {
   }
 
   fn update_vertex_type(&mut self, polygon: &Polygon, point: &Point) {
-    if let Some(mut sequence) = self.points_end.get_value_mut(&point.into()) {
+    let point_location: location::Point = (*point).into();
+
+    if let Some(mut sequence) = self.points_end.get_value_mut(&point_location) {
       sequence
         .value
         .insert(polygon.centroid, polygon.shape.into());
@@ -337,9 +341,9 @@ impl Plane {
 
   fn update_edge_type(&mut self, polygon: &Polygon, line_segment: &LineSegment) {
     let mid_point = line_segment.mid_point();
-    let mid_point_f64: (f64, f64) = mid_point.into();
+    let mid_location_point: location::Point = mid_point.into();
 
-    if let Some(mut sequence) = self.points_mid.get_value_mut(&mid_point_f64) {
+    if let Some(mut sequence) = self.points_mid.get_value_mut(&mid_location_point) {
       sequence
         .value
         .insert(polygon.centroid, polygon.shape.into());
@@ -478,17 +482,17 @@ impl Plane {
         .points_center
         .iter_points()
         .nth(origin_index.value as usize)
-        .map(|point| point.into()),
+        .map(|point| (*point).into()),
       OriginType::MidPoint => self
         .points_mid
         .iter_points()
         .nth(origin_index.value as usize)
-        .map(|point| point.into()),
+        .map(|point| (*point).into()),
       OriginType::EndPoint => self
         .points_end
         .iter_points()
         .nth(origin_index.value as usize)
-        .map(|point| point.into()),
+        .map(|point| (*point).into()),
     }
   }
 
