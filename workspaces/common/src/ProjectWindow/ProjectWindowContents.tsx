@@ -53,6 +53,7 @@ export default function ProjectWindowContents({
       flex="vertical"
       grow
       onClick={onClick}
+      overflow="hidden"
       style={{ userSelect: 'none' }}
       ref={refWindow}
       theme={theme}
@@ -63,14 +64,7 @@ export default function ProjectWindowContents({
         </Box>
       )}
 
-      <Box
-        borderRadius="x3"
-        container
-        flex="vertical"
-        grow
-        ref={refCanvas}
-        overflow="hidden"
-      >
+      <Box container flex="vertical" grow ref={refCanvas} overflow="hidden">
         <PatternBackground
           backgroundColor={backgroundColor}
           flex="vertical"
