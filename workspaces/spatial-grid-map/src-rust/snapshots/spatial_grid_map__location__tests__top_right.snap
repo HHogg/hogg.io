@@ -13,7 +13,7 @@ Location {
         7.5,
         -7.5,
     ),
-    distance: 10.606601717798213,
-    radians: 0.7853981633974483,
+    distance: 10.606602,
+    radians: 0.7853982,
     contained: true,
 }

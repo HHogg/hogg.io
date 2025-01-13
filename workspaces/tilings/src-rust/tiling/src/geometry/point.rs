@@ -15,22 +15,22 @@ use typeshare::typeshare;
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct Point {
-  pub x: f64,
-  pub y: f64,
+  pub x: f32,
+  pub y: f32,
   pub index: u8,
 }
 
 impl Point {
-  pub fn at(x: f64, y: f64) -> Self {
+  pub fn at(x: f32, y: f32) -> Self {
     Self::default().with_x(x).with_y(y)
   }
 
-  pub fn with_x(mut self, x: f64) -> Self {
+  pub fn with_x(mut self, x: f32) -> Self {
     self.x = x;
     self
   }
 
-  pub fn with_y(mut self, y: f64) -> Self {
+  pub fn with_y(mut self, y: f32) -> Self {
     self.y = y;
     self
   }
@@ -40,27 +40,27 @@ impl Point {
     self
   }
 
-  pub fn theta(&self) -> f64 {
+  pub fn theta(&self) -> f32 {
     self.radian_to(&Self::at(0.0, 0.0))
   }
 
-  pub fn distance_to(&self, point: &Self) -> f64 {
+  pub fn distance_to(&self, point: &Self) -> f32 {
     (point.x - self.x).hypot(point.y - self.y)
   }
 
-  pub fn distance_to_center(&self) -> f64 {
+  pub fn distance_to_center(&self) -> f32 {
     self.distance_to(&Self::at(0.0, 0.0))
   }
 
-  pub fn radian_to(&self, point: &Self) -> f64 {
+  pub fn radian_to(&self, point: &Self) -> f32 {
     get_radians_for_x_y(self.x - point.x, self.y - point.y)
   }
 
-  pub fn radian_to_center(&self) -> f64 {
+  pub fn radian_to_center(&self) -> f32 {
     self.radian_to(&Self::at(0.0, 0.0))
   }
 
-  pub fn multiply(&self, scalar: f64) -> Self {
+  pub fn multiply(&self, scalar: f32) -> Self {
     Self::at(self.x * scalar, self.y * scalar).with_index(self.index)
   }
 
@@ -76,7 +76,7 @@ impl Point {
     Self::at(x, y).with_index(self.index)
   }
 
-  pub fn rotate(&self, radians: f64, origin: Option<&Self>) -> Self {
+  pub fn rotate(&self, radians: f32, origin: Option<&Self>) -> Self {
     let default_origin = Self::default();
     let origin = origin.unwrap_or(&default_origin);
 
@@ -93,7 +93,7 @@ impl Point {
     Self::at(self.x + shift.x, self.y + shift.y).with_index(self.index)
   }
 
-  pub fn scale(&self, scale: f64) -> Self {
+  pub fn scale(&self, scale: f32) -> Self {
     Self::at(self.x * scale, self.y * scale).with_index(self.index)
   }
 }
@@ -144,7 +144,7 @@ impl From<location::Point> for Point {
 
 impl From<&Vec<Point>> for Point {
   fn from(points: &Vec<Point>) -> Self {
-    let length = points.len() as f64;
+    let length = points.len() as f32;
     let mut x = 0.0;
     let mut y = 0.0;
 

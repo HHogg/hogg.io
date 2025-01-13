@@ -54,14 +54,14 @@ impl Canvas {
       .with_has_transforms(tiling.notation.transforms.len() >= 2);
 
     let layers_enabled = options.show_layers.clone().unwrap_or_default();
-    let width = canvas.width() as f64;
-    let height = canvas.height() as f64;
+    let width = canvas.width() as f32;
+    let height = canvas.height() as f32;
 
     let canvas_bbox = BBox::default().with_width(width).with_height(height);
 
     // Clear canvas ready for drawing
     context.set_transform(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)?;
-    context.clear_rect(0.0, 0.0, width, height);
+    context.clear_rect(0.0, 0.0, width as f64, height as f64);
 
     Ok(Self {
       content_bbox: BBox::default(),

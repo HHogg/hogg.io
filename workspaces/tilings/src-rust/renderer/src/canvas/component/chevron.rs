@@ -1,4 +1,4 @@
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 use tiling::geometry::{BBox, Point};
 
@@ -10,7 +10,7 @@ use crate::Error;
 #[derive(Clone, Debug, Default)]
 pub struct Chevron {
   point: Point,
-  direction: f64,
+  direction: f32,
   style: Style,
 }
 
@@ -20,7 +20,7 @@ impl Chevron {
     self
   }
 
-  pub fn with_direction(mut self, direction: f64) -> Self {
+  pub fn with_direction(mut self, direction: f32) -> Self {
     self.direction = direction;
     self
   }

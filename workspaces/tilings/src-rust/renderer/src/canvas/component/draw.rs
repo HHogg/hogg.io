@@ -60,12 +60,12 @@ pub trait Draw {
 
     for (index, point) in points.iter().enumerate() {
       match index {
-        0 => context.move_to(point.x, point.y),
-        _ => context.line_to(point.x, point.y),
+        0 => context.move_to(point.x as f64, point.y as f64),
+        _ => context.line_to(point.x as f64, point.y as f64),
       }
     }
 
-    context.line_to(points[0].x, points[0].y);
+    context.line_to(points[0].x as f64, points[0].y as f64);
 
     self.draw_end(context);
 

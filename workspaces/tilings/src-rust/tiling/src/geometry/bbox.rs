@@ -12,9 +12,9 @@ use super::{LineSegment, Point, Polygon};
 #[typeshare]
 pub struct BBox {
   center: Point,
-  width: f64,
-  height: f64,
-  rotation: f64,
+  width: f32,
+  height: f32,
+  rotation: f32,
 }
 
 impl BBox {
@@ -42,33 +42,33 @@ impl BBox {
     self
   }
 
-  pub fn with_width(mut self, width: f64) -> Self {
+  pub fn with_width(mut self, width: f32) -> Self {
     self.width = width;
     self
   }
 
-  pub fn with_height(mut self, height: f64) -> Self {
+  pub fn with_height(mut self, height: f32) -> Self {
     self.height = height;
     self
   }
 
-  pub fn with_rotation(mut self, rotation: f64) -> Self {
+  pub fn with_rotation(mut self, rotation: f32) -> Self {
     self.rotation = rotation;
     self
   }
 
-  pub fn width(&self) -> f64 {
+  pub fn width(&self) -> f32 {
     self.width
   }
 
-  pub fn height(&self) -> f64 {
+  pub fn height(&self) -> f32 {
     self.height
   }
 
   pub fn min(&self) -> Point {
     let corners: [Point; 4] = self.into();
-    let mut min_x = f64::INFINITY;
-    let mut min_y = f64::INFINITY;
+    let mut min_x = f32::INFINITY;
+    let mut min_y = f32::INFINITY;
 
     for corner in corners.iter() {
       if corner.x < min_x {
@@ -85,8 +85,8 @@ impl BBox {
 
   pub fn max(&self) -> Point {
     let corners: [Point; 4] = self.into();
-    let mut max_x = -f64::INFINITY;
-    let mut max_y = -f64::INFINITY;
+    let mut max_x = -f32::INFINITY;
+    let mut max_y = -f32::INFINITY;
 
     for corner in corners.iter() {
       if corner.x > max_x {
@@ -101,15 +101,15 @@ impl BBox {
     Point::at(max_x, max_y)
   }
 
-  pub fn ratio(&self) -> f64 {
+  pub fn ratio(&self) -> f32 {
     self.width() / self.height()
   }
 
-  pub fn radius_min(&self) -> f64 {
+  pub fn radius_min(&self) -> f32 {
     self.width().min(self.height()) * 0.5
   }
 
-  pub fn radius_max(&self) -> f64 {
+  pub fn radius_max(&self) -> f32 {
     self.width().max(self.height()) * 0.5
   }
 
@@ -132,7 +132,7 @@ impl BBox {
     Self::from_min_max(union_min, union_max)
   }
 
-  pub fn translate(&self, x_multiplier: f64, y_multiplier: f64) -> Self {
+  pub fn translate(&self, x_multiplier: f32, y_multiplier: f32) -> Self {
     let offset = Point::at(self.width() * x_multiplier, self.height() * y_multiplier);
 
     self.with_center(self.center.clone().translate(&offset))
@@ -156,10 +156,10 @@ impl BBox {
 
 impl From<&Vec<Point>> for BBox {
   fn from(points: &Vec<Point>) -> Self {
-    let mut min_x = f64::INFINITY;
-    let mut min_y = f64::INFINITY;
-    let mut max_x = -f64::INFINITY;
-    let mut max_y = -f64::INFINITY;
+    let mut min_x = f32::INFINITY;
+    let mut min_y = f32::INFINITY;
+    let mut max_x = -f32::INFINITY;
+    let mut max_y = -f32::INFINITY;
 
     for point in points.iter() {
       if point.x < min_x {

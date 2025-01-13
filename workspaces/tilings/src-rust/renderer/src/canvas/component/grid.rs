@@ -8,7 +8,7 @@ use crate::Error;
 #[derive(Clone, Debug, Default)]
 pub struct Grid {
   size: u64,
-  spacing: f64,
+  spacing: f32,
   style: Style,
 }
 
@@ -18,7 +18,7 @@ impl Grid {
     self
   }
 
-  pub fn with_spacing(mut self, spacing: f64) -> Self {
+  pub fn with_spacing(mut self, spacing: f32) -> Self {
     self.spacing = spacing;
     self
   }
@@ -46,8 +46,8 @@ impl Grid {
     };
 
     self.draw_start(context, scale, &style)?;
-    context.move_to(start.x, start.y);
-    context.line_to(end.x, end.y);
+    context.move_to(start.x as f64, start.y as f64);
+    context.line_to(end.x as f64, end.y as f64);
     self.draw_end(context);
     Ok(())
   }
@@ -65,15 +65,15 @@ impl Grid {
       ..
     } = offset.unwrap_or_default();
 
-    let min_x = ((self.size as f64) * -0.5) * self.spacing + offset_x;
-    let max_x = ((self.size as f64) * 0.5) * self.spacing + offset_x;
-    let min_y = ((self.size as f64) * -0.5) * self.spacing + offset_y;
-    let max_y = ((self.size as f64) * 0.5) * self.spacing + offset_y;
+    let min_x = ((self.size as f32) * -0.5) * self.spacing + offset_x;
+    let max_x = ((self.size as f32) * 0.5) * self.spacing + offset_x;
+    let min_y = ((self.size as f32) * -0.5) * self.spacing + offset_y;
+    let max_y = ((self.size as f32) * 0.5) * self.spacing + offset_y;
 
     // Draw horizontal lines
     for i in 0..=self.size {
       let thick_line = i % 8 == 0;
-      let y = min_y + (i as f64) * self.spacing;
+      let y = min_y + (i as f32) * self.spacing;
 
       self.draw_line(
         context,
@@ -88,7 +88,7 @@ impl Grid {
     // Draw vertical lines
     for i in 0..=self.size {
       let thick_line = i % 8 == 0;
-      let x = min_x + (i as f64) * self.spacing;
+      let x = min_x + (i as f32) * self.spacing;
 
       self.draw_line(
         context,

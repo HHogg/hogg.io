@@ -63,8 +63,8 @@ impl Draw for Polygon {
 
     for (index, point) in self.polygon.points.iter().enumerate() {
       match index {
-        0 => context.move_to(point.x, point.y),
-        _ => context.line_to(point.x, point.y),
+        0 => context.move_to(point.x as f64, point.y as f64),
+        _ => context.line_to(point.x as f64, point.y as f64),
       }
     }
 
@@ -74,7 +74,7 @@ impl Draw for Polygon {
       .first()
       .expect("First point for polygon not found");
 
-    context.line_to(first_point.x, first_point.y);
+    context.line_to(first_point.x as f64, first_point.y as f64);
 
     self.draw_end(context);
 

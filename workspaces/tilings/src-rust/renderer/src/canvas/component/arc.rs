@@ -1,4 +1,4 @@
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 use tiling::geometry::{BBox, Point};
 
@@ -10,9 +10,9 @@ use crate::Error;
 #[derive(Clone, Debug, Default)]
 pub struct Arc {
   point: Point,
-  radius: f64,
-  start_angle: f64,
-  end_angle: f64,
+  radius: f32,
+  start_angle: f32,
+  end_angle: f32,
   style: Style,
 }
 
@@ -22,17 +22,17 @@ impl Arc {
     self
   }
 
-  pub fn with_radius(mut self, radius: f64) -> Self {
+  pub fn with_radius(mut self, radius: f32) -> Self {
     self.radius = radius;
     self
   }
 
-  pub fn with_start_angle(mut self, start_angle: f64) -> Self {
+  pub fn with_start_angle(mut self, start_angle: f32) -> Self {
     self.start_angle = start_angle;
     self
   }
 
-  pub fn with_end_angle(mut self, end_angle: f64) -> Self {
+  pub fn with_end_angle(mut self, end_angle: f32) -> Self {
     self.end_angle = end_angle;
     self
   }
@@ -42,7 +42,7 @@ impl Arc {
     self
   }
 
-  pub fn get_radius(&self, scale: &Scale) -> f64 {
+  pub fn get_radius(&self, scale: &Scale) -> f32 {
     let line_thickness = self.style.get_line_thickness(scale);
     let chevron_size = self.style.get_chevron_size(scale);
     let stroke_width = self.style.get_stroke_width(scale);
@@ -51,11 +51,11 @@ impl Arc {
     (self.radius - chevron_size.max(outer_line_thickness * 0.5)).max(chevron_size * 3.0)
   }
 
-  fn get_start_angle(&self) -> f64 {
+  fn get_start_angle(&self) -> f32 {
     self.start_angle - PI * 0.5
   }
 
-  fn get_end_angle(&self) -> f64 {
+  fn get_end_angle(&self) -> f32 {
     self.end_angle - PI * 0.5
   }
 
@@ -67,11 +67,11 @@ impl Arc {
   ) -> Result<(), Error> {
     self.draw_start(context, scale, style)?;
     context.arc(
-      self.point.x,
-      self.point.y,
-      self.get_radius(scale),
-      self.get_start_angle(),
-      self.get_end_angle(),
+      self.point.x as f64,
+      self.point.y as f64,
+      self.get_radius(scale) as f64,
+      self.get_start_angle() as f64,
+      self.get_end_angle() as f64,
     )?;
     self.draw_end(context);
 

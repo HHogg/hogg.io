@@ -61,7 +61,7 @@ impl TransformValue {
     Ok(self)
   }
 
-  pub fn as_radian(&self) -> f64 {
+  pub fn as_radian(&self) -> f32 {
     degrees_to_radian(self.value)
   }
 
@@ -75,7 +75,7 @@ impl TransformValue {
     value
   }
 
-  pub fn get_transform_values(&self) -> Vec<f64> {
+  pub fn get_transform_values(&self) -> Vec<f32> {
     let mut value = self.value;
     let mut values = vec![];
 

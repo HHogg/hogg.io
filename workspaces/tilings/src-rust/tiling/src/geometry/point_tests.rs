@@ -1,4 +1,4 @@
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 use super::*;
 
@@ -11,7 +11,7 @@ fn assert_eq_points_to_points(a: Vec<Point>, b: Vec<Point>) {
   }
 }
 
-fn assert_eq_points(a: Vec<Point>, b: Vec<(f64, f64)>) {
+fn assert_eq_points(a: Vec<Point>, b: Vec<(f32, f32)>) {
   assert_eq_points_to_points(a, b.iter().map(|(x, y)| Point::at(*x, *y)).collect())
 }
 
@@ -25,8 +25,8 @@ fn equality_exactly_the_same_values() {
 
 #[test]
 fn equality_close_to_the_same_values() {
-  let a = Point::at(-2.8844440295753455e-16, 1.6653345369377348e-16);
-  let b = Point::at(2.884444029575345e-16, -1.6653345369377365e-16);
+  let a = Point::at(-2.884_444e-16, 1.665_334_5e-16);
+  let b = Point::at(2.884_444e-16, -1.665_334_5e-16);
 
   assert_eq!(a, b);
 }
@@ -58,15 +58,15 @@ fn ordering() {
 #[test]
 fn ordering_precision_1() {
   let mut a = vec![
-    Point::at(4.440892098500626e-16, 1.7320508075688772),
-    Point::at(-2.8844440295753455e-16, 1.6653345369377348e-16),
-    Point::at(1.5, 0.8660254037844377),
+    Point::at(4.440_892e-16, 1.732_050_8),
+    Point::at(-2.884_444e-16, 1.665_334_5e-16),
+    Point::at(1.5, 0.866_025_4),
   ];
 
   let mut b = vec![
-    Point::at(1.5000000000000002, 0.8660254037844377),
-    Point::at(2.884444029575345e-16, -1.6653345369377365e-16),
-    Point::at(5.551115123125783e-16, 1.7320508075688767),
+    Point::at(1.5, 0.866_025_4),
+    Point::at(2.884_444e-16, -1.665_334_5e-16),
+    Point::at(5.551_115e-16, 1.732_050_8),
   ];
 
   a.sort();
@@ -78,15 +78,15 @@ fn ordering_precision_1() {
 #[test]
 fn ordering_precision_2() {
   let mut a = vec![
-    Point::at(-1.5000000000000004, -0.8660254037844378),
-    Point::at(-2.884444029575344e-16, 1.6653345369377368e-16),
-    Point::at(-5.551115123125783e-16, -1.7320508075688767),
+    Point::at(-1.5, -0.866_025_4),
+    Point::at(-2.884_444e-16, 1.665_334_5e-16),
+    Point::at(-5.551_115e-16, -1.732_050_8),
   ];
 
   let mut b = vec![
-    Point::at(-3.3306690738754696e-16, -1.7320508075688774),
-    Point::at(2.884444029575346e-16, -1.6653345369377348e-16),
-    Point::at(-1.5000000000000002, -0.8660254037844379),
+    Point::at(-3.330_669e-16, -1.732_050_8),
+    Point::at(2.884_444e-16, -1.665_334_5e-16),
+    Point::at(-1.5, -0.866_025_4),
   ];
 
   a.sort();
@@ -164,8 +164,8 @@ fn reflect() {
 
   let reflected = point.reflect(&p1, &p2);
 
-  assert!((reflected.x - 1.0).abs() < f64::EPSILON);
-  assert!((reflected.y - -1.0).abs() < f64::EPSILON);
+  assert!((reflected.x - 1.0).abs() < f32::EPSILON);
+  assert!((reflected.y - -1.0).abs() < f32::EPSILON);
 }
 
 #[test]
@@ -174,8 +174,8 @@ fn rotate() {
   let radians = PI / 2.0;
   let origin = Point::at(0.0, 0.0);
   let rotated = point.rotate(radians, Some(&origin));
-  assert!(rotated.x < f64::EPSILON);
-  assert!((rotated.y - 1.0).abs() < f64::EPSILON);
+  assert!(rotated.x < f32::EPSILON);
+  assert!((rotated.y - 1.0).abs() < f32::EPSILON);
 }
 
 #[test]

@@ -1,5 +1,3 @@
-use std::f64::consts::PI;
-
 use tiling::geometry::BBox;
 
 use super::{Draw, Style};
@@ -40,13 +38,13 @@ impl Point {
 
     self.draw_start(context, scale, style)?;
     context.ellipse(
-      self.point.x,
-      self.point.y,
-      radius,
-      radius,
+      self.point.x as f64,
+      self.point.y as f64,
+      radius as f64,
+      radius as f64,
       0.0,
       0.0,
-      PI * 2.0,
+      std::f64::consts::PI * 2.0,
     )?;
     self.draw_end(context);
 

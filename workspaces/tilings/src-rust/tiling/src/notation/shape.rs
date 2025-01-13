@@ -2,7 +2,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
@@ -53,12 +53,12 @@ impl Shape {
     }
   }
 
-  pub fn get_internal_angle(&self) -> f64 {
-    (PI * 2.0) / *self as u8 as f64
+  pub fn get_internal_angle(&self) -> f32 {
+    (PI * 2.0) / *self as u8 as f32
   }
 
-  pub fn get_side_length(&self) -> f64 {
-    2.0 * (PI / *self as u8 as f64).sin()
+  pub fn get_side_length(&self) -> f32 {
+    2.0 * (PI / *self as u8 as f32).sin()
   }
 
   pub fn previous(&self) -> Option<Self> {

@@ -1,4 +1,4 @@
-use core::f64;
+use core::f32;
 
 use serde::{Deserialize, Serialize};
 use tiling::geometry::{BBox, ConvexHull};
@@ -26,12 +26,12 @@ pub struct Scale {
   content_bbox: BBox,
   convex_hull: ConvexHull,
   mode: ScaleMode,
-  padding: f64,
+  padding: f32,
 
-  scale: f64,
-  translate_x: f64,
-  translate_y: f64,
-  rotate: f64,
+  scale: f32,
+  translate_x: f32,
+  translate_y: f32,
+  rotate: f32,
 
   has_error: bool,
   has_transforms: bool,
@@ -59,7 +59,7 @@ impl Default for Scale {
 }
 
 impl Scale {
-  pub fn with_padding(mut self, padding: Option<f64>) -> Self {
+  pub fn with_padding(mut self, padding: Option<f32>) -> Self {
     self.padding = padding.unwrap_or(0.0);
     self.update();
     self
@@ -112,13 +112,13 @@ impl Scale {
 
     // Move the origin to the center of the canvas.
     ctx.translate(
-      self.canvas_bbox.width() * 0.5,
-      self.canvas_bbox.height() * 0.5,
+      (self.canvas_bbox.width() * 0.5) as f64,
+      (self.canvas_bbox.height() * 0.5) as f64,
     )?;
 
-    ctx.rotate(self.rotate)?;
-    ctx.scale(self.scale, self.scale)?;
-    ctx.translate(self.translate_x, self.translate_y)?;
+    ctx.rotate(self.rotate as f64)?;
+    ctx.scale(self.scale as f64, self.scale as f64)?;
+    ctx.translate(self.translate_x as f64, self.translate_y as f64)?;
 
     Ok(())
   }
@@ -131,7 +131,7 @@ impl Scale {
    * canvas space to the content space. Usually called
    * in getting values from a Style object.
    */
-  pub fn scale_value_to_content(&self, value: f64) -> f64 {
+  pub fn scale_value_to_content(&self, value: f32) -> f32 {
     value * (1.0 / self.scale)
   }
 
@@ -143,7 +143,7 @@ impl Scale {
    * content space to the canvas space. Usually called
    * in setting value to store on a Style object.
    */
-  pub fn scale_value_to_canvas(&self, value: f64) -> f64 {
+  pub fn scale_value_to_canvas(&self, value: f32) -> f32 {
     value * self.scale
   }
 
@@ -179,7 +179,7 @@ impl Scale {
       && ((content_ratio < 1.0 && canvas_ratio > 1.0)
         || (content_ratio > 1.0 && canvas_ratio < 1.0))
     {
-      std::f64::consts::FRAC_PI_2
+      std::f32::consts::FRAC_PI_2
     } else {
       0.0
     };

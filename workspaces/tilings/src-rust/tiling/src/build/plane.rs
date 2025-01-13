@@ -2,7 +2,7 @@
 #[cfg(test)]
 mod tests;
 
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
 use circular_sequence::SequenceStore;
 use serde::{Deserialize, Serialize};

@@ -1,6 +1,6 @@
 import { type NestedKeyOf } from '@hogg/common';
-import init from '@hogg/wasm/pkg';
 import get from 'lodash.get';
+import init from '@hogg/wasm/pkg';
 import * as circularSequence from './modules/circular-sequence';
 import * as lineSegmentExtending from './modules/line-segment-extending';
 import * as tilings from './modules/tilings';

@@ -51,6 +51,10 @@ impl Transforms {
     self.list.len()
   }
 
+  pub fn is_empty(&self) -> bool {
+    self.list.is_empty()
+  }
+
   pub fn previous(&self, plane: &Plane, path: &Path) -> Result<Option<Self>, TilingError> {
     if self.list.is_empty() {
       return Ok(Some(Self::first(path, &Some(plane), &Direction::FromEnd)?));

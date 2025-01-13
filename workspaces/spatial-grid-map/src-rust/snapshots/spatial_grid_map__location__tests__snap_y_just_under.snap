@@ -11,9 +11,9 @@ Location {
     bit_index: 31,
     point: Point(
         7.0,
-        6.99992375,
+        6.9999237,
     ),
-    distance: 9.899441019866428,
-    radians: 2.3561890437341098,
+    distance: 9.899441,
+    radians: 2.356189,
     contained: true,
 }

@@ -3,16 +3,16 @@ use tiling::geometry::{BBox, LineSegment, LineSegmentOrigin};
 use super::{Arrow, Draw, Style};
 use crate::canvas::Scale;
 
-const GAP_BETWEEN_ARROWS_MULTIPLIER: f64 = 10.0;
-const GAP_FROM_LINE_SEGMENT: f64 = 2.0;
-const ARROW_LENGTH: f64 = 2.5;
+const GAP_BETWEEN_ARROWS_MULTIPLIER: f32 = 10.0;
+const GAP_FROM_LINE_SEGMENT: f32 = 2.0;
+const ARROW_LENGTH: f32 = 2.5;
 
 #[derive(Clone, Debug, Default)]
 pub struct LineSegmentArrows {
   line_segment: LineSegment,
   extend_start: bool,
   extend_end: bool,
-  direction: f64,
+  direction: f32,
   style: Style,
 }
 
@@ -32,7 +32,7 @@ impl LineSegmentArrows {
     self
   }
 
-  pub fn with_direction(mut self, direction: f64) -> Self {
+  pub fn with_direction(mut self, direction: f32) -> Self {
     self.direction = direction;
     self
   }

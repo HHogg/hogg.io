@@ -3,7 +3,7 @@
 mod tests;
 
 use std::cmp::Ordering;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
@@ -70,8 +70,8 @@ impl Polygon {
     let mut points = Vec::new();
 
     for index in 0..sides {
-      let x = (radians * index as f64).cos();
-      let y = (radians * index as f64).sin();
+      let x = (radians * index as f32).cos();
+      let y = (radians * index as f32).sin();
 
       let mut point = Point::at(x, y).with_index(index);
 
@@ -80,7 +80,7 @@ impl Polygon {
           point = point.rotate(PI / 6.0, None);
         }
         Shape::Square | Shape::Octagon | Shape::Dodecagon => {
-          point = point.rotate(PI / (sides as f64), None);
+          point = point.rotate(PI / (sides as f32), None);
         }
         _ => {}
       }
@@ -148,8 +148,8 @@ impl Polygon {
     self.line_segments = line_segments;
   }
 
-  fn get_apothem(&self) -> f64 {
-    let sides = self.shape as u8 as f64;
+  fn get_apothem(&self) -> f32 {
+    let sides = self.shape as u8 as f32;
     let side_length = self.line_segments[0].length();
     let radius = side_length / (2.0 * (PI / sides).sin());
 
@@ -180,7 +180,7 @@ impl Polygon {
     self.with_points(points)
   }
 
-  pub fn rotate(self, radians: f64, origin: Option<&Point>) -> Self {
+  pub fn rotate(self, radians: f32, origin: Option<&Point>) -> Self {
     let mut points = vec![];
     points.reserve_exact(self.points.len());
 

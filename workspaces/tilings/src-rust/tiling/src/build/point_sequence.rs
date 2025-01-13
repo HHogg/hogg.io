@@ -61,5 +61,5 @@ impl PointSequence {
 pub struct Entry {
   pub point: Point,
   pub value: u8,
-  pub radians: f64,
+  pub radians: f32,
 }

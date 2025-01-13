@@ -7,7 +7,7 @@ fn assert_eq_points_to_points(a: Polygon, b: Vec<Point>) {
   assert_eq!(a.points, b);
 }
 
-fn assert_eq_points(a: Polygon, b: Vec<(f64, f64)>) {
+fn assert_eq_points(a: Polygon, b: Vec<(f32, f32)>) {
   assert_eq_points_to_points(a, b.iter().map(|(x, y)| Point::at(*x, *y)).collect())
 }
 
@@ -70,17 +70,17 @@ fn at_center_dodecagon() {
     Polygon::default().with_shape(Shape::Dodecagon).at_center(),
     vec![
       (0.25881904, -0.9659258),
-      (0.70710678, -0.7071067),
-      (0.96592582, -0.2588190),
-      (0.96592582, 0.25881904),
+      (0.7071067, -0.7071068),
+      (0.96592593, -0.25881875),
+      (0.9659258, 0.25881904),
       (0.70710678, 0.70710678),
-      (0.25881904, 0.96592582),
-      (-0.2588190, 0.96592582),
+      (0.25881904, 0.9659258),
+      (-0.258819, 0.9659258),
       (-0.7071067, 0.70710678),
       (-0.9659258, 0.25881904),
-      (-0.9659258, -0.2588190),
+      (-0.9659258, -0.258_819),
       (-0.7071067, -0.7071067),
-      (-0.2588190, -0.9659258),
+      (-0.258819, -0.9659258),
     ],
   );
 }
@@ -146,7 +146,7 @@ fn on_line_segment_octagon() {
       .with_shape(Shape::Octagon)
       .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1), 0),
     vec![
-      (2.0907702, -5.3533711),
+      (2.0907702, -5.353_371),
       (3.59077, -4.4873457),
       (4.039058, -2.814313),
       (3.1730326, -1.314313),
@@ -168,17 +168,17 @@ fn on_line_segment_dodecagon() {
       .with_shape(Shape::Dodecagon)
       .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1), 0),
     vec![
-      (3.232050, -7.330127),
-      (4.732050, -6.464101),
+      (3.232_05, -7.330127),
+      (4.732_05, -6.464101),
       (5.598076, -4.964101),
-      (5.598076, -3.232050),
-      (4.732050, -1.732050),
-      (3.232050, -0.866025),
+      (5.598076, -3.232_05),
+      (4.732_05, -1.732_05),
+      (3.232_05, -0.866025),
       (p2.x, p2.y),
       (p1.x, p1.y),
-      (-0.866025, -3.2320508),
-      (-0.866025, -4.9641016),
-      (0.0, -6.4641016),
+      (-0.866025, -3.232_051),
+      (-0.866025, -4.964_102),
+      (0.0, -6.464_102),
       (1.499999, -7.330127),
     ],
   );
@@ -191,7 +191,7 @@ fn equality_exactly_the_same_values() {
     .with_points(vec![
       Point::at(0.0, 0.0),
       Point::at(1.0, 0.0),
-      Point::at(0.5, 0.8660254037844386),
+      Point::at(0.5, 0.866_025_4),
     ]);
 
   let shape2 = Polygon::default()
@@ -199,7 +199,7 @@ fn equality_exactly_the_same_values() {
     .with_points(vec![
       Point::at(0.0, 0.0),
       Point::at(1.0, 0.0),
-      Point::at(0.5, 0.8660254037844386),
+      Point::at(0.5, 0.866_025_4),
     ]);
 
   assert_eq!(shape1, shape2);
@@ -210,17 +210,17 @@ fn equality_close_to_the_same_values() {
   let shape1 = Polygon::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
-      Point::at(4.440892098500626e-16, 1.7320508075688772),
-      Point::at(-2.8844440295753455e-16, 1.6653345369377348e-16),
-      Point::at(1.5, 0.8660254037844377),
+      Point::at(4.440_892e-16, 1.732_050_8),
+      Point::at(-2.884_444e-16, 1.665_334_5e-16),
+      Point::at(1.5, 0.866_025_4),
     ]);
 
   let shape2 = Polygon::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
-      Point::at(1.5000000000000002, 0.8660254037844377),
-      Point::at(2.884444029575345e-16, -1.6653345369377365e-16),
-      Point::at(5.551115123125783e-16, 1.7320508075688767),
+      Point::at(1.5, 0.866_025_4),
+      Point::at(2.884_444e-16, -1.665_334_5e-16),
+      Point::at(5.551_115e-16, 1.732_050_8),
     ]);
 
   assert_eq!(shape1, shape2);
@@ -233,7 +233,7 @@ fn equality_different_values() {
     .with_points(vec![
       Point::at(0.0, 0.0),
       Point::at(1.0, 0.0),
-      Point::at(0.5, 0.8660254037844386),
+      Point::at(0.5, 0.866_025_4),
     ]);
 
   let shape2 = Polygon::default()
@@ -241,7 +241,7 @@ fn equality_different_values() {
     .with_points(vec![
       Point::at(0.0, 0.0),
       Point::at(1.0, 0.0),
-      Point::at(0.6, 0.8660254037844387),
+      Point::at(0.6, 0.866_025_4),
     ]);
 
   assert_ne!(shape1, shape2);

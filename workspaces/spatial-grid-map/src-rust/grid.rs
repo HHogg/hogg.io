@@ -5,7 +5,7 @@ mod grid_tests;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use core::f64;
+use core::f32;
 use std::cmp::Ordering;
 use std::collections::{BTreeSet, HashMap};
 use std::mem;
@@ -50,13 +50,13 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self
   }
 
-  pub fn with_spacing(mut self, spacing: f64) -> Self {
-    self.spacing = Some(spacing as f32);
+  pub fn with_spacing(mut self, spacing: f32) -> Self {
+    self.spacing = Some(spacing);
     self
   }
 
-  pub fn get_spacing(&self) -> f64 {
-    self.spacing.unwrap_or(1.0) as f64
+  pub fn get_spacing(&self) -> f32 {
+    self.spacing.unwrap_or(1.0)
   }
 
   pub fn get_grid_size(&self) -> u64 {
@@ -197,14 +197,14 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   pub fn insert(
     &mut self,
     point: location::Point,
-    size: f64,
+    size: f32,
     value: TEntryValue,
   ) -> MutBucketEntry<TEntryValue> {
     self.insert_entry(
       BucketEntry::default()
         .with_point(point)
         .with_value(value)
-        .with_size(size as f32),
+        .with_size(size),
       true,
     )
   }
@@ -280,14 +280,14 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
         return;
       }
       ResizeMethod::Maximum => {
-        if compare_coordinate(new_spacing as f64, self.get_spacing()) == Ordering::Greater {
+        if compare_coordinate(new_spacing, self.get_spacing()) == Ordering::Greater {
           self.spacing = Some(new_spacing);
         } else {
           return;
         }
       }
       ResizeMethod::Minimum => {
-        if compare_coordinate(new_spacing as f64, self.get_spacing()) == Ordering::Less {
+        if compare_coordinate(new_spacing, self.get_spacing()) == Ordering::Less {
           self.spacing = Some(new_spacing);
         } else {
           return;

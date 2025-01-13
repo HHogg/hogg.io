@@ -90,7 +90,7 @@ impl ConvexHull {
     None
   }
 
-  pub fn get_bbox_scale_value(&self, bbox: &BBox) -> f64 {
+  pub fn get_bbox_scale_value(&self, bbox: &BBox) -> f32 {
     if self.points.is_empty() {
       return 1.0;
     }
@@ -128,13 +128,13 @@ impl ConvexHull {
       .expect("There should be at least one point")
   }
 
-  pub fn scale(&self, scale: f64) -> Self {
+  pub fn scale(&self, scale: f32) -> Self {
     ConvexHull {
       points: self.points.iter().map(|point| point.scale(scale)).collect(),
     }
   }
 
-  pub fn rotate(&self, theta: f64, origin: Option<&Point>) -> Self {
+  pub fn rotate(&self, theta: f32, origin: Option<&Point>) -> Self {
     ConvexHull {
       points: self
         .points

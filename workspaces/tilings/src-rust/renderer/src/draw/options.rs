@@ -16,7 +16,7 @@ pub struct Options {
   pub color_palette: Option<ColorPalette>,
   pub is_valid: Option<bool>,
   pub max_stage: Option<u16>,
-  pub padding: Option<f64>,
+  pub padding: Option<f32>,
   pub scale_mode: Option<ScaleMode>,
   pub show_layers: Option<HashMap<Layer, bool>>,
   pub show_transform_index: Option<u8>,

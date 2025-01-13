@@ -8,20 +8,20 @@ use super::Scale;
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Style {
-  chevron_size: Option<f64>,
+  chevron_size: Option<f32>,
   fill: Option<String>,
-  line_dash: Option<Vec<f64>>,
-  line_thickness: Option<f64>,
-  point_radius: Option<f64>,
+  line_dash: Option<Vec<f32>>,
+  line_thickness: Option<f32>,
+  point_radius: Option<f32>,
   shadow_color: Option<String>,
-  shadow_blur: Option<f64>,
+  shadow_blur: Option<f32>,
   stroke_color: Option<String>,
-  stroke_width: Option<f64>,
-  opacity: Option<f64>,
+  stroke_width: Option<f32>,
+  opacity: Option<f32>,
 }
 
 impl Style {
-  pub fn get_chevron_size(&self, scale: &Scale) -> f64 {
+  pub fn get_chevron_size(&self, scale: &Scale) -> f32 {
     self
       .chevron_size
       .map(|v| scale.scale_value_to_content(v))
@@ -33,7 +33,7 @@ impl Style {
     self.fill.as_ref().cloned().unwrap_or(default_fill_style)
   }
 
-  pub fn get_line_dash(&self, scale: &Scale) -> Option<Vec<f64>> {
+  pub fn get_line_dash(&self, scale: &Scale) -> Option<Vec<f32>> {
     self.line_dash.as_ref().map(|v| {
       v.iter()
         .copied()
@@ -42,25 +42,25 @@ impl Style {
     })
   }
 
-  pub fn get_line_thickness(&self, scale: &Scale) -> f64 {
+  pub fn get_line_thickness(&self, scale: &Scale) -> f32 {
     self
       .line_thickness
       .map(|v| scale.scale_value_to_content(v))
       .unwrap_or(0.0)
   }
 
-  pub fn get_opacity(&self) -> f64 {
+  pub fn get_opacity(&self) -> f32 {
     self.opacity.unwrap_or(1.0)
   }
 
-  pub fn get_point_radius(&self, scale: &Scale) -> f64 {
+  pub fn get_point_radius(&self, scale: &Scale) -> f32 {
     self
       .point_radius
       .map(|v| scale.scale_value_to_content(v))
       .unwrap_or(0.0)
   }
 
-  pub fn get_shadow_blur(&self, _scale: &Scale) -> f64 {
+  pub fn get_shadow_blur(&self, _scale: &Scale) -> f32 {
     self.shadow_blur.unwrap_or(0.0)
   }
 
@@ -74,7 +74,7 @@ impl Style {
     self.stroke_color.clone().unwrap_or(default_stroke_color)
   }
 
-  pub fn get_stroke_width(&self, scale: &Scale) -> f64 {
+  pub fn get_stroke_width(&self, scale: &Scale) -> f32 {
     self
       .stroke_width
       .map(|v| scale.scale_value_to_content(v))
@@ -87,7 +87,7 @@ impl Style {
     style
   }
 
-  pub fn set_line_dash(&self, scale: &Scale, line_dash: Option<Vec<f64>>) -> Self {
+  pub fn set_line_dash(&self, scale: &Scale, line_dash: Option<Vec<f32>>) -> Self {
     let mut style = self.clone();
     style.line_dash = line_dash.map(|v| {
       v.into_iter()
@@ -97,19 +97,19 @@ impl Style {
     style
   }
 
-  pub fn set_opacity(&self, opacity: Option<f64>) -> Self {
+  pub fn set_opacity(&self, opacity: Option<f32>) -> Self {
     let mut style = self.clone();
     style.opacity = opacity;
     style
   }
 
-  pub fn set_point_radius(&self, scale: &Scale, point_radius: Option<f64>) -> Self {
+  pub fn set_point_radius(&self, scale: &Scale, point_radius: Option<f32>) -> Self {
     let mut style = self.clone();
     style.point_radius = point_radius.map(|v| scale.scale_value_to_canvas(v));
     style
   }
 
-  pub fn set_shadow_blur(&self, shadow_blur: Option<f64>) -> Self {
+  pub fn set_shadow_blur(&self, shadow_blur: Option<f32>) -> Self {
     let mut style = self.clone();
     style.shadow_blur = shadow_blur;
     style
@@ -127,7 +127,7 @@ impl Style {
     style
   }
 
-  pub fn set_stroke_width(&self, scale: &Scale, stroke_width: Option<f64>) -> Self {
+  pub fn set_stroke_width(&self, scale: &Scale, stroke_width: Option<f32>) -> Self {
     let mut style = self.clone();
     style.stroke_width = stroke_width.map(|v| scale.scale_value_to_canvas(v));
     style
@@ -157,7 +157,7 @@ impl Style {
 
   fn apply_opacity(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
     let opacity = self.opacity.unwrap_or(1.0);
-    context.set_global_alpha(opacity);
+    context.set_global_alpha(opacity as f64);
   }
 
   fn apply_shadow(&self, context: &web_sys::OffscreenCanvasRenderingContext2d, scale: &Scale) {
@@ -166,7 +166,7 @@ impl Style {
 
     if shadow_blur > 0.0 {
       context.set_shadow_color(&shadow_color);
-      context.set_shadow_blur(shadow_blur);
+      context.set_shadow_blur(shadow_blur as f64);
     } else {
       context.set_shadow_color("transparent");
       context.set_shadow_blur(0.0);
@@ -179,7 +179,7 @@ impl Style {
 
     if stroke_width > 0.0 {
       context.set_stroke_style_str(&stroke_color);
-      context.set_line_width(stroke_width);
+      context.set_line_width(stroke_width as f64);
     } else {
       context.set_stroke_style_str("transparent");
       context.set_line_width(0.0);
@@ -193,12 +193,12 @@ impl Style {
   ) -> Result<(), JsValue> {
     if let Some(line_dash) = &self.get_line_dash(scale) {
       context.set_line_dash_offset(0.0);
-      context.set_line_dash(&serde_wasm_bindgen::to_value::<Option<Vec<f64>>>(&Some(
+      context.set_line_dash(&serde_wasm_bindgen::to_value::<Option<Vec<f32>>>(&Some(
         line_dash.clone(),
       ))?)?;
     } else {
       context.set_line_dash_offset(0.0);
-      context.set_line_dash(&serde_wasm_bindgen::to_value::<Vec<f64>>(&vec![])?)?;
+      context.set_line_dash(&serde_wasm_bindgen::to_value::<Vec<f32>>(&vec![])?)?;
     }
 
     Ok(())

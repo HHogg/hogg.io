@@ -1,4 +1,4 @@
-use core::f64;
+use core::f32;
 
 use insta::assert_json_snapshot;
 
@@ -99,7 +99,7 @@ fn finds_line_segments_for_vector_terminal_points_right() {
     Point::default()
       .with_x(0.0)
       .with_y(-1.0)
-      .rotate(f64::consts::PI * 0.5, None),
+      .rotate(f32::consts::PI * 0.5, None),
   );
 
   assert_json_snapshot!(line_segment, {
@@ -115,7 +115,7 @@ fn finds_line_segments_for_vector_terminal_points_bottom() {
     Point::default()
       .with_x(0.0)
       .with_y(-1.0)
-      .rotate(f64::consts::PI, None),
+      .rotate(f32::consts::PI, None),
   );
 
   assert_json_snapshot!(line_segment, {
@@ -131,7 +131,7 @@ fn finds_line_segments_for_vector_terminal_points_left() {
     Point::default()
       .with_x(0.0)
       .with_y(-1.0)
-      .rotate(f64::consts::PI * 1.5, None),
+      .rotate(f32::consts::PI * 1.5, None),
   );
 
   assert_json_snapshot!(line_segment, {

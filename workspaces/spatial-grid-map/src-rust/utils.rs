@@ -3,21 +3,21 @@
 mod tests;
 
 use std::cmp::Ordering;
-use std::f64::consts::PI;
+use std::f32::consts::PI;
 
-const PRECISION_RADIAN: f64 = 0.0001;
-const PRECISION_COORDINATE: f64 = 0.001;
+const PRECISION_RADIAN: f32 = 0.0001;
+const PRECISION_COORDINATE: f32 = 0.001;
 
-pub fn compare_f64(a: f64, b: f64, precision: f64) -> Ordering {
-  if (a - b).abs() <= precision + f64::EPSILON {
+pub fn compare_f32(a: f32, b: f32, precision: f32) -> Ordering {
+  if (a - b).abs() <= precision + f32::EPSILON {
     return Ordering::Equal;
   }
 
   a.partial_cmp(&b).unwrap()
 }
 
-pub fn compare_radians(a: f64, b: f64) -> std::cmp::Ordering {
-  compare_f64(a, b, PRECISION_RADIAN)
+pub fn compare_radians(a: f32, b: f32) -> std::cmp::Ordering {
+  compare_f32(a, b, PRECISION_RADIAN)
 }
 
 /// Returns true if a <= b <= c. This assumes that
@@ -25,7 +25,7 @@ pub fn compare_radians(a: f64, b: f64) -> std::cmp::Ordering {
 /// and that a and c are clockwise.
 ///
 /// It handles cases where a <= PI * 2.0 and c >= 0.0
-pub fn is_between_radians(a: f64, b: f64, c: f64) -> bool {
+pub fn is_between_radians(a: f32, b: f32, c: f32) -> bool {
   let ab_comp = compare_radians(a, b);
   let bc_comp = compare_radians(b, c);
 
@@ -38,16 +38,16 @@ pub fn is_between_radians(a: f64, b: f64, c: f64) -> bool {
     || (ab_comp == Ordering::Less && bc_comp == Ordering::Less)
 }
 
-pub fn compare_coordinate(a: f64, b: f64) -> std::cmp::Ordering {
-  compare_f64(a, b, PRECISION_COORDINATE)
+pub fn compare_coordinate(a: f32, b: f32) -> std::cmp::Ordering {
+  compare_f32(a, b, PRECISION_COORDINATE)
 }
 
-pub fn coordinate_equals(a: f64, b: f64) -> bool {
+pub fn coordinate_equals(a: f32, b: f32) -> bool {
   compare_coordinate(a, b) == Ordering::Equal
 }
 
-pub fn round_coordinate(coordinate: f64) -> f64 {
-  let rounded = ((coordinate + f64::EPSILON) / PRECISION_COORDINATE).round() * PRECISION_COORDINATE;
+pub fn round_coordinate(coordinate: f32) -> f32 {
+  let rounded = ((coordinate + f32::EPSILON) / PRECISION_COORDINATE).round() * PRECISION_COORDINATE;
 
   // Even though -0.0 == 0.0, we want to return 0.0
   // to avoid issues with hashing
@@ -58,15 +58,15 @@ pub fn round_coordinate(coordinate: f64) -> f64 {
   rounded
 }
 
-pub fn radian_to_degrees(radian: f64) -> u16 {
+pub fn radian_to_degrees(radian: f32) -> u16 {
   (((radian * 180.0 / PI) * 10.0).round() / 10.0) as u16
 }
 
-pub fn degrees_to_radian(degrees: u16) -> f64 {
-  degrees as f64 * PI / 180.0
+pub fn degrees_to_radian(degrees: u16) -> f32 {
+  degrees as f32 * PI / 180.0
 }
 
-pub fn normalize_radian(mut radian: f64) -> f64 {
+pub fn normalize_radian(mut radian: f32) -> f32 {
   radian += PI * 0.5;
 
   if radian < -PRECISION_RADIAN {
@@ -76,7 +76,7 @@ pub fn normalize_radian(mut radian: f64) -> f64 {
   radian
 }
 
-pub fn get_radians_for_x_y(x: f64, y: f64) -> f64 {
+pub fn get_radians_for_x_y(x: f32, y: f32) -> f32 {
   if coordinate_equals(x, 0.0) && coordinate_equals(y, 0.0) {
     return 0.0;
   }

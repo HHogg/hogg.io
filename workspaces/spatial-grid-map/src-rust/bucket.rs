@@ -112,7 +112,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct BucketEntry<TEntryValue: Default> {
-  #[typeshare(serialized_as = "Vec<f64>")]
+  #[typeshare(serialized_as = "Vec<f32>")]
   pub point: location::Point,
   pub size: f32,
   pub value: TEntryValue,
@@ -140,12 +140,12 @@ impl<TEntryValue: Default> BucketEntry<TEntryValue> {
     self
   }
 
-  pub fn distance_to_center(&self) -> f64 {
+  pub fn distance_to_center(&self) -> f32 {
     let location::Point(x, y) = self.point;
     (x * x + y * y).sqrt()
   }
 
-  pub fn theta(&self) -> f64 {
+  pub fn theta(&self) -> f32 {
     let location::Point(x, y) = self.point;
     normalize_radian(y.atan2(x))
   }

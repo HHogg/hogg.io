@@ -12,7 +12,7 @@ use typeshare::typeshare;
 use super::point::Point;
 use super::BBox;
 
-fn get_point_at_percentage(p1: Point, p2: Point, percentage: f64, offset: f64) -> Point {
+fn get_point_at_percentage(p1: Point, p2: Point, percentage: f32, offset: f32) -> Point {
   let x = p1.x + (p2.x - p1.x) * percentage + offset;
   let y = p1.y + (p2.y - p1.y) * percentage + offset;
 
@@ -70,11 +70,11 @@ impl LineSegment {
     get_point_at_percentage(self.start, self.end, 0.5, 0.0)
   }
 
-  pub fn length(&self) -> f64 {
+  pub fn length(&self) -> f32 {
     self.start.distance_to(&self.end)
   }
 
-  pub fn theta(&self) -> f64 {
+  pub fn theta(&self) -> f32 {
     self.end.radian_to(&self.start)
   }
 
@@ -103,11 +103,11 @@ impl LineSegment {
     }
   }
 
-  pub fn get_point_at_percentage(&self, percentage: f64, offset: f64) -> Point {
+  pub fn get_point_at_percentage(&self, percentage: f32, offset: f32) -> Point {
     get_point_at_percentage(self.start, self.end, percentage, offset)
   }
 
-  pub fn set_length(&self, length: f64, origin: LineSegmentOrigin) -> Self {
+  pub fn set_length(&self, length: f32, origin: LineSegmentOrigin) -> Self {
     let dx = self.end.x - self.start.x;
     let dy = self.end.y - self.start.y;
     let theta = dy.atan2(dx);
@@ -137,7 +137,7 @@ impl LineSegment {
     Self::default().with_start(p1).with_end(p2)
   }
 
-  pub fn rotate(&self, theta: f64, origin: Option<&Point>) -> Self {
+  pub fn rotate(&self, theta: f32, origin: Option<&Point>) -> Self {
     let mid_point = self.mid_point();
     let origin = origin.or(Some(&mid_point));
 
@@ -146,7 +146,7 @@ impl LineSegment {
       .with_end(self.end.rotate(theta, origin))
   }
 
-  pub fn scale(&self, scale: f64) -> Self {
+  pub fn scale(&self, scale: f32) -> Self {
     Self::default()
       .with_start(self.start.scale(scale))
       .with_end(self.end.scale(scale))

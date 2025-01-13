@@ -9,12 +9,12 @@ use serde::{Deserialize, Serialize};
 use crate::utils::{compare_coordinate, compare_radians, coordinate_equals, get_radians_for_x_y};
 
 const BLOCK_SIZE: u64 = 8; // Sqrt(64)
-pub(super) const TOLERANCE: f64 = 0.0001525;
+pub(super) const TOLERANCE: f32 = 0.0001525;
 
 pub type Key = (i64, i64);
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
-pub struct Point(pub f64, pub f64);
+pub struct Point(pub f32, pub f32);
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Location {
@@ -22,8 +22,8 @@ pub struct Location {
   pub block_index: u64,
   pub bit_index: u64,
   pub point: Point,
-  pub distance: f64,
-  pub radians: f64,
+  pub distance: f32,
+  pub radians: f32,
   pub contained: bool,
 }
 
@@ -32,7 +32,7 @@ impl Location {
     (blocks_dimension as u64) * BLOCK_SIZE
   }
 
-  pub fn new(blocks_dimension: u32, spacing: f64, point: Point) -> Self {
+  pub fn new(blocks_dimension: u32, spacing: f32, point: Point) -> Self {
     let Point(x, y) = point;
     let grid_size = Self::get_grid_size(blocks_dimension);
     let grid_size_div2 = grid_size / 2;
@@ -61,14 +61,14 @@ impl Location {
     }
 
     // Adjust the coordinates relative to the grid center
-    let adjusted_x = scaled_x + grid_size_div2 as f64;
-    let adjusted_y = scaled_y + grid_size_div2 as f64;
+    let adjusted_x = scaled_x + grid_size_div2 as f32;
+    let adjusted_y = scaled_y + grid_size_div2 as f32;
 
     // Ensure the coordinates are within the grid
     let contained = adjusted_x >= 0.0
       && adjusted_y >= 0.0
-      && adjusted_x < grid_size as f64
-      && adjusted_y < grid_size as f64;
+      && adjusted_x < grid_size as f32
+      && adjusted_y < grid_size as f32;
 
     let adjusted_x = adjusted_x as u64;
     let adjusted_y = adjusted_y as u64;

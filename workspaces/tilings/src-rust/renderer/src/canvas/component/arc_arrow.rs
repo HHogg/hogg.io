@@ -6,9 +6,9 @@ use crate::canvas::Scale;
 #[derive(Clone, Debug, Default)]
 pub struct ArcArrow {
   point: Point,
-  radius: f64,
-  start_angle: f64,
-  end_angle: f64,
+  radius: f32,
+  start_angle: f32,
+  end_angle: f32,
   style: Style,
   interactive: Option<bool>,
 }
@@ -24,17 +24,17 @@ impl ArcArrow {
     self
   }
 
-  pub fn with_radius(mut self, radius: f64) -> Self {
+  pub fn with_radius(mut self, radius: f32) -> Self {
     self.radius = radius;
     self
   }
 
-  pub fn with_start_angle(mut self, start_angle: f64) -> Self {
+  pub fn with_start_angle(mut self, start_angle: f32) -> Self {
     self.start_angle = start_angle;
     self
   }
 
-  pub fn with_end_angle(mut self, end_angle: f64) -> Self {
+  pub fn with_end_angle(mut self, end_angle: f32) -> Self {
     self.end_angle = end_angle;
     self
   }
