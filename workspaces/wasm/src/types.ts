@@ -313,8 +313,8 @@ export interface Entry {
 export interface PointSequence {
 	sequence: Sequence;
 	center: Point;
-	entries: Entry[];
 	size: number;
+	entries: Entry[];
 }
 
 export interface Plane {

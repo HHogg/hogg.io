@@ -4,9 +4,10 @@ mod tests;
 
 use std::cmp::Ordering;
 
+use ordered_float::NotNan;
 use serde::{Deserialize, Serialize};
 
-use crate::utils::{compare_coordinate, compare_radians, coordinate_equals, get_radians_for_x_y};
+use crate::utils::{coordinate_equals, get_radians_for_x_y};
 
 const BLOCK_SIZE: u64 = 8; // Sqrt(64)
 pub(super) const TOLERANCE: f32 = 0.0001525;
@@ -19,12 +20,14 @@ pub struct Point(pub f32, pub f32);
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Location {
   pub key: Key,
-  pub block_index: u64,
-  pub bit_index: u64,
   pub point: Point,
-  pub distance: f32,
-  pub radians: f32,
-  pub contained: bool,
+
+  block_index: u64,
+  bit_index: u64,
+  contained: bool,
+
+  distance: NotNan<f32>,
+  radians: NotNan<f32>,
 }
 
 impl Location {
@@ -116,10 +119,15 @@ impl Location {
       key,
       block_index,
       bit_index,
-      distance,
-      radians,
       contained,
+
+      distance: NotNan::new(distance).expect("Distance not to be NaN"),
+      radians: NotNan::new(radians).expect("Radian not to be NaN"),
     }
+  }
+
+  pub fn is_contained(&self) -> bool {
+    self.contained
   }
 }
 
@@ -133,13 +141,13 @@ impl PartialEq for Location {
 
 impl Ord for Location {
   fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-    let theta_comparison = compare_radians(self.radians, other.radians);
+    let theta_comparison = self.radians.cmp(&other.radians);
 
     if theta_comparison != Ordering::Equal {
       return theta_comparison;
     }
 
-    compare_coordinate(self.distance, other.distance)
+    self.distance.cmp(&other.distance)
   }
 }
 

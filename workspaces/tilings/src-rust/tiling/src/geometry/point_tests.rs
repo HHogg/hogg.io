@@ -2,19 +2,6 @@ use std::f32::consts::PI;
 
 use super::*;
 
-fn assert_eq_points_to_points(a: Vec<Point>, b: Vec<Point>) {
-  assert_eq!(a.len(), b.len());
-
-  for (index, point) in a.iter().enumerate() {
-    let point_expected = &b[index];
-    assert_eq!(point, point_expected)
-  }
-}
-
-fn assert_eq_points(a: Vec<Point>, b: Vec<(f32, f32)>) {
-  assert_eq_points_to_points(a, b.iter().map(|(x, y)| Point::at(*x, *y)).collect())
-}
-
 #[test]
 fn equality_exactly_the_same_values() {
   let a = Point::at(1.0, 2.0);
@@ -37,62 +24,6 @@ fn equality_different_values() {
   let b = Point::at(1.0, 3.0);
 
   assert_ne!(a, b);
-}
-
-#[test]
-fn ordering() {
-  let a = Point::at(-1.0, -1.0);
-  let b = Point::at(1.0, -1.0);
-  let c = Point::at(1.0, 1.0);
-  let d = Point::at(-1.0, 1.0);
-
-  let mut points = vec![b, c, d, a];
-  points.sort();
-
-  assert_eq_points(
-    points,
-    vec![(1.0, -1.0), (1.0, 1.0), (-1.0, 1.0), (-1.0, -1.0)],
-  );
-}
-
-#[test]
-fn ordering_precision_1() {
-  let mut a = vec![
-    Point::at(4.440_892e-16, 1.732_050_8),
-    Point::at(-2.884_444e-16, 1.665_334_5e-16),
-    Point::at(1.5, 0.866_025_4),
-  ];
-
-  let mut b = vec![
-    Point::at(1.5, 0.866_025_4),
-    Point::at(2.884_444e-16, -1.665_334_5e-16),
-    Point::at(5.551_115e-16, 1.732_050_8),
-  ];
-
-  a.sort();
-  b.sort();
-
-  assert_eq_points_to_points(a, b);
-}
-
-#[test]
-fn ordering_precision_2() {
-  let mut a = vec![
-    Point::at(-1.5, -0.866_025_4),
-    Point::at(-2.884_444e-16, 1.665_334_5e-16),
-    Point::at(-5.551_115e-16, -1.732_050_8),
-  ];
-
-  let mut b = vec![
-    Point::at(-3.330_669e-16, -1.732_050_8),
-    Point::at(2.884_444e-16, -1.665_334_5e-16),
-    Point::at(-1.5, -0.866_025_4),
-  ];
-
-  a.sort();
-  b.sort();
-
-  assert_eq_points_to_points(a, b);
 }
 
 #[test]
@@ -137,24 +68,6 @@ fn radians_to_point() {
     PI * 1.5
   );
 }
-
-// #[test]
-// fn to_line_segments() {
-//   let p1 = Point::default().with_xy(1.0, -1.0);
-//   let p2 = Point::default().with_xy(1.0, 1.0);
-//   let p3 = Point::default().with_xy(-1.0, 1.0);
-//   let p4 = Point::default().with_xy(-1.0, -1.0);
-
-//   assert_eq!(
-//     get_line_segments_from_points(&[p4, p3, p2, p1]),
-//     vec![
-//       LineSegment::new(p1, p2),
-//       LineSegment::new(p2, p3),
-//       LineSegment::new(p3, p4),
-//       LineSegment::new(p4, p1),
-//     ],
-//   );
-// }
 
 #[test]
 fn reflect() {

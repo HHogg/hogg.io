@@ -7,13 +7,13 @@ Location {
         7,
         7,
     ),
-    block_index: 7,
-    bit_index: 31,
     point: Point(
         6.9999237,
         7.0,
     ),
+    block_index: 7,
+    bit_index: 31,
+    contained: true,
     distance: 9.899441,
     radians: 2.3562,
-    contained: true,
 }

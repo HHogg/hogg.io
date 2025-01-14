@@ -355,7 +355,7 @@ impl Plane {
       .points_mid
       .get_value(&line_segment.mid_point().into())
       .and_then(|line_segment_sequence| {
-        line_segment_sequence.find_where(|entry| entry.point != polygon.centroid)
+        line_segment_sequence.find(|entry| entry.point != polygon.centroid)
       })
       .and_then(|entry| self.polygons.get_value(&entry.point.into()).cloned());
 

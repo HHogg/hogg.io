@@ -6,7 +6,7 @@ use std::{cmp::Ordering, fmt::Display};
 
 use line_segment_extending::extend_line_segment;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::{compare_coordinate, compare_radians};
+use spatial_grid_map::utils::compare_coordinate;
 use typeshare::typeshare;
 
 use super::point::Point;
@@ -210,7 +210,7 @@ impl LineSegment {
     None
   }
 
-  pub fn is_intersection_with_polygon_line_segment(&self, other: &LineSegment) -> bool {
+  pub fn is_intersecting_with_polygon_line_segment(&self, other: &LineSegment) -> bool {
     let intersection_point = self.get_intersection_point(other);
 
     match intersection_point {
@@ -225,42 +225,6 @@ impl LineSegment {
 impl Display for LineSegment {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     write!(f, "({}, {})", self.start, self.end)
-  }
-}
-
-impl Ord for LineSegment {
-  fn cmp(&self, other: &Self) -> Ordering {
-    let self_midpoint = self.mid_point();
-    let other_midpoint = other.mid_point();
-
-    // Custom behaviour to handle
-    if compare_radians(self.theta(), 0.0).is_eq() {
-      if compare_radians(other.theta(), 0.0).is_eq() {
-        return compare_coordinate(
-          other_midpoint.distance_to_center(),
-          self_midpoint.distance_to_center(),
-        );
-      }
-
-      return Ordering::Greater;
-    }
-
-    let theta_comparison = compare_radians(self.mid_point().theta(), other.mid_point().theta());
-
-    if theta_comparison.is_ne() {
-      return theta_comparison;
-    }
-
-    compare_coordinate(
-      other_midpoint.distance_to_center(),
-      self_midpoint.distance_to_center(),
-    )
-  }
-}
-
-impl PartialOrd for LineSegment {
-  fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-    Some(self.cmp(other))
   }
 }
 

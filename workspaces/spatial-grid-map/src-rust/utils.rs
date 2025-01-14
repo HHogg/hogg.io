@@ -5,8 +5,8 @@ mod tests;
 use std::cmp::Ordering;
 use std::f32::consts::PI;
 
-const PRECISION_RADIAN: f32 = 0.0001;
-const PRECISION_COORDINATE: f32 = 0.001;
+const TOLERANCE_RADIAN: f32 = 0.0001;
+const TOLERANCE_COORDINATE: f32 = 0.001;
 
 pub fn compare_f32(a: f32, b: f32, precision: f32) -> Ordering {
   if (a - b).abs() <= precision + f32::EPSILON {
@@ -17,7 +17,7 @@ pub fn compare_f32(a: f32, b: f32, precision: f32) -> Ordering {
 }
 
 pub fn compare_radians(a: f32, b: f32) -> std::cmp::Ordering {
-  compare_f32(a, b, PRECISION_RADIAN)
+  compare_f32(a, b, TOLERANCE_RADIAN)
 }
 
 /// Returns true if a <= b <= c. This assumes that
@@ -39,7 +39,7 @@ pub fn is_between_radians(a: f32, b: f32, c: f32) -> bool {
 }
 
 pub fn compare_coordinate(a: f32, b: f32) -> std::cmp::Ordering {
-  compare_f32(a, b, PRECISION_COORDINATE)
+  compare_f32(a, b, TOLERANCE_COORDINATE)
 }
 
 pub fn coordinate_equals(a: f32, b: f32) -> bool {
@@ -47,7 +47,7 @@ pub fn coordinate_equals(a: f32, b: f32) -> bool {
 }
 
 pub fn round_coordinate(coordinate: f32) -> f32 {
-  let rounded = ((coordinate + f32::EPSILON) / PRECISION_COORDINATE).round() * PRECISION_COORDINATE;
+  let rounded = ((coordinate + f32::EPSILON) / TOLERANCE_COORDINATE).round() * TOLERANCE_COORDINATE;
 
   // Even though -0.0 == 0.0, we want to return 0.0
   // to avoid issues with hashing
@@ -69,7 +69,7 @@ pub fn degrees_to_radian(degrees: u16) -> f32 {
 pub fn normalize_radian(mut radian: f32) -> f32 {
   radian += PI * 0.5;
 
-  if radian < -PRECISION_RADIAN {
+  if radian < -TOLERANCE_RADIAN {
     radian += PI * 2.0;
   }
 

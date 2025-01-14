@@ -2,10 +2,9 @@
 #[cfg(test)]
 mod tests;
 
-use std::cmp::Ordering;
-
+use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::{compare_coordinate, compare_radians, is_between_radians};
+use spatial_grid_map::utils::is_between_radians;
 use typeshare::typeshare;
 
 use super::{BBox, LineSegment, Point};
@@ -37,16 +36,21 @@ impl ConvexHull {
     let lowest_point = points
       .iter()
       .cloned()
-      .max_by(|a, b| compare_coordinate(a.y, b.y))
+      .max_by(|a, b| {
+        let a_y = OrderedFloat(a.y);
+        let b_y = OrderedFloat(b.y);
+
+        a_y.cmp(&b_y)
+      })
       .expect("There should be at least one point");
 
     // Sort the points by their angle to the lowest point.
     // This gets all the points in order around the polygon.
     points.sort_by(|a, b| {
-      let a_radians = lowest_point.radian_to(a);
-      let b_radians = lowest_point.radian_to(b);
+      let a_radians = OrderedFloat(lowest_point.radian_to(a));
+      let b_radians = OrderedFloat(lowest_point.radian_to(b));
 
-      compare_radians(a_radians, b_radians)
+      a_radians.cmp(&b_radians)
     });
 
     // The stack will hold the points that are part of the convex hull
@@ -124,7 +128,7 @@ impl ConvexHull {
 
         origin_distance / intersection_point_distance
       })
-      .max_by(|a, b| compare_coordinate(*a, *b))
+      .max_by(|a, b| OrderedFloat(*a).cmp(&OrderedFloat(*b)))
       .expect("There should be at least one point")
   }
 
@@ -147,8 +151,5 @@ impl ConvexHull {
 
 // Check if the points make a left turn by checking the sign of the cross product
 fn is_left_turn(p1: Point, p2: Point, p3: Point) -> bool {
-  compare_coordinate(
-    (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x),
-    0.0,
-  ) == Ordering::Greater
+  OrderedFloat((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)) > OrderedFloat(0.0)
 }

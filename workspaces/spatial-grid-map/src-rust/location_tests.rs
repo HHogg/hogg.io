@@ -94,7 +94,7 @@ fn get_sorted_location_ids(locations: Vec<(&str, Location)>) -> Vec<&str> {
   locations.shuffle(&mut rand::thread_rng());
 
   // The actual logic we're testing here.
-  locations.sort_by(|a, b| a.partial_cmp(b).unwrap());
+  locations.sort();
 
   let sorted_locations_ids: Vec<_> = locations
     .iter()

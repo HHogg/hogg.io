@@ -3,12 +3,11 @@
 mod tests;
 
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::compare_radians;
 use typeshare::typeshare;
 
 use super::{LineSegment, Point, Polygon};
 
-#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Default, Deserialize, Serialize, PartialEq)]
 #[typeshare]
 pub struct BBox {
   center: Point,
@@ -144,7 +143,7 @@ impl BBox {
 
     for a_line_segment in a_line_segments.iter() {
       for b_line_segment in b_line_segments.iter() {
-        if a_line_segment.is_intersection_with_polygon_line_segment(b_line_segment) {
+        if a_line_segment.is_intersecting_with_polygon_line_segment(b_line_segment) {
           return true;
         }
       }
@@ -242,14 +241,3 @@ impl From<&BBox> for [LineSegment; 4] {
     ]
   }
 }
-
-impl PartialEq for BBox {
-  fn eq(&self, other: &Self) -> bool {
-    self.center == other.center
-      && self.width == other.width
-      && self.height == other.height
-      && compare_radians(self.rotation, other.rotation) == std::cmp::Ordering::Equal
-  }
-}
-
-impl Eq for BBox {}

@@ -1,6 +1,6 @@
 use circular_sequence::Sequence;
+use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::compare_radians;
 use typeshare::typeshare;
 
 use crate::geometry::Point;
@@ -11,8 +11,9 @@ use crate::geometry::Point;
 pub struct PointSequence {
   pub sequence: Sequence,
   pub center: Point,
-  entries: Vec<Entry>,
   pub size: u8,
+
+  entries: Vec<Entry>,
 }
 
 impl PointSequence {
@@ -28,13 +29,10 @@ impl PointSequence {
     self.entries.push(Entry {
       point,
       value,
-      radians: point.radian_to(&self.center),
+      radians: OrderedFloat(point.radian_to(&self.center)),
     });
 
-    self
-      .entries
-      .sort_by(|a, b| compare_radians(a.radians, b.radians));
-
+    self.entries.sort_by(|a, b| a.radians.cmp(&b.radians));
     self.sequence = Sequence::default();
 
     for entry in &self.entries {
@@ -42,7 +40,7 @@ impl PointSequence {
     }
   }
 
-  pub fn find_where(&self, predicate: impl Fn(&Entry) -> bool) -> Option<&Entry> {
+  pub fn find(&self, predicate: impl Fn(&Entry) -> bool) -> Option<&Entry> {
     self.iter().find(|value| predicate(value))
   }
 
@@ -61,5 +59,6 @@ impl PointSequence {
 pub struct Entry {
   pub point: Point,
   pub value: u8,
-  pub radians: f32,
+  #[typeshare(serialized_as = "f32")]
+  pub radians: OrderedFloat<f32>,
 }

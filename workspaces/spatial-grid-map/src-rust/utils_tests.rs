@@ -59,24 +59,24 @@ fn test_normalize_radian() {
   let pos: f32 = 1.0;
 
   // atan2
-  assert!((neg.atan2(zero) - PI * -0.5).abs() < PRECISION_RADIAN);
-  assert!((neg.atan2(pos) - PI * -0.25).abs() < PRECISION_RADIAN);
-  assert!((zero.atan2(pos) - PI * 0.0).abs() < PRECISION_RADIAN);
-  assert!((pos.atan2(pos) - PI * 0.25).abs() < PRECISION_RADIAN);
-  assert!((pos.atan2(zero) - PI * 0.5).abs() < PRECISION_RADIAN);
-  assert!((pos.atan2(neg) - PI * 0.75).abs() < PRECISION_RADIAN);
-  assert!((zero.atan2(neg) - PI * 1.0).abs() < PRECISION_RADIAN);
-  assert!((neg.atan2(neg) - PI * -0.75).abs() < PRECISION_RADIAN);
+  assert!((neg.atan2(zero) - PI * -0.5).abs() < TOLERANCE_RADIAN);
+  assert!((neg.atan2(pos) - PI * -0.25).abs() < TOLERANCE_RADIAN);
+  assert!((zero.atan2(pos) - PI * 0.0).abs() < TOLERANCE_RADIAN);
+  assert!((pos.atan2(pos) - PI * 0.25).abs() < TOLERANCE_RADIAN);
+  assert!((pos.atan2(zero) - PI * 0.5).abs() < TOLERANCE_RADIAN);
+  assert!((pos.atan2(neg) - PI * 0.75).abs() < TOLERANCE_RADIAN);
+  assert!((zero.atan2(neg) - PI * 1.0).abs() < TOLERANCE_RADIAN);
+  assert!((neg.atan2(neg) - PI * -0.75).abs() < TOLERANCE_RADIAN);
 
   // normalize_radian
-  assert!((normalize_radian(neg.atan2(zero)) - PI * 0.0).abs() < PRECISION_RADIAN);
-  assert!((normalize_radian(neg.atan2(pos)) - PI * 0.25).abs() < PRECISION_RADIAN);
-  assert!((normalize_radian(zero.atan2(pos)) - PI * 0.5).abs() < PRECISION_RADIAN);
-  assert!((normalize_radian(pos.atan2(pos)) - PI * 0.75).abs() < PRECISION_RADIAN);
-  assert!((normalize_radian(pos.atan2(zero)) - PI * 1.0).abs() < PRECISION_RADIAN);
-  assert!((normalize_radian(pos.atan2(neg)) - PI * 1.25).abs() < PRECISION_RADIAN);
-  assert!((normalize_radian(zero.atan2(neg)) - PI * 1.5).abs() < PRECISION_RADIAN);
-  assert!((normalize_radian(neg.atan2(neg)) - PI * 1.75).abs() < PRECISION_RADIAN);
+  assert!((normalize_radian(neg.atan2(zero)) - PI * 0.0).abs() < TOLERANCE_RADIAN);
+  assert!((normalize_radian(neg.atan2(pos)) - PI * 0.25).abs() < TOLERANCE_RADIAN);
+  assert!((normalize_radian(zero.atan2(pos)) - PI * 0.5).abs() < TOLERANCE_RADIAN);
+  assert!((normalize_radian(pos.atan2(pos)) - PI * 0.75).abs() < TOLERANCE_RADIAN);
+  assert!((normalize_radian(pos.atan2(zero)) - PI * 1.0).abs() < TOLERANCE_RADIAN);
+  assert!((normalize_radian(pos.atan2(neg)) - PI * 1.25).abs() < TOLERANCE_RADIAN);
+  assert!((normalize_radian(zero.atan2(neg)) - PI * 1.5).abs() < TOLERANCE_RADIAN);
+  assert!((normalize_radian(neg.atan2(neg)) - PI * 1.75).abs() < TOLERANCE_RADIAN);
 }
 
 #[test]

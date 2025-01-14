@@ -6,8 +6,9 @@ use std::cmp::Ordering;
 use std::f32::consts::PI;
 use std::str::FromStr;
 
+use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::{compare_coordinate, compare_radians};
+use spatial_grid_map::utils::compare_coordinate;
 use typeshare::typeshare;
 
 use super::{BBox, LineSegment, Point};
@@ -127,10 +128,10 @@ impl Polygon {
 
   fn generate_line_segments(&mut self) {
     self.points.sort_by(|v1, v2| {
-      let theta1 = v1.radian_to(&self.centroid);
-      let theta2 = v2.radian_to(&self.centroid);
+      let theta1 = OrderedFloat(v1.radian_to(&self.centroid));
+      let theta2 = OrderedFloat(v2.radian_to(&self.centroid));
 
-      compare_radians(theta1, theta2)
+      theta1.cmp(&theta2)
     });
 
     let mut line_segments = Vec::new();

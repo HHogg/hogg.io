@@ -5,6 +5,11 @@ expression: convex_hull
 {
   "points": [
     {
+      "x": 0.5,
+      "y": 0.86603,
+      "index": 1
+    },
+    {
       "x": -0.5,
       "y": 0.86603,
       "index": 2
@@ -28,11 +33,6 @@ expression: convex_hull
       "x": 1.0,
       "y": 0.0,
       "index": 0
-    },
-    {
-      "x": 0.5,
-      "y": 0.86603,
-      "index": 1
     }
   ]
 }

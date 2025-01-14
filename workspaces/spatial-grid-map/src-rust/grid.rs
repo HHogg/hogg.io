@@ -71,7 +71,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   fn get_location(&self, point: &location::Point) -> Option<Location> {
     let location = self.get_location_unchecked(point);
 
-    if location.contained {
+    if location.is_contained() {
       Some(location)
     } else {
       None

@@ -2,14 +2,11 @@
 #[cfg(test)]
 mod point_tests;
 
-use std::cmp::Ordering;
 use std::fmt::{self, Display};
 
 use serde::{Deserialize, Serialize};
 use spatial_grid_map::location;
-use spatial_grid_map::utils::{
-  compare_coordinate, compare_radians, coordinate_equals, get_radians_for_x_y,
-};
+use spatial_grid_map::utils::{coordinate_equals, get_radians_for_x_y};
 use typeshare::typeshare;
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
@@ -101,24 +98,6 @@ impl Point {
 impl Display for Point {
   fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
     write!(fmt, "({:.2}, {:.2})", self.x, self.y)
-  }
-}
-
-impl Ord for Point {
-  fn cmp(&self, other: &Self) -> Ordering {
-    let theta_comparison = compare_radians(self.theta(), other.theta());
-
-    if theta_comparison != Ordering::Equal {
-      return theta_comparison;
-    }
-
-    compare_coordinate(self.distance_to_center(), other.distance_to_center())
-  }
-}
-
-impl PartialOrd for Point {
-  fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-    Some(self.cmp(other))
   }
 }
 

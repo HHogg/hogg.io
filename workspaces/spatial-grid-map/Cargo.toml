@@ -13,6 +13,7 @@ path = "src-rust/lib.rs"
 
 [dependencies]
 log.workspace = true
+ordered-float.workspace = true
 rand.workspace = true
 serde.workspace = true
 serde_arrays.workspace = true
