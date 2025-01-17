@@ -37,7 +37,7 @@ pub fn draw(
   }
 
   if show_layers.get(&Layer::ConvexHull) == Some(&true) {
-    draw_convex_hull(&mut canvas, options, tiling)?;
+    draw_convex_hull(&mut canvas, options)?;
   }
 
   if show_layers.get(&Layer::GridLineSegment) == Some(&true) {

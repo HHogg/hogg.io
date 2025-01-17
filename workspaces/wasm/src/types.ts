@@ -300,10 +300,6 @@ export interface Polygon {
 	stageIndex: number;
 }
 
-export interface ConvexHull {
-	points: Point[];
-}
-
 export interface Entry {
 	point: Point;
 	value: number;
@@ -321,7 +317,6 @@ export interface Plane {
 	polygons: SpatialGridMap<Polygon>;
 	polygonsPlacement: SpatialGridMap<Polygon>;
 	seedPolygon?: Polygon;
-	convexHull: ConvexHull;
 	repetitions: number;
 	lineSegments: SpatialGridMap<LineSegment>;
 	pointsCenter: SpatialGridMap<PointSequence>;
@@ -399,6 +394,10 @@ export interface Result {
 export interface ApplicationError {
 	tiling: string;
 	reason: string;
+}
+
+export interface ConvexHull {
+	points: Point[];
 }
 
 export interface Path {

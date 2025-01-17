@@ -68,7 +68,7 @@ impl Canvas {
       context,
       scale: scale
         .with_canvas_bbox(canvas_bbox)
-        .with_convex_hull(tiling.plane.convex_hull.clone()),
+        .with_convex_hull(tiling.plane.get_convex_hull()),
 
       draw_bounding_boxes: layers_enabled
         .get(&Layer::BoundingBoxes)

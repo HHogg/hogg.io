@@ -1,17 +1,12 @@
 use anyhow::Result;
-use tiling::Tiling;
 
 use super::Layer;
 use crate::canvas::{Canvas, LineSegment};
 use crate::draw::Options;
 use crate::Error;
 
-pub fn draw_convex_hull(
-  canvas: &mut Canvas,
-  options: &Options,
-  tiling: &Tiling,
-) -> Result<(), Error> {
-  let points = &tiling.plane.convex_hull.points;
+pub fn draw_convex_hull(canvas: &mut Canvas, options: &Options) -> Result<(), Error> {
+  let points = &canvas.scale.convex_hull.points;
   let mut line_segments = Vec::new();
 
   for index in 0..points.len() {

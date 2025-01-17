@@ -32,7 +32,6 @@ pub struct Plane {
   // but can be rebuilt from the polygons. Would that be
   // a more performant approach to lower the data going
   // across workers?
-  pub convex_hull: ConvexHull,
   pub repetitions: u8,
   pub line_segments: SpatialGridMap<LineSegment>,
   pub points_center: SpatialGridMap<PointSequence>,
@@ -77,16 +76,6 @@ impl Plane {
   }
 
   pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
-    let build_error = self.inner_build(notation);
-
-    // Build the convex hull from the line segments regardless
-    // of whether the build was successful or not.
-    self.convex_hull = ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values());
-
-    build_error
-  }
-
-  fn inner_build(&mut self, notation: &Notation) -> Result<(), TilingError> {
     self.apply_path(&notation.path)?;
 
     if !notation.transforms.list.is_empty() {
@@ -399,6 +388,10 @@ impl Plane {
       .map(|point_sequence| point_sequence.sequence)
       .collect::<Vec<_>>()
       .into()
+  }
+
+  pub fn get_convex_hull(&self) -> ConvexHull {
+    ConvexHull::from_line_segments(self.get_line_segment_edges().iter_values())
   }
 
   fn complete_stage(&mut self, stage: Stage) {
@@ -768,7 +761,6 @@ impl Plane {
 impl Default for Plane {
   fn default() -> Self {
     Self {
-      convex_hull: ConvexHull::default(),
       repetitions: 0,
       metrics: Metrics::default(),
       validator: Validator::default(),
@@ -788,20 +780,3 @@ impl Default for Plane {
     }
   }
 }
-
-// #[derive(Clone, Debug, Deserialize, Serialize)]
-// #[typeshare]
-// #[serde(tag = "type", content = "index")]
-// pub enum Stage {
-//   Placement,
-//   Transform(u32),
-// }
-
-// impl std::fmt::Display for Stage {
-//   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//     match self {
-//       Stage::Placement => write!(f, "placement"),
-//       Stage::Transform(index) => write!(f, "transform_{}", index),
-//     }
-//   }
-// }

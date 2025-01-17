@@ -21,10 +21,11 @@ impl Default for ScaleMode {
 
 #[derive(Clone, Debug)]
 pub struct Scale {
+  pub convex_hull: ConvexHull,
+
   auto_rotate: bool,
   canvas_bbox: BBox,
   content_bbox: BBox,
-  convex_hull: ConvexHull,
   mode: ScaleMode,
   padding: f32,
 
