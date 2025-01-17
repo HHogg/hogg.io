@@ -4,16 +4,15 @@ mod tests;
 
 use std::cmp::Ordering;
 use std::f32::consts::PI;
-use std::str::FromStr;
 
-use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use spatial_grid_map::utils::compare_coordinate;
 use typeshare::typeshare;
 
+use super::point::sort_points_around_origin;
 use super::{BBox, LineSegment, Point};
+use crate::build;
 use crate::notation::{Offset, Shape};
-use crate::{build, TilingError};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
@@ -127,12 +126,7 @@ impl Polygon {
   }
 
   fn generate_line_segments(&mut self) {
-    self.points.sort_by(|v1, v2| {
-      let theta1 = OrderedFloat(v1.radian_to(&self.centroid));
-      let theta2 = OrderedFloat(v2.radian_to(&self.centroid));
-
-      theta1.cmp(&theta2)
-    });
+    sort_points_around_origin(&mut self.points, &self.centroid);
 
     let mut line_segments = Vec::new();
 
@@ -201,14 +195,6 @@ impl Polygon {
     }
 
     self.with_points(points)
-  }
-}
-
-impl FromStr for Polygon {
-  type Err = TilingError;
-
-  fn from_str(s: &str) -> Result<Self, Self::Err> {
-    Ok(Self::default().with_shape(Shape::from_str(s)?))
   }
 }
 

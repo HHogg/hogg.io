@@ -20,24 +20,6 @@ pub fn compare_radians(a: f32, b: f32) -> std::cmp::Ordering {
   compare_f32(a, b, TOLERANCE_RADIAN)
 }
 
-/// Returns true if a <= b <= c. This assumes that
-/// we're always working with normalized radians (0.0 to 2PI)
-/// and that a and c are clockwise.
-///
-/// It handles cases where a <= PI * 2.0 and c >= 0.0
-pub fn is_between_radians(a: f32, b: f32, c: f32) -> bool {
-  let ab_comp = compare_radians(a, b);
-  let bc_comp = compare_radians(b, c);
-
-  if compare_radians(a, c) == Ordering::Greater {
-    return ab_comp == Ordering::Less || bc_comp == Ordering::Less;
-  }
-
-  ab_comp == Ordering::Equal
-    || bc_comp == Ordering::Equal
-    || (ab_comp == Ordering::Less && bc_comp == Ordering::Less)
-}
-
 pub fn compare_coordinate(a: f32, b: f32) -> std::cmp::Ordering {
   compare_f32(a, b, TOLERANCE_COORDINATE)
 }

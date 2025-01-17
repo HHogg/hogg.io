@@ -4,6 +4,7 @@ mod point_tests;
 
 use std::fmt::{self, Display};
 
+use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use spatial_grid_map::location;
 use spatial_grid_map::utils::{coordinate_equals, get_radians_for_x_y};
@@ -97,7 +98,7 @@ impl Point {
 
 impl Display for Point {
   fn fmt(&self, fmt: &mut fmt::Formatter) -> Result<(), fmt::Error> {
-    write!(fmt, "({:.2}, {:.2})", self.x, self.y)
+    write!(fmt, "({}, {})", self.x, self.y)
   }
 }
 
@@ -134,4 +135,22 @@ impl From<&Vec<Point>> for Point {
 
     Point::at(x / length, y / length)
   }
+}
+
+pub fn sort_points_around_origin(points: &mut [Point], origin: &Point) {
+  points.sort_by(|a, b| {
+    let a_radians = OrderedFloat(a.radian_to(origin));
+    let b_radians = OrderedFloat(b.radian_to(origin));
+
+    let radian_comparison = a_radians.cmp(&b_radians);
+
+    if radian_comparison == std::cmp::Ordering::Equal {
+      let a_distance = OrderedFloat(a.distance_to(origin));
+      let b_distance = OrderedFloat(b.distance_to(origin));
+
+      a_distance.cmp(&b_distance)
+    } else {
+      radian_comparison
+    }
+  });
 }

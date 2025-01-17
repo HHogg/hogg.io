@@ -342,7 +342,7 @@ let intercepts_max_x = y_for_max_x >= min_y && y_for_max_x <= max_y;
               height={300}
               options={tilingRendererOptions}
               expansionPhases={0}
-              notation="3-3-6-3-3,3/r60/r(h16)"
+              notation="6-3-4,4-3/m90/r(h13)"
             />
           </ArticleFig>
         </ArticleFigs>

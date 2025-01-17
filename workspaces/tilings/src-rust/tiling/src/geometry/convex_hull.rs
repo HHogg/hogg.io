@@ -4,10 +4,9 @@ mod tests;
 
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::is_between_radians;
 use typeshare::typeshare;
 
-use super::{BBox, LineSegment, Point};
+use super::{point::sort_points_around_origin, BBox, LineSegment, Point};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -31,38 +30,27 @@ impl ConvexHull {
     // We'll perform the Graham's scan algorithm to find the convex hull
     // of the points
 
-    // Find the point with the lowest y-coordinate, we could quite
-    // easily also use the centroid of all the points too.
-    let lowest_point = points
+    // Find the center point of all the points as the
+    // origin to sort all the points by their angle to the origin.
+    let origin = points
       .iter()
       .cloned()
-      .max_by(|a, b| {
-        let a_y = OrderedFloat(a.y);
-        let b_y = OrderedFloat(b.y);
-
-        a_y.cmp(&b_y)
-      })
+      .min_by(|a, b| OrderedFloat(a.y).cmp(&OrderedFloat(b.y)))
       .expect("There should be at least one point");
 
     // Sort the points by their angle to the lowest point.
     // This gets all the points in order around the polygon.
-    points.sort_by(|a, b| {
-      let a_radians = OrderedFloat(lowest_point.radian_to(a));
-      let b_radians = OrderedFloat(lowest_point.radian_to(b));
-
-      a_radians.cmp(&b_radians)
-    });
+    sort_points_around_origin(&mut points, &origin);
 
     // The stack will hold the points that are part of the convex hull
     let mut stack = Vec::new();
 
-    // Add the first two points to the stack
     for point in points {
       while stack.len() >= 2 {
-        let top = stack.len() - 1;
-        let second_top = stack.len() - 2;
+        let a = stack.len() - 2;
+        let b = stack.len() - 1;
 
-        if is_left_turn(stack[second_top], stack[top], point) {
+        if is_left_turn(stack[a], stack[b], point) {
           break;
         }
 
@@ -71,6 +59,11 @@ impl ConvexHull {
 
       stack.push(point);
     }
+
+    // At the moment the points are sorted in a counter-clockwise order
+    // around the origin. We need to put them in order around the origin
+    // of the plane.
+    sort_points_around_origin(&mut stack, &Point::default());
 
     ConvexHull { points: stack }
   }
@@ -151,5 +144,29 @@ impl ConvexHull {
 
 // Check if the points make a left turn by checking the sign of the cross product
 fn is_left_turn(p1: Point, p2: Point, p3: Point) -> bool {
-  OrderedFloat((p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)) > OrderedFloat(0.0)
+  (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x) > 0.0
+}
+
+/// Returns true if a <= b <= c. This assumes that
+/// we're always working with normalized radians (0.0 to 2PI)
+/// and that a and c are clockwise.
+///
+/// It handles cases where a <= PI * 2.0 and c >= 0.0, in other
+/// words where the range wraps around 0.0.
+fn is_between_radians(a: f32, b: f32, c: f32) -> bool {
+  // If a and c are colinear, then b must also be colinear to
+  // a and c to be between them.
+  if a == c {
+    return a == b;
+  }
+
+  // The normal check c does not wrap around 0.0
+  if a < c {
+    return a <= b && b <= c;
+  }
+
+  // At this point, c wraps around 0.0
+  // We need to check if b is between a and 2PI
+  // or between 0.0 and c
+  a <= b || b <= c
 }

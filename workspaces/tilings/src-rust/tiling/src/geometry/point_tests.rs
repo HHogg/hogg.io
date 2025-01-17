@@ -99,3 +99,25 @@ fn translate() {
   assert_eq!(translated.x, 2.0);
   assert_eq!(translated.y, 2.0);
 }
+
+#[test]
+fn correctly_sorts_points_around_origin() {
+  let mut points = vec![
+    Point::at(1.0, 0.0),
+    Point::at(0.0, -1.0),
+    Point::at(-1.0, 0.0),
+    Point::at(0.0, 1.0),
+  ];
+
+  sort_points_around_origin(&mut points, &Point::default());
+
+  assert_eq!(
+    points,
+    vec![
+      Point::at(0.0, -1.0),
+      Point::at(1.0, 0.0),
+      Point::at(0.0, 1.0),
+      Point::at(-1.0, 0.0),
+    ]
+  );
+}

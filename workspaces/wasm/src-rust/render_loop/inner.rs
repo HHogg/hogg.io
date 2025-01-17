@@ -6,7 +6,6 @@ use tiling::Tiling;
 use tiling_renderer::draw;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::console;
 use web_sys::js_sys;
 use web_sys::OffscreenCanvas;
 use web_sys::WorkerGlobalScope;
@@ -139,14 +138,10 @@ impl RenderLoopInner {
         state.render_options.max_stage = Some(state.draw_index);
 
         if let (Some(tiling), Some(canvas)) = (tiling.as_ref(), state.canvas.as_ref()) {
-          draw(tiling, canvas, &state.render_options)
-            .inspect(|metrics| post_draw_event(metrics.clone()))
-            .map_err(|e| {
-              console::error_1(
-                &serde_wasm_bindgen::to_value(&e).expect("Failed to serialize error"),
-              )
-            })
-            .ok();
+          match draw(tiling, canvas, &state.render_options) {
+            Ok(metrics) => post_draw_event(metrics),
+            Err(e) => log::error!("{e}"),
+          }
         }
       }
 
