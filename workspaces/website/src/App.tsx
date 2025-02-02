@@ -40,12 +40,10 @@ export default function App({ helmetContext = {} }: Props) {
                     ))}
                 </Route>
 
-                {process.env.NODE_ENV === 'development' && (
-                  <Route
-                    path="_tiling_generation"
-                    element={<TilingGenerationPage />}
-                  />
-                )}
+                <Route
+                  path="_tiling_generation"
+                  element={<TilingGenerationPage />}
+                />
 
                 <Route path="*" element={<Page404 />} />
               </Routes>

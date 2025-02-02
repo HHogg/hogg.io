@@ -21,9 +21,6 @@ impl Validator {
     self.option_validate_vertex_types
   }
 
-  ///
-  /// Time: O(n)
-  /// Space: O(1)
   pub fn validate_overlaps(
     &self,
     plane: &Plane,
@@ -77,9 +74,6 @@ impl Validator {
   /// Checks that the tiling expanded by ensuring all of edges
   /// of the polygons placed in the placement phase now have
   /// shapes attached to them
-  ///
-  /// Time: O(n)
-  /// Space: O(1)
   pub fn validate_expanded(&self, plane: &Plane) -> Result<(), Error> {
     if !self.option_validate_expansion {
       return Ok(());
@@ -96,43 +90,53 @@ impl Validator {
     Ok(())
   }
 
-  /// Time: O(n)
-  /// Space: O(n)
   pub fn validate_gaps(&self, plane: &Plane) -> Result<(), Error> {
     if !self.option_validate_gaps {
       return Ok(());
     }
 
-    let line_segments = plane.get_line_segment_edges();
-    let mut line_segments_deque = line_segments.clone();
-    let mut line_segments_iter = line_segments.iter_values();
-    let first_line_segment = line_segments_iter.next();
+    let mut line_segments = plane.get_line_segment_edges();
+    let mut seen_counter = 0;
 
-    if first_line_segment.is_none() {
-      return Ok(());
-    }
+    let first_line_segment = *line_segments
+      .iter_values()
+      .next()
+      .expect("First line segment does not exist");
+    let first_line_segment_mid_point: location::Point = first_line_segment.mid_point().into();
 
-    let first_line_segment = first_line_segment.expect("First line segment does not exist");
+    // We need to keep track of the line segments we've seen
+    // this prevents us from traversing back up the same line
+    // segment we've already traversed.
+    seen_counter += 1;
+    line_segments.increment_counter(&first_line_segment_mid_point, "seen");
+
     let mut current_line_segment = first_line_segment;
 
     loop {
       let mid_point: location::Point = current_line_segment.mid_point().into();
-      let near_by = line_segments.iter_values_around(&mid_point, 1);
+      let neighbors = line_segments
+        .iter_values_around(&mid_point, 1)
+        .collect::<Vec<_>>();
 
       let mut found = false;
 
-      for other in near_by {
-        if line_segments_deque.contains(&other.mid_point().into()) {
-          if current_line_segment.is_connected(other) {
-            line_segments_deque.remove(&mid_point);
-            current_line_segment = other;
+      for neighbor in neighbors {
+        let neighbor_mid_point: location::Point = neighbor.mid_point().into();
+
+        if current_line_segment.is_connected(neighbor) {
+          let is_first_visit = *line_segments
+            .get_counter(&neighbor_mid_point, "seen")
+            .unwrap_or(&0)
+            == 0;
+
+          if is_first_visit {
+            current_line_segment = *neighbor;
             found = true;
-            break;
-          } else {
-            // Line segment not connected
+            line_segments.increment_counter(&neighbor_mid_point, "seen");
+            seen_counter += 1;
           }
-        } else {
-          // Line segment already removed
+
+          break;
         }
       }
 
@@ -143,8 +147,7 @@ impl Validator {
 
       // If we've reached the first line segment then we've
       // completed connecting the border of the starting line segment
-      if current_line_segment.is_connected(first_line_segment) {
-        line_segments_deque.remove(&current_line_segment.mid_point().into());
+      if current_line_segment.is_connected(&first_line_segment) {
         break;
       }
     }
@@ -152,7 +155,7 @@ impl Validator {
     // We need to check if there are any line segments left over
     // that are not connected to the border, if there are
     // then there are gaps in the tessellation
-    if line_segments_deque.is_empty() {
+    if seen_counter == line_segments.size() {
       Ok(())
     } else {
       Err(Error::Gaps)
@@ -165,7 +168,7 @@ impl Validator {
     }
 
     for point_sequence in plane.points_end.iter_values() {
-      if !plane.vertex_types.is_valid(&point_sequence.sequence) {
+      if !plane.vertex_types.matches_exactly(&point_sequence.sequence) {
         return Err(Error::VertexType {
           sequence: circular_sequence::to_string_one(point_sequence.sequence),
         });

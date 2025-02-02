@@ -9,6 +9,7 @@ export type NodeId = string;
 export interface BucketEntry<TEntryValue> {
 	point: number[];
 	size: number;
+	rotation?: number;
 	value: TEntryValue;
 	counters: Record<string, number>;
 }
@@ -25,6 +26,7 @@ export enum ResizeMethod {
 }
 
 export interface SpatialGridMap<TEntryValue> {
+	id: string;
 	/**
 	 * Default of "2" as 2 * 2 * 64 = 256 bits or a 16x16 grid.
 	 * The reason we start with 4 blocks as opposed to 1 block
@@ -320,8 +322,11 @@ export interface Plane {
 	repetitions: number;
 	lineSegments: SpatialGridMap<LineSegment>;
 	pointsCenter: SpatialGridMap<PointSequence>;
+	pointsCenterExtended: SpatialGridMap<PointSequence>;
 	pointsEnd: SpatialGridMap<PointSequence>;
+	pointsEndExtended: SpatialGridMap<PointSequence>;
 	pointsMid: SpatialGridMap<PointSequence>;
+	pointsMidExtended: SpatialGridMap<PointSequence>;
 	metrics: Metrics;
 	stages: Stage[];
 }
@@ -383,6 +388,7 @@ export interface Result {
 	notation: string;
 	expansionPhases: number;
 	error?: TilingError;
+	hash: Hash;
 	transformIndex: number;
 	timestamp: string;
 	metrics: Metrics;
@@ -509,6 +515,12 @@ export type ValidationError =
 	| { type: "Gaps", content?: undefined }
 	| { type: "Overlaps", content?: undefined }
 	| { type: "VertexType", content: {
+	sequence: string;
+}}
+	| { type: "EdgeType", content: {
+	sequence: string;
+}}
+	| { type: "ShapeType", content: {
 	sequence: string;
 }};
 

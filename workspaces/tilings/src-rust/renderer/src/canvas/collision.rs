@@ -11,7 +11,7 @@ pub struct Theia {
 impl Theia {
   pub fn new() -> Self {
     Self {
-      components: SpatialGridMap::default().with_resize_method(ResizeMethod::Maximum),
+      components: SpatialGridMap::new("components").with_resize_method(ResizeMethod::Maximum),
     }
   }
 
@@ -43,7 +43,7 @@ impl Theia {
       }
     }
 
-    self.components.insert(a_centroid, a_size, a_bbox);
+    self.components.insert(a_centroid, a_size, None, a_bbox);
 
     false
   }

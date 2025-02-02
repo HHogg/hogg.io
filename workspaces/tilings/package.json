@@ -10,7 +10,7 @@
     "./types": "./src/types.ts"
   },
   "scripts": {
-    "dev:searcher": "cargo watch -w workspaces/spatial-grid-map/src-rust -w workspaces/circular-sequence/src-rust -w workspaces/line-segment-extending/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --reset --migrations-dir=workspaces/tilings/migrations\"",
+    "dev:searcher": "cargo watch -w workspaces/spatial-grid-map/src-rust -w workspaces/circular-sequence/src-rust -w workspaces/line-segment-extending/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --refresh-insights --reset --migrations-dir=workspaces/tilings/migrations\"",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file"

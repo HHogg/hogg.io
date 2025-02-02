@@ -6,8 +6,7 @@ use std::f32::consts::PI;
 
 use circular_sequence::SequenceStore;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::compare_coordinate;
-use spatial_grid_map::{location, ResizeMethod, SpatialGridMap};
+use spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap};
 use typeshare::typeshare;
 
 use super::vertex_types::VertexTypes;
@@ -24,7 +23,9 @@ use crate::TilingError;
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Plane {
+  // Lookup<Polygon.centroid> -> Polygon
   pub polygons: SpatialGridMap<Polygon>,
+  // Lookup<Polygon.centroid> -> Polygon
   pub polygons_placement: SpatialGridMap<Polygon>,
   pub seed_polygon: Option<Polygon>,
 
@@ -33,10 +34,20 @@ pub struct Plane {
   // a more performant approach to lower the data going
   // across workers?
   pub repetitions: u8,
+  // Lookup<LineSegment.midPoint> -> LineSegment
   pub line_segments: SpatialGridMap<LineSegment>,
+  // Lookup<Polygon.centroid> -> [(Polygon.centroid, Polygon.shape)]
   pub points_center: SpatialGridMap<PointSequence>,
+  // Lookup<Polygon.centroid> -> [(Polygon.centroid, Polygon.shape)]
+  pub points_center_extended: SpatialGridMap<PointSequence>,
+  // Lookup<Vertex> -> [(Polygon.centroid, Polygon.shape)]
   pub points_end: SpatialGridMap<PointSequence>,
+  // Lookup<Vertex> -> [(Polygon.centroid, Polygon.shape)]
+  pub points_end_extended: SpatialGridMap<PointSequence>,
+  // Lookup<LineSegment.midPoint> -> [(Polygon.centroid, Polygon.shape)]
   pub points_mid: SpatialGridMap<PointSequence>,
+  // Lookup<LineSegment.midPoint> -> [(Polygon.centroid, Polygon.shape)]
+  pub points_mid_extended: SpatialGridMap<PointSequence>,
   pub metrics: Metrics,
   pub stages: Vec<Stage>,
 
@@ -61,18 +72,6 @@ impl Plane {
   pub fn with_validations(mut self, validations: Option<Vec<validation::Flag>>) -> Self {
     self.validator = validations.into();
     self
-  }
-
-  pub fn is_empty(&self) -> bool {
-    self.polygons.is_empty()
-  }
-
-  pub fn iter_polygons(&self) -> impl Iterator<Item = &Polygon> {
-    self.polygons.iter_values()
-  }
-
-  pub fn iter_polygons_placement(&self) -> impl Iterator<Item = &Polygon> {
-    self.polygons_placement.iter_values()
   }
 
   pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
@@ -101,7 +100,7 @@ impl Plane {
             )?;
           }
 
-          if repetition_index <= 1 {
+          if repetition_index == 2 {
             self.validate_expanded()?;
             self.validate_gaps()?;
             self.validate_vertex_types()?;
@@ -148,9 +147,10 @@ impl Plane {
               .with_offset(seed.offset)
               .at_center();
 
-            self
-              .line_segments_by_shape_group
-              .push(SpatialGridMap::default().with_resize_method(ResizeMethod::First));
+            self.line_segments_by_shape_group.push(
+              SpatialGridMap::new("line_segments_by_shape_group.seed")
+                .with_resize_method(ResizeMethod::First),
+            );
             self.seed_polygon = Some(polygon.clone());
             self.add_polygon(Stage::Placement, polygon)?;
 
@@ -187,9 +187,10 @@ impl Plane {
             self.complete_stage(Stage::Placement);
           }
           Node::Separator(Separator::Group) => {
-            self
-              .line_segments_by_shape_group
-              .push(SpatialGridMap::default().with_resize_method(ResizeMethod::First));
+            self.line_segments_by_shape_group.push(
+              SpatialGridMap::new("line_segments_by_shape_group.group")
+                .with_resize_method(ResizeMethod::First),
+            );
             group_counter += 1;
             skip = 0;
           }
@@ -221,28 +222,33 @@ impl Plane {
     }
 
     let size = polygon.bbox.height().max(polygon.bbox.width());
+    let is_placement_polygon = polygon.stage <= Stage::Placement;
+    let is_touching_placement_polygon = self.is_polygon_touching_placement_polygon(&polygon);
 
     self.stage_added_polygon = true;
     self
       .metrics
       .increment(stage.to_string().as_str(), "polygons_added");
 
+    let location_polygon_centroid: location::Point = polygon.centroid.into();
+
     // We add the polygon first so we can see it
     // if there are any errors
     self
       .polygons
-      .insert(polygon.centroid.into(), size, polygon.clone());
+      .insert(location_polygon_centroid, size, None, polygon.clone());
 
     // We also add the polygon to the polygons to transform
     // to picked up on the next transform stage
     self.polygons_to_transform.push(polygon.clone());
 
-    if polygon.stage <= Stage::Placement {
+    if is_placement_polygon {
       // Store the polygon's center point
       // for looking up origins for transforms
       self.points_center.insert(
-        polygon.centroid.into(),
+        location_polygon_centroid,
         size,
+        None,
         PointSequence::default()
           .with_center(polygon.centroid)
           .with_size(polygon.shape.into()),
@@ -253,19 +259,31 @@ impl Plane {
       // all the other polygons after are transformed copies.
       self
         .polygons_placement
-        .insert(polygon.centroid.into(), size, polygon.clone());
+        .insert(location_polygon_centroid, size, None, polygon.clone());
+    } else if is_touching_placement_polygon
+      && !self.points_center.contains(&location_polygon_centroid)
+    {
+      self.points_center_extended.insert(
+        location_polygon_centroid,
+        size,
+        None,
+        PointSequence::default()
+          .with_center(polygon.centroid)
+          .with_size(polygon.shape.into()),
+      );
     }
 
     for line_segment in polygon.line_segments.iter() {
       let mid_point = line_segment.mid_point();
       let mid_point_location: location::Point = mid_point.into();
 
-      if polygon.stage <= Stage::Placement {
+      if is_placement_polygon {
         // Store the line segments mid point
         // for looking up origins for transforms
         self.points_mid.insert(
           mid_point_location,
           line_segment.length(),
+          Some(line_segment.theta()),
           PointSequence::default().with_center(mid_point).with_size(2),
         );
 
@@ -278,36 +296,57 @@ impl Plane {
             line_segments.insert(
               line_segment.mid_point().into(),
               line_segment.length(),
+              Some(line_segment.theta()),
               *line_segment,
             )
           });
+      } else if is_touching_placement_polygon && !self.points_mid.contains(&mid_point_location) {
+        self.points_mid_extended.insert(
+          mid_point_location,
+          line_segment.length(),
+          Some(line_segment.theta()),
+          PointSequence::default().with_center(mid_point).with_size(2),
+        );
       }
 
       // Store the line segments for overlap validation.
       self
         .line_segments
-        .insert(mid_point_location, line_segment.length(), *line_segment)
+        .insert(
+          mid_point_location,
+          line_segment.length(),
+          Some(line_segment.theta()),
+          *line_segment,
+        )
         .increment_counter("count");
 
       // Check that the line segment is not intersecting with any
       // other line segments around it. However we should only need to do
       // this up until the first transforms have been applied, after that
       // any future line segments should be valid.
-
       self.validate_overlaps(&polygon, line_segment)?;
+
       self.update_edge_type(&polygon, line_segment);
       self.update_shape_type(&polygon, line_segment);
     }
 
     for point in polygon.points.iter() {
-      if polygon.stage <= Stage::Placement {
-        let point_location: location::Point = (*point).into();
+      let location_point: location::Point = point.into();
 
+      if is_placement_polygon {
         // Store the polygon's end points
         // for looking up origins for transforms
         self.points_end.insert(
-          point_location,
+          location_point,
           1.0,
+          None,
+          PointSequence::default().with_center(*point),
+        );
+      } else if is_touching_placement_polygon && !self.points_end.contains(&location_point) {
+        self.points_end_extended.insert(
+          location_point,
+          1.0,
+          None,
           PointSequence::default().with_center(*point),
         );
       }
@@ -318,10 +357,20 @@ impl Plane {
     Ok(())
   }
 
-  fn update_vertex_type(&mut self, polygon: &Polygon, point: &Point) {
-    let point_location: location::Point = (*point).into();
+  pub fn is_empty(&self) -> bool {
+    self.polygons.is_empty()
+  }
 
-    if let Some(mut sequence) = self.points_end.get_value_mut(&point_location) {
+  pub fn iter_polygons(&self) -> impl Iterator<Item = &Polygon> {
+    self.polygons.iter_values()
+  }
+
+  pub fn iter_polygons_placement(&self) -> impl Iterator<Item = &Polygon> {
+    self.polygons_placement.iter_values()
+  }
+
+  fn update_vertex_type(&mut self, polygon: &Polygon, point: &Point) {
+    if let Some(mut sequence) = self.get_core_end_point_sequence_mut(point) {
       sequence
         .value
         .insert(polygon.centroid, polygon.shape.into());
@@ -329,10 +378,7 @@ impl Plane {
   }
 
   fn update_edge_type(&mut self, polygon: &Polygon, line_segment: &LineSegment) {
-    let mid_point = line_segment.mid_point();
-    let mid_location_point: location::Point = mid_point.into();
-
-    if let Some(mut sequence) = self.points_mid.get_value_mut(&mid_location_point) {
+    if let Some(mut sequence) = self.get_core_mid_point_sequence_mut(&line_segment.mid_point()) {
       sequence
         .value
         .insert(polygon.centroid, polygon.shape.into());
@@ -341,8 +387,7 @@ impl Plane {
 
   fn update_shape_type(&mut self, polygon: &Polygon, line_segment: &LineSegment) {
     let other_polygon = self
-      .points_mid
-      .get_value(&line_segment.mid_point().into())
+      .get_core_mid_point_sequence(&line_segment.mid_point())
       .and_then(|line_segment_sequence| {
         line_segment_sequence.find(|entry| entry.point != polygon.centroid)
       })
@@ -355,39 +400,9 @@ impl Plane {
   }
 
   fn update_shape_type_for_polygon(&mut self, a: &Polygon, b: &Polygon) {
-    if let Some(mut sequence) = self.points_center.get_value_mut(&a.centroid.into()) {
+    if let Some(mut sequence) = self.get_core_center_point_sequence_mut(&a.centroid) {
       sequence.value.insert(b.centroid, b.shape.into());
     }
-  }
-
-  pub fn get_vertex_types(&self) -> SequenceStore {
-    self
-      .points_end
-      .iter_values()
-      .filter(|point_sequence| self.vertex_types.matches_exactly(&point_sequence.sequence))
-      .map(|point_sequence| point_sequence.sequence)
-      .collect::<Vec<_>>()
-      .into()
-  }
-
-  pub fn get_edge_types(&self) -> SequenceStore {
-    self
-      .points_mid
-      .iter_values()
-      .filter(|point_sequence| point_sequence.is_complete())
-      .map(|point_sequence| point_sequence.sequence)
-      .collect::<Vec<_>>()
-      .into()
-  }
-
-  pub fn get_shape_types(&self) -> SequenceStore {
-    self
-      .points_center
-      .iter_values()
-      .filter(|point_sequence| point_sequence.is_complete())
-      .map(|point_sequence| point_sequence.sequence)
-      .collect::<Vec<_>>()
-      .into()
   }
 
   pub fn get_convex_hull(&self) -> ConvexHull {
@@ -401,6 +416,16 @@ impl Plane {
     }
   }
 
+  pub fn is_polygon_touching_placement_polygon(&self, polygon: &Polygon) -> bool {
+    for point in polygon.points.iter() {
+      if self.points_end.contains(&point.into()) {
+        return true;
+      }
+    }
+
+    false
+  }
+
   pub fn is_line_segment_available(&self, line_segment: &LineSegment) -> bool {
     self
       .line_segments
@@ -412,19 +437,6 @@ impl Plane {
     self
       .line_segments
       .filter(|line_segment| self.is_line_segment_available(line_segment))
-  }
-
-  pub fn get_nearest_edge_point(&self) -> Option<Point> {
-    self
-      .get_line_segment_edges()
-      .iter_values()
-      .flat_map(|line_segment| [line_segment.start, line_segment.end])
-      .min_by(|a, b| {
-        compare_coordinate(
-          a.distance_to(&Point::default()),
-          b.distance_to(&Point::default()),
-        )
-      })
   }
 
   /// Returns the line segments that only have a single shape
@@ -487,6 +499,135 @@ impl Plane {
         .nth(origin_index.value as usize)
         .map(|point| (*point).into()),
     }
+  }
+
+  pub fn get_core_center_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    let location_point: location::Point = point.into();
+
+    self
+      .points_center
+      .get_value(&location_point)
+      .or_else(|| self.points_center_extended.get_value(&location_point))
+  }
+
+  pub fn get_core_center_complete_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    self
+      .get_core_center_point_sequence(point)
+      .filter(|point_sequence| point_sequence.is_complete())
+  }
+
+  pub fn get_core_center_point_sequence_mut(
+    &mut self,
+    point: &Point,
+  ) -> Option<MutBucketEntry<'_, PointSequence>> {
+    let location_point: location::Point = point.into();
+
+    self
+      .points_center
+      .get_value_mut(&location_point)
+      .or_else(|| self.points_center_extended.get_value_mut(&location_point))
+  }
+
+  pub fn get_core_end_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    let location_point: location::Point = point.into();
+
+    self
+      .points_end
+      .get_value(&location_point)
+      .or_else(|| self.points_end_extended.get_value(&location_point))
+  }
+
+  pub fn get_core_end_complete_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    self
+      .get_core_end_point_sequence(point)
+      .filter(|point_sequence| self.vertex_types.matches_exactly(&point_sequence.sequence))
+  }
+
+  pub fn get_core_end_point_sequence_mut(
+    &mut self,
+    point: &Point,
+  ) -> Option<MutBucketEntry<'_, PointSequence>> {
+    let location_point: location::Point = point.into();
+
+    self
+      .points_end
+      .get_value_mut(&location_point)
+      .or_else(|| self.points_end_extended.get_value_mut(&location_point))
+  }
+
+  pub fn get_core_mid_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    let location_point: location::Point = point.into();
+
+    self
+      .points_mid
+      .get_value(&location_point)
+      .or_else(|| self.points_mid_extended.get_value(&location_point))
+  }
+
+  pub fn get_core_mid_complete_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    self
+      .get_core_mid_point_sequence(point)
+      .filter(|point_sequence| point_sequence.is_complete())
+  }
+
+  pub fn get_core_mid_point_sequence_mut(
+    &mut self,
+    point: &Point,
+  ) -> Option<MutBucketEntry<'_, PointSequence>> {
+    let location_point: location::Point = point.into();
+
+    self
+      .points_mid
+      .get_value_mut(&location_point)
+      .or_else(|| self.points_mid_extended.get_value_mut(&location_point))
+  }
+
+  pub fn iter_core_center_complete_point_sequences(&self) -> impl Iterator<Item = &PointSequence> {
+    self
+      .points_center
+      .iter_values()
+      .chain(self.points_center_extended.iter_values())
+      .filter(|point_sequence| point_sequence.is_complete())
+  }
+
+  pub fn iter_core_mid_complete_point_sequences(&self) -> impl Iterator<Item = &PointSequence> {
+    self
+      .points_mid
+      .iter_values()
+      .chain(self.points_mid_extended.iter_values())
+      .filter(|point_sequence| point_sequence.is_complete())
+  }
+
+  pub fn iter_core_end_complete_point_sequences(&self) -> impl Iterator<Item = &PointSequence> {
+    self
+      .points_end
+      .iter_values()
+      .chain(self.points_end_extended.iter_values())
+      .filter(|point_sequence| self.vertex_types.matches_exactly(&point_sequence.sequence))
+  }
+
+  pub fn get_shape_types(&self) -> SequenceStore {
+    self
+      .iter_core_center_complete_point_sequences()
+      .map(|point_sequence| point_sequence.sequence)
+      .collect::<Vec<_>>()
+      .into()
+  }
+
+  pub fn get_edge_types(&self) -> SequenceStore {
+    self
+      .iter_core_mid_complete_point_sequences()
+      .map(|point_sequence| point_sequence.sequence)
+      .collect::<Vec<_>>()
+      .into()
+  }
+
+  pub fn get_vertex_types(&self) -> SequenceStore {
+    self
+      .iter_core_end_complete_point_sequences()
+      .map(|point_sequence| point_sequence.sequence)
+      .collect::<Vec<_>>()
+      .into()
   }
 
   pub fn get_reflection_line(
@@ -766,13 +907,20 @@ impl Default for Plane {
       validator: Validator::default(),
       vertex_types: VertexTypes::default(),
 
-      line_segments: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
+      line_segments: SpatialGridMap::new("line_segments").with_resize_method(ResizeMethod::First),
       line_segments_by_shape_group: Vec::new(),
-      points_center: SpatialGridMap::default().with_resize_method(ResizeMethod::Minimum),
-      points_end: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
-      points_mid: SpatialGridMap::default().with_resize_method(ResizeMethod::First),
-      polygons: SpatialGridMap::default().with_resize_method(ResizeMethod::Minimum),
-      polygons_placement: SpatialGridMap::default().with_resize_method(ResizeMethod::Minimum),
+      points_center: SpatialGridMap::new("points_center").with_resize_method(ResizeMethod::Minimum),
+      points_center_extended: SpatialGridMap::new("points_center_extended")
+        .with_resize_method(ResizeMethod::Minimum),
+      points_end: SpatialGridMap::new("points_end").with_resize_method(ResizeMethod::First),
+      points_end_extended: SpatialGridMap::new("points_end_extended")
+        .with_resize_method(ResizeMethod::First),
+      points_mid: SpatialGridMap::new("points_mid").with_resize_method(ResizeMethod::First),
+      points_mid_extended: SpatialGridMap::new("points_mid_extended")
+        .with_resize_method(ResizeMethod::First),
+      polygons: SpatialGridMap::new("polygons").with_resize_method(ResizeMethod::Minimum),
+      polygons_placement: SpatialGridMap::new("polygons_placement")
+        .with_resize_method(ResizeMethod::Minimum),
       polygons_to_transform: Vec::new(),
       seed_polygon: None,
       stage_added_polygon: false,

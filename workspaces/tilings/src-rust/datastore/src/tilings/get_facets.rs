@@ -9,6 +9,8 @@ use typeshare::typeshare;
 use crate::utils::{get_show_nodes_condition, FacetValue};
 use crate::{Facet, ResponseMultiple};
 
+// array_agg(DISTINCT uniform) AS uniform
+
 const BASE_QUERY: &str = "
 SELECT
   bool_or(has_0) as has_0,
@@ -17,8 +19,7 @@ SELECT
   bool_or(has_6) as has_6,
   bool_or(has_8) as has_8,
   bool_or(has_12) as has_12,
-  array_agg(DISTINCT uniform) AS uniform
-FROM tilings";
+  FROM tilings";
 
 #[derive(Clone, Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]

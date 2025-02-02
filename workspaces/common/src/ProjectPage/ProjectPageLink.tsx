@@ -1,4 +1,5 @@
 import { Link, LinkProps } from 'preshape';
+import { PropsWithChildren } from 'react';
 import { Project } from '../types';
 import { getProjectRoutePath } from '../utils';
 
@@ -7,12 +8,13 @@ type Props = {
 };
 
 export default function ProjectPageLink({
+  children,
   project,
   ...rest
-}: Props & LinkProps) {
+}: PropsWithChildren<Props & LinkProps>) {
   return (
     <Link to={getProjectRoutePath(project)} underline {...rest}>
-      '{project.name}'
+      {children ? children : `'${project.name}'`}
     </Link>
   );
 }

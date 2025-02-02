@@ -116,8 +116,20 @@ impl From<Point> for location::Point {
   }
 }
 
+impl From<&Point> for location::Point {
+  fn from(value: &Point) -> Self {
+    location::Point(value.x, value.y)
+  }
+}
+
 impl From<location::Point> for Point {
   fn from(value: location::Point) -> Self {
+    Point::at(value.0, value.1)
+  }
+}
+
+impl From<&location::Point> for Point {
+  fn from(value: &location::Point) -> Self {
     Point::at(value.0, value.1)
   }
 }

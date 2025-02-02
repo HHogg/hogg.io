@@ -16,4 +16,8 @@ pub enum Error {
   Overlaps,
   #[error("Invalid vertex type -> {sequence}")]
   VertexType { sequence: String },
+  #[error("Invalid edge type -> {sequence}")]
+  EdgeType { sequence: String },
+  #[error("Invalid shape type -> {sequence}")]
+  ShapeType { sequence: String },
 }

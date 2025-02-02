@@ -2,11 +2,10 @@
 #[cfg(test)]
 mod tests;
 
-use std::{cmp::Ordering, fmt::Display};
+use std::fmt::Display;
 
 use line_segment_extending::extend_line_segment;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::compare_coordinate;
 use typeshare::typeshare;
 
 use super::point::Point;
@@ -84,23 +83,6 @@ impl LineSegment {
 
   pub fn is_connected(&self, other: &Self) -> bool {
     self.end == other.start
-  }
-
-  pub fn get_point_delta(&self, point: &Point) -> isize {
-    let x = point.x;
-    let y = point.y;
-    let x0 = self.start.x;
-    let y0 = self.start.y;
-    let x1 = self.end.x;
-    let y1 = self.end.y;
-
-    let pos = (y - y0) * (x1 - x0) - (x - x0) * (y1 - y0);
-
-    match compare_coordinate(pos, 0.0) {
-      Ordering::Less => -1,
-      Ordering::Greater => 1,
-      _ => 0,
-    }
   }
 
   pub fn get_point_at_percentage(&self, percentage: f32, offset: f32) -> Point {

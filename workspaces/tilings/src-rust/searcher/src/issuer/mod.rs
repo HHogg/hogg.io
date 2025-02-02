@@ -98,16 +98,20 @@ impl Actor for Issuer {
 
         if buffer_rx.len() < buffer_size {
           let mut state = state.lock().await;
-          let path = state.path.next_path();
 
-          state.path = path.clone();
-          state.path_index += 1;
-
+          // Send the current path waiting to be
+          // processed
+          buffer_tx.try_send(state.path.clone()).ok();
           leases
             .lock()
             .await
             .insert(state.path.clone(), state.path_index);
-          buffer_tx.try_send(state.path.clone()).ok();
+
+          // Update the state to the next path
+          let path = state.path.next_path();
+
+          state.path = path.clone();
+          state.path_index += 1;
         }
       }
     });

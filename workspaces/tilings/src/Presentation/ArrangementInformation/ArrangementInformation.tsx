@@ -57,6 +57,7 @@ export default function ArrangementInformation() {
   const { renderResult } = usePlayerContext();
   const {
     notation = '',
+    hash,
     vertexTypes = [],
     edgeTypes = [],
     shapeTypes = [],
@@ -68,6 +69,10 @@ export default function ArrangementInformation() {
         <>
           <Section title="Notation">
             <CopyToClipboardCard text={notation} size="x3" />
+          </Section>
+
+          <Section title="Hash">
+            <CopyToClipboardCard text={hash} size="x3" />
           </Section>
         </>
       )}

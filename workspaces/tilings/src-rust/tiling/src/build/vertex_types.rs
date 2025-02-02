@@ -13,10 +13,6 @@ impl VertexTypes {
       circular_sequence::Match::Exact(_)
     )
   }
-
-  pub fn is_valid(&self, sequence: &Sequence) -> bool {
-    self.store.get_match(sequence) != circular_sequence::Match::None
-  }
 }
 
 impl Default for VertexTypes {

@@ -43,6 +43,12 @@ impl SequenceStore {
   }
 }
 
+impl Display for SequenceStore {
+  fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+    write!(f, "{}", to_string(self.sequences.clone()))
+  }
+}
+
 impl From<Vec<Sequence>> for SequenceStore {
   fn from(sequences: Vec<Sequence>) -> Self {
     let mut sequence_store = Self::default();
@@ -67,11 +73,5 @@ impl From<SequenceStore> for Vec<String> {
       .iter()
       .map(|s| to_string_one(*s))
       .collect()
-  }
-}
-
-impl Display for SequenceStore {
-  fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-    write!(f, "{}", to_string(self.sequences.clone()))
   }
 }

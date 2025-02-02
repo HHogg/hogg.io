@@ -3,7 +3,7 @@ use circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::{Tiling, TilingError};
+use crate::{hash::Hash, Tiling, TilingError};
 
 use super::Metrics;
 
@@ -14,6 +14,7 @@ pub struct Result {
   pub notation: String,
   pub expansion_phases: u8,
   pub error: Option<TilingError>,
+  pub hash: Hash,
   pub transform_index: i32,
   #[typeshare(serialized_as = "string")]
   pub timestamp: NaiveDateTime,
@@ -67,12 +68,18 @@ impl Result {
     self
   }
 
-  pub fn create_hash(self) -> Self {
+  pub fn create_hash(mut self, tiling: &Tiling) -> Self {
+    self.hash = Hash::build(
+      tiling,
+      &self.vertex_types,
+      &self.edge_types,
+      &self.shape_types,
+    );
     self
   }
 
   pub fn get_hash(&self) -> String {
-    String::new()
+    self.hash.to_string()
   }
 }
 
@@ -80,6 +87,7 @@ impl Default for Result {
   fn default() -> Self {
     Self {
       notation: String::new(),
+      hash: Hash::default(),
       error: None,
       expansion_phases: 0,
       transform_index: 0,
@@ -102,6 +110,6 @@ impl From<&mut Tiling> for Result {
       .with_vertex_types(tiling.plane.get_vertex_types())
       .with_edge_types(tiling.plane.get_edge_types())
       .with_shape_types(tiling.plane.get_shape_types())
-      .create_hash()
+      .create_hash(tiling)
   }
 }

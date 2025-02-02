@@ -1,9 +1,10 @@
 import { ProjectWindow, ProjectTabs, ProjectTab } from '@hogg/common';
 import { WasmApiLoadingScreen } from '@hogg/wasm';
-import { ChartNoAxesCombinedIcon, InfoIcon } from 'lucide-react';
+import { BookOpenIcon, ChartNoAxesCombinedIcon, InfoIcon } from 'lucide-react';
 import { Box } from 'preshape';
 import ArrangementInformation from './ArrangementInformation/ArrangementInformation';
 import ArrangementStats from './ArrangementStats/ArrangementStats';
+import Library from './Library/Library';
 import NotationInput from './Notation/NotationInput';
 import NotationProvider from './Notation/NotationProvider';
 import PlayerControls from './Player/PlayerControls';
@@ -34,9 +35,9 @@ function PresentationInner() {
             <ArrangementStats />
           </ProjectTab>
 
-          {/* <ProjectTab Icon={BookOpenIcon} name="Library">
+          <ProjectTab Icon={BookOpenIcon} name="Library">
             <Library />
-          </ProjectTab> */}
+          </ProjectTab>
         </ProjectTabs>
       }
     >

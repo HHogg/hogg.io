@@ -56,8 +56,8 @@ impl Metrics {
       .time_started
       .expect("Metric event has already been paused or was never started.");
 
-    let time_ended = Utc::now();
-    let duration = time_ended.timestamp_millis() - time_started;
+    let time_ended = Utc::now().timestamp_millis();
+    let duration = (time_ended - time_started).max(0);
 
     event.duration += duration as u32;
   }

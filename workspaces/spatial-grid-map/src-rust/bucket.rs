@@ -6,10 +6,7 @@ use std::{
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::{
-  location,
-  utils::{coordinate_equals, normalize_radian},
-};
+use crate::{location, utils::coordinate_equals};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
@@ -19,17 +16,6 @@ pub struct Bucket<TEntryValue: Clone + Default> {
 }
 
 impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
-  pub fn new(point: location::Point, value: TEntryValue, size: f32) -> Self {
-    Bucket {
-      entries: Vec::from([BucketEntry {
-        point,
-        value,
-        size,
-        counters: HashMap::new(),
-      }]),
-    }
-  }
-
   pub fn size(&self) -> usize {
     self.entries.len()
   }
@@ -115,6 +101,7 @@ pub struct BucketEntry<TEntryValue: Default> {
   #[typeshare(serialized_as = "Vec<f32>")]
   pub point: location::Point,
   pub size: f32,
+  pub rotation: Option<f32>,
   pub value: TEntryValue,
   pub counters: HashMap<String, u32>,
 }
@@ -130,6 +117,11 @@ impl<TEntryValue: Default> BucketEntry<TEntryValue> {
     self
   }
 
+  pub fn with_rotation(mut self, rotation: Option<f32>) -> Self {
+    self.rotation = rotation;
+    self
+  }
+
   pub fn with_value(mut self, value: TEntryValue) -> Self {
     self.value = value;
     self
@@ -138,16 +130,6 @@ impl<TEntryValue: Default> BucketEntry<TEntryValue> {
   pub fn with_counters(mut self, counters: HashMap<String, u32>) -> Self {
     self.counters = counters;
     self
-  }
-
-  pub fn distance_to_center(&self) -> f32 {
-    let location::Point(x, y) = self.point;
-    (x * x + y * y).sqrt()
-  }
-
-  pub fn theta(&self) -> f32 {
-    let location::Point(x, y) = self.point;
-    normalize_radian(y.atan2(x))
   }
 
   pub fn increment_counter(&mut self, key: &str) {

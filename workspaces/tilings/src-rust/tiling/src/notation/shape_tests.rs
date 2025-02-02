@@ -1,5 +1,3 @@
-use spatial_grid_map::utils::radian_to_degrees;
-
 use super::Shape;
 
 #[test]
@@ -10,13 +8,4 @@ fn test_shape_next() {
   assert_eq!(Shape::Octagon.next(), Some(Shape::Dodecagon));
   assert_eq!(Shape::Dodecagon.next(), Some(Shape::Skip));
   assert_eq!(Shape::Skip.next(), None,);
-}
-
-#[test]
-fn test_shape_get_radians() {
-  assert_eq!(radian_to_degrees(Shape::Triangle.get_internal_angle()), 120);
-  assert_eq!(radian_to_degrees(Shape::Square.get_internal_angle()), 90);
-  assert_eq!(radian_to_degrees(Shape::Hexagon.get_internal_angle()), 60);
-  assert_eq!(radian_to_degrees(Shape::Octagon.get_internal_angle()), 45);
-  assert_eq!(radian_to_degrees(Shape::Dodecagon.get_internal_angle()), 30);
 }

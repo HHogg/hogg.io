@@ -1,3 +1,4 @@
+// mod hash;
 mod metrics;
 mod plane;
 mod point_sequence;

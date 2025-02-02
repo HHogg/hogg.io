@@ -1,3 +1,148 @@
 {
-  "insights_per_minute": []
+  "insights_per_minute": [
+    {
+      "minute": "2025-01-26T23:06:00",
+      "level": 3,
+      "countSessions": 1,
+      "countNodes": 41,
+      "countValidTilings": 521,
+      "countTotalTilings": 14180
+    },
+    {
+      "minute": "2025-01-26T23:07:00",
+      "level": 3,
+      "countSessions": 1,
+      "countNodes": 105,
+      "countValidTilings": 852,
+      "countTotalTilings": 52946
+    },
+    {
+      "minute": "2025-01-26T23:08:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 109,
+      "countValidTilings": 588,
+      "countTotalTilings": 69074
+    },
+    {
+      "minute": "2025-01-26T23:09:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 87,
+      "countValidTilings": 81,
+      "countTotalTilings": 43078
+    },
+    {
+      "minute": "2025-01-26T23:10:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 73,
+      "countValidTilings": 102,
+      "countTotalTilings": 42700
+    },
+    {
+      "minute": "2025-01-26T23:11:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 207,
+      "countValidTilings": 647,
+      "countTotalTilings": 74456
+    },
+    {
+      "minute": "2025-01-26T23:12:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 109,
+      "countValidTilings": 73,
+      "countTotalTilings": 35936
+    },
+    {
+      "minute": "2025-01-26T23:13:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 103,
+      "countValidTilings": 311,
+      "countTotalTilings": 37104
+    },
+    {
+      "minute": "2025-01-26T23:14:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 108,
+      "countValidTilings": 434,
+      "countTotalTilings": 56448
+    },
+    {
+      "minute": "2025-01-26T23:15:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 77,
+      "countValidTilings": 377,
+      "countTotalTilings": 45808
+    },
+    {
+      "minute": "2025-01-26T23:16:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 49,
+      "countValidTilings": 400,
+      "countTotalTilings": 34846
+    },
+    {
+      "minute": "2025-01-26T23:17:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 75,
+      "countValidTilings": 524,
+      "countTotalTilings": 51040
+    },
+    {
+      "minute": "2025-01-26T23:18:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 36,
+      "countValidTilings": 78,
+      "countTotalTilings": 54272
+    },
+    {
+      "minute": "2025-01-26T23:19:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 39,
+      "countValidTilings": 243,
+      "countTotalTilings": 61088
+    },
+    {
+      "minute": "2025-01-26T23:20:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 25,
+      "countValidTilings": 8,
+      "countTotalTilings": 42016
+    },
+    {
+      "minute": "2025-01-26T23:21:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 40,
+      "countValidTilings": 21,
+      "countTotalTilings": 63488
+    },
+    {
+      "minute": "2025-01-26T23:22:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 24,
+      "countValidTilings": 0,
+      "countTotalTilings": 41856
+    },
+    {
+      "minute": "2025-01-26T23:23:00",
+      "level": 4,
+      "countSessions": 1,
+      "countNodes": 40,
+      "countValidTilings": 13,
+      "countTotalTilings": 71456
+    }
+  ]
 }

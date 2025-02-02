@@ -1,10 +1,11 @@
 import { TilingRenderer } from '@hogg/tilings';
-import { ColorPalette, Options, ScaleMode } from '@hogg/wasm';
+import { ColorMode, ColorPalette, Options, ScaleMode } from '@hogg/wasm';
 import { useSearchParams } from 'react-router-dom';
 
 const options: Options = {
   autoRotate: true,
-  colorPalette: ColorPalette.VaporWaveRandom,
+  colorMode: ColorMode.Placement,
+  colorPalette: ColorPalette.VaporWave,
   scaleMode: ScaleMode.Cover,
   styles: {},
 };

@@ -56,7 +56,7 @@ impl Display for TilingsRequest {
 
 async fn get_total(pool: &Pool<Postgres>, request: &TilingsRequest) -> Result<i64> {
   let count = if request.show_distinct {
-    "COUNT(DISTINCT d_key)"
+    "COUNT(DISTINCT hash)"
   } else {
     "COUNT(*)"
   };
@@ -78,15 +78,15 @@ async fn get_rows(pool: &Pool<Postgres>, request: &TilingsRequest) -> Result<Vec
   } = request;
 
   let distinct = if *show_distinct {
-    "DISTINCT ON(d_key)"
+    "DISTINCT ON(hash)"
   } else {
     ""
   };
 
   let order_by = if *show_distinct {
-    "ORDER BY d_key, p_index ASC, t_index ASC"
+    "ORDER BY hash, path_index ASC, transform_index ASC"
   } else {
-    "ORDER BY p_index ASC, t_index ASC"
+    "ORDER BY path_index ASC, transform_index ASC"
   };
 
   Ok(
@@ -95,7 +95,7 @@ async fn get_rows(pool: &Pool<Postgres>, request: &TilingsRequest) -> Result<Vec
         "
         SELECT * FROM (
           SELECT {distinct} * FROM tilings {request} {order_by}
-        ) AS results ORDER BY p_index {page_direction}, t_index {page_direction} LIMIT $1 OFFSET $2
+        ) AS results ORDER BY path_index {page_direction}, transform_index {page_direction} LIMIT $1 OFFSET $2
       "
       )
       .as_str(),

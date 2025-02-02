@@ -3,7 +3,7 @@ import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import screenfull from 'screenfull';
 import { ProjectWindowContext } from './useProjectWindowContext';
 
-const MAX_TABS_REVEAL_PERCENTAGE = 0.8;
+const MAX_TABS_REVEAL_PERCENTAGE = 0.5;
 
 export default function ProjectWindowProvider({ children }: PropsWithChildren) {
   const [activeTab, setActiveTab] = useState<null | string>(null);

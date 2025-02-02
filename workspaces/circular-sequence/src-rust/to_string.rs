@@ -10,7 +10,7 @@ pub fn to_string(sequences: Vec<Sequence>) -> String {
     sort(sequences).iter().copied().map(to_string_one).collect(),
     Some(("(", ")")),
   )
-  .join("; ")
+  .join(";")
 }
 
 /// Converts a sequence to a string.

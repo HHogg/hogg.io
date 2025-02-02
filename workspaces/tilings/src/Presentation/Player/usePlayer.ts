@@ -129,6 +129,8 @@ export const usePlayer = (): UsePlayerResult => {
 
   useEffect(() => {
     return addEventListener('render', ({ data }) => {
+      console.log(data.result.hash);
+
       setRenderResult(data.result);
     });
   }, []);

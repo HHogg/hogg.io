@@ -2,14 +2,18 @@
 #[cfg(test)]
 mod tests;
 
+use core::f32;
 use std::fmt::Display;
 
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::degrees_to_radian;
 use typeshare::typeshare;
 
 use super::{Direction, Offset, Operation, Seed, Shape};
 use crate::TilingError;
+
+fn degrees_to_radian(degrees: u16) -> f32 {
+  degrees as f32 * f32::consts::PI / 180.0
+}
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq, Serialize)]
 #[typeshare]

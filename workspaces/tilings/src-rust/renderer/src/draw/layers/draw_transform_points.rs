@@ -35,6 +35,36 @@ pub fn draw_transform_points(
     VAPOR_WAVE_COLOR_PALETTE[2],
   )?;
 
+  draw_transform_points_group(
+    canvas,
+    &style.set_point_radius(
+      &canvas.scale,
+      Some(style.get_point_radius(&canvas.scale) * 0.5),
+    ),
+    tiling.plane.points_center_extended.iter_points(),
+    "black",
+  )?;
+
+  draw_transform_points_group(
+    canvas,
+    &style.set_point_radius(
+      &canvas.scale,
+      Some(style.get_point_radius(&canvas.scale) * 0.5),
+    ),
+    tiling.plane.points_end_extended.iter_points(),
+    "black",
+  )?;
+
+  draw_transform_points_group(
+    canvas,
+    &style.set_point_radius(
+      &canvas.scale,
+      Some(style.get_point_radius(&canvas.scale) * 0.5),
+    ),
+    tiling.plane.points_mid_extended.iter_points(),
+    "black",
+  )?;
+
   Ok(())
 }
 

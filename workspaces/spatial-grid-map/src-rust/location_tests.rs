@@ -7,77 +7,87 @@ use rand::seq::SliceRandom;
 
 #[test]
 fn center() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, 0.0)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, 0.0), None));
 }
 
 #[test]
 fn top() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, -7.5)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, -7.5), None));
 }
 
 #[test]
 fn top_right() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.5, -7.5)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.5, -7.5), None));
 }
 
 #[test]
 fn right() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.5, 0.0)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.5, 0.0), None));
 }
 
 #[test]
 fn bottom_right() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.5, 7.5)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.5, 7.5), None));
 }
 
 #[test]
 fn bottom() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, 7.5)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, 7.5), None));
 }
 
 #[test]
 fn bottom_left() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(-7.5, 7.5)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(-7.5, 7.5), None));
 }
 
 #[test]
 fn left() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(-7.5, 0.0)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(-7.5, 0.0), None));
 }
 
 #[test]
 fn top_left() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(-7.5, -7.5)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(-7.5, -7.5), None));
 }
 
 #[test]
 fn snap_x_just_under() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.0 - TOLERANCE * 0.5, 7.0)));
+  assert_debug_snapshot!(Location::new(
+    2,
+    1.0,
+    Point(7.0 - TOLERANCE * 0.5, 7.0),
+    None
+  ));
 }
 
 #[test]
 fn snap_y_just_under() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(7.0, 7.0 - TOLERANCE * 0.5)));
+  assert_debug_snapshot!(Location::new(
+    2,
+    1.0,
+    Point(7.0, 7.0 - TOLERANCE * 0.5),
+    None
+  ));
 }
 
 #[test]
 fn top_oob() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, -8.1)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, -8.1), None));
 }
 
 #[test]
 fn right_oob() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(8.0, 0.0)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(8.0, 0.0), None));
 }
 
 #[test]
 fn bottom_oob() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, 8.0)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(0.0, 8.0), None));
 }
 
 #[test]
 fn left_oob() {
-  assert_debug_snapshot!(Location::new(2, 1.0, Point(-8.1, 0.0)));
+  assert_debug_snapshot!(Location::new(2, 1.0, Point(-8.1, 0.0), None));
 }
 
 fn get_sorted_location_ids(locations: Vec<(&str, Location)>) -> Vec<&str> {
@@ -107,22 +117,22 @@ fn get_sorted_location_ids(locations: Vec<(&str, Location)>) -> Vec<&str> {
 #[test]
 fn order_radians() {
   assert_debug_snapshot!(get_sorted_location_ids(vec![
-    ("top", Location::new(2, 1.0, Point(0.0, -7.5))),
-    ("top-right", Location::new(2, 1.0, Point(7.5, -7.5))),
-    ("right", Location::new(2, 1.0, Point(7.5, 0.0))),
-    ("bottom-right", Location::new(2, 1.0, Point(7.5, 7.5))),
-    ("bottom", Location::new(2, 1.0, Point(0.0, 7.5))),
-    ("bottom-left", Location::new(2, 1.0, Point(-7.5, 7.5))),
-    ("left", Location::new(2, 1.0, Point(-7.5, 0.0))),
-    ("top-left", Location::new(2, 1.0, Point(-7.5, -7.5))),
+    ("bottom-left", Location::new(2, 1.0, Point(-7.5, 7.5), None)),
+    ("bottom-right", Location::new(2, 1.0, Point(7.5, 7.5), None)),
+    ("bottom", Location::new(2, 1.0, Point(0.0, 7.5), None)),
+    ("left", Location::new(2, 1.0, Point(-7.5, 0.0), None)),
+    ("right", Location::new(2, 1.0, Point(7.5, 0.0), None)),
+    ("top-left", Location::new(2, 1.0, Point(-7.5, -7.5), None)),
+    ("top-right", Location::new(2, 1.0, Point(7.5, -7.5), None)),
+    ("top", Location::new(2, 1.0, Point(0.0, -7.5), None)),
   ]));
 }
 
 #[test]
 fn order_distance() {
   assert_debug_snapshot!(get_sorted_location_ids(vec![
-    ("center", Location::new(2, 1.0, Point(0.0, 0.0))),
-    ("top", Location::new(2, 1.0, Point(0.0, -7.5))),
-    ("top-right", Location::new(2, 1.0, Point(7.5, -7.5))),
+    ("center", Location::new(2, 1.0, Point(0.0, 0.0), None)),
+    ("top-right", Location::new(2, 1.0, Point(7.5, -7.5), None)),
+    ("top", Location::new(2, 1.0, Point(0.0, -7.5), None)),
   ]));
 }

@@ -11,7 +11,7 @@ const tilingErrorToString = (error: TilingError | null) => {
   }
 
   return `${error?.name}: ${Object.entries(error?.data)
-    .map(([key, value]) => `[${key}=${value}]`)
+    .map(([key, value]) => `[${key}=${JSON.stringify(value)}]`)
     .join(' ')}`;
 };
 

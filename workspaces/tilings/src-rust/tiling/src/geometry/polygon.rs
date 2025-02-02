@@ -152,6 +152,7 @@ impl Polygon {
   }
 
   /// Returns true if the shape intersects with another shape.
+  /// TODO: Can this be removed? Is this actually needed?
   pub fn intersects(&self, other: &Self) -> bool {
     let self_apothem = self.get_apothem();
     let other_apothem = other.get_apothem();
