@@ -1,7 +1,8 @@
 use circular_sequence::SequenceStore;
+use geometry::Point;
 use spatial_grid_map::{location, SpatialGridMap};
 
-use crate::{build::PointSequence, geometry::Point, Tiling};
+use crate::{build::PointSequence, Tiling};
 
 // The edge types is a unique line from a shape. It is
 // determined by the shape sequence of unique shape faces
@@ -75,7 +76,7 @@ impl Hash {
     self.hash = self.sequence_store.to_string();
   }
 
-  fn update_from_hashes(&mut self, tiling: &Tiling) {}
+  fn update_from_hashes(&mut self, _tiling: &Tiling) {}
 
   fn update_edge_point_sequence(
     &mut self,

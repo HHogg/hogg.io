@@ -1,10 +1,8 @@
-use spatial_grid_map::location;
+use gap_validation::has_single_circuit;
+use geometry::LineSegment;
 
 use super::{Error, Flag};
-use crate::{
-  build::Plane,
-  geometry::{LineSegment, Polygon},
-};
+use crate::build::{Plane, Tile};
 
 #[derive(Clone, Debug, Default)]
 pub struct Validator {
@@ -24,7 +22,7 @@ impl Validator {
   pub fn validate_overlaps(
     &self,
     plane: &Plane,
-    polygon: &Polygon,
+    polygon: &Tile,
     line_segment: &LineSegment,
   ) -> Result<(), Error> {
     if !self.option_validate_overlap {
@@ -55,15 +53,15 @@ impl Validator {
     }
 
     let nearby_polygons = plane
-      .polygons
-      .iter_values_around(&polygon.centroid.into(), 1)
+      .tiles
+      .iter_values_around(&polygon.geometry.centroid.into(), 1)
       .filter(|other| *other != polygon);
 
     // If the distance between the centroids of 2 polygons is
     // greater than the sum of their apothems then they are not
     // overlapping.
     for nearby_polygon in nearby_polygons {
-      if polygon.intersects(nearby_polygon) {
+      if polygon.geometry.intersects(&nearby_polygon.geometry) {
         return Err(Error::Overlaps {});
       }
     }
@@ -95,67 +93,7 @@ impl Validator {
       return Ok(());
     }
 
-    let mut line_segments = plane.get_line_segment_edges();
-    let mut seen_counter = 0;
-
-    let first_line_segment = *line_segments
-      .iter_values()
-      .next()
-      .expect("First line segment does not exist");
-    let first_line_segment_mid_point: location::Point = first_line_segment.mid_point().into();
-
-    // We need to keep track of the line segments we've seen
-    // this prevents us from traversing back up the same line
-    // segment we've already traversed.
-    seen_counter += 1;
-    line_segments.increment_counter(&first_line_segment_mid_point, "seen");
-
-    let mut current_line_segment = first_line_segment;
-
-    loop {
-      let mid_point: location::Point = current_line_segment.mid_point().into();
-      let neighbors = line_segments
-        .iter_values_around(&mid_point, 1)
-        .collect::<Vec<_>>();
-
-      let mut found = false;
-
-      for neighbor in neighbors {
-        let neighbor_mid_point: location::Point = neighbor.mid_point().into();
-
-        if current_line_segment.is_connected(neighbor) {
-          let is_first_visit = *line_segments
-            .get_counter(&neighbor_mid_point, "seen")
-            .unwrap_or(&0)
-            == 0;
-
-          if is_first_visit {
-            current_line_segment = *neighbor;
-            found = true;
-            line_segments.increment_counter(&neighbor_mid_point, "seen");
-            seen_counter += 1;
-          }
-
-          break;
-        }
-      }
-
-      // If we didn't find a connected line segment then there are gaps
-      if !found {
-        return Err(Error::Gaps);
-      }
-
-      // If we've reached the first line segment then we've
-      // completed connecting the border of the starting line segment
-      if current_line_segment.is_connected(&first_line_segment) {
-        break;
-      }
-    }
-
-    // We need to check if there are any line segments left over
-    // that are not connected to the border, if there are
-    // then there are gaps in the tessellation
-    if seen_counter == line_segments.size() {
+    if has_single_circuit(plane.get_line_segment_edges()) {
       Ok(())
     } else {
       Err(Error::Gaps)

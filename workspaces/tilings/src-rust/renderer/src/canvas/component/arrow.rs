@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 
-use tiling::geometry::BBox;
+use geometry::BBox;
 
 use super::{Chevron, Draw, LineSegment, Style};
 use crate::canvas::collision::Theia;
@@ -9,12 +9,12 @@ use crate::Error;
 
 #[derive(Clone, Debug, Default)]
 pub struct Arrow {
-  line_segment: tiling::geometry::LineSegment,
+  line_segment: geometry::LineSegment,
   style: Style,
 }
 
 impl Arrow {
-  pub fn with_line_segment(mut self, line_segment: tiling::geometry::LineSegment) -> Self {
+  pub fn with_line_segment(mut self, line_segment: geometry::LineSegment) -> Self {
     self.line_segment = line_segment;
     self
   }

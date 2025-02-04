@@ -11,12 +11,12 @@ pub fn draw_grid_polygon(
   options: &Options,
   tiling: &Tiling,
 ) -> Result<(), Error> {
-  let scaled_spacing = tiling.plane.polygons.get_spacing();
+  let scaled_spacing = tiling.plane.tiles.get_spacing();
 
   canvas.add_component(
     Layer::GridPolygon,
     Grid::default()
-      .with_size(tiling.plane.polygons.get_grid_size())
+      .with_size(tiling.plane.tiles.get_grid_size())
       .with_spacing(scaled_spacing)
       .with_style(options.styles.grid.clone().unwrap_or_default())
       .into(),

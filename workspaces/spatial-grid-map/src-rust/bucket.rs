@@ -79,6 +79,12 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
       .map(|index| self.entries.remove(index))
   }
 
+  pub fn get_counter(&self, point: &location::Point, counter: &str) -> Option<&u32> {
+    self
+      .get_entry(point)
+      .and_then(|entry| entry.counters.get(counter))
+  }
+
   pub fn increment_counter(&mut self, point: &location::Point, counter: &str) {
     let mut entry = self
       .get_entry_mut(point)
@@ -88,10 +94,18 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
     *counter += 1;
   }
 
-  pub fn get_counter(&self, point: &location::Point, counter: &str) -> Option<&u32> {
+  pub fn get_bool_state(&self, point: &location::Point, flag: &str) -> Option<&bool> {
     self
       .get_entry(point)
-      .and_then(|entry| entry.counters.get(counter))
+      .and_then(|entry| entry.bools.get(flag))
+  }
+
+  pub fn set_bool_state(&mut self, point: &location::Point, flag: &str, value: bool) {
+    let mut entry = self
+      .get_entry_mut(point)
+      .expect("No entry found to toggle flag.");
+
+    entry.bools.insert(flag.to_string(), value);
   }
 }
 
@@ -104,6 +118,7 @@ pub struct BucketEntry<TEntryValue: Default> {
   pub rotation: Option<f32>,
   pub value: TEntryValue,
   pub counters: HashMap<String, u32>,
+  pub bools: HashMap<String, bool>,
 }
 
 impl<TEntryValue: Default> BucketEntry<TEntryValue> {

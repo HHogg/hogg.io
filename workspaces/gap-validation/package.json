@@ -11,6 +11,9 @@
   },
   "dependencies": {
     "@hogg/common": "workspace:^",
+    "@hogg/spatial-grid-map": "workspace:^",
+    "@hogg/tilings": "workspace:^",
+    "@hogg/wasm": "workspace:^",
     "preshape": "^19.1.5",
     "react": "^18.2.0"
   },

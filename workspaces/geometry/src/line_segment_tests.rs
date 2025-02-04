@@ -60,6 +60,6 @@ fn is_connected() {
     .with_start(Point::at(3.0, 3.0))
     .with_end(Point::at(4.0, 4.0));
 
-  assert!(line_segment1.is_connected(&line_segment2));
-  assert!(!line_segment1.is_connected(&line_segment3));
+  assert!(line_segment1.is_connected_to(&line_segment2));
+  assert!(!line_segment1.is_connected_to(&line_segment3));
 }

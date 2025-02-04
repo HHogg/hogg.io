@@ -1,5 +1,5 @@
 import { type Project, ProjectKey } from '@hogg/common';
-import image from './preshape.webp';
+import image from './image.webp';
 
 export const meta: Project = {
   id: ProjectKey._preshape,

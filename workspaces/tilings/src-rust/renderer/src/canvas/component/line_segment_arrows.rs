@@ -1,4 +1,4 @@
-use tiling::geometry::{BBox, LineSegment, LineSegmentOrigin};
+use geometry::{BBox, LineSegment, LineSegmentOrigin};
 
 use super::{Arrow, Draw, Style};
 use crate::canvas::Scale;

@@ -14,6 +14,7 @@ pub struct Result {
   pub notation: String,
   pub expansion_phases: u8,
   pub error: Option<TilingError>,
+  #[typeshare(serialized_as = "string")]
   pub hash: Hash,
   pub transform_index: i32,
   #[typeshare(serialized_as = "string")]

@@ -859,6 +859,9 @@ __metadata:
   resolution: "@hogg/gap-validation@workspace:workspaces/gap-validation"
   dependencies:
     "@hogg/common": "workspace:^"
+    "@hogg/spatial-grid-map": "workspace:^"
+    "@hogg/tilings": "workspace:^"
+    "@hogg/wasm": "workspace:^"
     "@types/react": ^18.0.28
     preshape: ^19.1.5
     react: ^18.2.0

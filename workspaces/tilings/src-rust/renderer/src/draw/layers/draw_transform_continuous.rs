@@ -32,7 +32,7 @@ pub fn draw_transform_continuous(
   canvas.add_component(
     Layer::Transform,
     Point::default()
-      .with_point(tiling::geometry::Point::default())
+      .with_point(geometry::Point::default())
       .with_style(style.set_line_dash(&canvas.scale, None))
       .into(),
   )?;
@@ -52,9 +52,9 @@ fn draw_transform_continuous_reflect_transform(
       .iter()
       .any(|other| coordinate_equals(value - PI, *other) || coordinate_equals(value + PI, *other));
 
-    let implicit_line_segment = tiling::geometry::LineSegment::default()
-      .with_start(tiling::geometry::Point::at(0.0, -2.0).rotate(value + PI, None))
-      .with_end(tiling::geometry::Point::at(0.0, -3.0).rotate(value + PI, None));
+    let implicit_line_segment = geometry::LineSegment::default()
+      .with_start(geometry::Point::at(0.0, -2.0).rotate(value + PI, None))
+      .with_end(geometry::Point::at(0.0, -3.0).rotate(value + PI, None));
 
     if !has_opposite {
       canvas.add_component(
@@ -68,9 +68,9 @@ fn draw_transform_continuous_reflect_transform(
       )?;
     }
 
-    let line_segment = tiling::geometry::LineSegment::default()
-      .with_start(tiling::geometry::Point::at(0.0, -2.0).rotate(*value, None))
-      .with_end(tiling::geometry::Point::at(0.0, -3.0).rotate(*value, None));
+    let line_segment = geometry::LineSegment::default()
+      .with_start(geometry::Point::at(0.0, -2.0).rotate(*value, None))
+      .with_end(geometry::Point::at(0.0, -3.0).rotate(*value, None));
 
     canvas.add_component(
       Layer::Transform,
@@ -103,7 +103,7 @@ fn draw_transform_continuous_rotate_transform(
   style: &Style,
 ) -> Result<(), Error> {
   let radius = canvas.content_bbox().radius_min();
-  let origin = tiling::geometry::Point::default();
+  let origin = geometry::Point::default();
   let arc_angle_padding = PI * 0.05;
   let mut previous_start_angle = 0.0;
 
@@ -111,9 +111,9 @@ fn draw_transform_continuous_rotate_transform(
     Layer::Transform,
     LineSegment::default()
       .with_points(
-        tiling::geometry::LineSegment::default()
-          .with_start(tiling::geometry::Point::at(0.0, -2.0))
-          .with_end(tiling::geometry::Point::at(0.0, -3.0))
+        geometry::LineSegment::default()
+          .with_start(geometry::Point::at(0.0, -2.0))
+          .with_end(geometry::Point::at(0.0, -3.0))
           .into(),
       )
       .with_extend_start(false)
@@ -123,9 +123,9 @@ fn draw_transform_continuous_rotate_transform(
   )?;
 
   for value in transform_value.get_transform_values() {
-    let line_segment = tiling::geometry::LineSegment::default()
-      .with_start(tiling::geometry::Point::at(0.0, -2.0).rotate(value, None))
-      .with_end(tiling::geometry::Point::at(0.0, -3.0).rotate(value, None));
+    let line_segment = geometry::LineSegment::default()
+      .with_start(geometry::Point::at(0.0, -2.0).rotate(value, None))
+      .with_end(geometry::Point::at(0.0, -3.0).rotate(value, None));
 
     canvas.add_component(
       Layer::Transform,

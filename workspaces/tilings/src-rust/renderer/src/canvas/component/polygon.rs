@@ -1,4 +1,4 @@
-use tiling::geometry::BBox;
+use geometry::BBox;
 
 use super::{Draw, Style};
 use crate::canvas::collision::Theia;
@@ -7,7 +7,7 @@ use crate::Error;
 
 #[derive(Clone, Debug, Default)]
 pub struct Polygon {
-  polygon: tiling::geometry::Polygon,
+  polygon: geometry::Polygon,
   style: Style,
   interactive: Option<bool>,
 }
@@ -18,7 +18,7 @@ impl Polygon {
     self
   }
 
-  pub fn with_polygon(mut self, polygon: tiling::geometry::Polygon) -> Self {
+  pub fn with_polygon(mut self, polygon: geometry::Polygon) -> Self {
     self.polygon = polygon;
     self
   }

@@ -1,5 +1,5 @@
 import { Project, ProjectKey } from '@hogg/common';
-import image from './circle-graph.webp';
+import image from './image.webp';
 
 export { default as Project } from './Project';
 

@@ -6,7 +6,7 @@ mod style;
 use std::collections::{BTreeMap, HashMap, VecDeque};
 
 use anyhow::Result;
-use tiling::geometry::BBox;
+use geometry::BBox;
 use tiling::Tiling;
 use wasm_bindgen::JsCast;
 

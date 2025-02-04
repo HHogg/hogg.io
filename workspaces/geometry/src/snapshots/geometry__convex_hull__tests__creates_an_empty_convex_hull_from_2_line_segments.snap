@@ -1,0 +1,7 @@
+---
+source: workspaces/geometry/src/./convex_hull_tests.rs
+expression: "ConvexHull::from_line_segments([LineSegment::default(),\nLineSegment::default()].iter())"
+---
+{
+  "points": []
+}

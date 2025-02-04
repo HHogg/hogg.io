@@ -1,7 +1,8 @@
 use circular_sequence::SequenceStore;
+use geometry::Point;
 use spatial_grid_map::{location, SpatialGridMap};
 
-use crate::{build::PointSequence, geometry::Point, Tiling};
+use crate::{build::PointSequence, Tiling};
 
 // The vertex type is a unique point. It is determined by the
 // unique edge sequence that meet at it. As more edge types are
@@ -85,7 +86,7 @@ impl Hash {
     self.hash = self.sequence_store.to_string();
   }
 
-  fn update_from_hashes(&mut self, tiling: &Tiling) {}
+  fn update_from_hashes(&mut self, _tiling: &Tiling) {}
 
   fn update_vertex_sequence(
     &mut self,

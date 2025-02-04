@@ -74,15 +74,15 @@ pub fn draw_transform_eccentric(
 
 fn draw_transform_eccentric_reflect(
   canvas: &mut Canvas,
-  origin_point: &tiling::geometry::Point,
-  line_segment: tiling::geometry::LineSegment,
+  origin_point: &geometry::Point,
+  line_segment: geometry::LineSegment,
   style: &Style,
 ) -> Result<(), Error> {
-  let line_segment_p1 = tiling::geometry::LineSegment::default()
+  let line_segment_p1 = geometry::LineSegment::default()
     .with_start(*origin_point)
     .with_end(line_segment.start);
 
-  let line_segment_p2 = tiling::geometry::LineSegment::default()
+  let line_segment_p2 = geometry::LineSegment::default()
     .with_start(*origin_point)
     .with_end(line_segment.end);
 
@@ -114,7 +114,7 @@ fn draw_transform_eccentric_reflect(
 fn draw_transform_eccentric_rotate(
   canvas: &mut Canvas,
   tiling: &Tiling,
-  origin_point: &tiling::geometry::Point,
+  origin_point: &geometry::Point,
   origin_type: &OriginType,
   style: &Style,
 ) -> Result<(), Error> {

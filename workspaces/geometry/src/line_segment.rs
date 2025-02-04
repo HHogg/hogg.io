@@ -81,7 +81,7 @@ impl LineSegment {
     Self::default().with_start(self.end).with_end(self.start)
   }
 
-  pub fn is_connected(&self, other: &Self) -> bool {
+  pub fn is_connected_to(&self, other: &Self) -> bool {
     self.end == other.start
   }
 

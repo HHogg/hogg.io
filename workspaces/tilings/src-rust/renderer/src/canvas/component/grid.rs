@@ -1,4 +1,4 @@
-use tiling::geometry::{BBox, Point};
+use geometry::{BBox, Point};
 
 use super::{Draw, Style};
 use crate::canvas::collision::Theia;

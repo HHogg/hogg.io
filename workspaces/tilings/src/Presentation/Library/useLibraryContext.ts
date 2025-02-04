@@ -1,6 +1,5 @@
-import { Result } from '@hogg/wasm';
 import { createContext, useContext } from 'react';
-import { results } from '../utils/results';
+import { OutputResult, results } from '../utils/results';
 
 const FILTER_KEYS = [] as const;
 
@@ -10,8 +9,8 @@ export type LibraryResultCounts = Record<FilterKeys, number>;
 
 export type LibraryContextProps = {
   countsByShapes: LibraryResultCounts;
-  filteredResults: Result[];
-  filteredResultsByUniform: Record<string, Result[]>;
+  filteredResults: OutputResult[];
+  filteredResultsByUniform: Record<string, OutputResult[]>;
   filters: LibraryFilters;
   toggleFilter: (filter: keyof LibraryFilters) => void;
 };
@@ -27,9 +26,9 @@ export const defaultFilters = FILTER_KEYS.reduce(
 );
 
 export const getFilteredResults = (
-  results: Result[],
+  results: OutputResult[],
   filters: LibraryFilters
-): Result[] => {
+): OutputResult[] => {
   if (Object.values(filters).every((value) => !value)) {
     return results;
   }
@@ -57,7 +56,7 @@ export const getCountsByShapes = (
       // then we increase all the counts
       const matches = Object.entries(filters)
         .filter(([, selected]) => selected)
-        .every(([key]) => result[key as keyof Result]);
+        .every(([key]) => result[key as keyof OutputResult]);
 
       if (!matches) {
         continue;
@@ -65,7 +64,7 @@ export const getCountsByShapes = (
     }
 
     for (const key of FILTER_KEYS) {
-      if (result[key as keyof Result]) {
+      if (result[key as keyof OutputResult]) {
         counts[key]++;
       }
     }

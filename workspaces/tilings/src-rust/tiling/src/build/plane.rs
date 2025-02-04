@@ -5,13 +5,14 @@ mod tests;
 use std::f32::consts::PI;
 
 use circular_sequence::SequenceStore;
+use geometry::{ConvexHull, LineSegment, Point};
 use serde::{Deserialize, Serialize};
 use spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap};
 use typeshare::typeshare;
 
+use super::tile::Tile;
 use super::vertex_types::VertexTypes;
 use super::{Metrics, PointSequence, Stage};
-use crate::geometry::{ConvexHull, LineSegment, Point, Polygon};
 use crate::notation::{
   Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
   TransformContinuous, TransformEccentric, TransformValue,
@@ -23,30 +24,30 @@ use crate::TilingError;
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Plane {
-  // Lookup<Polygon.centroid> -> Polygon
-  pub polygons: SpatialGridMap<Polygon>,
-  // Lookup<Polygon.centroid> -> Polygon
-  pub polygons_placement: SpatialGridMap<Polygon>,
-  pub seed_polygon: Option<Polygon>,
+  // Lookup<Tile.geometry.centroid> -> Tile
+  pub tiles: SpatialGridMap<Tile>,
+  // Lookup<Tile.geometry.centroid> -> Tile
+  pub placement_tiles: SpatialGridMap<Tile>,
+  pub seed_tile: Option<Tile>,
 
   // TODO: These shouldn't be needed for deserialization
-  // but can be rebuilt from the polygons. Would that be
+  // but can be rebuilt from the Tiles. Would that be
   // a more performant approach to lower the data going
   // across workers?
   pub repetitions: u8,
   // Lookup<LineSegment.midPoint> -> LineSegment
   pub line_segments: SpatialGridMap<LineSegment>,
-  // Lookup<Polygon.centroid> -> [(Polygon.centroid, Polygon.shape)]
+  // Lookup<Tile.geometry.centroid> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_center: SpatialGridMap<PointSequence>,
-  // Lookup<Polygon.centroid> -> [(Polygon.centroid, Polygon.shape)]
+  // Lookup<Tile.geometry.centroid> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_center_extended: SpatialGridMap<PointSequence>,
-  // Lookup<Vertex> -> [(Polygon.centroid, Polygon.shape)]
+  // Lookup<Vertex> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_end: SpatialGridMap<PointSequence>,
-  // Lookup<Vertex> -> [(Polygon.centroid, Polygon.shape)]
+  // Lookup<Vertex> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_end_extended: SpatialGridMap<PointSequence>,
-  // Lookup<LineSegment.midPoint> -> [(Polygon.centroid, Polygon.shape)]
+  // Lookup<LineSegment.midPoint> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_mid: SpatialGridMap<PointSequence>,
-  // Lookup<LineSegment.midPoint> -> [(Polygon.centroid, Polygon.shape)]
+  // Lookup<LineSegment.midPoint> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_mid_extended: SpatialGridMap<PointSequence>,
   pub metrics: Metrics,
   pub stages: Vec<Stage>,
@@ -54,9 +55,9 @@ pub struct Plane {
   #[serde(skip)]
   pub line_segments_by_shape_group: Vec<SpatialGridMap<LineSegment>>,
   #[serde(skip)]
-  pub polygons_to_transform: Vec<Polygon>,
+  pub tiles_to_transform: Vec<Tile>,
   #[serde(skip)]
-  pub stage_added_polygon: bool,
+  pub stage_added_tile: bool,
   #[serde(skip)]
   pub validator: Validator,
   #[serde(skip)]
@@ -141,7 +142,7 @@ impl Plane {
       .try_for_each::<_, Result<(), TilingError>>(|node| {
         match node {
           Node::Seed(seed) => {
-            let polygon = Polygon::default()
+            let tile = Tile::default()
               .with_stage(Stage::Seed)
               .with_shape(seed.shape)
               .with_offset(seed.offset)
@@ -151,8 +152,8 @@ impl Plane {
               SpatialGridMap::new("line_segments_by_shape_group.seed")
                 .with_resize_method(ResizeMethod::First),
             );
-            self.seed_polygon = Some(polygon.clone());
-            self.add_polygon(Stage::Placement, polygon)?;
+            self.seed_tile = Some(tile.clone());
+            self.add_tile(Stage::Placement, tile)?;
 
             shape_counter += 1;
             points_counter += seed.shape as u8;
@@ -172,14 +173,14 @@ impl Plane {
                 reason: "no available line segment".into(),
               })?;
 
-            let polygon = Polygon::default()
+            let tile = Tile::default()
               .with_shape(*shape)
               .with_stage(Stage::Placement)
               .with_index(shape_counter)
               .with_stage_index(self.stages.len() as u16)
               .on_line_segment(&line_segment.flip(), points_counter - 1);
 
-            self.add_polygon(Stage::Placement, polygon)?;
+            self.add_tile(Stage::Placement, tile)?;
 
             shape_counter += 1;
             points_counter += *shape as u8 - 2;
@@ -213,71 +214,67 @@ impl Plane {
 
   /// Inserts a polygon into the tiling. If the polygon that occupies the
   /// same space already exists then it is not added.
-  fn add_polygon(&mut self, stage: Stage, polygon: Polygon) -> Result<(), TilingError> {
-    if self.polygons.contains(&polygon.centroid.into()) {
+  fn add_tile(&mut self, stage: Stage, tile: Tile) -> Result<(), TilingError> {
+    if self.tiles.contains(&tile.geometry.centroid.into()) {
       self
         .metrics
         .increment(stage.to_string().as_str(), "polygons_skipped");
       return Ok(());
     }
 
-    let size = polygon.bbox.height().max(polygon.bbox.width());
-    let is_placement_polygon = polygon.stage <= Stage::Placement;
-    let is_touching_placement_polygon = self.is_polygon_touching_placement_polygon(&polygon);
+    let size = tile.geometry.bbox.height().max(tile.geometry.bbox.width());
+    let is_placement_tile = tile.stage <= Stage::Placement;
+    let is_touching_placement_tile = self.is_touching_placement_tile(&tile);
 
-    self.stage_added_polygon = true;
+    self.stage_added_tile = true;
     self
       .metrics
       .increment(stage.to_string().as_str(), "polygons_added");
 
-    let location_polygon_centroid: location::Point = polygon.centroid.into();
+    let tile_location: location::Point = tile.geometry.centroid.into();
 
     // We add the polygon first so we can see it
     // if there are any errors
-    self
-      .polygons
-      .insert(location_polygon_centroid, size, None, polygon.clone());
+    self.tiles.insert(tile_location, size, None, tile.clone());
 
     // We also add the polygon to the polygons to transform
     // to picked up on the next transform stage
-    self.polygons_to_transform.push(polygon.clone());
+    self.tiles_to_transform.push(tile.clone());
 
-    if is_placement_polygon {
+    if is_placement_tile {
       // Store the polygon's center point
       // for looking up origins for transforms
       self.points_center.insert(
-        location_polygon_centroid,
+        tile_location,
         size,
         None,
         PointSequence::default()
-          .with_center(polygon.centroid)
-          .with_size(polygon.shape.into()),
+          .with_center(tile.geometry.centroid)
+          .with_size(tile.shape.into()),
       );
 
       // We also store the polygons from the placement phase
       // for convenience as they are the only original polygons,
       // all the other polygons after are transformed copies.
       self
-        .polygons_placement
-        .insert(location_polygon_centroid, size, None, polygon.clone());
-    } else if is_touching_placement_polygon
-      && !self.points_center.contains(&location_polygon_centroid)
-    {
+        .placement_tiles
+        .insert(tile_location, size, None, tile.clone());
+    } else if is_touching_placement_tile && !self.points_center.contains(&tile_location) {
       self.points_center_extended.insert(
-        location_polygon_centroid,
+        tile_location,
         size,
         None,
         PointSequence::default()
-          .with_center(polygon.centroid)
-          .with_size(polygon.shape.into()),
+          .with_center(tile.geometry.centroid)
+          .with_size(tile.shape.into()),
       );
     }
 
-    for line_segment in polygon.line_segments.iter() {
+    for line_segment in tile.geometry.line_segments.iter() {
       let mid_point = line_segment.mid_point();
       let mid_point_location: location::Point = mid_point.into();
 
-      if is_placement_polygon {
+      if is_placement_tile {
         // Store the line segments mid point
         // for looking up origins for transforms
         self.points_mid.insert(
@@ -300,7 +297,7 @@ impl Plane {
               *line_segment,
             )
           });
-      } else if is_touching_placement_polygon && !self.points_mid.contains(&mid_point_location) {
+      } else if is_touching_placement_tile && !self.points_mid.contains(&mid_point_location) {
         self.points_mid_extended.insert(
           mid_point_location,
           line_segment.length(),
@@ -324,16 +321,16 @@ impl Plane {
       // other line segments around it. However we should only need to do
       // this up until the first transforms have been applied, after that
       // any future line segments should be valid.
-      self.validate_overlaps(&polygon, line_segment)?;
+      self.validate_overlaps(&tile, line_segment)?;
 
-      self.update_edge_type(&polygon, line_segment);
-      self.update_shape_type(&polygon, line_segment);
+      self.update_edge_type(&tile, line_segment);
+      self.update_shape_type(&tile, line_segment);
     }
 
-    for point in polygon.points.iter() {
+    for point in tile.geometry.points.iter() {
       let location_point: location::Point = point.into();
 
-      if is_placement_polygon {
+      if is_placement_tile {
         // Store the polygon's end points
         // for looking up origins for transforms
         self.points_end.insert(
@@ -342,7 +339,7 @@ impl Plane {
           None,
           PointSequence::default().with_center(*point),
         );
-      } else if is_touching_placement_polygon && !self.points_end.contains(&location_point) {
+      } else if is_touching_placement_tile && !self.points_end.contains(&location_point) {
         self.points_end_extended.insert(
           location_point,
           1.0,
@@ -351,57 +348,57 @@ impl Plane {
         );
       }
 
-      self.update_vertex_type(&polygon, point);
+      self.update_vertex_type(&tile, point);
     }
 
     Ok(())
   }
 
   pub fn is_empty(&self) -> bool {
-    self.polygons.is_empty()
+    self.tiles.is_empty()
   }
 
-  pub fn iter_polygons(&self) -> impl Iterator<Item = &Polygon> {
-    self.polygons.iter_values()
+  pub fn iter_tiles(&self) -> impl Iterator<Item = &Tile> {
+    self.tiles.iter_values()
   }
 
-  pub fn iter_polygons_placement(&self) -> impl Iterator<Item = &Polygon> {
-    self.polygons_placement.iter_values()
+  pub fn iter_placement_tiles(&self) -> impl Iterator<Item = &Tile> {
+    self.placement_tiles.iter_values()
   }
 
-  fn update_vertex_type(&mut self, polygon: &Polygon, point: &Point) {
+  fn update_vertex_type(&mut self, tile: &Tile, point: &Point) {
     if let Some(mut sequence) = self.get_core_end_point_sequence_mut(point) {
       sequence
         .value
-        .insert(polygon.centroid, polygon.shape.into());
+        .insert(tile.geometry.centroid, tile.shape.into());
     }
   }
 
-  fn update_edge_type(&mut self, polygon: &Polygon, line_segment: &LineSegment) {
+  fn update_edge_type(&mut self, tile: &Tile, line_segment: &LineSegment) {
     if let Some(mut sequence) = self.get_core_mid_point_sequence_mut(&line_segment.mid_point()) {
       sequence
         .value
-        .insert(polygon.centroid, polygon.shape.into());
+        .insert(tile.geometry.centroid, tile.shape.into());
     }
   }
 
-  fn update_shape_type(&mut self, polygon: &Polygon, line_segment: &LineSegment) {
-    let other_polygon = self
+  fn update_shape_type(&mut self, tile: &Tile, line_segment: &LineSegment) {
+    let other_tile = self
       .get_core_mid_point_sequence(&line_segment.mid_point())
       .and_then(|line_segment_sequence| {
-        line_segment_sequence.find(|entry| entry.point != polygon.centroid)
+        line_segment_sequence.find(|entry| entry.point != tile.geometry.centroid)
       })
-      .and_then(|entry| self.polygons.get_value(&entry.point.into()).cloned());
+      .and_then(|entry| self.tiles.get_value(&entry.point.into()).cloned());
 
-    if let Some(other_polygon) = other_polygon {
-      self.update_shape_type_for_polygon(polygon, &other_polygon);
-      self.update_shape_type_for_polygon(&other_polygon, polygon);
+    if let Some(other_tile) = other_tile {
+      self.update_shape_type_for_tile(tile, &other_tile);
+      self.update_shape_type_for_tile(&other_tile, tile);
     }
   }
 
-  fn update_shape_type_for_polygon(&mut self, a: &Polygon, b: &Polygon) {
-    if let Some(mut sequence) = self.get_core_center_point_sequence_mut(&a.centroid) {
-      sequence.value.insert(b.centroid, b.shape.into());
+  fn update_shape_type_for_tile(&mut self, a: &Tile, b: &Tile) {
+    if let Some(mut sequence) = self.get_core_center_point_sequence_mut(&a.geometry.centroid) {
+      sequence.value.insert(b.geometry.centroid, b.shape.into());
     }
   }
 
@@ -410,14 +407,14 @@ impl Plane {
   }
 
   fn complete_stage(&mut self, stage: Stage) {
-    if self.stage_added_polygon {
-      self.stage_added_polygon = false;
+    if self.stage_added_tile {
+      self.stage_added_tile = false;
       self.stages.push(stage);
     }
   }
 
-  pub fn is_polygon_touching_placement_polygon(&self, polygon: &Polygon) -> bool {
-    for point in polygon.points.iter() {
+  pub fn is_touching_placement_tile(&self, tile: &Tile) -> bool {
+    for point in tile.geometry.points.iter() {
       if self.points_end.contains(&point.into()) {
         return true;
       }
@@ -737,22 +734,22 @@ impl Plane {
       let p2 = Point::at((value - PI * 0.5).cos(), (value - PI * 0.5).sin());
       let line_segment = LineSegment::default().with_start(p1).with_end(p2);
 
-      for i in 0..self.polygons_to_transform.len() {
-        let polygon = self
-          .polygons_to_transform
+      for i in 0..self.tiles_to_transform.len() {
+        let tile = self
+          .tiles_to_transform
           .get(i)
           .ok_or(TilingError::InvalidTransform {
             transform: "reflect".into(),
             reason: "polygon not found".into(),
           })?;
 
-        let next_polygon = polygon
+        let next_tile = tile
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
           .reflect(&line_segment);
 
-        self.add_polygon(stage, next_polygon)?;
+        self.add_tile(stage, next_tile)?;
       }
 
       self.complete_stage(stage);
@@ -771,22 +768,22 @@ impl Plane {
     for value in transform_value.get_transform_values() {
       let stage_index = self.stages.len() as u16;
 
-      for i in 0..self.polygons_to_transform.len() {
-        let polygon = self
-          .polygons_to_transform
+      for i in 0..self.tiles_to_transform.len() {
+        let tile = self
+          .tiles_to_transform
           .get(i)
           .ok_or(TilingError::InvalidTransform {
             transform: "rotate".into(),
-            reason: "polygon not found".into(),
+            reason: "tile not found".into(),
           })?;
 
-        let next_polygon = polygon
+        let next_tile = tile
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
           .rotate(value, None);
 
-        self.add_polygon(stage, next_polygon)?;
+        self.add_tile(stage, next_tile)?;
       }
 
       self.complete_stage(stage);
@@ -813,16 +810,16 @@ impl Plane {
 
     let stage_index = self.stages.len() as u16;
 
-    std::mem::take(&mut self.polygons_to_transform)
+    std::mem::take(&mut self.tiles_to_transform)
       .iter()
-      .map(|polygon| {
-        polygon
+      .map(|tile| {
+        tile
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
           .reflect(&line_segment)
       })
-      .try_for_each(|polygon| self.add_polygon(stage, polygon))?;
+      .try_for_each(|tile| self.add_tile(stage, tile))?;
 
     self.complete_stage(stage);
 
@@ -837,7 +834,7 @@ impl Plane {
     origin_type: &OriginType,
     origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
-    let polygons = std::mem::take(&mut self.polygons_to_transform);
+    let tiles = std::mem::take(&mut self.tiles_to_transform);
 
     let origin = self
       .get_point_by_index_and_type(origin_type, origin_index)
@@ -848,16 +845,16 @@ impl Plane {
 
     let stage_index = self.stages.len() as u16;
 
-    polygons
+    tiles
       .iter()
-      .map(|polygon| {
-        polygon
+      .map(|tile| {
+        tile
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
           .rotate(PI, Some(&origin))
       })
-      .try_for_each(|polygon| self.add_polygon(stage, polygon))?;
+      .try_for_each(|tile| self.add_tile(stage, tile))?;
 
     self.complete_stage(stage);
 
@@ -866,13 +863,11 @@ impl Plane {
 
   fn validate_overlaps(
     &mut self,
-    polygon: &Polygon,
+    tile: &Tile,
     line_segment: &LineSegment,
   ) -> Result<(), TilingError> {
     self.metrics.resume(validation::Flag::Overlaps.into());
-    let result = self
-      .validator
-      .validate_overlaps(self, polygon, line_segment);
+    let result = self.validator.validate_overlaps(self, tile, line_segment);
     self.metrics.pause(validation::Flag::Overlaps.into());
     result.map_err(|error| error.into())
   }
@@ -918,12 +913,12 @@ impl Default for Plane {
       points_mid: SpatialGridMap::new("points_mid").with_resize_method(ResizeMethod::First),
       points_mid_extended: SpatialGridMap::new("points_mid_extended")
         .with_resize_method(ResizeMethod::First),
-      polygons: SpatialGridMap::new("polygons").with_resize_method(ResizeMethod::Minimum),
-      polygons_placement: SpatialGridMap::new("polygons_placement")
+      tiles: SpatialGridMap::new("tiles").with_resize_method(ResizeMethod::Minimum),
+      placement_tiles: SpatialGridMap::new("tiles_placement")
         .with_resize_method(ResizeMethod::Minimum),
-      polygons_to_transform: Vec::new(),
-      seed_polygon: None,
-      stage_added_polygon: false,
+      tiles_to_transform: Vec::new(),
+      seed_tile: None,
+      stage_added_tile: false,
       stages: Vec::new(),
     }
   }

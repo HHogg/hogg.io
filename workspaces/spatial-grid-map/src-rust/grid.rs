@@ -185,6 +185,10 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       .flat_map(|bucket| bucket.iter_values())
   }
 
+  pub fn first(&self) -> Option<&TEntryValue> {
+    self.iter_values().next()
+  }
+
   pub fn size(&self) -> usize {
     self.store.values().map(|bucket| bucket.size()).sum()
   }
@@ -256,6 +260,19 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   pub fn increment_counter(&mut self, point: &location::Point, counter: &str) {
     if let Some(bucket) = self.get_bucket_by_point_mut(point) {
       bucket.increment_counter(point, counter)
+    }
+  }
+
+  pub fn has_visited(&self, point: &location::Point) -> &bool {
+    self
+      .get_bucket_by_point(point)
+      .and_then(|bucket| bucket.get_bool_state(point, "visited"))
+      .unwrap_or(&false)
+  }
+
+  pub fn visit(&mut self, point: &location::Point) {
+    if let Some(bucket) = self.get_bucket_by_point_mut(point) {
+      bucket.set_bool_state(point, "visited", true)
     }
   }
 

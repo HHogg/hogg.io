@@ -2,19 +2,19 @@ use pretty_assertions::assert_eq;
 
 use super::*;
 
-fn assert_eq_points_to_points(a: Polygon, b: Vec<Point>) {
-  assert_eq!(a.points.len(), b.len());
-  assert_eq!(a.points, b);
+fn assert_eq_points_to_points(a: Tile, b: Vec<Point>) {
+  assert_eq!(a.geometry.points.len(), b.len());
+  assert_eq!(a.geometry.points, b);
 }
 
-fn assert_eq_points(a: Polygon, b: Vec<(f32, f32)>) {
+fn assert_eq_points(a: Tile, b: Vec<(f32, f32)>) {
   assert_eq_points_to_points(a, b.iter().map(|(x, y)| Point::at(*x, *y)).collect())
 }
 
 #[test]
 fn at_center_triangle() {
   assert_eq_points(
-    Polygon::default().with_shape(Shape::Triangle).at_center(),
+    Tile::default().with_shape(Shape::Triangle).at_center(),
     vec![(1.5, -0.86602545), (0.0, 0.0), (0.0, -1.7320509)],
   );
 }
@@ -22,7 +22,7 @@ fn at_center_triangle() {
 #[test]
 fn at_center_square() {
   assert_eq_points(
-    Polygon::default().with_shape(Shape::Square).at_center(),
+    Tile::default().with_shape(Shape::Square).at_center(),
     vec![
       (0.7071068, -0.7071068),
       (0.7071068, 0.7071068),
@@ -35,7 +35,7 @@ fn at_center_square() {
 #[test]
 fn at_center_hexagon() {
   assert_eq_points(
-    Polygon::default().with_shape(Shape::Hexagon).at_center(),
+    Tile::default().with_shape(Shape::Hexagon).at_center(),
     vec![
       (0.5, -0.86602545),
       (1.0, 0.0),
@@ -50,7 +50,7 @@ fn at_center_hexagon() {
 #[test]
 fn at_center_octagon() {
   assert_eq_points(
-    Polygon::default().with_shape(Shape::Octagon).at_center(),
+    Tile::default().with_shape(Shape::Octagon).at_center(),
     vec![
       (0.38268346, -0.9238795),
       (0.9238795, -0.38268346),
@@ -67,7 +67,7 @@ fn at_center_octagon() {
 #[test]
 fn at_center_dodecagon() {
   assert_eq_points(
-    Polygon::default().with_shape(Shape::Dodecagon).at_center(),
+    Tile::default().with_shape(Shape::Dodecagon).at_center(),
     vec![
       (0.25881904, -0.9659258),
       (0.7071067, -0.7071068),
@@ -91,7 +91,7 @@ fn on_line_segment_triangle() {
   let p2 = Point::at(1.5, -0.8660252);
 
   assert_eq_points(
-    Polygon::default()
+    Tile::default()
       .with_shape(Shape::Triangle)
       .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1), 0),
     vec![(1.5, -2.598076), (p2.x, p2.y), (p1.x, p1.y)],
@@ -104,7 +104,7 @@ fn on_line_segment_square() {
   let p2 = Point::at(1.5, -0.8660252);
 
   assert_eq_points(
-    Polygon::default()
+    Tile::default()
       .with_shape(Shape::Square)
       .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1), 0),
     vec![
@@ -122,7 +122,7 @@ fn on_line_segment_hexagon() {
   let p2 = Point::at(1.5, -0.8660252);
 
   assert_eq_points(
-    Polygon::default()
+    Tile::default()
       .with_shape(Shape::Hexagon)
       .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1), 0),
     vec![
@@ -142,7 +142,7 @@ fn on_line_segment_octagon() {
   let p2 = Point::at(1.5, -0.8660252);
 
   assert_eq_points(
-    Polygon::default()
+    Tile::default()
       .with_shape(Shape::Octagon)
       .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1), 0),
     vec![
@@ -164,7 +164,7 @@ fn on_line_segment_dodecagon() {
   let p2 = Point::at(1.5, -0.8660252);
 
   assert_eq_points(
-    Polygon::default()
+    Tile::default()
       .with_shape(Shape::Dodecagon)
       .on_line_segment(&LineSegment::default().with_start(p2).with_end(p1), 0),
     vec![
@@ -186,7 +186,7 @@ fn on_line_segment_dodecagon() {
 
 #[test]
 fn equality_exactly_the_same_values() {
-  let shape1 = Polygon::default()
+  let shape1 = Tile::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
       Point::at(0.0, 0.0),
@@ -194,7 +194,7 @@ fn equality_exactly_the_same_values() {
       Point::at(0.5, 0.866_025_4),
     ]);
 
-  let shape2 = Polygon::default()
+  let shape2 = Tile::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
       Point::at(0.0, 0.0),
@@ -207,7 +207,7 @@ fn equality_exactly_the_same_values() {
 
 #[test]
 fn equality_close_to_the_same_values() {
-  let shape1 = Polygon::default()
+  let shape1 = Tile::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
       Point::at(4.440_892e-16, 1.732_050_8),
@@ -215,7 +215,7 @@ fn equality_close_to_the_same_values() {
       Point::at(1.5, 0.866_025_4),
     ]);
 
-  let shape2 = Polygon::default()
+  let shape2 = Tile::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
       Point::at(1.5, 0.866_025_4),
@@ -228,7 +228,7 @@ fn equality_close_to_the_same_values() {
 
 #[test]
 fn equality_different_values() {
-  let shape1 = Polygon::default()
+  let shape1 = Tile::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
       Point::at(0.0, 0.0),
@@ -236,7 +236,7 @@ fn equality_different_values() {
       Point::at(0.5, 0.866_025_4),
     ]);
 
-  let shape2 = Polygon::default()
+  let shape2 = Tile::default()
     .with_shape(Shape::Triangle)
     .with_points(vec![
       Point::at(0.0, 0.0),

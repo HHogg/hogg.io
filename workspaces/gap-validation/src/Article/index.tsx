@@ -1,5 +1,6 @@
 import {
   ArticleFig,
+  ArticleFigCodeBlock,
   ArticleFigLink,
   ArticleFigs,
   ArticlePage,
@@ -19,6 +20,7 @@ import {
   Text,
   colorNegativeShade4,
 } from 'preshape';
+import fileContent from '../../src-rust/lib.rs?raw';
 
 const tilingRendererOptions: DeepPartial<Options> = {
   autoRotate: true,
@@ -142,8 +144,8 @@ const Article = () => {
         <ArticleParagraph>
           Using the helpful spatial hashing data structure I wrote about in my{' '}
           <ProjectPageLink project={spatialGridMapMeta} /> project. We can
-          create a helpful lookup store where we can quickly find the edges that
-          are adjacent to a given edge.
+          create a lookup store to quickly find the edges that are adjacent to a
+          given edge.
         </ArticleParagraph>
 
         <ArticleParagraph>
@@ -153,8 +155,19 @@ const Article = () => {
           <ProjectPageLink project={spatialGridMapMeta}>
             <Code language="rust">{`SpatialGridMap<LineSegment>`}</Code>
           </ProjectPageLink>
-          .
+          , where each line segment's lookup key is the midpoint of the line
+          segment.
         </ArticleParagraph>
+
+        <ArticleFigs>
+          <ArticleFigCodeBlock
+            id="full-implementation"
+            description="Full implementation for detecting if a set of line segments form a complete edge circuit, and therefore a tiling without gaps"
+            language="rust"
+          >
+            {fileContent}
+          </ArticleFigCodeBlock>
+        </ArticleFigs>
       </ArticleSection>
     </ArticlePage>
   );

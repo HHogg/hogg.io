@@ -71,9 +71,11 @@ export default function ArrangementInformation() {
             <CopyToClipboardCard text={notation} size="x3" />
           </Section>
 
-          <Section title="Hash">
-            <CopyToClipboardCard text={hash} size="x3" />
-          </Section>
+          {hash && (
+            <Section title="Hash">
+              <CopyToClipboardCard text={hash} size="x3" />
+            </Section>
+          )}
         </>
       )}
 

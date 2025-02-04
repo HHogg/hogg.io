@@ -1,7 +1,8 @@
 use circular_sequence::SequenceStore;
+use geometry::Point;
 use spatial_grid_map::{location, SpatialGridMap};
 
-use crate::{build::PointSequence, geometry::Point, Tiling};
+use crate::{build::PointSequence, Tiling};
 
 // The shape types is a unique shape face. It is determined
 // by the sequence of vertex types that make it up. As the
@@ -37,11 +38,11 @@ impl Hash {
     for sequence in tiling.plane.iter_core_center_complete_point_sequences() {
       let polygon = tiling
         .plane
-        .polygons
+        .tiles
         .get_value(&sequence.center.into())
         .expect("Polygon not found");
 
-      for vertex_point in polygon.points.iter() {
+      for vertex_point in polygon.geometry.points.iter() {
         let sequence_index = tiling
           .plane
           .get_core_end_complete_point_sequence(vertex_point)
@@ -56,8 +57,8 @@ impl Hash {
         self.update_shape_point_sequence(
           &mut shape_sequences,
           &mut shape_sequence_store,
-          &polygon.centroid,
-          &polygon.points.len(),
+          &polygon.geometry.centroid,
+          &polygon.geometry.points.len(),
           vertex_point,
           sequence_index,
         );
@@ -70,7 +71,7 @@ impl Hash {
     self.hash = self.sequence_store.to_string();
   }
 
-  fn update_from_hashes(&mut self, tiling: &Tiling) {}
+  fn update_from_hashes(&mut self, _tiling: &Tiling) {}
 
   fn update_shape_point_sequence(
     &mut self,

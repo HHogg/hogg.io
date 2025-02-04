@@ -37,10 +37,12 @@ export default function ArticleFigCodeBlock({
     }
   }, []);
 
-  const contents = children
+  const lines = children
     .split('\n')
-    .slice((startLineNumber ?? 1) - 1, endLineNumber)
-    .join('\n');
+    .slice((startLineNumber ?? 1) - 1, endLineNumber);
+  const leadingSpaces = lines[0].match(/^\s*/)?.[0].length ?? 0;
+
+  const contents = lines.map((line) => line.slice(leadingSpaces)).join('\n');
 
   return (
     <ArticleFig {...rest} flex="horizontal" padding="x0">

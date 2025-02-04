@@ -12,6 +12,8 @@ strip = true
 [workspace]
 members = [
   "workspaces/circular-sequence",
+  "workspaces/gap-validation",
+  "workspaces/geometry",
   "workspaces/line-segment-extending",
   "workspaces/spatial-grid-map",
   "workspaces/tilings/src-rust/*",

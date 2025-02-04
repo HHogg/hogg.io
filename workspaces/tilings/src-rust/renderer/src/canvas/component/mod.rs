@@ -9,7 +9,7 @@ mod line_segment_arrows;
 mod point;
 mod polygon;
 
-use tiling::geometry::BBox;
+use geometry::BBox;
 
 pub use self::arc::Arc;
 pub use self::arc_arrow::ArcArrow;

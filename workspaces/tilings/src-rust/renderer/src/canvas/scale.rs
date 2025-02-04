@@ -1,7 +1,7 @@
 use core::f32;
 
+use geometry::{BBox, ConvexHull};
 use serde::{Deserialize, Serialize};
-use tiling::geometry::{BBox, ConvexHull};
 use typeshare::typeshare;
 
 use crate::Error;

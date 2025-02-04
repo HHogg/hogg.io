@@ -1,5 +1,5 @@
+use geometry::BBox;
 use spatial_grid_map::{location, ResizeMethod, SpatialGridMap};
-use tiling::geometry::BBox;
 
 use super::component::{Component, Draw};
 use super::Scale;

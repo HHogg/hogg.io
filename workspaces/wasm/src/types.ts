@@ -6,12 +6,42 @@ export type Sequence = [number, number, number, number, number, number, number, 
 
 export type NodeId = string;
 
+export interface Point {
+	x: number;
+	y: number;
+	index: number;
+}
+
+export interface BBox {
+	center: Point;
+	width: number;
+	height: number;
+	rotation: number;
+}
+
+export interface ConvexHull {
+	points: Point[];
+}
+
+export interface LineSegment {
+	start: Point;
+	end: Point;
+}
+
+export interface Polygon {
+	bbox: BBox;
+	centroid: Point;
+	lineSegments: LineSegment[];
+	points: Point[];
+}
+
 export interface BucketEntry<TEntryValue> {
 	point: number[];
 	size: number;
 	rotation?: number;
 	value: TEntryValue;
 	counters: Record<string, number>;
+	bools: Record<string, boolean>;
 }
 
 export interface Bucket<TEntryValue> {
@@ -260,24 +290,6 @@ export interface Metrics {
 	eventsPending: Record<string, Event>;
 }
 
-export interface Point {
-	x: number;
-	y: number;
-	index: number;
-}
-
-export interface BBox {
-	center: Point;
-	width: number;
-	height: number;
-	rotation: number;
-}
-
-export interface LineSegment {
-	start: Point;
-	end: Point;
-}
-
 export enum Offset {
 	Center = "Center",
 }
@@ -290,13 +302,10 @@ export type Stage =
 	repetition_index: number;
 }};
 
-export interface Polygon {
-	bbox: BBox;
-	centroid: Point;
+export interface Tile {
+	geometry: Polygon;
 	index: number;
-	lineSegments: LineSegment[];
 	offset: Offset;
-	points: Point[];
 	shape: Shape;
 	stage: Stage;
 	stageIndex: number;
@@ -316,9 +325,9 @@ export interface PointSequence {
 }
 
 export interface Plane {
-	polygons: SpatialGridMap<Polygon>;
-	polygonsPlacement: SpatialGridMap<Polygon>;
-	seedPolygon?: Polygon;
+	tiles: SpatialGridMap<Tile>;
+	placementTiles: SpatialGridMap<Tile>;
+	seedTile?: Tile;
 	repetitions: number;
 	lineSegments: SpatialGridMap<LineSegment>;
 	pointsCenter: SpatialGridMap<PointSequence>;
@@ -388,7 +397,7 @@ export interface Result {
 	notation: string;
 	expansionPhases: number;
 	error?: TilingError;
-	hash: Hash;
+	hash: string;
 	transformIndex: number;
 	timestamp: string;
 	metrics: Metrics;
@@ -400,10 +409,6 @@ export interface Result {
 export interface ApplicationError {
 	tiling: string;
 	reason: string;
-}
-
-export interface ConvexHull {
-	points: Point[];
 }
 
 export interface Path {

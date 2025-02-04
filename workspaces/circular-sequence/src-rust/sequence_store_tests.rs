@@ -36,5 +36,5 @@ fn to_string() {
     [3, 3, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ]);
 
-  assert_eq!(format!("{store}"), "3².6; 3.6².3.6²");
+  assert_eq!(format!("{store}"), "3².6;3.6².3.6²");
 }

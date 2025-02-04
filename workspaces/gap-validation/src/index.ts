@@ -1,15 +1,16 @@
 import { type Project, ProjectKey } from '@hogg/common';
+import image from './image.webp';
 
 export { default as Project } from './Project';
 
 export const meta: Project = {
   id: ProjectKey.gap_validation,
-  name: 'Validating a tiled plane for gaps',
+  name: 'Detecting Gaps in Euclidean Tilings',
   description:
-    'An approach for checking a tiled plane for gaps by ensure there is a single continuous perimeter.',
-  tags: ['algorithms', 'data structures', 'sequences', 'rust'],
-  deploy: false,
-  wip: true,
-  created: '2099-12-12',
-  updated: '2099-12-12',
+    'Short article explaining how to detect gaps in tilings using line segments to form complete circuits, in linear time.',
+  image,
+  tags: ['algorithm', 'data structures', 'rust'],
+  deploy: true,
+  created: '2025-02-04',
+  updated: '2025-02-04',
 };

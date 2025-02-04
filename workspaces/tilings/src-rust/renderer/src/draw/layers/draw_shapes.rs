@@ -70,15 +70,15 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
   let shape_types = tiling.plane.get_shape_types();
   let shape_types_by_index = tiling
     .plane
-    .iter_polygons_placement()
-    .map(|polygon| {
+    .iter_placement_tiles()
+    .map(|tile| {
       (
-        polygon.index,
+        tile.index,
         shape_types.get_index(
           &tiling
             .plane
             .points_center
-            .get_value(&polygon.centroid.into())
+            .get_value(&tile.geometry.centroid.into())
             .expect("Expected to find a sequence for point center")
             .sequence,
         ),
@@ -89,16 +89,16 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
     })
     .collect::<HashMap<u16, u8>>();
 
-  for shape in tiling.plane.iter_polygons() {
+  for tile in tiling.plane.iter_tiles() {
     if let Some(max_stage) = options.max_stage {
-      if shape.stage_index > max_stage {
+      if tile.stage_index > max_stage {
         continue;
       }
     }
 
     let color_index = match color_mode {
-      ColorMode::Placement => *shape_types_by_index.get(&shape.index).unwrap_or(&0) as f32,
-      ColorMode::Stage => shape.stage_index as f32,
+      ColorMode::Placement => *shape_types_by_index.get(&tile.index).unwrap_or(&0) as f32,
+      ColorMode::Stage => tile.stage_index as f32,
     };
 
     let fill = gradient
@@ -110,7 +110,7 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
       Layer::ShapeFill,
       Polygon::default()
         .non_interactive()
-        .with_polygon(shape.clone())
+        .with_polygon(tile.geometry.clone())
         .with_style(
           options
             .styles
@@ -127,7 +127,7 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
       Layer::ShapeBorder,
       Polygon::default()
         .non_interactive()
-        .with_polygon(shape.clone())
+        .with_polygon(tile.geometry.clone())
         .with_style(
           options
             .styles

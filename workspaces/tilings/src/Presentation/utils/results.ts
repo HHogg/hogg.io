@@ -1,10 +1,10 @@
-import { Result } from '@hogg/wasm';
 import groupBy from 'lodash/groupBy';
 import uniqueTilings from '../../../results/output.json';
 
 export type ImageModule = { default: string };
 
-export const results = uniqueTilings as Result[];
+export const results = uniqueTilings;
+export type OutputResult = (typeof results)[number];
 
 export const getRandomNotation = (previous: string): string => {
   const randomResult = results[Math.floor(Math.random() * results.length)];
@@ -14,11 +14,11 @@ export const getRandomNotation = (previous: string): string => {
 };
 
 export const groupResultsByUniform = (
-  results: Result[]
-): Record<string, Result[]> => groupBy(results, 'uniform');
+  results: OutputResult[]
+): Record<string, OutputResult[]> => groupBy(results, 'uniform');
 
-const indexResultsBy = (key: keyof Pick<Result, 'notation'>) =>
-  results.reduce<Record<string, Result>>((acc, tiling) => {
+const indexResultsBy = (key: keyof Pick<OutputResult, 'notation'>) =>
+  results.reduce<Record<string, OutputResult>>((acc, tiling) => {
     acc[tiling[key]] = tiling;
     return acc;
   }, {});
