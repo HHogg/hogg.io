@@ -1,6 +1,6 @@
 use core::f32;
 
-use geometry::{BBox, ConvexHull};
+use hogg_geometry::{BBox, ConvexHull};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 

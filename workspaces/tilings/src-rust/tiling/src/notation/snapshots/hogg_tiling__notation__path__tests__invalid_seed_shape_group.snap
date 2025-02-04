@@ -1,6 +1,6 @@
 ---
 source: workspaces/tilings/src-rust/tiling/src/notation/./path_tests.rs
-expression: "Path::default().from_string(\"2\")"
+expression: "Path::default().from_string(\"2\", false)"
 ---
 Err(
     InvalidShape {

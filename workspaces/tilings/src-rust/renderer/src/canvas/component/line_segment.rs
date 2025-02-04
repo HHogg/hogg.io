@@ -1,4 +1,4 @@
-use geometry::{BBox, Point};
+use hogg_geometry::{BBox, Point};
 
 use super::{Draw, Style};
 use crate::canvas::collision::Theia;
@@ -89,7 +89,7 @@ impl Draw for LineSegment {
       2 => {
         let a = points[0];
         let b = points[1];
-        let line_segment = geometry::LineSegment::default()
+        let line_segment = hogg_geometry::LineSegment::default()
           .with_start(a)
           .with_end(b)
           .extend_to_bbox(content_bbox, self.extend_start, self.extend_end);
@@ -168,7 +168,7 @@ pub fn get_extended_points_to_bbox(
     let mut point = *point;
 
     if extend_start && index == 0 {
-      let line_segment = geometry::LineSegment::default()
+      let line_segment = hogg_geometry::LineSegment::default()
         .with_start(points[0])
         .with_end(points[1])
         .extend_to_bbox(bbox, extend_start, false);
@@ -176,7 +176,7 @@ pub fn get_extended_points_to_bbox(
     }
 
     if extend_end && index == points.len() - 1 {
-      let line_segment = geometry::LineSegment::default()
+      let line_segment = hogg_geometry::LineSegment::default()
         .with_start(points[points.len() - 2])
         .with_end(points[points.len() - 1])
         .extend_to_bbox(bbox, false, extend_end);

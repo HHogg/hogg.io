@@ -1,6 +1,6 @@
 pub use actix::prelude::*;
 use anyhow::Result;
-use tiling::notation::Path;
+use hogg_tiling::notation::Path;
 
 #[derive(Debug)]
 pub struct PathResponse {

@@ -6,8 +6,8 @@ mod style;
 use std::collections::{BTreeMap, HashMap, VecDeque};
 
 use anyhow::Result;
-use geometry::BBox;
-use tiling::Tiling;
+use hogg_geometry::BBox;
+use hogg_tiling::Tiling;
 use wasm_bindgen::JsCast;
 
 use self::collision::Theia;

@@ -12,7 +12,7 @@ pub fn draw_axis(canvas: &mut Canvas, options: &Options) -> Result<(), Error> {
     Layer::Axis,
     Point::default()
       .non_interactive()
-      .with_point(geometry::Point::default())
+      .with_point(hogg_geometry::Point::default())
       .with_style(style.clone())
       .into(),
   )?;
@@ -22,9 +22,9 @@ pub fn draw_axis(canvas: &mut Canvas, options: &Options) -> Result<(), Error> {
     LineSegment::default()
       .non_interactive()
       .with_points(
-        geometry::LineSegment::default()
-          .with_start(geometry::Point::at(-0.5, 0.0))
-          .with_end(geometry::Point::at(-1.0, 0.0))
+        hogg_geometry::LineSegment::default()
+          .with_start(hogg_geometry::Point::at(-0.5, 0.0))
+          .with_end(hogg_geometry::Point::at(-1.0, 0.0))
           .into(),
       )
       .with_style(style.clone())
@@ -37,9 +37,9 @@ pub fn draw_axis(canvas: &mut Canvas, options: &Options) -> Result<(), Error> {
     LineSegment::default()
       .non_interactive()
       .with_points(
-        geometry::LineSegment::default()
-          .with_start(geometry::Point::at(0.5, 0.0))
-          .with_end(geometry::Point::at(1.0, 0.0))
+        hogg_geometry::LineSegment::default()
+          .with_start(hogg_geometry::Point::at(0.5, 0.0))
+          .with_end(hogg_geometry::Point::at(1.0, 0.0))
           .into(),
       )
       .with_style(style.clone())
@@ -52,9 +52,9 @@ pub fn draw_axis(canvas: &mut Canvas, options: &Options) -> Result<(), Error> {
     LineSegment::default()
       .non_interactive()
       .with_points(
-        geometry::LineSegment::default()
-          .with_start(geometry::Point::at(0.0, -0.5))
-          .with_end(geometry::Point::at(0.0, -1.0))
+        hogg_geometry::LineSegment::default()
+          .with_start(hogg_geometry::Point::at(0.0, -0.5))
+          .with_end(hogg_geometry::Point::at(0.0, -1.0))
           .into(),
       )
       .with_style(style.clone())
@@ -67,9 +67,9 @@ pub fn draw_axis(canvas: &mut Canvas, options: &Options) -> Result<(), Error> {
     LineSegment::default()
       .non_interactive()
       .with_points(
-        geometry::LineSegment::default()
-          .with_start(geometry::Point::at(0.0, 0.5))
-          .with_end(geometry::Point::at(0.0, 1.0))
+        hogg_geometry::LineSegment::default()
+          .with_start(hogg_geometry::Point::at(0.0, 0.5))
+          .with_end(hogg_geometry::Point::at(0.0, 1.0))
           .into(),
       )
       .with_style(style.clone())

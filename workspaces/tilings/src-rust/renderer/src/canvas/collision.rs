@@ -1,5 +1,5 @@
-use geometry::BBox;
-use spatial_grid_map::{location, ResizeMethod, SpatialGridMap};
+use hogg_geometry::BBox;
+use hogg_spatial_grid_map::{location, ResizeMethod, SpatialGridMap};
 
 use super::component::{Component, Draw};
 use super::Scale;

@@ -1,8 +1,8 @@
 use actix::prelude::*;
 use anyhow::Result;
+use hogg_tiling::{notation::Path, ApplicationError};
+use hogg_tiling_datastore::tilings;
 use serde::Serialize;
-use tiling::{notation::Path, ApplicationError};
-use tiling_datastore::tilings;
 
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct VisitResult {
@@ -26,7 +26,7 @@ impl VisitResult {
     self.application_errors.push(error);
   }
 
-  pub fn add_valid_tiling(&mut self, result: &tiling::build::Result) {
+  pub fn add_valid_tiling(&mut self, result: &hogg_tiling::build::Result) {
     self.valid_results.push(tilings::VisitResultValid {
       notation: result.notation.to_string(),
       hash: result.get_hash(),

@@ -1,7 +1,7 @@
 use serde::Serialize;
 use sqlx::postgres::PgRow;
 use sqlx::{FromRow, Row};
-use tiling::notation::Path;
+use hogg_tiling::notation::Path;
 
 mod get_by_path;
 mod get_facets;

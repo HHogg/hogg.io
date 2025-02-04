@@ -1,4 +1,4 @@
-use circular_sequence::{Sequence, SequenceStore};
+use hogg_circular_sequence::{Sequence, SequenceStore};
 
 /// A store for the possible vertex types of a tiling.
 #[derive(Clone, Debug)]
@@ -10,7 +10,7 @@ impl VertexTypes {
   pub fn matches_exactly(&self, sequence: &Sequence) -> bool {
     matches!(
       self.store.get_match(sequence),
-      circular_sequence::Match::Exact(_)
+      hogg_circular_sequence::Match::Exact(_)
     )
   }
 }

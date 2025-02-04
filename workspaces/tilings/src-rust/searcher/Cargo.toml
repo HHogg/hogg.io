@@ -1,5 +1,5 @@
 [package]
-name = "tiling-searcher"
+name = "hogg_tiling_searcher"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
@@ -12,20 +12,19 @@ name = "tiling-searcher"
 path = "src/main.rs"
 
 [dependencies]
-anyhow.workspace = true
-serde.workspace = true
-serde_json.workspace = true
-sqlx.workspace = true
-tokio.workspace = true
-tokio-util.workspace = true
-tracing.workspace = true
-tracing-appender.workspace = true
-tracing-subscriber.workspace = true
-typeshare.workspace = true
-
 actix = "0.13.0"
+anyhow.workspace = true
 async-channel = "2.2.1"
 clap = { version = "4.1.8", features = ["derive"] }
+hogg_tiling = { path = "../tiling" }
+hogg_tiling_datastore = { path = "../datastore" }
 nanoid = "0.4.0"
-tiling = { path = "../tiling" }
-tiling-datastore = { path = "../datastore" }
+serde_json.workspace = true
+serde.workspace = true
+sqlx.workspace = true
+tokio-util.workspace = true
+tokio.workspace = true
+tracing-appender.workspace = true
+tracing-subscriber.workspace = true
+tracing.workspace = true
+typeshare.workspace = true

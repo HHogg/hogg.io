@@ -7,8 +7,8 @@ mod visitor;
 use actix::prelude::*;
 use anyhow::Result;
 use clap::{arg, command, Parser};
+use hogg_tiling_datastore::get_pool;
 use issuer::Issuer;
-use tiling_datastore::get_pool;
 use tokio::signal;
 
 use crate::datastore::{errors, insights, sessions, state, tilings, visits};

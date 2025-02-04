@@ -3,7 +3,7 @@ use std::fmt::Display;
 use anyhow::Result;
 use serde::Deserialize;
 use sqlx::{Pool, Postgres};
-use tiling::notation::Shape;
+use hogg_tiling::notation::Shape;
 use typeshare::typeshare;
 
 use super::Visit;

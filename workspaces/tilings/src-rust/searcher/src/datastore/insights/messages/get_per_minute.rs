@@ -1,7 +1,7 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling_datastore::insights::{self, InsightsPerMinute};
-use tiling_datastore::ResponseMultiple;
+use hogg_tiling_datastore::insights::{self, InsightsPerMinute};
+use hogg_tiling_datastore::ResponseMultiple;
 
 use crate::datastore::insights::Store;
 

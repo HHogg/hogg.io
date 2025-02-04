@@ -4,7 +4,7 @@ mod tests;
 
 use std::f32::consts::PI;
 
-use geometry::{LineSegment, Point};
+use hogg_geometry::{LineSegment, Point};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -15,7 +15,7 @@ use crate::notation::{Offset, Shape};
 #[typeshare]
 #[serde(rename_all = "camelCase")]
 pub struct Tile {
-  pub geometry: geometry::Polygon,
+  pub geometry: hogg_geometry::Polygon,
   pub index: u16,
   pub offset: Offset,
   pub shape: Shape,
@@ -25,7 +25,7 @@ pub struct Tile {
 
 impl Tile {
   pub fn with_points(mut self, points: Vec<Point>) -> Self {
-    self.geometry = geometry::Polygon::from_points(points);
+    self.geometry = hogg_geometry::Polygon::from_points(points);
     self
   }
 

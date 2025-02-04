@@ -13,7 +13,7 @@ pub fn draw_convex_hull(canvas: &mut Canvas, options: &Options) -> Result<(), Er
     let next_index = (index + 1) % points.len();
 
     line_segments.push(
-      geometry::LineSegment::default()
+      hogg_geometry::LineSegment::default()
         .with_start(points[index])
         .with_end(points[next_index]),
     );

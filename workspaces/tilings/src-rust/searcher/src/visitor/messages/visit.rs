@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::notation::Path;
+use hogg_tiling::notation::Path;
 
 use super::VisitResult;
 use crate::visitor::Visitor;

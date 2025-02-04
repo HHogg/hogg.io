@@ -1,5 +1,5 @@
 use serde::Serialize;
-use tiling::build::{self, Metrics};
+use hogg_tiling::build::{self, Metrics};
 use typeshare::typeshare;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::{console, js_sys, DedicatedWorkerGlobalScope};

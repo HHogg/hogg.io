@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use actix::prelude::*;
 use anyhow::Result;
-use tiling::{validation, ApplicationError, Tiling, TilingError};
+use hogg_tiling::{validation, ApplicationError, Tiling, TilingError};
 
 use super::{messages::VisitResult, Visit};
 
@@ -27,18 +27,20 @@ impl Handler<Visit> for Worker {
 
     let visit_result = RefCell::new(VisitResult::default().with_path(path));
 
-    while let Some(result) = tiling.find_next_tiling(Some(&|result: &tiling::build::Result| {
-      visit_result.borrow_mut().increment_total_tilings();
+    while let Some(result) =
+      tiling.find_next_tiling(Some(&|result: &hogg_tiling::build::Result| {
+        visit_result.borrow_mut().increment_total_tilings();
 
-      if let Some(TilingError::Application { reason }) = result.error.as_ref() {
-        visit_result
-          .borrow_mut()
-          .add_application_error(ApplicationError {
-            tiling: result.notation.clone(),
-            reason: reason.clone(),
-          });
-      }
-    }))? {
+        if let Some(TilingError::Application { reason }) = result.error.as_ref() {
+          visit_result
+            .borrow_mut()
+            .add_application_error(ApplicationError {
+              tiling: result.notation.clone(),
+              reason: reason.clone(),
+            });
+        }
+      }))?
+    {
       visit_result.borrow_mut().add_valid_tiling(result);
     }
 

@@ -4,7 +4,7 @@ mod tests;
 
 use std::fmt::Display;
 
-use line_segment_extending::extend_line_segment;
+use hogg_line_segment_extending::extend_line_segment;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 

@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
-use tiling::notation::{Operation, OriginIndex, OriginType};
-use tiling::Tiling;
+use hogg_tiling::notation::{Operation, OriginIndex, OriginType};
+use hogg_tiling::Tiling;
 
 use super::Layer;
 use crate::canvas::{ArcArrow, Canvas, LineSegment, LineSegmentArrows, Point, Style};
@@ -74,15 +74,15 @@ pub fn draw_transform_eccentric(
 
 fn draw_transform_eccentric_reflect(
   canvas: &mut Canvas,
-  origin_point: &geometry::Point,
-  line_segment: geometry::LineSegment,
+  origin_point: &hogg_geometry::Point,
+  line_segment: hogg_geometry::LineSegment,
   style: &Style,
 ) -> Result<(), Error> {
-  let line_segment_p1 = geometry::LineSegment::default()
+  let line_segment_p1 = hogg_geometry::LineSegment::default()
     .with_start(*origin_point)
     .with_end(line_segment.start);
 
-  let line_segment_p2 = geometry::LineSegment::default()
+  let line_segment_p2 = hogg_geometry::LineSegment::default()
     .with_start(*origin_point)
     .with_end(line_segment.end);
 
@@ -114,7 +114,7 @@ fn draw_transform_eccentric_reflect(
 fn draw_transform_eccentric_rotate(
   canvas: &mut Canvas,
   tiling: &Tiling,
-  origin_point: &geometry::Point,
+  origin_point: &hogg_geometry::Point,
   origin_type: &OriginType,
   style: &Style,
 ) -> Result<(), Error> {

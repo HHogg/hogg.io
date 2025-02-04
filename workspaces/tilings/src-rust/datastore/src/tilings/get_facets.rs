@@ -3,7 +3,7 @@ use std::fmt::{Display, Formatter};
 use anyhow::Result;
 use serde::Deserialize;
 use sqlx::{FromRow, Pool, Postgres};
-use tiling::notation::Shape;
+use hogg_tiling::notation::Shape;
 use typeshare::typeshare;
 
 use crate::utils::{get_show_nodes_condition, FacetValue};

@@ -1,5 +1,5 @@
-use circular_sequence::Sequence;
-use geometry::Point;
+use hogg_geometry::Point;
+use hogg_circular_sequence::Sequence;
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
@@ -35,7 +35,7 @@ impl PointSequence {
     self.sequence = Sequence::default();
 
     for entry in &self.entries {
-      circular_sequence::insert(&mut self.sequence, entry.value);
+      hogg_circular_sequence::insert(&mut self.sequence, entry.value);
     }
   }
 
@@ -48,7 +48,7 @@ impl PointSequence {
   }
 
   pub fn is_complete(&self) -> bool {
-    circular_sequence::get_length(&self.sequence) == self.size as usize
+    hogg_circular_sequence::get_length(&self.sequence) == self.size as usize
   }
 }
 

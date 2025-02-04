@@ -1,5 +1,5 @@
-use geometry::LineSegment;
-use spatial_grid_map::SpatialGridMap;
+use hogg_geometry::LineSegment;
+use hogg_spatial_grid_map::SpatialGridMap;
 
 /// Checks if the line segments form a single circuit, returning
 /// true if they do and false otherwise.

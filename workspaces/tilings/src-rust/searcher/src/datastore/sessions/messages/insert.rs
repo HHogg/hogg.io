@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling_datastore::sessions::{self, Session};
+use hogg_tiling_datastore::sessions::{self, Session};
 
 use crate::datastore::sessions::Store;
 

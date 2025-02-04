@@ -4,10 +4,10 @@ mod point_tests;
 
 use std::fmt::{self, Display};
 
+use hogg_spatial_grid_map::location;
+use hogg_spatial_grid_map::utils::{coordinate_equals, get_radians_for_x_y};
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::location;
-use spatial_grid_map::utils::{coordinate_equals, get_radians_for_x_y};
 use typeshare::typeshare;
 
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]

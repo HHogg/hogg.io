@@ -1,7 +1,7 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling_datastore::tilings::{get_facets, TilingsFacetsRequest};
-use tiling_datastore::{Facet, ResponseMultiple};
+use hogg_tiling_datastore::tilings::{get_facets, TilingsFacetsRequest};
+use hogg_tiling_datastore::{Facet, ResponseMultiple};
 
 use crate::datastore::tilings::Store;
 

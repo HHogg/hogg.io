@@ -9,7 +9,7 @@ mod line_segment_arrows;
 mod point;
 mod polygon;
 
-use geometry::BBox;
+use hogg_geometry::BBox;
 
 pub use self::arc::Arc;
 pub use self::arc_arrow::ArcArrow;

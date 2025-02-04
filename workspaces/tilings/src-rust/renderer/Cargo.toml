@@ -1,5 +1,5 @@
 [package]
-name = "tiling-renderer"
+name = "hogg_tiling_renderer"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
@@ -10,9 +10,15 @@ path = "src/lib.rs"
 
 [dependencies]
 anyhow.workspace = true
+colorgrad = "0.7.0"
 console_log.workspace = true
 console_error_panic_hook.workspace = true
+hogg_circular_sequence = { path = "../../../circular-sequence" }
+hogg_geometry = { path = "../../../geometry" }
+hogg_spatial_grid_map = { path = "../../../spatial-grid-map" }
+hogg_tiling = { path = "../tiling" }
 log.workspace = true
+rand = "0.8.5"
 serde.workspace = true
 serde_json.workspace = true
 serde-wasm-bindgen.workspace = true
@@ -26,12 +32,5 @@ web-sys = { workspace = true, features = [
   'OffscreenCanvasRenderingContext2d',
 ] }
 
-colorgrad = "0.7.0"
 # This is needed as a dependecy for wasm-bindgen
 getrandom = { version = "0.2", features = ["js"] }
-rand = "0.8.5"
-
-circular_sequence = { path = "../../../circular-sequence" }
-geometry = { path = "../../../geometry" }
-spatial_grid_map = { path = "../../../spatial-grid-map" }
-tiling = { path = "../tiling" }

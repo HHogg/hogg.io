@@ -4,10 +4,10 @@ mod tests;
 
 use std::f32::consts::PI;
 
-use circular_sequence::SequenceStore;
-use geometry::{ConvexHull, LineSegment, Point};
+use hogg_circular_sequence::SequenceStore;
+use hogg_geometry::{ConvexHull, LineSegment, Point};
+use hogg_spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap};
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap};
 use typeshare::typeshare;
 
 use super::tile::Tile;

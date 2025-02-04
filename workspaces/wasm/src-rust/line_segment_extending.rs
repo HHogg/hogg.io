@@ -1,7 +1,7 @@
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsError, JsValue};
 
-use line_segment_extending::{extend_line_segment, X1Y1X2Y2};
+use hogg_line_segment_extending::{extend_line_segment, X1Y1X2Y2};
 
 #[wasm_bindgen]
 pub fn get_extended_line_segment(

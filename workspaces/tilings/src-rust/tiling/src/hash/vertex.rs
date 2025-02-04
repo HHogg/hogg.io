@@ -1,6 +1,6 @@
-use circular_sequence::SequenceStore;
-use geometry::Point;
-use spatial_grid_map::{location, SpatialGridMap};
+use hogg_geometry::Point;
+use hogg_circular_sequence::SequenceStore;
+use hogg_spatial_grid_map::{location, SpatialGridMap};
 
 use crate::{build::PointSequence, Tiling};
 
@@ -102,7 +102,7 @@ impl Hash {
     let vertex_point_sequence_size = tiling
       .plane
       .get_core_end_complete_point_sequence(&vertex_point)
-      .map(|sequence| circular_sequence::get_length(&sequence.sequence))
+      .map(|sequence| hogg_circular_sequence::get_length(&sequence.sequence))
       .unwrap_or_else(|| 0);
 
     // We only want to look at vertex points that are

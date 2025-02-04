@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 
-use geometry::{BBox, Point};
+use hogg_geometry::{BBox, Point};
 
 use super::{Draw, LineSegment, Style};
 use crate::canvas::collision::Theia;

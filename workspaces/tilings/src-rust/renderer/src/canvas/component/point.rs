@@ -1,4 +1,4 @@
-use geometry::BBox;
+use hogg_geometry::BBox;
 
 use super::{Draw, Style};
 use crate::canvas::collision::Theia;
@@ -7,7 +7,7 @@ use crate::Error;
 
 #[derive(Clone, Debug, Default)]
 pub struct Point {
-  point: geometry::Point,
+  point: hogg_geometry::Point,
   interactive: Option<bool>,
   style: Style,
 }
@@ -18,7 +18,7 @@ impl Point {
     self
   }
 
-  pub fn with_point(mut self, point: geometry::Point) -> Self {
+  pub fn with_point(mut self, point: hogg_geometry::Point) -> Self {
     self.point = point;
     self
   }
@@ -73,12 +73,12 @@ impl Draw for Point {
     let min = self
       .point
       .clone()
-      .translate(&geometry::Point::at(-radius, -radius));
+      .translate(&hogg_geometry::Point::at(-radius, -radius));
 
     let max = self
       .point
       .clone()
-      .translate(&geometry::Point::at(radius, radius));
+      .translate(&hogg_geometry::Point::at(radius, radius));
 
     BBox::from_min_max(min, max)
   }

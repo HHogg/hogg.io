@@ -1,7 +1,7 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling_datastore::visits::{get_paged, VisitsRequest};
-use tiling_datastore::ResponseMultiple;
+use hogg_tiling_datastore::visits::{get_paged, VisitsRequest};
+use hogg_tiling_datastore::ResponseMultiple;
 
 use crate::datastore::visits::{Store, Tree};
 

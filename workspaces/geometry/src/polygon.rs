@@ -1,8 +1,8 @@
 use std::cmp::Ordering;
 use std::f32::consts::PI;
 
+use hogg_spatial_grid_map::utils::compare_coordinate;
 use serde::{Deserialize, Serialize};
-use spatial_grid_map::utils::compare_coordinate;
 use typeshare::typeshare;
 
 use super::point::sort_points_around_origin;

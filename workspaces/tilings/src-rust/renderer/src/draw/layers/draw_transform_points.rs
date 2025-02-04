@@ -1,5 +1,5 @@
-use spatial_grid_map::location;
-use tiling::Tiling;
+use hogg_spatial_grid_map::location;
+use hogg_tiling::Tiling;
 
 use super::draw_shapes::VAPOR_WAVE_COLOR_PALETTE;
 use super::Layer;

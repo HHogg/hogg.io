@@ -1,4 +1,4 @@
-use geometry::{BBox, Point};
+use hogg_geometry::{BBox, Point};
 
 use super::{Component, Style};
 use crate::canvas::collision::Theia;

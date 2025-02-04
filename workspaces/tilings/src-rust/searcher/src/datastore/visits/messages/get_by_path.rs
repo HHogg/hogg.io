@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling_datastore::visits::{get_by_path, VisitRequest};
+use hogg_tiling_datastore::visits::{get_by_path, VisitRequest};
 
 use crate::datastore::visits::{Store, Tree};
 

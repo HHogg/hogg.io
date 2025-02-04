@@ -1,0 +1,14 @@
+---
+source: workspaces/spatial-grid-map/src-rust/./location_tests.rs
+expression: "get_sorted_location_ids(vec![(\"bottom-left\",\nLocation::new(2, 1.0, Point(-7.5, 7.5), None)),\n(\"bottom-right\", Location::new(2, 1.0, Point(7.5, 7.5), None)),\n(\"bottom\", Location::new(2, 1.0, Point(0.0, 7.5), None)),\n(\"left\", Location::new(2, 1.0, Point(-7.5, 0.0), None)),\n(\"right\", Location::new(2, 1.0, Point(7.5, 0.0), None)),\n(\"top-left\", Location::new(2, 1.0, Point(-7.5, -7.5), None)),\n(\"top-right\", Location::new(2, 1.0, Point(7.5, -7.5), None)),\n(\"top\", Location::new(2, 1.0, Point(0.0, -7.5), None)),])"
+---
+[
+    "top",
+    "top-right",
+    "right",
+    "bottom-right",
+    "bottom",
+    "bottom-left",
+    "left",
+    "top-left",
+]

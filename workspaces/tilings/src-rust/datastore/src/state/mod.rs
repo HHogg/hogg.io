@@ -1,4 +1,4 @@
-use tiling::notation::Path;
+use hogg_tiling::notation::Path;
 
 mod get;
 mod set;

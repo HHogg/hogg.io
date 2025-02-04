@@ -1,9 +1,9 @@
+use hogg_tiling::build::Metrics;
+use hogg_tiling::validation::Flag;
+use hogg_tiling::Tiling;
+use hogg_tiling_renderer::draw;
 use std::cell::RefCell;
 use std::rc::Rc;
-use tiling::build::Metrics;
-use tiling::validation::Flag;
-use tiling::Tiling;
-use tiling_renderer::draw;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 use web_sys::js_sys;
@@ -63,7 +63,7 @@ pub struct RenderLoopState {
   canvas: Option<OffscreenCanvas>,
   expansion_phases: u8,
   notation: String,
-  render_options: tiling_renderer::Options,
+  render_options: hogg_tiling_renderer::Options,
   speed: f32,
   width: u32,
   height: u32,
@@ -85,7 +85,7 @@ impl Default for RenderLoopState {
       canvas: None,
       expansion_phases: 0,
       notation: String::new(),
-      render_options: tiling_renderer::Options::default(),
+      render_options: hogg_tiling_renderer::Options::default(),
       speed: 1.0,
       width: 0,
       height: 0,
@@ -257,7 +257,7 @@ impl RenderLoopInner {
     Ok(())
   }
 
-  pub fn set_render_options(&self, render_options: tiling_renderer::Options) {
+  pub fn set_render_options(&self, render_options: hogg_tiling_renderer::Options) {
     self.state.borrow_mut().render_options = render_options;
     self.set_draw();
   }

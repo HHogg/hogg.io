@@ -51,7 +51,7 @@ impl RenderLoop {
 
   pub fn set_render_options(&self, options: &JsValue) -> Result<(), JsValue> {
     let render_options =
-      serde_wasm_bindgen::from_value::<tiling_renderer::Options>(options.to_owned())?;
+      serde_wasm_bindgen::from_value::<hogg_tiling_renderer::Options>(options.to_owned())?;
 
     self.inner.set_render_options(render_options);
 

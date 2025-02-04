@@ -1,8 +1,8 @@
 use actix::prelude::*;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
-use tiling_datastore::sessions::{self, Session};
-use tiling_datastore::ResponseMultiple;
+use hogg_tiling_datastore::sessions::{self, Session};
+use hogg_tiling_datastore::ResponseMultiple;
 
 use crate::datastore::sessions::Store;
 

@@ -2,9 +2,9 @@ use std::fs::File;
 use std::io::Write;
 
 use anyhow::Result;
+use hogg_tiling_datastore::insights::{self, InsightsPerMinute};
 use serde::Serialize;
 use sqlx::PgPool;
-use tiling_datastore::insights::{self, InsightsPerMinute};
 
 #[derive(Default, Serialize)]
 struct Insights {

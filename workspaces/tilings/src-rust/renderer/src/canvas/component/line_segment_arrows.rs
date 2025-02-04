@@ -1,4 +1,4 @@
-use geometry::{BBox, LineSegment, LineSegmentOrigin};
+use hogg_geometry::{BBox, LineSegment, LineSegmentOrigin};
 
 use super::{Arrow, Draw, Style};
 use crate::canvas::Scale;

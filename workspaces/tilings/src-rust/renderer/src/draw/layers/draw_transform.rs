@@ -1,6 +1,6 @@
 use anyhow::Result;
-use tiling::notation::{Transform, TransformContinuous, TransformEccentric};
-use tiling::{build, Tiling};
+use hogg_tiling::notation::{Transform, TransformContinuous, TransformEccentric};
+use hogg_tiling::{build, Tiling};
 
 use super::{draw_transform_continuous, draw_transform_eccentric};
 use crate::canvas::Canvas;

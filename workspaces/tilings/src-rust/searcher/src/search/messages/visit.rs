@@ -1,7 +1,7 @@
 use actix::prelude::*;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
-use tiling::notation::Path;
+use hogg_tiling::notation::Path;
 use typeshare::typeshare;
 
 use crate::search::Client;

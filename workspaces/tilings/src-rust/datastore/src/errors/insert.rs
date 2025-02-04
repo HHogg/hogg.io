@@ -1,7 +1,7 @@
 use anyhow::Result;
 use futures_util::future::try_join_all;
 use sqlx::{Pool, Postgres};
-use tiling::ApplicationError;
+use hogg_tiling::ApplicationError;
 
 pub async fn insert(pool: &Pool<Postgres>, errors: Vec<ApplicationError>) -> Result<()> {
   let futures_insert_errors = errors.iter().cloned().map(|error| {

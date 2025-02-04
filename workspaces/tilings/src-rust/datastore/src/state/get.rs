@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use anyhow::Result;
 use sqlx::PgPool;
-use tiling::notation::Path;
+use hogg_tiling::notation::Path;
 
 use super::State;
 

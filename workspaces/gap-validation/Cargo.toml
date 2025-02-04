@@ -1,5 +1,5 @@
 [package]
-name = "gap_validation"
+name = "hogg_gap_validation"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
@@ -8,9 +8,9 @@ license = "MIT/Apache-2.0"
 repository = "https://github.com/hhogg/hogg.io"
 
 [lib]
-name = "gap_validation"
+name = "hogg_gap_validation"
 path = "src-rust/lib.rs"
 
 [dependencies]
-geometry = { path = "../geometry" }
-spatial_grid_map = { path = "../spatial-grid-map" }
+hogg_geometry = { path = "../geometry" }
+hogg_spatial_grid_map = { path = "../spatial-grid-map" }

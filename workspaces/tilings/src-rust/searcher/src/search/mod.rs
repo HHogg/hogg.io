@@ -2,7 +2,7 @@ pub mod messages;
 
 use actix::prelude::*;
 use anyhow::Result;
-use tiling_datastore::sessions::{Session, SysInfo};
+use hogg_tiling_datastore::sessions::{Session, SysInfo};
 
 use crate::datastore::sessions;
 use crate::issuer::{self, Issuer};

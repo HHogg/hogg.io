@@ -1,4 +1,4 @@
-use circular_sequence::SequenceStore;
+use hogg_circular_sequence::SequenceStore;
 use serde::{Serialize, Serializer};
 
 use crate::Tiling;

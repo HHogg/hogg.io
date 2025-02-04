@@ -2,8 +2,8 @@ mod layers;
 mod options;
 
 use anyhow::Result;
-use tiling::build::Metrics;
-use tiling::Tiling;
+use hogg_tiling::build::Metrics;
+use hogg_tiling::Tiling;
 use web_sys::OffscreenCanvas;
 
 pub use self::layers::Layer;

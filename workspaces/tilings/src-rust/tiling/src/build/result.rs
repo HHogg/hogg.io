@@ -1,5 +1,5 @@
 use chrono::{NaiveDateTime, Utc};
-use circular_sequence::SequenceStore;
+use hogg_circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 

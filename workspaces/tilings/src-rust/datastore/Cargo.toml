@@ -1,5 +1,5 @@
 [package]
-name = "tiling-datastore"
+name = "hogg_tiling_datastore"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
@@ -14,16 +14,15 @@ path = "src/lib.rs"
 anyhow.workspace = true
 chrono.workspace = true
 futures-util.workspace = true
+hogg_tiling = { path = "../tiling" }
+local-ip-address = "0.6.1"
 serde.workspace = true
 serde_json.workspace = true
 sqlx.workspace = true
+sysinfo = "0.33.0"
 tracing.workspace = true
 tokio.workspace = true
 tokio-util.workspace = true
 tracing-appender.workspace = true
 tracing-subscriber.workspace = true
 typeshare.workspace = true
-
-local-ip-address = "0.6.1"
-sysinfo = "0.33.0"
-tiling = { path = "../tiling" }

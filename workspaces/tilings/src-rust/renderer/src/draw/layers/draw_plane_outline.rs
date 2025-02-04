@@ -1,5 +1,5 @@
 use anyhow::Result;
-use tiling::Tiling;
+use hogg_tiling::Tiling;
 
 use super::Layer;
 use crate::canvas::{Canvas, LineSegment};

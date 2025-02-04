@@ -87,19 +87,17 @@ const Article = () => {
           either once or twice:
         </ArticleParagraph>
 
-        <ArticleParagraph>
-          <BulletPoints>
-            <BulletPoint>
-              <Text strong>Once</Text> if it represents an outer edge of the
-              tiling.
-            </BulletPoint>
+        <BulletPoints>
+          <BulletPoint>
+            <Text strong>Once</Text> if it represents an outer edge of the
+            tiling.
+          </BulletPoint>
 
-            <BulletPoint>
-              <Text strong>Twice</Text> if it is shared by two adjacent shapes
-              and therefore an internal boundary.
-            </BulletPoint>
-          </BulletPoints>
-        </ArticleParagraph>
+          <BulletPoint>
+            <Text strong>Twice</Text> if it is shared by two adjacent shapes and
+            therefore an internal boundary.
+          </BulletPoint>
+        </BulletPoints>
 
         <ArticleParagraph>
           Once we gather all line segments that occur only once, we can

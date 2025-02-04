@@ -1,7 +1,7 @@
 use serde::{Serialize, Serializer};
-use tiling::notation::{Path, Transform};
-use tiling::{Tiling, TilingError};
-use tiling_datastore::visits::Visit;
+use hogg_tiling::notation::{Path, Transform};
+use hogg_tiling::{Tiling, TilingError};
+use hogg_tiling_datastore::visits::Visit;
 use typeshare::typeshare;
 
 #[derive(Debug, Default, Clone, Serialize)]

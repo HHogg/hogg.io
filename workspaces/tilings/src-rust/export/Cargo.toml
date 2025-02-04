@@ -1,5 +1,5 @@
 [package]
-name = "tiling-export"
+name = "hogg_tiling_export"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
@@ -14,6 +14,9 @@ path = "src/main.rs"
 [dependencies]
 anyhow.workspace = true
 chrono.workspace = true
+clap = { version = "4.5.4", features = ["derive"] }
+hogg_tiling = { path = "../tiling" }
+hogg_tiling_datastore = { path = "../datastore" }
 serde.workspace = true
 serde_json.workspace = true
 sqlx.workspace = true
@@ -22,7 +25,3 @@ tokio.workspace = true
 tokio-util.workspace = true
 tracing-appender.workspace = true
 tracing-subscriber.workspace = true
-
-clap = { version = "4.5.4", features = ["derive"] }
-tiling-datastore = { path = "../datastore" }
-tiling = { path = "../tiling" }

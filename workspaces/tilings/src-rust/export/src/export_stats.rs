@@ -5,8 +5,8 @@ use std::vec;
 use anyhow::Result;
 use serde::Serialize;
 use sqlx::{Pool, Postgres};
-use tiling_datastore::visits::VisitsRequest;
-use tiling_datastore::{sessions, visits, Direction};
+use hogg_tiling_datastore::visits::VisitsRequest;
+use hogg_tiling_datastore::{sessions, visits, Direction};
 
 #[derive(Default, Serialize)]
 struct Stats {

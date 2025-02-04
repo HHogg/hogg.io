@@ -2,9 +2,9 @@ use std::collections::HashMap;
 
 use anyhow::Result;
 use colorgrad::{Gradient, GradientBuilder};
+use hogg_tiling::Tiling;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
-use tiling::Tiling;
 
 use super::Layer;
 use crate::canvas::{Canvas, Polygon};

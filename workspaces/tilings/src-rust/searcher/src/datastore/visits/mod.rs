@@ -5,7 +5,7 @@ use actix::prelude::*;
 use serde::Serialize;
 use sqlx::postgres::PgRow;
 use sqlx::{FromRow, PgPool, Row};
-use tiling::notation::Path;
+use hogg_tiling::notation::Path;
 
 pub use self::tree::Tree;
 

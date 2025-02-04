@@ -426,18 +426,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "circular_sequence"
-version = "0.0.0"
-dependencies = [
- "pretty_assertions",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "typeshare",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "clap"
 version = "4.5.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -976,14 +964,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "gap_validation"
-version = "0.0.0"
-dependencies = [
- "geometry",
- "spatial_grid_map",
-]
-
-[[package]]
 name = "generic-array"
 version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -991,20 +971,6 @@ checksum = "85649ca51fd72272d7821adaf274ad91c288277713d9c18820d8499a7ff69e9a"
 dependencies = [
  "typenum",
  "version_check",
-]
-
-[[package]]
-name = "geometry"
-version = "0.0.0"
-dependencies = [
- "insta",
- "line_segment_extending",
- "ordered-float",
- "pretty_assertions",
- "serde",
- "serde_json",
- "spatial_grid_map",
- "typeshare",
 ]
 
 [[package]]
@@ -1116,6 +1082,201 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c49c37c09c17a53d937dfbb742eb3a961d65a994e6bcdcf37e7399d0cc8ab5e"
 dependencies = [
  "digest",
+]
+
+[[package]]
+name = "hogg_circular_sequence"
+version = "0.0.0"
+dependencies = [
+ "pretty_assertions",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "typeshare",
+ "wasm-bindgen",
+]
+
+[[package]]
+name = "hogg_gap_validation"
+version = "0.0.0"
+dependencies = [
+ "hogg_geometry",
+ "hogg_spatial_grid_map",
+]
+
+[[package]]
+name = "hogg_geometry"
+version = "0.0.0"
+dependencies = [
+ "hogg_line_segment_extending",
+ "hogg_spatial_grid_map",
+ "insta",
+ "ordered-float",
+ "pretty_assertions",
+ "serde",
+ "serde_json",
+ "typeshare",
+]
+
+[[package]]
+name = "hogg_line_segment_extending"
+version = "0.0.0"
+dependencies = [
+ "console_error_panic_hook",
+ "console_log",
+ "log",
+ "pretty_assertions",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+]
+
+[[package]]
+name = "hogg_spatial_grid_map"
+version = "0.0.0"
+dependencies = [
+ "insta",
+ "log",
+ "ordered-float",
+ "rand",
+ "serde",
+ "serde_arrays",
+ "serde_json",
+ "typeshare",
+]
+
+[[package]]
+name = "hogg_tiling"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "console_error_panic_hook",
+ "console_log",
+ "hogg_circular_sequence",
+ "hogg_gap_validation",
+ "hogg_geometry",
+ "hogg_line_segment_extending",
+ "hogg_spatial_grid_map",
+ "insta",
+ "log",
+ "ordered-float",
+ "pretty_assertions",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "serde_with",
+ "thiserror 2.0.11",
+ "tracing",
+ "typeshare",
+ "wasm-bindgen",
+]
+
+[[package]]
+name = "hogg_tiling_datastore"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "futures-util",
+ "hogg_tiling",
+ "local-ip-address",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "sysinfo",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
+ "typeshare",
+]
+
+[[package]]
+name = "hogg_tiling_export"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "hogg_tiling",
+ "hogg_tiling_datastore",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "hogg_tiling_renderer"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "colorgrad",
+ "console_error_panic_hook",
+ "console_log",
+ "getrandom 0.2.15",
+ "hogg_circular_sequence",
+ "hogg_geometry",
+ "hogg_spatial_grid_map",
+ "hogg_tiling",
+ "log",
+ "rand",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "thiserror 2.0.11",
+ "typeshare",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
+name = "hogg_tiling_searcher"
+version = "0.0.0"
+dependencies = [
+ "actix",
+ "anyhow",
+ "async-channel 2.3.1",
+ "clap",
+ "hogg_tiling",
+ "hogg_tiling_datastore",
+ "nanoid",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
+ "typeshare",
+]
+
+[[package]]
+name = "hogg_wasm"
+version = "0.0.0"
+dependencies = [
+ "console_error_panic_hook",
+ "console_log",
+ "hogg_circular_sequence",
+ "hogg_line_segment_extending",
+ "hogg_spatial_grid_map",
+ "hogg_tiling",
+ "hogg_tiling_renderer",
+ "log",
+ "pretty_assertions",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "typeshare",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
@@ -1413,19 +1574,6 @@ checksum = "2e99fb7a497b1e3339bc746195567ed8d3e24945ecd636e3619d20b9de9e9149"
 dependencies = [
  "pkg-config",
  "vcpkg",
-]
-
-[[package]]
-name = "line_segment_extending"
-version = "0.0.0"
-dependencies = [
- "console_error_panic_hook",
- "console_log",
- "log",
- "pretty_assertions",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
 ]
 
 [[package]]
@@ -2352,20 +2500,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "spatial_grid_map"
-version = "0.0.0"
-dependencies = [
- "insta",
- "log",
- "ordered-float",
- "rand",
- "serde",
- "serde_arrays",
- "serde_json",
- "typeshare",
-]
-
-[[package]]
 name = "spin"
 version = "0.9.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2717,119 +2851,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tiling"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "chrono",
- "circular_sequence",
- "console_error_panic_hook",
- "console_log",
- "gap_validation",
- "geometry",
- "insta",
- "line_segment_extending",
- "log",
- "ordered-float",
- "pretty_assertions",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "serde_with",
- "spatial_grid_map",
- "thiserror 2.0.11",
- "tracing",
- "typeshare",
- "wasm-bindgen",
-]
-
-[[package]]
-name = "tiling-datastore"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "chrono",
- "futures-util",
- "local-ip-address",
- "serde",
- "serde_json",
- "sqlx",
- "sysinfo",
- "tiling",
- "tokio",
- "tokio-util",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
- "typeshare",
-]
-
-[[package]]
-name = "tiling-export"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "serde",
- "serde_json",
- "sqlx",
- "tiling",
- "tiling-datastore",
- "tokio",
- "tokio-util",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "tiling-renderer"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "circular_sequence",
- "colorgrad",
- "console_error_panic_hook",
- "console_log",
- "geometry",
- "getrandom 0.2.15",
- "log",
- "rand",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "spatial_grid_map",
- "thiserror 2.0.11",
- "tiling",
- "typeshare",
- "wasm-bindgen",
- "web-sys",
-]
-
-[[package]]
-name = "tiling-searcher"
-version = "0.0.0"
-dependencies = [
- "actix",
- "anyhow",
- "async-channel 2.3.1",
- "clap",
- "nanoid",
- "serde",
- "serde_json",
- "sqlx",
- "tiling",
- "tiling-datastore",
- "tokio",
- "tokio-util",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
- "typeshare",
-]
-
-[[package]]
 name = "time"
 version = "0.3.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3137,27 +3158,6 @@ name = "wasite"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b8dad83b4f25e74f184f64c43b150b91efe7647395b42289f38e50566d82855b"
-
-[[package]]
-name = "wasm"
-version = "0.0.0"
-dependencies = [
- "circular_sequence",
- "console_error_panic_hook",
- "console_log",
- "line_segment_extending",
- "log",
- "pretty_assertions",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "spatial_grid_map",
- "tiling",
- "tiling-renderer",
- "typeshare",
- "wasm-bindgen",
- "web-sys",
-]
 
 [[package]]
 name = "wasm-bindgen"

@@ -1,5 +1,5 @@
 [package]
-name = "geometry"
+name = "hogg_geometry"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
@@ -8,17 +8,16 @@ license = "MIT/Apache-2.0"
 repository = "https://github.com/hhogg/hogg.io"
 
 [lib]
-name = "geometry"
+name = "hogg_geometry"
 path = "src/lib.rs"
 
 [dependencies]
+hogg_line_segment_extending = { path = "../line-segment-extending" }
+hogg_spatial_grid_map = { path = "../spatial-grid-map" }
 ordered-float.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 typeshare.workspace = true
-
-line_segment_extending = { path = "../line-segment-extending" }
-spatial_grid_map = { path = "../spatial-grid-map" }
 
 [dev-dependencies]
 insta = { workspace = true, features = ["redactions"] }

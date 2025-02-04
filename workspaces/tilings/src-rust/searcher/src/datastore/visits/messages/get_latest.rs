@@ -1,6 +1,6 @@
 use actix::prelude::*;
 use anyhow::Result;
-use tiling_datastore::visits;
+use hogg_tiling_datastore::visits;
 
 use crate::datastore::visits::Store;
 

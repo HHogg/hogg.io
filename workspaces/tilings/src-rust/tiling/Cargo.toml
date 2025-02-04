@@ -1,5 +1,5 @@
 [package]
-name = "tiling"
+name = "hogg_tiling"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
@@ -13,24 +13,23 @@ path = "src/lib.rs"
 [dependencies]
 anyhow.workspace = true
 chrono.workspace = true
-console_log.workspace = true
 console_error_panic_hook.workspace = true
+console_log.workspace = true
+hogg_circular_sequence = { path = "../../../circular-sequence" }
+hogg_gap_validation = { path = "../../../gap-validation" }
+hogg_geometry = { path = "../../../geometry" }
+hogg_line_segment_extending = { path = "../../../line-segment-extending" }
+hogg_spatial_grid_map = { path = "../../../spatial-grid-map" }
 log.workspace = true
 ordered-float.workspace = true
-serde.workspace = true
 serde_json.workspace = true
-serde-wasm-bindgen.workspace = true
 serde_with.workspace = true
+serde-wasm-bindgen.workspace = true
+serde.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 typeshare.workspace = true
 wasm-bindgen.workspace = true
-
-circular_sequence = { path = "../../../circular-sequence" }
-gap_validation = { path = "../../../gap-validation" }
-geometry = { path = "../../../geometry" }
-line_segment_extending = { path = "../../../line-segment-extending" }
-spatial_grid_map = { path = "../../../spatial-grid-map" }
 
 [dev-dependencies]
 insta = { workspace = true, features = ["redactions"] }

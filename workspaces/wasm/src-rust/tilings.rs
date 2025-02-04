@@ -1,9 +1,9 @@
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsError, JsValue};
 
-use tiling::notation::{Path, Transform};
-use tiling::{validation, Tiling};
-use tiling_renderer::{draw, Options};
+use hogg_tiling::notation::{Path, Transform};
+use hogg_tiling::{validation, Tiling};
+use hogg_tiling_renderer::{draw, Options};
 use web_sys::OffscreenCanvas;
 
 use crate::events::{post_event, WasmWorkerEvent};

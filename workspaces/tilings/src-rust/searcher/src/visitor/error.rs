@@ -1,5 +1,5 @@
+use hogg_tiling::TilingError;
 use serde::{Deserialize, Serialize};
-use tiling::TilingError;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum VisitError {

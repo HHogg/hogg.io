@@ -4,8 +4,8 @@ use std::vec;
 
 use anyhow::Result;
 use sqlx::{Pool, Postgres};
-use tiling_datastore::tilings::TilingsRequest;
-use tiling_datastore::{tilings, Direction};
+use hogg_tiling_datastore::tilings::TilingsRequest;
+use hogg_tiling_datastore::{tilings, Direction};
 
 pub async fn export_unique_tilings(pool: &Pool<Postgres>, mut file: File) -> Result<()> {
   let mut page = 0;

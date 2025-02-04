@@ -1,5 +1,5 @@
-use gap_validation::has_single_circuit;
-use geometry::LineSegment;
+use hogg_geometry::LineSegment;
+use hogg_gap_validation::has_single_circuit;
 
 use super::{Error, Flag};
 use crate::build::{Plane, Tile};
@@ -108,7 +108,7 @@ impl Validator {
     for point_sequence in plane.points_end.iter_values() {
       if !plane.vertex_types.matches_exactly(&point_sequence.sequence) {
         return Err(Error::VertexType {
-          sequence: circular_sequence::to_string_one(point_sequence.sequence),
+          sequence: hogg_circular_sequence::to_string_one(point_sequence.sequence),
         });
       }
     }
