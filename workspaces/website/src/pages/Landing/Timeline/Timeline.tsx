@@ -15,7 +15,11 @@ export default function Timeline(props: BoxProps) {
           wrap
         >
           <TimelineEntry {...placement} />
-          <TimelineDate date={placement.date} isLast={index === length - 1} />
+          <TimelineDate
+            dateFrom={placement.date}
+            dateTo={index ? data.placements[index - 1].date : undefined}
+            isLast={index === length - 1}
+          />
         </Box>
       ))}
     </Box>
