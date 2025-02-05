@@ -37,8 +37,8 @@ export default function CopyToClipboardCard({
       weight="x1"
       width="100%"
     >
-      <Box basis="0" grow>
-        <Text monospace weight="x2">
+      <Box basis="0" grow minWidth={0} title={text}>
+        <Text monospace weight="x2" ellipsis>
           {text}
         </Text>
       </Box>
