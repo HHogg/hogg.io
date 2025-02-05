@@ -1,5 +1,5 @@
-use hogg_geometry::Point;
 use hogg_circular_sequence::SequenceStore;
+use hogg_geometry::Point;
 use hogg_spatial_grid_map::{location, SpatialGridMap};
 
 use crate::{build::PointSequence, Tiling};

@@ -1,7 +1,7 @@
 use anyhow::Result;
+use hogg_tiling::notation::Path;
 use serde::Deserialize;
 use sqlx::{Pool, Postgres};
-use hogg_tiling::notation::Path;
 use typeshare::typeshare;
 
 use super::Visit;

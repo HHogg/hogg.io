@@ -1,7 +1,7 @@
 use std::fmt::Display;
 
-use serde::{Deserialize, Serialize};
 use hogg_tiling::notation::Shape;
+use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 pub fn get_results_condition(

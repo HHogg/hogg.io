@@ -1,8 +1,8 @@
 use anyhow::Result;
 use futures_util::future::try_join_all;
+use hogg_tiling::notation::{Path, Shape};
 use serde::{Deserialize, Serialize};
 use sqlx::{Pool, Postgres};
-use hogg_tiling::notation::{Path, Shape};
 
 pub struct InsertRequest {
   pub path: Path,

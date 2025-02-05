@@ -1,8 +1,8 @@
 use std::str::FromStr;
 
 use anyhow::Result;
-use sqlx::PgPool;
 use hogg_tiling::notation::Path;
+use sqlx::PgPool;
 
 use super::State;
 

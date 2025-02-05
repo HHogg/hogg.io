@@ -1,9 +1,9 @@
 use std::fmt::Display;
 
 use anyhow::Result;
+use hogg_tiling::notation::Shape;
 use serde::Deserialize;
 use sqlx::{Pool, Postgres};
-use hogg_tiling::notation::Shape;
 use typeshare::typeshare;
 
 use super::Visit;

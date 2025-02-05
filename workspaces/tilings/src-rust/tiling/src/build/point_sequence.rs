@@ -1,5 +1,5 @@
-use hogg_geometry::Point;
 use hogg_circular_sequence::Sequence;
+use hogg_geometry::Point;
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;

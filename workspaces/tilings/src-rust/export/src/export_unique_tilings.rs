@@ -3,9 +3,9 @@ use std::io::Write;
 use std::vec;
 
 use anyhow::Result;
-use sqlx::{Pool, Postgres};
 use hogg_tiling_datastore::tilings::TilingsRequest;
 use hogg_tiling_datastore::{tilings, Direction};
+use sqlx::{Pool, Postgres};
 
 pub async fn export_unique_tilings(pool: &Pool<Postgres>, mut file: File) -> Result<()> {
   let mut page = 0;

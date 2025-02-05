@@ -3,10 +3,10 @@ use std::io::Write;
 use std::vec;
 
 use anyhow::Result;
-use serde::Serialize;
-use sqlx::{Pool, Postgres};
 use hogg_tiling_datastore::visits::VisitsRequest;
 use hogg_tiling_datastore::{sessions, visits, Direction};
+use serde::Serialize;
+use sqlx::{Pool, Postgres};
 
 #[derive(Default, Serialize)]
 struct Stats {

@@ -1,6 +1,6 @@
 use anyhow::Result;
-use sqlx::{Pool, Postgres};
 use hogg_tiling::notation::{Path, Shape};
+use sqlx::{Pool, Postgres};
 
 pub struct InsertRequest {
   pub session_id: String,

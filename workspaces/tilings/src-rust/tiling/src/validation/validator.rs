@@ -1,5 +1,5 @@
-use hogg_geometry::LineSegment;
 use hogg_gap_validation::has_single_circuit;
+use hogg_geometry::LineSegment;
 
 use super::{Error, Flag};
 use crate::build::{Plane, Tile};

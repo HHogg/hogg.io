@@ -1,9 +1,9 @@
 use std::fmt::{Display, Formatter};
 
 use anyhow::Result;
+use hogg_tiling::notation::Shape;
 use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, Pool, Postgres};
-use hogg_tiling::notation::Shape;
 use typeshare::typeshare;
 
 use crate::utils::{get_show_nodes_condition, Facet, FacetValue, ResponseMultiple};

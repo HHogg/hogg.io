@@ -7,8 +7,8 @@ use std::fs::File;
 
 use anyhow::Result;
 use clap::{arg, command, Parser};
-use sqlx::FromRow;
 use hogg_tiling_datastore::get_pool;
+use sqlx::FromRow;
 use tracing_subscriber::fmt::format;
 
 use self::export_insights::export_insights;

@@ -2,10 +2,10 @@ pub mod messages;
 mod tree;
 
 use actix::prelude::*;
+use hogg_tiling::notation::Path;
 use serde::Serialize;
 use sqlx::postgres::PgRow;
 use sqlx::{FromRow, PgPool, Row};
-use hogg_tiling::notation::Path;
 
 pub use self::tree::Tree;
 
