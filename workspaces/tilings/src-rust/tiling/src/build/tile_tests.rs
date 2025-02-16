@@ -1,3 +1,4 @@
+use hogg_spatial_grid_map::Fxx;
 use pretty_assertions::assert_eq;
 
 use super::*;
@@ -7,7 +8,7 @@ fn assert_eq_points_to_points(a: Tile, b: Vec<Point>) {
   assert_eq!(a.geometry.points, b);
 }
 
-fn assert_eq_points(a: Tile, b: Vec<(f32, f32)>) {
+fn assert_eq_points(a: Tile, b: Vec<(Fxx, Fxx)>) {
   assert_eq_points_to_points(a, b.iter().map(|(x, y)| Point::at(*x, *y)).collect())
 }
 

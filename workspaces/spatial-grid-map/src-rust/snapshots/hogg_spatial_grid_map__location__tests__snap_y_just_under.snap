@@ -1,6 +1,6 @@
 ---
 source: workspaces/spatial-grid-map/src-rust/./location_tests.rs
-expression: "Location::new(2, 1.0, Point(7.0, 7.0 - TOLERANCE * 0.5), None)"
+expression: "Location::new(1.0, Point(7.0, 7.0 - TOLERANCE_COORDINATE * 0.5), None)"
 ---
 Location {
     key: (
@@ -9,9 +9,8 @@ Location {
     ),
     point: Point(
         7.0,
-        6.9999237,
+        6.9995,
     ),
-    contained: true,
-    distance: 9.899441,
-    radians: 2.356189,
+    distance: 9.899141389534751,
+    radians: 2.35615877463109,
 }

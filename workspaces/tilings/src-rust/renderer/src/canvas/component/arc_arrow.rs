@@ -1,4 +1,5 @@
 use hogg_geometry::{BBox, Point};
+use hogg_spatial_grid_map::Fxx;
 
 use super::{Arc, Chevron, Draw, Style};
 use crate::canvas::Scale;
@@ -6,9 +7,9 @@ use crate::canvas::Scale;
 #[derive(Clone, Debug, Default)]
 pub struct ArcArrow {
   point: Point,
-  radius: f32,
-  start_angle: f32,
-  end_angle: f32,
+  radius: Fxx,
+  start_angle: Fxx,
+  end_angle: Fxx,
   style: Style,
   interactive: Option<bool>,
 }
@@ -24,17 +25,17 @@ impl ArcArrow {
     self
   }
 
-  pub fn with_radius(mut self, radius: f32) -> Self {
+  pub fn with_radius(mut self, radius: Fxx) -> Self {
     self.radius = radius;
     self
   }
 
-  pub fn with_start_angle(mut self, start_angle: f32) -> Self {
+  pub fn with_start_angle(mut self, start_angle: Fxx) -> Self {
     self.start_angle = start_angle;
     self
   }
 
-  pub fn with_end_angle(mut self, end_angle: f32) -> Self {
+  pub fn with_end_angle(mut self, end_angle: Fxx) -> Self {
     self.end_angle = end_angle;
     self
   }

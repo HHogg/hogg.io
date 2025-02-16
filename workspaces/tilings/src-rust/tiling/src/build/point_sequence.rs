@@ -1,5 +1,6 @@
 use hogg_circular_sequence::Sequence;
 use hogg_geometry::Point;
+use hogg_spatial_grid_map::Fxx;
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
@@ -25,6 +26,10 @@ impl PointSequence {
   }
 
   pub fn insert(&mut self, point: Point, value: u8) {
+    if self.contains_point(&point) {
+      return;
+    }
+
     self.entries.push(Entry {
       point,
       value,
@@ -37,6 +42,10 @@ impl PointSequence {
     for entry in &self.entries {
       hogg_circular_sequence::insert(&mut self.sequence, entry.value);
     }
+  }
+
+  pub fn contains_point(&self, point: &Point) -> bool {
+    self.entries.iter().any(|entry| entry.point == *point)
   }
 
   pub fn find(&self, predicate: impl Fn(&Entry) -> bool) -> Option<&Entry> {
@@ -58,6 +67,6 @@ impl PointSequence {
 pub struct Entry {
   pub point: Point,
   pub value: u8,
-  #[typeshare(serialized_as = "f32")]
-  pub radians: OrderedFloat<f32>,
+  #[typeshare(serialized_as = "Fxx")]
+  pub radians: OrderedFloat<Fxx>,
 }

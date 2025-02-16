@@ -9,9 +9,9 @@ fn test_compare_coordinate() {
 
 #[test]
 fn test_normalize_radian() {
-  let neg: f32 = -1.0;
-  let zero: f32 = 0.0;
-  let pos: f32 = 1.0;
+  let neg: Fxx = -1.0;
+  let zero: Fxx = 0.0;
+  let pos: Fxx = 1.0;
 
   // atan2
   assert!((neg.atan2(zero) - PI * -0.5).abs() < TOLERANCE_RADIAN);

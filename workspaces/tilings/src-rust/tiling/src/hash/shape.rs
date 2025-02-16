@@ -19,27 +19,28 @@ impl Hash {
   pub fn update(
     &mut self,
     tiling: &Tiling,
-    first_run: &bool,
+    is_first_run: bool,
     vertex_sequence_store: &SequenceStore,
+    vertex_hash: &super::vertex::Hash,
   ) {
     self.updated = false;
 
-    if *first_run {
-      self.update_from_plane(tiling, vertex_sequence_store);
+    if is_first_run {
+      self.update_from_tiling(tiling, vertex_sequence_store);
     } else {
-      self.update_from_hashes(tiling);
+      self.update_from_hash(tiling, vertex_hash);
     }
   }
 
-  fn update_from_plane(&mut self, tiling: &Tiling, vertex_sequence_store: &SequenceStore) {
+  fn update_from_tiling(&mut self, tiling: &Tiling, vertex_sequence_store: &SequenceStore) {
     let mut shape_sequences = SpatialGridMap::<PointSequence>::new("shape_sequences");
     let mut shape_sequence_store = SequenceStore::default();
 
-    for sequence in tiling.plane.iter_core_center_complete_point_sequences() {
+    for point_sequence in tiling.plane.iter_core_center_complete_point_sequences() {
       let polygon = tiling
         .plane
         .tiles
-        .get_value(&sequence.center.into())
+        .get_value(&point_sequence.center.into())
         .expect("Polygon not found");
 
       for vertex_point in polygon.geometry.points.iter() {
@@ -65,13 +66,17 @@ impl Hash {
       }
     }
 
-    self.updated = true;
-    self.point_sequences = shape_sequences;
-    self.sequence_store = shape_sequence_store;
-    self.hash = self.sequence_store.to_string();
+    let hash = shape_sequence_store.to_string();
+
+    if hash != self.hash {
+      self.updated = true;
+      self.hash = hash;
+      self.point_sequences = shape_sequences;
+      self.sequence_store = shape_sequence_store;
+    }
   }
 
-  fn update_from_hashes(&mut self, _tiling: &Tiling) {}
+  fn update_from_hash(&mut self, tiling: &Tiling, vertex_hash: &super::vertex::Hash) {}
 
   fn update_shape_point_sequence(
     &mut self,

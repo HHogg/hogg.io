@@ -3,42 +3,50 @@
 mod tests;
 
 use std::cmp::Ordering;
-use std::f32::consts::PI;
 
-const TOLERANCE_RADIAN: f32 = 0.0001;
-const TOLERANCE_COORDINATE: f32 = 0.001;
+use typeshare::typeshare;
 
-fn compare_f32(a: f32, b: f32, precision: f32) -> Ordering {
-  if (a - b).abs() <= precision + f32::EPSILON {
+#[typeshare]
+pub type Fxx = f64;
+
+pub const PI: Fxx = std::f64::consts::PI;
+pub const PI_FRAC2: Fxx = PI * 0.5;
+pub const PI2: Fxx = PI * 2.0;
+
+pub const TOLERANCE_RADIAN: Fxx = 0.0001;
+pub const TOLERANCE_COORDINATE: Fxx = 0.001;
+
+fn compare_fxx(a: Fxx, b: Fxx, precision: Fxx) -> Ordering {
+  if (a - b).abs() <= precision + Fxx::EPSILON {
     return Ordering::Equal;
   }
 
   a.partial_cmp(&b).unwrap()
 }
 
-pub fn compare_coordinate(a: f32, b: f32) -> std::cmp::Ordering {
-  compare_f32(a, b, TOLERANCE_COORDINATE)
+pub fn compare_coordinate(a: Fxx, b: Fxx) -> std::cmp::Ordering {
+  compare_fxx(a, b, TOLERANCE_COORDINATE)
 }
 
-pub fn coordinate_equals(a: f32, b: f32) -> bool {
+pub fn coordinate_equals(a: Fxx, b: Fxx) -> bool {
   compare_coordinate(a, b) == Ordering::Equal
 }
 
-pub fn radians_equal(a: f32, b: f32) -> bool {
-  compare_f32(a, b, TOLERANCE_RADIAN) == Ordering::Equal
+pub fn radians_equal(a: Fxx, b: Fxx) -> bool {
+  compare_fxx(a, b, TOLERANCE_RADIAN) == Ordering::Equal
 }
 
-pub fn normalize_radian(mut radian: f32) -> f32 {
-  radian += PI * 0.5;
+pub fn normalize_radian(mut radian: Fxx) -> Fxx {
+  radian += PI_FRAC2;
 
   if radian < -TOLERANCE_RADIAN {
-    radian += PI * 2.0;
+    radian += PI2;
   }
 
   radian
 }
 
-pub fn get_radians_for_x_y(x: f32, y: f32) -> f32 {
+pub fn get_radians_for_x_y(x: Fxx, y: Fxx) -> Fxx {
   if coordinate_equals(x, 0.0) && coordinate_equals(y, 0.0) {
     return 0.0;
   }

@@ -1,7 +1,6 @@
 use std::cmp::Ordering;
-use std::f32::consts::PI;
 
-use hogg_spatial_grid_map::utils::compare_coordinate;
+use hogg_spatial_grid_map::utils::{compare_coordinate, Fxx, PI};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -48,8 +47,8 @@ impl Polygon {
     self.line_segments = line_segments;
   }
 
-  fn get_apothem(&self) -> f32 {
-    let sides = self.points.len() as f32;
+  fn get_apothem(&self) -> Fxx {
+    let sides = self.points.len() as Fxx;
     let side_length = self.line_segments[0].length();
     let radius = side_length / (2.0 * (PI / sides).sin());
 
@@ -81,7 +80,7 @@ impl Polygon {
     Self::from_points(points)
   }
 
-  pub fn rotate(self, radians: f32, origin: Option<&Point>) -> Self {
+  pub fn rotate(self, radians: Fxx, origin: Option<&Point>) -> Self {
     let mut points = vec![];
     points.reserve_exact(self.points.len());
 

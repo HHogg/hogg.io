@@ -1,3 +1,4 @@
+use hogg_spatial_grid_map::Fxx;
 use hogg_tiling::build::Metrics;
 use hogg_tiling::validation::Flag;
 use hogg_tiling::Tiling;
@@ -16,7 +17,7 @@ use crate::events::PlayerStateSnapshot;
 use crate::events::RenderStateSnapshot;
 use crate::events::WasmWorkerEvent;
 
-static BASE_SPEED: f32 = 250.0;
+static BASE_SPEED: Fxx = 250.0;
 
 fn post_render_event(tiling: &Tiling) {
   post_event(WasmWorkerEvent::Render(RenderStateSnapshot {
@@ -64,7 +65,7 @@ pub struct RenderLoopState {
   expansion_phases: u8,
   notation: String,
   render_options: hogg_tiling_renderer::Options,
-  speed: f32,
+  speed: Fxx,
   width: u32,
   height: u32,
 }
@@ -262,7 +263,7 @@ impl RenderLoopInner {
     self.set_draw();
   }
 
-  pub fn set_speed(&self, speed: f32) -> Result<(), JsValue> {
+  pub fn set_speed(&self, speed: Fxx) -> Result<(), JsValue> {
     if self.state.borrow().speed == speed {
       return Ok(());
     }

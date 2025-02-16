@@ -1,6 +1,5 @@
-use std::f32::consts::PI;
-
 use hogg_geometry::BBox;
+use hogg_spatial_grid_map::PI_FRAC2;
 
 use super::{Chevron, Draw, LineSegment, Style};
 use crate::canvas::collision::Theia;
@@ -25,7 +24,7 @@ impl Arrow {
   }
 
   fn get_chevron(&self, scale: &Scale) -> Chevron {
-    let direction = self.line_segment.end.radian_to(&self.line_segment.start) - PI * 0.5;
+    let direction = self.line_segment.end.radian_to(&self.line_segment.start) - PI_FRAC2;
     let point = self.line_segment.end;
 
     Chevron::default()

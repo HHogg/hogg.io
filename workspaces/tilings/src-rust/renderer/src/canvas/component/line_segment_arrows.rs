@@ -1,18 +1,19 @@
 use hogg_geometry::{BBox, LineSegment, LineSegmentOrigin};
+use hogg_spatial_grid_map::Fxx;
 
 use super::{Arrow, Draw, Style};
 use crate::canvas::Scale;
 
-const GAP_BETWEEN_ARROWS_MULTIPLIER: f32 = 10.0;
-const GAP_FROM_LINE_SEGMENT: f32 = 2.0;
-const ARROW_LENGTH: f32 = 2.5;
+const GAP_BETWEEN_ARROWS_MULTIPLIER: Fxx = 10.0;
+const GAP_FROM_LINE_SEGMENT: Fxx = 2.0;
+const ARROW_LENGTH: Fxx = 2.5;
 
 #[derive(Clone, Debug, Default)]
 pub struct LineSegmentArrows {
   line_segment: LineSegment,
   extend_start: bool,
   extend_end: bool,
-  direction: f32,
+  direction: Fxx,
   style: Style,
 }
 
@@ -32,7 +33,7 @@ impl LineSegmentArrows {
     self
   }
 
-  pub fn with_direction(mut self, direction: f32) -> Self {
+  pub fn with_direction(mut self, direction: Fxx) -> Self {
     self.direction = direction;
     self
   }

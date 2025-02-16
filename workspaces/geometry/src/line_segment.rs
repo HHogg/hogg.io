@@ -5,13 +5,14 @@ mod tests;
 use std::fmt::Display;
 
 use hogg_line_segment_extending::extend_line_segment;
+use hogg_spatial_grid_map::utils::Fxx;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::point::Point;
 use super::BBox;
 
-fn get_point_at_percentage(p1: Point, p2: Point, percentage: f32, offset: f32) -> Point {
+fn get_point_at_percentage(p1: Point, p2: Point, percentage: Fxx, offset: Fxx) -> Point {
   let x = p1.x + (p2.x - p1.x) * percentage + offset;
   let y = p1.y + (p2.y - p1.y) * percentage + offset;
 
@@ -69,11 +70,11 @@ impl LineSegment {
     get_point_at_percentage(self.start, self.end, 0.5, 0.0)
   }
 
-  pub fn length(&self) -> f32 {
+  pub fn length(&self) -> Fxx {
     self.start.distance_to(&self.end)
   }
 
-  pub fn theta(&self) -> f32 {
+  pub fn theta(&self) -> Fxx {
     self.end.radian_to(&self.start)
   }
 
@@ -85,11 +86,11 @@ impl LineSegment {
     self.end == other.start
   }
 
-  pub fn get_point_at_percentage(&self, percentage: f32, offset: f32) -> Point {
+  pub fn get_point_at_percentage(&self, percentage: Fxx, offset: Fxx) -> Point {
     get_point_at_percentage(self.start, self.end, percentage, offset)
   }
 
-  pub fn set_length(&self, length: f32, origin: LineSegmentOrigin) -> Self {
+  pub fn set_length(&self, length: Fxx, origin: LineSegmentOrigin) -> Self {
     let dx = self.end.x - self.start.x;
     let dy = self.end.y - self.start.y;
     let theta = dy.atan2(dx);
@@ -119,7 +120,7 @@ impl LineSegment {
     Self::default().with_start(p1).with_end(p2)
   }
 
-  pub fn rotate(&self, theta: f32, origin: Option<&Point>) -> Self {
+  pub fn rotate(&self, theta: Fxx, origin: Option<&Point>) -> Self {
     let mid_point = self.mid_point();
     let origin = origin.or(Some(&mid_point));
 
@@ -128,7 +129,7 @@ impl LineSegment {
       .with_end(self.end.rotate(theta, origin))
   }
 
-  pub fn scale(&self, scale: f32) -> Self {
+  pub fn scale(&self, scale: Fxx) -> Self {
     Self::default()
       .with_start(self.start.scale(scale))
       .with_end(self.end.scale(scale))
@@ -214,7 +215,8 @@ impl Eq for LineSegment {}
 
 impl PartialEq for LineSegment {
   fn eq(&self, other: &Self) -> bool {
-    self.start == other.start && self.end == other.end
+    (self.start == other.start && self.end == other.end)
+      || (self.start == other.end && self.end == other.start)
   }
 }
 

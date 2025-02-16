@@ -1,6 +1,5 @@
-use std::f32::consts::PI;
-
 use hogg_spatial_grid_map::utils::coordinate_equals;
+use hogg_spatial_grid_map::PI;
 use hogg_tiling::notation::{Operation, TransformValue};
 
 use super::Layer;

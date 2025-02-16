@@ -1,3 +1,4 @@
+use hogg_spatial_grid_map::Fxx;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 use wasm_bindgen::JsValue;
@@ -8,20 +9,20 @@ use super::Scale;
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Style {
-  chevron_size: Option<f32>,
+  chevron_size: Option<Fxx>,
   fill: Option<String>,
-  line_dash: Option<Vec<f32>>,
-  line_thickness: Option<f32>,
-  point_radius: Option<f32>,
+  line_dash: Option<Vec<Fxx>>,
+  line_thickness: Option<Fxx>,
+  point_radius: Option<Fxx>,
   shadow_color: Option<String>,
-  shadow_blur: Option<f32>,
+  shadow_blur: Option<Fxx>,
   stroke_color: Option<String>,
-  stroke_width: Option<f32>,
-  opacity: Option<f32>,
+  stroke_width: Option<Fxx>,
+  opacity: Option<Fxx>,
 }
 
 impl Style {
-  pub fn get_chevron_size(&self, scale: &Scale) -> f32 {
+  pub fn get_chevron_size(&self, scale: &Scale) -> Fxx {
     self
       .chevron_size
       .map(|v| scale.scale_value_to_content(v))
@@ -33,7 +34,7 @@ impl Style {
     self.fill.as_ref().cloned().unwrap_or(default_fill_style)
   }
 
-  pub fn get_line_dash(&self, scale: &Scale) -> Option<Vec<f32>> {
+  pub fn get_line_dash(&self, scale: &Scale) -> Option<Vec<Fxx>> {
     self.line_dash.as_ref().map(|v| {
       v.iter()
         .copied()
@@ -42,25 +43,25 @@ impl Style {
     })
   }
 
-  pub fn get_line_thickness(&self, scale: &Scale) -> f32 {
+  pub fn get_line_thickness(&self, scale: &Scale) -> Fxx {
     self
       .line_thickness
       .map(|v| scale.scale_value_to_content(v))
       .unwrap_or(0.0)
   }
 
-  pub fn get_opacity(&self) -> f32 {
+  pub fn get_opacity(&self) -> Fxx {
     self.opacity.unwrap_or(1.0)
   }
 
-  pub fn get_point_radius(&self, scale: &Scale) -> f32 {
+  pub fn get_point_radius(&self, scale: &Scale) -> Fxx {
     self
       .point_radius
       .map(|v| scale.scale_value_to_content(v))
       .unwrap_or(0.0)
   }
 
-  pub fn get_shadow_blur(&self, _scale: &Scale) -> f32 {
+  pub fn get_shadow_blur(&self, _scale: &Scale) -> Fxx {
     self.shadow_blur.unwrap_or(0.0)
   }
 
@@ -74,7 +75,7 @@ impl Style {
     self.stroke_color.clone().unwrap_or(default_stroke_color)
   }
 
-  pub fn get_stroke_width(&self, scale: &Scale) -> f32 {
+  pub fn get_stroke_width(&self, scale: &Scale) -> Fxx {
     self
       .stroke_width
       .map(|v| scale.scale_value_to_content(v))
@@ -87,7 +88,7 @@ impl Style {
     style
   }
 
-  pub fn set_line_dash(&self, scale: &Scale, line_dash: Option<Vec<f32>>) -> Self {
+  pub fn set_line_dash(&self, scale: &Scale, line_dash: Option<Vec<Fxx>>) -> Self {
     let mut style = self.clone();
     style.line_dash = line_dash.map(|v| {
       v.into_iter()
@@ -97,19 +98,19 @@ impl Style {
     style
   }
 
-  pub fn set_opacity(&self, opacity: Option<f32>) -> Self {
+  pub fn set_opacity(&self, opacity: Option<Fxx>) -> Self {
     let mut style = self.clone();
     style.opacity = opacity;
     style
   }
 
-  pub fn set_point_radius(&self, scale: &Scale, point_radius: Option<f32>) -> Self {
+  pub fn set_point_radius(&self, scale: &Scale, point_radius: Option<Fxx>) -> Self {
     let mut style = self.clone();
     style.point_radius = point_radius.map(|v| scale.scale_value_to_canvas(v));
     style
   }
 
-  pub fn set_shadow_blur(&self, shadow_blur: Option<f32>) -> Self {
+  pub fn set_shadow_blur(&self, shadow_blur: Option<Fxx>) -> Self {
     let mut style = self.clone();
     style.shadow_blur = shadow_blur;
     style
@@ -127,7 +128,7 @@ impl Style {
     style
   }
 
-  pub fn set_stroke_width(&self, scale: &Scale, stroke_width: Option<f32>) -> Self {
+  pub fn set_stroke_width(&self, scale: &Scale, stroke_width: Option<Fxx>) -> Self {
     let mut style = self.clone();
     style.stroke_width = stroke_width.map(|v| scale.scale_value_to_canvas(v));
     style
@@ -193,12 +194,12 @@ impl Style {
   ) -> Result<(), JsValue> {
     if let Some(line_dash) = &self.get_line_dash(scale) {
       context.set_line_dash_offset(0.0);
-      context.set_line_dash(&serde_wasm_bindgen::to_value::<Option<Vec<f32>>>(&Some(
+      context.set_line_dash(&serde_wasm_bindgen::to_value::<Option<Vec<Fxx>>>(&Some(
         line_dash.clone(),
       ))?)?;
     } else {
       context.set_line_dash_offset(0.0);
-      context.set_line_dash(&serde_wasm_bindgen::to_value::<Vec<f32>>(&vec![])?)?;
+      context.set_line_dash(&serde_wasm_bindgen::to_value::<Vec<Fxx>>(&vec![])?)?;
     }
 
     Ok(())

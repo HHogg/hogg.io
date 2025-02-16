@@ -17,21 +17,21 @@ pub fn draw_transform_points(
   draw_transform_points_group(
     canvas,
     &style,
-    tiling.plane.points_center.iter_points(),
+    tiling.plane.points_center.iter_points().cloned(),
     VAPOR_WAVE_COLOR_PALETTE[0],
   )?;
 
   draw_transform_points_group(
     canvas,
     &style,
-    tiling.plane.points_end.iter_points(),
+    tiling.plane.points_end.iter_points().cloned(),
     VAPOR_WAVE_COLOR_PALETTE[1],
   )?;
 
   draw_transform_points_group(
     canvas,
     &style,
-    tiling.plane.points_mid.iter_points(),
+    tiling.plane.points_mid.iter_points().cloned(),
     VAPOR_WAVE_COLOR_PALETTE[2],
   )?;
 
@@ -41,7 +41,7 @@ pub fn draw_transform_points(
       &canvas.scale,
       Some(style.get_point_radius(&canvas.scale) * 0.5),
     ),
-    tiling.plane.points_center_extended.iter_points(),
+    tiling.plane.points_center_extended.iter_points().cloned(),
     "black",
   )?;
 
@@ -51,7 +51,7 @@ pub fn draw_transform_points(
       &canvas.scale,
       Some(style.get_point_radius(&canvas.scale) * 0.5),
     ),
-    tiling.plane.points_end_extended.iter_points(),
+    tiling.plane.points_end_extended.iter_points().cloned(),
     "black",
   )?;
 
@@ -61,17 +61,55 @@ pub fn draw_transform_points(
       &canvas.scale,
       Some(style.get_point_radius(&canvas.scale) * 0.5),
     ),
-    tiling.plane.points_mid_extended.iter_points(),
+    tiling.plane.points_mid_extended.iter_points().cloned(),
     "black",
+  )?;
+
+  //
+  draw_transform_points_group(
+    canvas,
+    &style.set_point_radius(
+      &canvas.scale,
+      Some(style.get_point_radius(&canvas.scale) * 0.45),
+    ),
+    tiling
+      .plane
+      .iter_core_center_complete_point_sequences()
+      .map(|point_sequence| point_sequence.center.into()),
+    "red",
+  )?;
+  draw_transform_points_group(
+    canvas,
+    &style.set_point_radius(
+      &canvas.scale,
+      Some(style.get_point_radius(&canvas.scale) * 0.45),
+    ),
+    tiling
+      .plane
+      .iter_core_mid_complete_point_sequences()
+      .map(|point_sequence| point_sequence.center.into()),
+    "red",
+  )?;
+  draw_transform_points_group(
+    canvas,
+    &style.set_point_radius(
+      &canvas.scale,
+      Some(style.get_point_radius(&canvas.scale) * 0.45),
+    ),
+    tiling
+      .plane
+      .iter_core_end_complete_point_sequences()
+      .map(|point_sequence| point_sequence.center.into()),
+    "red",
   )?;
 
   Ok(())
 }
 
-fn draw_transform_points_group<'a>(
+fn draw_transform_points_group(
   canvas: &mut Canvas,
   style: &Style,
-  points: impl Iterator<Item = &'a location::Point>,
+  points: impl Iterator<Item = location::Point>,
   color: &str,
 ) -> Result<(), Error> {
   for point in points {
@@ -79,7 +117,7 @@ fn draw_transform_points_group<'a>(
       Layer::TransformPoints,
       Point::default()
         .non_interactive()
-        .with_point((*point).into())
+        .with_point((point).into())
         .with_style(style.clone().set_fill(Some(color.to_string())))
         .into(),
     )?;

@@ -5,7 +5,7 @@ mod point_tests;
 use std::fmt::{self, Display};
 
 use hogg_spatial_grid_map::location;
-use hogg_spatial_grid_map::utils::{coordinate_equals, get_radians_for_x_y};
+use hogg_spatial_grid_map::utils::{coordinate_equals, get_radians_for_x_y, Fxx};
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
@@ -13,22 +13,22 @@ use typeshare::typeshare;
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct Point {
-  pub x: f32,
-  pub y: f32,
+  pub x: Fxx,
+  pub y: Fxx,
   pub index: u8,
 }
 
 impl Point {
-  pub fn at(x: f32, y: f32) -> Self {
+  pub fn at(x: Fxx, y: Fxx) -> Self {
     Self::default().with_x(x).with_y(y)
   }
 
-  pub fn with_x(mut self, x: f32) -> Self {
+  pub fn with_x(mut self, x: Fxx) -> Self {
     self.x = x;
     self
   }
 
-  pub fn with_y(mut self, y: f32) -> Self {
+  pub fn with_y(mut self, y: Fxx) -> Self {
     self.y = y;
     self
   }
@@ -38,27 +38,27 @@ impl Point {
     self
   }
 
-  pub fn theta(&self) -> f32 {
+  pub fn theta(&self) -> Fxx {
     self.radian_to(&Self::at(0.0, 0.0))
   }
 
-  pub fn distance_to(&self, point: &Self) -> f32 {
+  pub fn distance_to(&self, point: &Self) -> Fxx {
     (point.x - self.x).hypot(point.y - self.y)
   }
 
-  pub fn distance_to_center(&self) -> f32 {
+  pub fn distance_to_center(&self) -> Fxx {
     self.distance_to(&Self::at(0.0, 0.0))
   }
 
-  pub fn radian_to(&self, point: &Self) -> f32 {
+  pub fn radian_to(&self, point: &Self) -> Fxx {
     get_radians_for_x_y(self.x - point.x, self.y - point.y)
   }
 
-  pub fn radian_to_center(&self) -> f32 {
+  pub fn radian_to_center(&self) -> Fxx {
     self.radian_to(&Self::at(0.0, 0.0))
   }
 
-  pub fn multiply(&self, scalar: f32) -> Self {
+  pub fn multiply(&self, scalar: Fxx) -> Self {
     Self::at(self.x * scalar, self.y * scalar).with_index(self.index)
   }
 
@@ -74,7 +74,7 @@ impl Point {
     Self::at(x, y).with_index(self.index)
   }
 
-  pub fn rotate(&self, radians: f32, origin: Option<&Self>) -> Self {
+  pub fn rotate(&self, radians: Fxx, origin: Option<&Self>) -> Self {
     let default_origin = Self::default();
     let origin = origin.unwrap_or(&default_origin);
 
@@ -91,7 +91,7 @@ impl Point {
     Self::at(self.x + shift.x, self.y + shift.y).with_index(self.index)
   }
 
-  pub fn scale(&self, scale: f32) -> Self {
+  pub fn scale(&self, scale: Fxx) -> Self {
     Self::at(self.x * scale, self.y * scale).with_index(self.index)
   }
 }
@@ -136,7 +136,7 @@ impl From<&location::Point> for Point {
 
 impl From<&Vec<Point>> for Point {
   fn from(points: &Vec<Point>) -> Self {
-    let length = points.len() as f32;
+    let length = points.len() as Fxx;
     let mut x = 0.0;
     let mut y = 0.0;
 

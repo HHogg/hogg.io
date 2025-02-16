@@ -7,6 +7,8 @@ import tilings from '../results/output.json' assert { type: 'json' };
 
 const outputDir = path.resolve('./results/images');
 
+const toId = (notation) => notation.replace(/\//g, ':');
+
 const generateTilingImage = async (page, notation, filePath) => {
   await page.goto(
     `http://localhost:4001/_tiling_generation?notation=${notation}`
@@ -50,34 +52,51 @@ const generateTilingImage = async (page, notation, filePath) => {
 (async () => {
   console.log('Starting puppeteer...');
 
-  // Remove the directory if it exists
+  const fileNameMap = new Map();
+
+  tilings.forEach((tiling) => {
+    const { notation } = tiling;
+    const id = toId(notation);
+    fileNameMap.set(id, notation);
+  });
+
+  // If the diretory exists, remove the images
+  // that aren't in the tilings list
   if (fs.existsSync(outputDir)) {
-    fs.rmSync(outputDir, { recursive: true });
-    fs.mkdirSync(outputDir, { recursive: true });
+    const files = fs.readdirSync(outputDir);
+
+    for (const file of files) {
+      const id = path.basename(file, '.png');
+
+      if (!fileNameMap.has(id)) {
+        fs.rmSync(path.join(outputDir, file));
+        console.log(`Removed ${file}`);
+      }
+    }
   }
 
   // Launch the browser and open a new blank page
   const browser = await launch({ headless: 'new' });
   const page = await browser.newPage();
+
   let tilingsCount = 0;
+  let i = 0;
 
   await page.setViewport({ width: 1200, height: 600 });
 
-  for (let i = 0; i < tilings.length; i++) {
-    const { notation } = tilings[i];
-    const filePath = path.join(
-      outputDir,
-      `${notation.replace(/\//g, ':')}.png`
-    );
+  for (const [id, notation] of fileNameMap.entries()) {
+    const filePath = path.join(outputDir, `${id}.png`);
 
     if (fs.existsSync(filePath)) {
-      console.log(`Skipping ${notation} as it already exists`);
+      console.log(
+        `[${++i}/${tilings.length}] Skipping ${notation} as it already exists`
+      );
       continue;
     }
 
     await generateTilingImage(page, notation, filePath);
     tilingsCount++;
-    console.log(`Saved ${notation} [${i + 1}/${tilings.length}]`);
+    console.log(`[${++i}/${tilings.length}] Saved ${notation}`);
   }
 
   await browser.close();

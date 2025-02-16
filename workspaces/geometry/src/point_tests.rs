@@ -1,4 +1,4 @@
-use std::f32::consts::PI;
+use hogg_spatial_grid_map::utils::{Fxx, PI};
 
 use super::*;
 
@@ -77,8 +77,8 @@ fn reflect() {
 
   let reflected = point.reflect(&p1, &p2);
 
-  assert!((reflected.x - 1.0).abs() < f32::EPSILON);
-  assert!((reflected.y - -1.0).abs() < f32::EPSILON);
+  assert!((reflected.x - 1.0).abs() < Fxx::EPSILON);
+  assert!((reflected.y - -1.0).abs() < Fxx::EPSILON);
 }
 
 #[test]
@@ -87,8 +87,8 @@ fn rotate() {
   let radians = PI / 2.0;
   let origin = Point::at(0.0, 0.0);
   let rotated = point.rotate(radians, Some(&origin));
-  assert!(rotated.x < f32::EPSILON);
-  assert!((rotated.y - 1.0).abs() < f32::EPSILON);
+  assert!(rotated.x < Fxx::EPSILON);
+  assert!((rotated.y - 1.0).abs() < Fxx::EPSILON);
 }
 
 #[test]

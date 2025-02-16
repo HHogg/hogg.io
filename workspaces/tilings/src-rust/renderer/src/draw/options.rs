@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use hogg_spatial_grid_map::Fxx;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -16,7 +17,7 @@ pub struct Options {
   pub color_palette: Option<ColorPalette>,
   pub is_valid: Option<bool>,
   pub max_stage: Option<u16>,
-  pub padding: Option<f32>,
+  pub padding: Option<Fxx>,
   pub scale_mode: Option<ScaleMode>,
   pub show_layers: Option<HashMap<Layer, bool>>,
   pub show_transform_index: Option<u8>,

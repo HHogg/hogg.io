@@ -1,17 +1,16 @@
 ---
 source: workspaces/spatial-grid-map/src-rust/./location_tests.rs
-expression: "Location::new(2, 1.0, Point(-8.1, 0.0), None)"
+expression: "Location::new(1.0, Point(-8.1, 0.0), None)"
 ---
 Location {
     key: (
-        -8,
+        -9,
         0,
     ),
     point: Point(
         -8.1,
         0.0,
     ),
-    contained: false,
     distance: 8.1,
-    radians: 4.712389,
+    radians: 4.71238898038469,
 }

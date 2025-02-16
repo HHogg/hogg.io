@@ -1,4 +1,5 @@
 use hogg_geometry::{BBox, Point};
+use hogg_spatial_grid_map::Fxx;
 
 use super::{Draw, Style};
 use crate::canvas::collision::Theia;
@@ -8,7 +9,7 @@ use crate::Error;
 #[derive(Clone, Debug, Default)]
 pub struct Grid {
   size: u64,
-  spacing: f32,
+  spacing: Fxx,
   style: Style,
 }
 
@@ -18,7 +19,7 @@ impl Grid {
     self
   }
 
-  pub fn with_spacing(mut self, spacing: f32) -> Self {
+  pub fn with_spacing(mut self, spacing: Fxx) -> Self {
     self.spacing = spacing;
     self
   }
@@ -65,15 +66,15 @@ impl Grid {
       ..
     } = offset.unwrap_or_default();
 
-    let min_x = ((self.size as f32) * -0.5) * self.spacing + offset_x;
-    let max_x = ((self.size as f32) * 0.5) * self.spacing + offset_x;
-    let min_y = ((self.size as f32) * -0.5) * self.spacing + offset_y;
-    let max_y = ((self.size as f32) * 0.5) * self.spacing + offset_y;
+    let min_x = ((self.size as Fxx) * -0.5) * self.spacing + offset_x;
+    let max_x = ((self.size as Fxx) * 0.5) * self.spacing + offset_x;
+    let min_y = ((self.size as Fxx) * -0.5) * self.spacing + offset_y;
+    let max_y = ((self.size as Fxx) * 0.5) * self.spacing + offset_y;
 
     // Draw horizontal lines
     for i in 0..=self.size {
       let thick_line = i % 8 == 0;
-      let y = min_y + (i as f32) * self.spacing;
+      let y = min_y + (i as Fxx) * self.spacing;
 
       self.draw_line(
         context,
@@ -88,7 +89,7 @@ impl Grid {
     // Draw vertical lines
     for i in 0..=self.size {
       let thick_line = i % 8 == 0;
-      let x = min_x + (i as f32) * self.spacing;
+      let x = min_x + (i as Fxx) * self.spacing;
 
       self.draw_line(
         context,

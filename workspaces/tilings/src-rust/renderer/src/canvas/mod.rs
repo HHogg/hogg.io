@@ -7,6 +7,7 @@ use std::collections::{BTreeMap, HashMap, VecDeque};
 
 use anyhow::Result;
 use hogg_geometry::BBox;
+use hogg_spatial_grid_map::Fxx;
 use hogg_tiling::Tiling;
 use wasm_bindgen::JsCast;
 
@@ -54,8 +55,8 @@ impl Canvas {
       .with_has_transforms(tiling.notation.transforms.len() >= 2);
 
     let layers_enabled = options.show_layers.clone().unwrap_or_default();
-    let width = canvas.width() as f32;
-    let height = canvas.height() as f32;
+    let width = canvas.width() as Fxx;
+    let height = canvas.height() as Fxx;
 
     let canvas_bbox = BBox::default().with_width(width).with_height(height);
 

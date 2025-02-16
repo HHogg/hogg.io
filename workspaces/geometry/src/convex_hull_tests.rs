@@ -1,5 +1,4 @@
-use std::f32::consts::PI;
-
+use hogg_spatial_grid_map::utils::PI;
 use insta::assert_json_snapshot;
 
 use super::*;

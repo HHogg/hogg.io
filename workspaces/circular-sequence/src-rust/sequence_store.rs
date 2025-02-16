@@ -7,7 +7,7 @@ use std::fmt::{self, Display, Formatter};
 use serde::Serialize;
 
 use crate::to_string::{to_string, to_string_one};
-use crate::{get_match, get_min_permutation, sort, Match, Sequence};
+use crate::{compare, get_match, get_min_permutation, sort, Match, Sequence};
 
 #[derive(Clone, Debug, Default, Serialize)]
 #[serde(into = "Vec<String>")]
@@ -31,13 +31,13 @@ impl SequenceStore {
     get_match(sequence, &self.sequences)
   }
 
-  pub fn insert(&mut self, sequence: Sequence) -> u8 {
+  pub fn insert(&mut self, sequence: Sequence) -> bool {
     match self.get_match(&sequence) {
-      Match::Exact(index) => index,
+      Match::Exact(_) => false,
       _ => {
-        let index = self.sequences.len();
         self.sequences.push(get_min_permutation(&sequence));
-        index as u8
+        self.sequences.sort_by(compare);
+        true
       }
     }
   }

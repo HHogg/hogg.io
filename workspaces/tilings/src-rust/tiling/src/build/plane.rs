@@ -2,11 +2,9 @@
 #[cfg(test)]
 mod tests;
 
-use std::f32::consts::PI;
-
 use hogg_circular_sequence::SequenceStore;
 use hogg_geometry::{ConvexHull, LineSegment, Point};
-use hogg_spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap};
+use hogg_spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap, PI};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -74,7 +72,6 @@ impl Plane {
     self.validator = validations.into();
     self
   }
-
   pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
     self.apply_path(&notation.path)?;
 
@@ -100,13 +97,11 @@ impl Plane {
               },
             )?;
           }
-
-          if repetition_index == 2 {
-            self.validate_expanded()?;
-            self.validate_gaps()?;
-            self.validate_vertex_types()?;
-          }
         }
+
+        self.validate_expanded()?;
+        self.validate_gaps()?;
+        self.validate_vertex_types()?;
       }
     }
 
@@ -215,54 +210,57 @@ impl Plane {
   /// Inserts a polygon into the tiling. If the polygon that occupies the
   /// same space already exists then it is not added.
   fn add_tile(&mut self, stage: Stage, tile: Tile) -> Result<(), TilingError> {
-    if self.tiles.contains(&tile.geometry.centroid.into()) {
+    let tile_location = tile.get_location();
+
+    if self.tiles.contains(&tile_location) {
       self
         .metrics
         .increment(stage.to_string().as_str(), "polygons_skipped");
       return Ok(());
     }
 
-    let size = tile.geometry.bbox.height().max(tile.geometry.bbox.width());
-    let is_placement_tile = tile.stage <= Stage::Placement;
-    let is_touching_placement_tile = self.is_touching_placement_tile(&tile);
+    let tile_size = tile.get_size();
+    let is_placement_tile = stage == Stage::Placement;
+    let is_touching_placement_tile = !is_placement_tile && self.is_touching_placement_tile(&tile);
+
+    // We add the polygon first so we can see it
+    // if there are any errors
+    self
+      .tiles
+      .insert(tile_location, tile_size, None, tile.clone());
+
+    // We also add the polygon to the polygons to transform
+    // to picked up on the next transform stage
+    self.tiles_to_transform.push(tile.clone());
 
     self.stage_added_tile = true;
     self
       .metrics
       .increment(stage.to_string().as_str(), "polygons_added");
 
-    let tile_location: location::Point = tile.geometry.centroid.into();
-
-    // We add the polygon first so we can see it
-    // if there are any errors
-    self.tiles.insert(tile_location, size, None, tile.clone());
-
-    // We also add the polygon to the polygons to transform
-    // to picked up on the next transform stage
-    self.tiles_to_transform.push(tile.clone());
-
     if is_placement_tile {
-      // Store the polygon's center point
-      // for looking up origins for transforms
+      // We store the polygons from the placement phase
+      // for convenience as they are the only original polygons,
+      // all the other polygons after are transformed copies.
+      self
+        .placement_tiles
+        .insert(tile_location, tile_size, None, tile.clone());
+
       self.points_center.insert(
         tile_location,
-        size,
+        tile_size,
         None,
         PointSequence::default()
           .with_center(tile.geometry.centroid)
           .with_size(tile.shape.into()),
       );
-
-      // We also store the polygons from the placement phase
-      // for convenience as they are the only original polygons,
-      // all the other polygons after are transformed copies.
-      self
-        .placement_tiles
-        .insert(tile_location, size, None, tile.clone());
-    } else if is_touching_placement_tile && !self.points_center.contains(&tile_location) {
+    } else if is_touching_placement_tile
+      && !self.points_center.contains(&tile_location)
+      && !self.points_center_extended.contains(&tile_location)
+    {
       self.points_center_extended.insert(
         tile_location,
-        size,
+        tile_size,
         None,
         PointSequence::default()
           .with_center(tile.geometry.centroid)
@@ -270,9 +268,8 @@ impl Plane {
       );
     }
 
-    for line_segment in tile.geometry.line_segments.iter() {
-      let mid_point = line_segment.mid_point();
-      let mid_point_location: location::Point = mid_point.into();
+    for line_segment in &tile.geometry.line_segments {
+      let mid_point_location: location::Point = line_segment.mid_point().into();
 
       if is_placement_tile {
         // Store the line segments mid point
@@ -281,7 +278,9 @@ impl Plane {
           mid_point_location,
           line_segment.length(),
           Some(line_segment.theta()),
-          PointSequence::default().with_center(mid_point).with_size(2),
+          PointSequence::default()
+            .with_center(line_segment.mid_point())
+            .with_size(2),
         );
 
         // Store the polygon's line segments
@@ -291,22 +290,26 @@ impl Plane {
           .last_mut()
           .map(|line_segments| {
             line_segments.insert(
-              line_segment.mid_point().into(),
+              mid_point_location,
               line_segment.length(),
               Some(line_segment.theta()),
               *line_segment,
             )
           });
-      } else if is_touching_placement_tile && !self.points_mid.contains(&mid_point_location) {
+      } else if is_touching_placement_tile
+        && !self.points_mid.contains(&mid_point_location)
+        && !self.points_mid_extended.contains(&mid_point_location)
+      {
         self.points_mid_extended.insert(
           mid_point_location,
           line_segment.length(),
           Some(line_segment.theta()),
-          PointSequence::default().with_center(mid_point).with_size(2),
+          PointSequence::default()
+            .with_center(line_segment.mid_point())
+            .with_size(2),
         );
       }
 
-      // Store the line segments for overlap validation.
       self
         .line_segments
         .insert(
@@ -323,8 +326,18 @@ impl Plane {
       // any future line segments should be valid.
       self.validate_overlaps(&tile, line_segment)?;
 
-      self.update_edge_type(&tile, line_segment);
-      self.update_shape_type(&tile, line_segment);
+      // With the opposite tile we can start to fill in the
+      // the shape and edge types.
+      let opposite_tile = self.get_opposite_tile(&tile, line_segment).cloned();
+
+      self.update_mid_point_sequence(&tile, line_segment);
+
+      if let Some(opposite_tile) = opposite_tile {
+        self.update_center_point_sequence(&tile, &opposite_tile);
+        self.update_center_point_sequence(&opposite_tile, &tile);
+
+        self.update_mid_point_sequence(&opposite_tile, line_segment);
+      }
     }
 
     for point in tile.geometry.points.iter() {
@@ -339,16 +352,34 @@ impl Plane {
           None,
           PointSequence::default().with_center(*point),
         );
-      } else if is_touching_placement_tile && !self.points_end.contains(&location_point) {
+      } else if is_touching_placement_tile
+        && !self.points_end.contains(&location_point)
+        && !self.points_end_extended.contains(&location_point)
+      {
         self.points_end_extended.insert(
           location_point,
           1.0,
           None,
           PointSequence::default().with_center(*point),
         );
+
+        // It might be that some non-touching placement tiles
+        // were added before this tile, so we need to update
+        // the end point sequence with those tiles as well.
+        let nearby_tiles = self
+          .tiles
+          .iter_values_around(&location_point, 2)
+          .cloned()
+          .collect::<Vec<_>>();
+
+        for nearby_tile in nearby_tiles {
+          if nearby_tile != tile && nearby_tile.geometry.points.contains(point) {
+            self.update_end_point_sequence(&nearby_tile, point);
+          }
+        }
       }
 
-      self.update_vertex_type(&tile, point);
+      self.update_end_point_sequence(&tile, point);
     }
 
     Ok(())
@@ -366,15 +397,34 @@ impl Plane {
     self.placement_tiles.iter_values()
   }
 
-  fn update_vertex_type(&mut self, tile: &Tile, point: &Point) {
-    if let Some(mut sequence) = self.get_core_end_point_sequence_mut(point) {
-      sequence
-        .value
-        .insert(tile.geometry.centroid, tile.shape.into());
+  fn is_touching_placement_tile(&self, tile: &Tile) -> bool {
+    for point in tile.geometry.points.iter() {
+      if self.points_end.contains(&point.into()) {
+        return true;
+      }
+    }
+
+    false
+  }
+
+  fn get_opposite_tile(&self, tile: &Tile, line_segment: &LineSegment) -> Option<&Tile> {
+    let location: location::Point = line_segment.mid_point().into();
+
+    self
+      .tiles
+      .iter_values_around(&location, 2)
+      .find(|nearby_tile| {
+        *nearby_tile != tile && nearby_tile.geometry.line_segments.contains(line_segment)
+      })
+  }
+
+  fn update_center_point_sequence(&mut self, a: &Tile, b: &Tile) {
+    if let Some(mut sequence) = self.get_core_center_point_sequence_mut(&a.geometry.centroid) {
+      sequence.value.insert(b.geometry.centroid, b.shape.into());
     }
   }
 
-  fn update_edge_type(&mut self, tile: &Tile, line_segment: &LineSegment) {
+  fn update_mid_point_sequence(&mut self, tile: &Tile, line_segment: &LineSegment) {
     if let Some(mut sequence) = self.get_core_mid_point_sequence_mut(&line_segment.mid_point()) {
       sequence
         .value
@@ -382,23 +432,11 @@ impl Plane {
     }
   }
 
-  fn update_shape_type(&mut self, tile: &Tile, line_segment: &LineSegment) {
-    let other_tile = self
-      .get_core_mid_point_sequence(&line_segment.mid_point())
-      .and_then(|line_segment_sequence| {
-        line_segment_sequence.find(|entry| entry.point != tile.geometry.centroid)
-      })
-      .and_then(|entry| self.tiles.get_value(&entry.point.into()).cloned());
-
-    if let Some(other_tile) = other_tile {
-      self.update_shape_type_for_tile(tile, &other_tile);
-      self.update_shape_type_for_tile(&other_tile, tile);
-    }
-  }
-
-  fn update_shape_type_for_tile(&mut self, a: &Tile, b: &Tile) {
-    if let Some(mut sequence) = self.get_core_center_point_sequence_mut(&a.geometry.centroid) {
-      sequence.value.insert(b.geometry.centroid, b.shape.into());
+  fn update_end_point_sequence(&mut self, tile: &Tile, point: &Point) {
+    if let Some(mut sequence) = self.get_core_end_point_sequence_mut(point) {
+      sequence
+        .value
+        .insert(tile.geometry.centroid, tile.shape.into());
     }
   }
 
@@ -411,16 +449,6 @@ impl Plane {
       self.stage_added_tile = false;
       self.stages.push(stage);
     }
-  }
-
-  pub fn is_touching_placement_tile(&self, tile: &Tile) -> bool {
-    for point in tile.geometry.points.iter() {
-      if self.points_end.contains(&point.into()) {
-        return true;
-      }
-    }
-
-    false
   }
 
   pub fn is_line_segment_available(&self, line_segment: &LineSegment) -> bool {

@@ -1,5 +1,4 @@
-use std::f32::consts::PI;
-
+use hogg_spatial_grid_map::PI;
 use hogg_tiling::notation::{Operation, OriginIndex, OriginType};
 use hogg_tiling::Tiling;
 

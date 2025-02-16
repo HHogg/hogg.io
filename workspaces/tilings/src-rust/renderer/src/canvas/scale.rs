@@ -1,6 +1,5 @@
-use core::f32;
-
 use hogg_geometry::{BBox, ConvexHull};
+use hogg_spatial_grid_map::{Fxx, PI_FRAC2};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -27,12 +26,12 @@ pub struct Scale {
   canvas_bbox: BBox,
   content_bbox: BBox,
   mode: ScaleMode,
-  padding: f32,
+  padding: Fxx,
 
-  scale: f32,
-  translate_x: f32,
-  translate_y: f32,
-  rotate: f32,
+  scale: Fxx,
+  translate_x: Fxx,
+  translate_y: Fxx,
+  rotate: Fxx,
 
   has_error: bool,
   has_transforms: bool,
@@ -60,7 +59,7 @@ impl Default for Scale {
 }
 
 impl Scale {
-  pub fn with_padding(mut self, padding: Option<f32>) -> Self {
+  pub fn with_padding(mut self, padding: Option<Fxx>) -> Self {
     self.padding = padding.unwrap_or(0.0);
     self.update();
     self
@@ -132,7 +131,7 @@ impl Scale {
    * canvas space to the content space. Usually called
    * in getting values from a Style object.
    */
-  pub fn scale_value_to_content(&self, value: f32) -> f32 {
+  pub fn scale_value_to_content(&self, value: Fxx) -> Fxx {
     value * (1.0 / self.scale)
   }
 
@@ -144,7 +143,7 @@ impl Scale {
    * content space to the canvas space. Usually called
    * in setting value to store on a Style object.
    */
-  pub fn scale_value_to_canvas(&self, value: f32) -> f32 {
+  pub fn scale_value_to_canvas(&self, value: Fxx) -> Fxx {
     value * self.scale
   }
 
@@ -180,7 +179,7 @@ impl Scale {
       && ((content_ratio < 1.0 && canvas_ratio > 1.0)
         || (content_ratio > 1.0 && canvas_ratio < 1.0))
     {
-      std::f32::consts::FRAC_PI_2
+      PI_FRAC2
     } else {
       0.0
     };

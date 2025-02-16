@@ -1,6 +1,5 @@
-use std::f32::consts::PI;
-
 use hogg_geometry::{BBox, Point};
+use hogg_spatial_grid_map::{Fxx, PI_FRAC2};
 
 use super::{Draw, LineSegment, Style};
 use crate::canvas::collision::Theia;
@@ -10,7 +9,7 @@ use crate::Error;
 #[derive(Clone, Debug, Default)]
 pub struct Chevron {
   point: Point,
-  direction: f32,
+  direction: Fxx,
   style: Style,
 }
 
@@ -20,7 +19,7 @@ impl Chevron {
     self
   }
 
-  pub fn with_direction(mut self, direction: f32) -> Self {
+  pub fn with_direction(mut self, direction: Fxx) -> Self {
     self.direction = direction;
     self
   }
@@ -34,10 +33,10 @@ impl Chevron {
     let size = self.style.get_chevron_size(scale);
 
     let point_1 = Point::at(self.point.x - size, self.point.y - size)
-      .rotate(self.direction - PI * 0.5, Some(&self.point));
+      .rotate(self.direction - PI_FRAC2, Some(&self.point));
     let point_2 = Point::at(self.point.x, self.point.y);
     let point_3 = Point::at(self.point.x + size, self.point.y - size)
-      .rotate(self.direction - PI * 0.5, Some(&self.point));
+      .rotate(self.direction - PI_FRAC2, Some(&self.point));
 
     vec![point_1, point_2, point_3]
   }

@@ -16,13 +16,19 @@ pub(super) struct Hash {
 }
 
 impl Hash {
-  pub fn update(&mut self, tiling: &Tiling, first_run: &bool, edge_sequence_store: &SequenceStore) {
+  pub fn update(
+    &mut self,
+    tiling: &Tiling,
+    is_first_run: bool,
+    tiling_edge_sequence_store: &SequenceStore,
+    edge_hash: &super::edge::Hash,
+  ) {
     self.updated = false;
 
-    if *first_run {
-      self.update_from_plane(tiling, edge_sequence_store);
+    if is_first_run {
+      self.update_from_tiling(tiling, tiling_edge_sequence_store);
     } else {
-      self.update_from_hashes(tiling);
+      self.update_from_hash(tiling, edge_hash);
     }
   }
 
@@ -35,20 +41,16 @@ impl Hash {
   // it, which gives us access to the vertex points, and
   // then insert the sequence_index for edge_sequence into
   // that vertex point_sequences.
-  fn update_from_plane(&mut self, tiling: &Tiling, edge_sequence_store: &SequenceStore) {
+  fn update_from_tiling(&mut self, tiling: &Tiling, edge_sequence_store: &SequenceStore) {
     let mut vertex_sequences = SpatialGridMap::<PointSequence>::new("vertex_sequences");
     let mut vertex_sequence_store = SequenceStore::default();
 
-    for sequence in tiling.plane.iter_core_mid_complete_point_sequences() {
-      if !sequence.is_complete() {
-        continue;
-      }
-
+    for point_sequence in tiling.plane.iter_core_mid_complete_point_sequences() {
       let PointSequence {
         center: line_segment_midpoint,
         sequence,
         ..
-      } = sequence;
+      } = point_sequence;
 
       let sequence_index = edge_sequence_store
         .get_index(sequence)
@@ -80,13 +82,17 @@ impl Hash {
       );
     }
 
-    self.updated = true;
-    self.point_sequences = vertex_sequences;
-    self.sequence_store = vertex_sequence_store;
-    self.hash = self.sequence_store.to_string();
+    let hash = vertex_sequence_store.to_string();
+
+    if hash != self.hash {
+      self.updated = true;
+      self.hash = hash;
+      self.point_sequences = vertex_sequences;
+      self.sequence_store = vertex_sequence_store;
+    }
   }
 
-  fn update_from_hashes(&mut self, _tiling: &Tiling) {}
+  fn update_from_hash(&mut self, tiling: &Tiling, edge_hash: &super::edge::Hash) {}
 
   fn update_vertex_sequence(
     &mut self,

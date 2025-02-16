@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod tests;
 
+use hogg_spatial_grid_map::utils::Fxx;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -11,9 +12,9 @@ use super::{LineSegment, Point, Polygon};
 #[typeshare]
 pub struct BBox {
   center: Point,
-  width: f32,
-  height: f32,
-  rotation: f32,
+  width: Fxx,
+  height: Fxx,
+  rotation: Fxx,
 }
 
 impl BBox {
@@ -41,33 +42,33 @@ impl BBox {
     self
   }
 
-  pub fn with_width(mut self, width: f32) -> Self {
+  pub fn with_width(mut self, width: Fxx) -> Self {
     self.width = width;
     self
   }
 
-  pub fn with_height(mut self, height: f32) -> Self {
+  pub fn with_height(mut self, height: Fxx) -> Self {
     self.height = height;
     self
   }
 
-  pub fn with_rotation(mut self, rotation: f32) -> Self {
+  pub fn with_rotation(mut self, rotation: Fxx) -> Self {
     self.rotation = rotation;
     self
   }
 
-  pub fn width(&self) -> f32 {
+  pub fn width(&self) -> Fxx {
     self.width
   }
 
-  pub fn height(&self) -> f32 {
+  pub fn height(&self) -> Fxx {
     self.height
   }
 
   pub fn min(&self) -> Point {
     let corners: [Point; 4] = self.into();
-    let mut min_x = f32::INFINITY;
-    let mut min_y = f32::INFINITY;
+    let mut min_x = Fxx::INFINITY;
+    let mut min_y = Fxx::INFINITY;
 
     for corner in corners.iter() {
       if corner.x < min_x {
@@ -84,8 +85,8 @@ impl BBox {
 
   pub fn max(&self) -> Point {
     let corners: [Point; 4] = self.into();
-    let mut max_x = -f32::INFINITY;
-    let mut max_y = -f32::INFINITY;
+    let mut max_x = -Fxx::INFINITY;
+    let mut max_y = -Fxx::INFINITY;
 
     for corner in corners.iter() {
       if corner.x > max_x {
@@ -100,15 +101,15 @@ impl BBox {
     Point::at(max_x, max_y)
   }
 
-  pub fn ratio(&self) -> f32 {
+  pub fn ratio(&self) -> Fxx {
     self.width() / self.height()
   }
 
-  pub fn radius_min(&self) -> f32 {
+  pub fn radius_min(&self) -> Fxx {
     self.width().min(self.height()) * 0.5
   }
 
-  pub fn radius_max(&self) -> f32 {
+  pub fn radius_max(&self) -> Fxx {
     self.width().max(self.height()) * 0.5
   }
 
@@ -131,7 +132,7 @@ impl BBox {
     Self::from_min_max(union_min, union_max)
   }
 
-  pub fn translate(&self, x_multiplier: f32, y_multiplier: f32) -> Self {
+  pub fn translate(&self, x_multiplier: Fxx, y_multiplier: Fxx) -> Self {
     let offset = Point::at(self.width() * x_multiplier, self.height() * y_multiplier);
 
     self.with_center(self.center.clone().translate(&offset))
@@ -155,10 +156,10 @@ impl BBox {
 
 impl From<&Vec<Point>> for BBox {
   fn from(points: &Vec<Point>) -> Self {
-    let mut min_x = f32::INFINITY;
-    let mut min_y = f32::INFINITY;
-    let mut max_x = -f32::INFINITY;
-    let mut max_y = -f32::INFINITY;
+    let mut min_x = Fxx::INFINITY;
+    let mut min_y = Fxx::INFINITY;
+    let mut max_x = -Fxx::INFINITY;
+    let mut max_y = -Fxx::INFINITY;
 
     for point in points.iter() {
       if point.x < min_x {

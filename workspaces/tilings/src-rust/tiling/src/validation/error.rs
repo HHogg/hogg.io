@@ -12,8 +12,8 @@ pub enum Error {
   Expansion,
   #[error("Gaps between shapes")]
   Gaps,
-  #[error("Shapes overlap")]
-  Overlaps,
+  #[error("Shapes overlap -> {reason}")]
+  Overlaps { reason: String },
   #[error("Invalid vertex type -> {sequence}")]
   VertexType { sequence: String },
   #[error("Invalid edge type -> {sequence}")]

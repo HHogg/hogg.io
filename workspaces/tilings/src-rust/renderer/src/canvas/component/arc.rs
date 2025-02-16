@@ -1,6 +1,5 @@
-use std::f32::consts::PI;
-
 use hogg_geometry::{BBox, Point};
+use hogg_spatial_grid_map::{Fxx, PI};
 
 use super::{Draw, Style};
 use crate::canvas::collision::Theia;
@@ -10,9 +9,9 @@ use crate::Error;
 #[derive(Clone, Debug, Default)]
 pub struct Arc {
   point: Point,
-  radius: f32,
-  start_angle: f32,
-  end_angle: f32,
+  radius: Fxx,
+  start_angle: Fxx,
+  end_angle: Fxx,
   style: Style,
 }
 
@@ -22,17 +21,17 @@ impl Arc {
     self
   }
 
-  pub fn with_radius(mut self, radius: f32) -> Self {
+  pub fn with_radius(mut self, radius: Fxx) -> Self {
     self.radius = radius;
     self
   }
 
-  pub fn with_start_angle(mut self, start_angle: f32) -> Self {
+  pub fn with_start_angle(mut self, start_angle: Fxx) -> Self {
     self.start_angle = start_angle;
     self
   }
 
-  pub fn with_end_angle(mut self, end_angle: f32) -> Self {
+  pub fn with_end_angle(mut self, end_angle: Fxx) -> Self {
     self.end_angle = end_angle;
     self
   }
@@ -42,7 +41,7 @@ impl Arc {
     self
   }
 
-  pub fn get_radius(&self, scale: &Scale) -> f32 {
+  pub fn get_radius(&self, scale: &Scale) -> Fxx {
     let line_thickness = self.style.get_line_thickness(scale);
     let chevron_size = self.style.get_chevron_size(scale);
     let stroke_width = self.style.get_stroke_width(scale);
@@ -51,11 +50,11 @@ impl Arc {
     (self.radius - chevron_size.max(outer_line_thickness * 0.5)).max(chevron_size * 3.0)
   }
 
-  fn get_start_angle(&self) -> f32 {
+  fn get_start_angle(&self) -> Fxx {
     self.start_angle - PI * 0.5
   }
 
-  fn get_end_angle(&self) -> f32 {
+  fn get_end_angle(&self) -> Fxx {
     self.end_angle - PI * 0.5
   }
 

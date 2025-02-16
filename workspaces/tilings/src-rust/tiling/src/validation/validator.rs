@@ -1,5 +1,6 @@
 use hogg_gap_validation::has_single_circuit;
 use hogg_geometry::LineSegment;
+use hogg_spatial_grid_map::location;
 
 use super::{Error, Flag};
 use crate::build::{Plane, Tile};
@@ -22,47 +23,55 @@ impl Validator {
   pub fn validate_overlaps(
     &self,
     plane: &Plane,
-    polygon: &Tile,
+    tile: &Tile,
     line_segment: &LineSegment,
   ) -> Result<(), Error> {
     if !self.option_validate_overlap {
       return Ok(());
     }
 
+    let location: location::Point = line_segment.mid_point().into();
+    let line_segment_count = *plane
+      .line_segments
+      .get_counter(&location, "count")
+      .unwrap_or(&0);
+
     // If a line segment has more than 2 polygons touching it
     // then it's overlapping with another line segment
-    if plane
-      .line_segments
-      .get_counter(&line_segment.mid_point().into(), "count")
-      .map_or(false, |count| *count > 2)
-    {
-      return Err(Error::Overlaps {});
+    if line_segment_count > 2 {
+      return Err(Error::Overlaps {
+        reason: format!("line segment count of {} is > 2", line_segment_count),
+      });
     }
 
     let nearby_line_segments = plane
       .line_segments
-      .iter_values_around(&line_segment.mid_point().into(), 1)
+      .iter_values_around(&location, 1)
       .filter(|other| *other != line_segment);
 
     // If a line segment intersects with another line segment
     // then it's overlapping with another line segment
     for nearby_line_segment in nearby_line_segments {
       if line_segment.is_intersecting_with_polygon_line_segment(nearby_line_segment) {
-        return Err(Error::Overlaps {});
+        return Err(Error::Overlaps {
+          reason: "nearby line segments intersecting".to_string(),
+        });
       }
     }
 
-    let nearby_polygons = plane
+    let nearby_tiles = plane
       .tiles
-      .iter_values_around(&polygon.geometry.centroid.into(), 1)
-      .filter(|other| *other != polygon);
+      .iter_values_around(&tile.geometry.centroid.into(), 1)
+      .filter(|other| *other != tile);
 
     // If the distance between the centroids of 2 polygons is
     // greater than the sum of their apothems then they are not
     // overlapping.
-    for nearby_polygon in nearby_polygons {
-      if polygon.geometry.intersects(&nearby_polygon.geometry) {
-        return Err(Error::Overlaps {});
+    for nearby_tile in nearby_tiles {
+      if tile.geometry.intersects(&nearby_tile.geometry) {
+        return Err(Error::Overlaps {
+          reason: "nearby by tiles intersecting".to_string(),
+        });
       }
     }
 

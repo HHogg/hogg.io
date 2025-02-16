@@ -5,14 +5,13 @@ mod grid_tests;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use core::f32;
-
 use std::collections::{BTreeSet, HashMap};
 use std::mem;
 
 use crate::bucket::{Bucket, BucketEntry, MutBucketEntry};
 use crate::location::{self, Location};
 use crate::visitor::Visitor;
+use crate::Fxx;
 
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 #[typeshare]
@@ -27,32 +26,34 @@ pub enum ResizeMethod {
 #[typeshare]
 pub struct SpatialGridMap<TEntryValue: Clone + std::fmt::Debug + Default> {
   id: String,
-  /// Default of "2" as 2 * 2 * 64 = 256 bits or a 16x16 grid.
-  /// The reason we start with 4 blocks as opposed to 1 block
-  /// is to avoid the case of shifting a single block over the center
-  /// of 4 blocks which would require some block splitting.
-  blocks_dimension: u32,
   /// Sorted set of all occupied locations in the grid.
   #[typeshare(serialized_as = "Vec<Location>")]
   locations: BTreeSet<Location>,
+  /// The minimum location in the grid.
+  location_min: location::Point,
+  /// The maximum location in the grid.
+  location_max: location::Point,
   /// Resizing
   resize_method: ResizeMethod,
   /// Bucket store.
   #[typeshare(serialized_as = "Map<Vec<i32>, Bucket<TEntryValue>>")]
   store: HashMap<location::Key, Bucket<TEntryValue>>,
   /// The amount of space each bit represents in the grid.
-  spacing: Option<f32>,
+  spacing: Option<Fxx>,
 }
 
 impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue> {
   pub fn new(id: &str) -> Self {
     SpatialGridMap {
       id: id.to_string(),
-      blocks_dimension: 2,
-      locations: BTreeSet::new(),
       resize_method: ResizeMethod::First,
-      spacing: None,
       store: HashMap::new(),
+
+      spacing: None,
+
+      locations: BTreeSet::new(),
+      location_min: location::Point(Fxx::MAX, Fxx::MAX),
+      location_max: location::Point(Fxx::MIN, Fxx::MIN),
     }
   }
 
@@ -61,39 +62,27 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self
   }
 
-  pub fn with_spacing(mut self, spacing: f32) -> Self {
+  pub fn with_spacing(mut self, spacing: Fxx) -> Self {
     self.spacing = Some(spacing);
     self
   }
 
-  pub fn get_spacing(&self) -> f32 {
+  pub fn get_spacing(&self) -> Fxx {
     self.spacing.unwrap_or(1.0)
   }
 
   pub fn get_grid_size(&self) -> u64 {
-    Location::get_grid_size(self.blocks_dimension)
+    let x = (self.location_max.0 - self.location_min.0).abs() as u64;
+    let y = (self.location_max.1 - self.location_min.1).abs() as u64;
+
+    x.max(y)
   }
 
-  /// Increases the grid size by making it 4 times larger (a square)
-  fn increase_size(&mut self) {
-    self.blocks_dimension *= 2;
+  fn get_location(&self, point: &location::Point, rotation: &Option<Fxx>) -> Location {
+    Location::new(self.get_spacing(), *point, *rotation)
   }
 
-  fn get_location(&self, point: &location::Point, rotation: &Option<f32>) -> Option<Location> {
-    let location = self.get_location_unchecked(point, rotation);
-
-    if location.is_contained() {
-      Some(location)
-    } else {
-      None
-    }
-  }
-
-  fn get_location_unchecked(&self, point: &location::Point, rotation: &Option<f32>) -> Location {
-    Location::new(self.blocks_dimension, self.get_spacing(), *point, *rotation)
-  }
-
-  fn get_bucket_by_location_key(&self, key: &location::Key) -> Option<&Bucket<TEntryValue>> {
+  pub fn get_bucket_by_location_key(&self, key: &location::Key) -> Option<&Bucket<TEntryValue>> {
     self.store.get(key)
   }
 
@@ -104,20 +93,8 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self.store.get_mut(key)
   }
 
-  fn create_location_key(&self, point: &location::Point) -> Option<location::Key> {
-    let location_key = self.create_location_key_unchecked(point);
-    let is_contained =
-      Location::get_is_contained(self.blocks_dimension, self.get_spacing(), *point);
-
-    if is_contained {
-      Some(location_key)
-    } else {
-      None
-    }
-  }
-
-  fn create_location_key_unchecked(&self, point: &location::Point) -> location::Key {
-    Location::get_key(self.blocks_dimension, self.get_spacing(), *point)
+  pub fn create_location_key(&self, point: &location::Point) -> location::Key {
+    Location::get_key(self.get_spacing(), *point)
   }
 
   fn get_location_by_key(&self, key: &location::Key) -> Option<Location> {
@@ -128,19 +105,15 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       .cloned()
   }
 
-  fn get_bucket_by_point(&self, point: &location::Point) -> Option<&Bucket<TEntryValue>> {
-    self
-      .create_location_key(point)
-      .and_then(|key| self.get_bucket_by_location_key(&key))
+  pub fn get_bucket_by_point(&self, point: &location::Point) -> Option<&Bucket<TEntryValue>> {
+    self.get_bucket_by_location_key(&self.create_location_key(point))
   }
 
   fn get_bucket_by_point_mut(
     &mut self,
     point: &location::Point,
   ) -> Option<&mut Bucket<TEntryValue>> {
-    self
-      .create_location_key(point)
-      .and_then(|location| self.get_bucket_by_location_key_mut(&location))
+    self.get_bucket_by_location_key_mut(&self.create_location_key(point))
   }
 
   pub fn get_value(&self, point: &location::Point) -> Option<&TEntryValue> {
@@ -161,6 +134,10 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       .and_then(|bucket| bucket.get_value(&location.point))
   }
 
+  pub fn iter_entries(&self) -> impl Iterator<Item = &BucketEntry<TEntryValue>> {
+    self.store.values().flat_map(|bucket| bucket.iter())
+  }
+
   pub fn iter_points(&self) -> impl Iterator<Item = &location::Point> {
     self.locations.iter().map(|location| &location.point)
   }
@@ -178,7 +155,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     point: &location::Point,
     radius: u8,
   ) -> impl Iterator<Item = &TEntryValue> {
-    let key = self.create_location_key_unchecked(point);
+    let key = self.create_location_key(point);
 
     Visitor::new(key, radius)
       .filter_map(move |key| self.store.get(&key))
@@ -207,29 +184,27 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     entry: BucketEntry<TEntryValue>,
     update_size_check: bool,
   ) -> MutBucketEntry<TEntryValue> {
-    match self.get_location(&entry.point, &entry.rotation) {
-      None => {
-        self.increase_size();
-        self.insert_entry(entry, update_size_check)
-      }
-      Some(location) => {
-        let point = entry.point;
-        let size = entry.size;
-        let inserted = self.store.entry(location.key).or_default().insert(entry);
+    let BucketEntry {
+      point,
+      rotation,
+      size,
+      ..
+    } = entry;
 
-        if inserted {
-          self.locations.insert(location.clone());
+    let location = self.get_location(&point, &rotation);
+    let inserted = self.store.entry(location.key).or_default().insert(entry);
 
-          if update_size_check {
-            self.update_spacing(size);
-          }
-        }
+    if inserted {
+      self.locations.insert(location.clone());
 
-        self
-          .get_value_mut(&point)
-          .expect("Value not found after insert")
+      if update_size_check {
+        self.update_spacing(size);
       }
     }
+
+    self
+      .get_value_mut(&point)
+      .expect("Value not found after insert")
   }
 
   /// Inserts a point into the grid, returning false if it's already present.
@@ -237,8 +212,8 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   pub fn insert(
     &mut self,
     point: location::Point,
-    size: f32,
-    rotation: Option<f32>,
+    size: Fxx,
+    rotation: Option<Fxx>,
     value: TEntryValue,
   ) -> MutBucketEntry<TEntryValue> {
     self.insert_entry(
@@ -277,21 +252,21 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   }
 
   pub fn remove(&mut self, point: &location::Point) {
-    if let Some(key) = self.create_location_key(point) {
-      let bucket = self
-        .get_bucket_by_location_key_mut(&key)
-        .expect("Bucket not found while removing point");
+    let key = self.create_location_key(point);
 
-      bucket.remove(point);
+    let bucket = self
+      .get_bucket_by_location_key_mut(&key)
+      .expect("Bucket not found while removing point");
 
-      if bucket.size() == 0 {
-        let location = self
-          .get_location_by_key(&key)
-          .expect("Location not found while removing bucket");
+    bucket.remove(point);
 
-        self.store.remove(&key);
-        self.locations.remove(&location);
-      }
+    if bucket.size() == 0 {
+      let location = self
+        .get_location_by_key(&key)
+        .expect("Location not found while removing bucket");
+
+      self.store.remove(&key);
+      self.locations.remove(&location);
     }
   }
 
@@ -311,7 +286,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     filtered_grid
   }
 
-  fn update_spacing(&mut self, new_spacing: f32) {
+  fn update_spacing(&mut self, new_spacing: Fxx) {
     match self.resize_method {
       ResizeMethod::First => {
         if self.spacing.is_none() {
@@ -341,8 +316,6 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
 
     let old_locations = mem::take(&mut self.locations);
     let mut old_store = mem::take(&mut self.store);
-
-    self.blocks_dimension = 2;
 
     for location in old_locations {
       let bucket = old_store

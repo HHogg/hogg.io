@@ -2,9 +2,8 @@
 #[cfg(test)]
 mod tests;
 
-use std::f32::consts::PI;
-
 use hogg_geometry::{LineSegment, Point};
+use hogg_spatial_grid_map::{location, Fxx, PI};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -54,6 +53,14 @@ impl Tile {
     self
   }
 
+  pub fn get_location(&self) -> location::Point {
+    self.geometry.centroid.into()
+  }
+
+  pub fn get_size(&self) -> Fxx {
+    self.geometry.bbox.height().max(self.geometry.bbox.width())
+  }
+
   pub fn at_center(self) -> Self {
     let sides = self.shape as u8;
     let radians = self.shape.get_internal_angle();
@@ -61,8 +68,8 @@ impl Tile {
     let mut points = Vec::new();
 
     for index in 0..sides {
-      let x = (radians * index as f32).cos();
-      let y = (radians * index as f32).sin();
+      let x = (radians * index as Fxx).cos();
+      let y = (radians * index as Fxx).sin();
 
       let mut point = Point::at(x, y).with_index(index);
 
@@ -71,7 +78,7 @@ impl Tile {
           point = point.rotate(PI / 6.0, None);
         }
         Shape::Square | Shape::Octagon | Shape::Dodecagon => {
-          point = point.rotate(PI / (sides as f32), None);
+          point = point.rotate(PI / (sides as Fxx), None);
         }
         _ => {}
       }
@@ -124,7 +131,7 @@ impl Tile {
     self
   }
 
-  pub fn rotate(mut self, radians: f32, origin: Option<&Point>) -> Self {
+  pub fn rotate(mut self, radians: Fxx, origin: Option<&Point>) -> Self {
     self.geometry = self.geometry.rotate(radians, origin);
     self
   }
@@ -134,10 +141,6 @@ impl Eq for Tile {}
 
 impl PartialEq for Tile {
   fn eq(&self, other: &Self) -> bool {
-    if self.shape != other.shape {
-      return false;
-    }
-
-    self.geometry == other.geometry
+    self.shape == other.shape && self.geometry == other.geometry
   }
 }

@@ -79,7 +79,7 @@ export default function ArrangementInformation() {
         </>
       )}
 
-      <Section title={transforms.length ? 'Transforms' : 'No transforms'}>
+      {/* <Section title={transforms.length ? 'Transforms' : 'No transforms'}>
         <Box flex="horizontal" gap="x16">
           {transforms.map((transform, index) => (
             <TransformCard
@@ -136,7 +136,7 @@ export default function ArrangementInformation() {
             />
           ))}
         </Grid>
-      </Section>
+      </Section> */}
     </Box>
   );
 }

@@ -14,6 +14,7 @@ path = "src-rust/lib.rs"
 [dependencies]
 console_log.workspace = true
 console_error_panic_hook.workspace = true
+hogg_spatial_grid_map = { path = "../spatial-grid-map" }
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true

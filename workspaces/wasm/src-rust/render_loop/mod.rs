@@ -1,5 +1,6 @@
 use std::rc::Rc;
 
+use hogg_spatial_grid_map::Fxx;
 use inner::RenderLoopInner;
 use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
 use web_sys::OffscreenCanvas;
@@ -58,7 +59,7 @@ impl RenderLoop {
     Ok(())
   }
 
-  pub fn set_speed(&self, speed: f32) -> Result<(), JsValue> {
+  pub fn set_speed(&self, speed: Fxx) -> Result<(), JsValue> {
     self.inner.set_speed(speed)
   }
 

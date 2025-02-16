@@ -1,7 +1,6 @@
-use std::f32;
-use std::f32::consts::PI;
+use hogg_spatial_grid_map::{Fxx, PI};
 
-pub type X1Y1X2Y2 = (f32, f32, f32, f32);
+pub type X1Y1X2Y2 = (Fxx, Fxx, Fxx, Fxx);
 
 pub fn extend_line_segment(
   line_segment: X1Y1X2Y2,
@@ -14,8 +13,8 @@ pub fn extend_line_segment(
 
   let dx = x2 - x1;
   let dy = y2 - y1;
-  let is_horizontal = dy.abs() < f32::EPSILON;
-  let is_vertical = dx.abs() < f32::EPSILON;
+  let is_horizontal = dy.abs() < Fxx::EPSILON;
+  let is_vertical = dx.abs() < Fxx::EPSILON;
 
   // For cases where the line is horizontal or vertical,
   // we can just use the min/max values of the bbox, and
@@ -66,8 +65,8 @@ pub fn extend_line_segment(
 
   let m = dy / dx;
   let b = y1 - m * x1;
-  let x = |y: f32| (y - b) / m;
-  let y = |x: f32| m * x + b;
+  let x = |y: Fxx| (y - b) / m;
+  let y = |x: Fxx| m * x + b;
 
   let x_for_min_y = x(min_y);
   let x_for_max_y = x(max_y);

@@ -4,19 +4,21 @@
 
 export type Sequence = [number, number, number, number, number, number, number, number, number, number, number, number];
 
+export type Fxx = number;
+
 export type NodeId = string;
 
 export interface Point {
-	x: number;
-	y: number;
+	x: Fxx;
+	y: Fxx;
 	index: number;
 }
 
 export interface BBox {
 	center: Point;
-	width: number;
-	height: number;
-	rotation: number;
+	width: Fxx;
+	height: Fxx;
+	rotation: Fxx;
 }
 
 export interface ConvexHull {
@@ -36,9 +38,9 @@ export interface Polygon {
 }
 
 export interface BucketEntry<TEntryValue> {
-	point: number[];
-	size: number;
-	rotation?: number;
+	point: Fxx[];
+	size: Fxx;
+	rotation?: Fxx;
 	value: TEntryValue;
 	counters: Record<string, number>;
 	bools: Record<string, boolean>;
@@ -57,21 +59,18 @@ export enum ResizeMethod {
 
 export interface SpatialGridMap<TEntryValue> {
 	id: string;
-	/**
-	 * Default of "2" as 2 * 2 * 64 = 256 bits or a 16x16 grid.
-	 * The reason we start with 4 blocks as opposed to 1 block
-	 * is to avoid the case of shifting a single block over the center
-	 * of 4 blocks which would require some block splitting.
-	 */
-	blocks_dimension: number;
 	/** Sorted set of all occupied locations in the grid. */
 	locations: Location[];
+	/** The minimum location in the grid. */
+	location_min: Point;
+	/** The maximum location in the grid. */
+	location_max: Point;
 	/** Resizing */
 	resize_method: ResizeMethod;
 	/** Bucket store. */
 	store: Map<number[], Bucket<TEntryValue>>;
 	/** The amount of space each bit represents in the grid. */
-	spacing?: number;
+	spacing?: Fxx;
 }
 
 export interface Error {
@@ -198,16 +197,16 @@ export interface VisitsRequest {
 }
 
 export interface Style {
-	chevronSize?: number;
+	chevronSize?: Fxx;
 	fill?: string;
-	lineDash?: number[];
-	lineThickness?: number;
-	pointRadius?: number;
+	lineDash?: Fxx[];
+	lineThickness?: Fxx;
+	pointRadius?: Fxx;
 	shadowColor?: string;
-	shadowBlur?: number;
+	shadowBlur?: Fxx;
 	strokeColor?: string;
-	strokeWidth?: number;
-	opacity?: number;
+	strokeWidth?: Fxx;
+	opacity?: Fxx;
 }
 
 export enum ColorMode {
@@ -261,7 +260,7 @@ export interface Options {
 	colorPalette?: ColorPalette;
 	isValid?: boolean;
 	maxStage?: number;
-	padding?: number;
+	padding?: Fxx;
 	scaleMode?: ScaleMode;
 	showLayers?: Record<Layer, boolean>;
 	showTransformIndex?: number;
@@ -314,7 +313,7 @@ export interface Tile {
 export interface Entry {
 	point: Point;
 	value: number;
-	radians: number;
+	radians: Fxx;
 }
 
 export interface PointSequence {
@@ -518,7 +517,9 @@ export type ValidationError =
 }}
 	| { type: "Expansion", content?: undefined }
 	| { type: "Gaps", content?: undefined }
-	| { type: "Overlaps", content?: undefined }
+	| { type: "Overlaps", content: {
+	reason: string;
+}}
 	| { type: "VertexType", content: {
 	sequence: string;
 }}

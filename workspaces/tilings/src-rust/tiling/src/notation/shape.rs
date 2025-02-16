@@ -2,9 +2,9 @@
 #[cfg(test)]
 mod tests;
 
-use std::f32::consts::PI;
 use std::str::FromStr;
 
+use hogg_spatial_grid_map::{Fxx, PI};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -53,12 +53,12 @@ impl Shape {
     }
   }
 
-  pub fn get_internal_angle(&self) -> f32 {
-    (PI * 2.0) / *self as u8 as f32
+  pub fn get_internal_angle(&self) -> Fxx {
+    (PI * 2.0) / *self as u8 as Fxx
   }
 
-  pub fn get_side_length(&self) -> f32 {
-    2.0 * (PI / *self as u8 as f32).sin()
+  pub fn get_side_length(&self) -> Fxx {
+    2.0 * (PI / *self as u8 as Fxx).sin()
   }
 
   pub fn previous(&self) -> Option<Self> {

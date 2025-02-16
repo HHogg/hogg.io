@@ -6,7 +6,7 @@ use std::{
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::{location, utils::coordinate_equals};
+use crate::{location, utils::coordinate_equals, Fxx};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
@@ -112,10 +112,10 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct BucketEntry<TEntryValue: Default> {
-  #[typeshare(serialized_as = "Vec<f32>")]
+  #[typeshare(serialized_as = "Vec<Fxx>")]
   pub point: location::Point,
-  pub size: f32,
-  pub rotation: Option<f32>,
+  pub size: Fxx,
+  pub rotation: Option<Fxx>,
   pub value: TEntryValue,
   pub counters: HashMap<String, u32>,
   pub bools: HashMap<String, bool>,
@@ -127,12 +127,12 @@ impl<TEntryValue: Default> BucketEntry<TEntryValue> {
     self
   }
 
-  pub fn with_size(mut self, size: f32) -> Self {
+  pub fn with_size(mut self, size: Fxx) -> Self {
     self.size = size;
     self
   }
 
-  pub fn with_rotation(mut self, rotation: Option<f32>) -> Self {
+  pub fn with_rotation(mut self, rotation: Option<Fxx>) -> Self {
     self.rotation = rotation;
     self
   }

@@ -2,17 +2,17 @@
 #[cfg(test)]
 mod tests;
 
-use core::f32;
 use std::fmt::Display;
 
+use hogg_spatial_grid_map::{Fxx, PI};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::{Direction, Offset, Operation, Seed, Shape};
 use crate::TilingError;
 
-fn degrees_to_radian(degrees: u16) -> f32 {
-  degrees as f32 * f32::consts::PI / 180.0
+fn degrees_to_radian(degrees: u16) -> Fxx {
+  degrees as Fxx * PI / 180.0
 }
 
 #[derive(Clone, Debug, Default, Deserialize, PartialEq, Eq, Serialize)]
@@ -65,7 +65,7 @@ impl TransformValue {
     Ok(self)
   }
 
-  pub fn as_radian(&self) -> f32 {
+  pub fn as_radian(&self) -> Fxx {
     degrees_to_radian(self.value)
   }
 
@@ -79,7 +79,7 @@ impl TransformValue {
     value
   }
 
-  pub fn get_transform_values(&self) -> Vec<f32> {
+  pub fn get_transform_values(&self) -> Vec<Fxx> {
     let mut value = self.value;
     let mut values = vec![];
 

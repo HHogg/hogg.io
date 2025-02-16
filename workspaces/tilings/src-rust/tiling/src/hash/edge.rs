@@ -20,15 +20,16 @@ impl Hash {
   pub fn update(
     &mut self,
     tiling: &Tiling,
-    first_run: &bool,
+    is_first_run: bool,
     shape_sequence_store: &SequenceStore,
+    shape_hash: &super::shape::Hash,
   ) {
     self.updated = false;
 
-    if *first_run {
-      self.update_from_plane(tiling, shape_sequence_store);
+    if is_first_run {
+      self.update_from_tiling(tiling, shape_sequence_store);
     } else {
-      self.update_from_hashes(tiling);
+      self.update_from_hash(tiling, shape_hash);
     }
   }
 
@@ -39,19 +40,16 @@ impl Hash {
   // the shape centroids on either side, which we can use to look up
   // the shape sequence and use it's index in the sequence store
   // to insert into the edge sequences.
-  fn update_from_plane(&mut self, tiling: &Tiling, shape_sequence_store: &SequenceStore) {
+  fn update_from_tiling(&mut self, tiling: &Tiling, shape_sequence_store: &SequenceStore) {
     let mut edge_sequences = SpatialGridMap::<PointSequence>::new("edge_sequences");
     let mut edge_sequence_store = SequenceStore::default();
 
-    for sequence in tiling.plane.iter_core_mid_complete_point_sequences() {
-      if !sequence.is_complete() {
-        continue;
-      }
-
-      for entry in sequence.iter() {
+    for point_sequence in tiling.plane.iter_core_mid_complete_point_sequences() {
+      for entry in point_sequence.iter() {
+        let shape_centroid = entry.point;
         let sequence_index = tiling
           .plane
-          .get_core_center_complete_point_sequence(&entry.point)
+          .get_core_center_complete_point_sequence(&shape_centroid)
           .and_then(|point_sequence| shape_sequence_store.get_index(&point_sequence.sequence))
           .map(|sequence_index| sequence_index + 1)
           .unwrap_or_else(|| 0);
@@ -61,25 +59,31 @@ impl Hash {
         }
 
         self.update_edge_point_sequence(
+          tiling,
           &mut edge_sequences,
           &mut edge_sequence_store,
-          &sequence.center, // Line segment midpoint
-          &entry.point,     // Shape centroid
+          &point_sequence.center, // Line segment midpoint
+          &shape_centroid,        // Shape centroid
           sequence_index,
         );
       }
     }
 
-    self.updated = true;
-    self.point_sequences = edge_sequences;
-    self.sequence_store = edge_sequence_store;
-    self.hash = self.sequence_store.to_string();
+    let hash = edge_sequence_store.to_string();
+
+    if hash != self.hash {
+      self.updated = true;
+      self.hash = hash;
+      self.point_sequences = edge_sequences;
+      self.sequence_store = edge_sequence_store;
+    }
   }
 
-  fn update_from_hashes(&mut self, _tiling: &Tiling) {}
+  fn update_from_hash(&mut self, tiling: &Tiling, shape_hash: &super::shape::Hash) {}
 
   fn update_edge_point_sequence(
     &mut self,
+    tiling: &Tiling,
     edge_sequences: &mut SpatialGridMap<PointSequence>,
     edge_sequence_store: &mut SequenceStore,
     edge_point: &Point,

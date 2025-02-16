@@ -2,6 +2,7 @@
 #[cfg(test)]
 mod tests;
 
+use hogg_spatial_grid_map::utils::Fxx;
 use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
@@ -87,7 +88,7 @@ impl ConvexHull {
     None
   }
 
-  pub fn get_bbox_scale_value(&self, bbox: &BBox) -> f32 {
+  pub fn get_bbox_scale_value(&self, bbox: &BBox) -> Fxx {
     if self.points.is_empty() {
       return 1.0;
     }
@@ -125,13 +126,13 @@ impl ConvexHull {
       .expect("There should be at least one point")
   }
 
-  pub fn scale(&self, scale: f32) -> Self {
+  pub fn scale(&self, scale: Fxx) -> Self {
     ConvexHull {
       points: self.points.iter().map(|point| point.scale(scale)).collect(),
     }
   }
 
-  pub fn rotate(&self, theta: f32, origin: Option<&Point>) -> Self {
+  pub fn rotate(&self, theta: Fxx, origin: Option<&Point>) -> Self {
     ConvexHull {
       points: self
         .points
@@ -153,7 +154,7 @@ fn is_left_turn(p1: Point, p2: Point, p3: Point) -> bool {
 ///
 /// It handles cases where a <= PI * 2.0 and c >= 0.0, in other
 /// words where the range wraps around 0.0.
-fn is_between_radians(a: f32, b: f32, c: f32) -> bool {
+fn is_between_radians(a: Fxx, b: Fxx, c: Fxx) -> bool {
   // If a and c are colinear, then b must also be colinear to
   // a and c to be between them.
   if a == c {
