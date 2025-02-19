@@ -120,6 +120,16 @@ export function formatFacetValue(key: string, value: string) {
   return titlecase(value);
 }
 
+export function formatShape(shape: number | string): string {
+  if (shape.toString() === '3') return 'Triangle';
+  if (shape.toString() === '4') return 'Square';
+  if (shape.toString() === '6') return 'Hexagon';
+  if (shape.toString() === '8') return 'Octagon';
+  if (shape.toString() === '12') return 'Dodecagon';
+
+  return `Shape ${shape}`;
+}
+
 export function formatUniform(value: number | string): string {
   if (value.toString() === '0') return 'Regular';
   if (value.toString() === '1') return 'Semi-Regular';

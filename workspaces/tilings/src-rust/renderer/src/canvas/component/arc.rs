@@ -66,11 +66,11 @@ impl Arc {
   ) -> Result<(), Error> {
     self.draw_start(context, scale, style)?;
     context.arc(
-      self.point.x as f64,
-      self.point.y as f64,
-      self.get_radius(scale) as f64,
-      self.get_start_angle() as f64,
-      self.get_end_angle() as f64,
+      self.point.x,
+      self.point.y,
+      self.get_radius(scale),
+      self.get_start_angle(),
+      self.get_end_angle(),
     )?;
     self.draw_end(context);
 

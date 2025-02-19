@@ -1,5 +1,5 @@
 import { PropsWithChildren, useMemo, useState } from 'react';
-import { groupResultsByUniform, results } from '../utils/results';
+import { groupResults, results } from '../utils/results';
 import {
   LibraryContext,
   LibraryFilters,
@@ -18,7 +18,7 @@ export default function LibraryProvider({ children }: PropsWithChildren) {
   );
 
   const filteredResultsByUniform = useMemo(
-    () => groupResultsByUniform(filteredResults),
+    () => groupResults(filteredResults),
     [filteredResults]
   );
 
@@ -37,7 +37,7 @@ export default function LibraryProvider({ children }: PropsWithChildren) {
         countsByShapes,
         filters,
         filteredResults,
-        filteredResultsByUniform,
+        filteredResultsBySeed: filteredResultsByUniform,
         toggleFilter,
       }}
     >

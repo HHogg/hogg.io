@@ -60,8 +60,6 @@ export default function useArrangementStats(): ArrangementStats {
     const stats = createStats();
 
     for (const event of combinedMetricEvents) {
-      stats.totalDuration += event.duration;
-
       stats.polygonsAdded += event.counters.get('polygons_added') ?? 0;
       stats.polygonsAddedSeries.push(stats.polygonsAdded);
 
@@ -117,12 +115,18 @@ export default function useArrangementStats(): ArrangementStats {
         }
       }
 
+      if (event.key === 'build') {
+        stats.totalDuration += event.duration;
+      }
+
       if (event.key == 'draw_shapes') {
         stats.stageDurationDraw += event.duration;
+        stats.totalDuration += event.duration;
       }
 
       if (event.key == 'render') {
         stats.stageDurationRender += event.duration;
+        stats.totalDuration += event.duration;
       }
     }
 

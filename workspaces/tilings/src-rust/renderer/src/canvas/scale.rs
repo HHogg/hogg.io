@@ -112,13 +112,13 @@ impl Scale {
 
     // Move the origin to the center of the canvas.
     ctx.translate(
-      (self.canvas_bbox.width() * 0.5) as f64,
-      (self.canvas_bbox.height() * 0.5) as f64,
+      self.canvas_bbox.width() * 0.5,
+      self.canvas_bbox.height() * 0.5,
     )?;
 
-    ctx.rotate(self.rotate as f64)?;
-    ctx.scale(self.scale as f64, self.scale as f64)?;
-    ctx.translate(self.translate_x as f64, self.translate_y as f64)?;
+    ctx.rotate(self.rotate)?;
+    ctx.scale(self.scale, self.scale)?;
+    ctx.translate(self.translate_x, self.translate_y)?;
 
     Ok(())
   }

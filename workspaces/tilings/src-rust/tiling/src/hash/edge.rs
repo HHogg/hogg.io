@@ -101,7 +101,7 @@ impl Hash {
         None,
         PointSequence::default()
           .with_center(*edge_point)
-          .with_size(2),
+          .with_max_size(2),
       );
     }
 

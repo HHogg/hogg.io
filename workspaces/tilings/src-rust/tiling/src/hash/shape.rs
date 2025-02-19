@@ -98,7 +98,7 @@ impl Hash {
         None,
         PointSequence::default()
           .with_center(*shape_centroid)
-          .with_size(*size as u8),
+          .with_max_size(*size as u8),
       );
     }
 

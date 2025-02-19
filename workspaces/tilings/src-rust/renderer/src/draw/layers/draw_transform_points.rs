@@ -70,7 +70,7 @@ pub fn draw_transform_points(
     canvas,
     &style.set_point_radius(
       &canvas.scale,
-      Some(style.get_point_radius(&canvas.scale) * 0.45),
+      Some(style.get_point_radius(&canvas.scale) * 0.33),
     ),
     tiling
       .plane
@@ -78,11 +78,12 @@ pub fn draw_transform_points(
       .map(|point_sequence| point_sequence.center.into()),
     "red",
   )?;
+
   draw_transform_points_group(
     canvas,
     &style.set_point_radius(
       &canvas.scale,
-      Some(style.get_point_radius(&canvas.scale) * 0.45),
+      Some(style.get_point_radius(&canvas.scale) * 0.33),
     ),
     tiling
       .plane
@@ -90,11 +91,12 @@ pub fn draw_transform_points(
       .map(|point_sequence| point_sequence.center.into()),
     "red",
   )?;
+
   draw_transform_points_group(
     canvas,
     &style.set_point_radius(
       &canvas.scale,
-      Some(style.get_point_radius(&canvas.scale) * 0.45),
+      Some(style.get_point_radius(&canvas.scale) * 0.33),
     ),
     tiling
       .plane

@@ -10,7 +10,7 @@ export type LibraryResultCounts = Record<FilterKeys, number>;
 export type LibraryContextProps = {
   countsByShapes: LibraryResultCounts;
   filteredResults: OutputResult[];
-  filteredResultsByUniform: Record<string, OutputResult[]>;
+  filteredResultsBySeed: Record<string, OutputResult[]>;
   filters: LibraryFilters;
   toggleFilter: (filter: keyof LibraryFilters) => void;
 };
@@ -78,7 +78,7 @@ const noop = () => {};
 export const defaultContext = {
   countsByShapes: defaultResultsCounts,
   filteredResults: [],
-  filteredResultsByUniform: {},
+  filteredResultsBySeed: {},
   filters: defaultFilters,
   toggleFilter: noop,
 };

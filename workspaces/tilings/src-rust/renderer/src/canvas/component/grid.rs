@@ -47,8 +47,8 @@ impl Grid {
     };
 
     self.draw_start(context, scale, &style)?;
-    context.move_to(start.x as f64, start.y as f64);
-    context.line_to(end.x as f64, end.y as f64);
+    context.move_to(start.x, start.y);
+    context.line_to(end.x, end.y);
     self.draw_end(context);
     Ok(())
   }

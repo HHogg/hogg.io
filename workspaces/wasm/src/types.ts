@@ -319,22 +319,25 @@ export interface Entry {
 export interface PointSequence {
 	sequence: Sequence;
 	center: Point;
-	size: number;
+	maxSize: number;
 	entries: Entry[];
 }
 
 export interface Plane {
 	tiles: SpatialGridMap<Tile>;
-	placementTiles: SpatialGridMap<Tile>;
+	tilesFromPlacement: SpatialGridMap<Tile>;
 	seedTile?: Tile;
 	repetitions: number;
 	lineSegments: SpatialGridMap<LineSegment>;
 	pointsCenter: SpatialGridMap<PointSequence>;
 	pointsCenterExtended: SpatialGridMap<PointSequence>;
+	pointsCenterPeripheral: SpatialGridMap<PointSequence>;
 	pointsEnd: SpatialGridMap<PointSequence>;
 	pointsEndExtended: SpatialGridMap<PointSequence>;
+	pointsEndPeripheral: SpatialGridMap<PointSequence>;
 	pointsMid: SpatialGridMap<PointSequence>;
 	pointsMidExtended: SpatialGridMap<PointSequence>;
+	pointsMidPeripheral: SpatialGridMap<PointSequence>;
 	metrics: Metrics;
 	stages: Stage[];
 }

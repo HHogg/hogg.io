@@ -128,7 +128,7 @@ impl Hash {
         None,
         PointSequence::default()
           .with_center(vertex_point)
-          .with_size(vertex_point_sequence_size as u8),
+          .with_max_size(vertex_point_sequence_size as u8),
       );
     }
 

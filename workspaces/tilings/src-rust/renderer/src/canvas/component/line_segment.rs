@@ -56,8 +56,8 @@ impl LineSegment {
 
     for (index, point) in self.get_points(content_bbox).iter().enumerate() {
       match index {
-        0 => context.move_to(point.x as f64, point.y as f64),
-        _ => context.line_to(point.x as f64, point.y as f64),
+        0 => context.move_to(point.x, point.y),
+        _ => context.line_to(point.x, point.y),
       }
     }
 

@@ -38,10 +38,10 @@ impl Point {
 
     self.draw_start(context, scale, style)?;
     context.ellipse(
-      self.point.x as f64,
-      self.point.y as f64,
-      radius as f64,
-      radius as f64,
+      self.point.x,
+      self.point.y,
+      radius,
+      radius,
       0.0,
       0.0,
       std::f64::consts::PI * 2.0,

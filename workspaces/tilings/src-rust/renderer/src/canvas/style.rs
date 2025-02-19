@@ -158,7 +158,7 @@ impl Style {
 
   fn apply_opacity(&self, context: &web_sys::OffscreenCanvasRenderingContext2d) {
     let opacity = self.opacity.unwrap_or(1.0);
-    context.set_global_alpha(opacity as f64);
+    context.set_global_alpha(opacity);
   }
 
   fn apply_shadow(&self, context: &web_sys::OffscreenCanvasRenderingContext2d, scale: &Scale) {
@@ -167,7 +167,7 @@ impl Style {
 
     if shadow_blur > 0.0 {
       context.set_shadow_color(&shadow_color);
-      context.set_shadow_blur(shadow_blur as f64);
+      context.set_shadow_blur(shadow_blur);
     } else {
       context.set_shadow_color("transparent");
       context.set_shadow_blur(0.0);
@@ -180,7 +180,7 @@ impl Style {
 
     if stroke_width > 0.0 {
       context.set_stroke_style_str(&stroke_color);
-      context.set_line_width(stroke_width as f64);
+      context.set_line_width(stroke_width);
     } else {
       context.set_stroke_style_str("transparent");
       context.set_line_width(0.0);
