@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 const options: Options = {
   autoRotate: true,
   colorMode: ColorMode.Placement,
-  colorPalette: ColorPalette.VaporWave,
+  colorPalette: ColorPalette.VaporWaveRandom,
   scaleMode: ScaleMode.Cover,
   styles: {},
 };

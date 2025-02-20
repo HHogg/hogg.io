@@ -2,6 +2,7 @@ import { ProjectWindow, ProjectTabs, ProjectTab } from '@hogg/common';
 import { WasmApiLoadingScreen } from '@hogg/wasm';
 import { BookOpenIcon, ChartNoAxesCombinedIcon, InfoIcon } from 'lucide-react';
 import { Box } from 'preshape';
+import { useCallback, useState } from 'react';
 import ArrangementInformation from './ArrangementInformation/ArrangementInformation';
 import ArrangementStats from './ArrangementStats/ArrangementStats';
 import Library from './Library/Library';
@@ -13,8 +14,7 @@ import RendererPlayer from './Renderer/RendererPlayer';
 import Settings from './Settings/Settings';
 import SettingsProvider from './Settings/SettingsProvider';
 import { useSettingsContext } from './Settings/useSettingsContext';
-
-const DEFAULT_NOTATION = '6-3-4,4-3/m90/r(h12)';
+import { getRandomNotation } from './utils/results';
 
 function PresentationInner() {
   const { setShowSettings } = useSettingsContext();
@@ -54,11 +54,17 @@ function PresentationInner() {
 }
 
 export default function Presentation({}) {
+  const [defaultNotation, setDefaultNotation] = useState(getRandomNotation());
+
+  const refreshNotation = useCallback(() => {
+    setDefaultNotation(getRandomNotation);
+  }, []);
+
   return (
     <WasmApiLoadingScreen>
       <SettingsProvider>
-        <NotationProvider notation={DEFAULT_NOTATION}>
-          <PlayerProvider>
+        <NotationProvider notation={defaultNotation}>
+          <PlayerProvider onEnd={refreshNotation}>
             <PresentationInner />
           </PlayerProvider>
         </NotationProvider>

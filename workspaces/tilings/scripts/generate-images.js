@@ -11,7 +11,7 @@ const toId = (notation) => notation.replace(/\//g, ':');
 
 const generateTilingImage = async (page, notation, filePath) => {
   await page.goto(
-    `http://localhost:4001/_tiling_generation?notation=${notation}`
+    `http://127.0.0.1:8080/_tiling_generation?notation=${notation}`
   );
 
   const element = await page.waitForSelector('canvas', {

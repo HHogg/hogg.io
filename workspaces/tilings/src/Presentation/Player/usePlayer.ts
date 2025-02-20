@@ -6,7 +6,7 @@ import {
   Result,
   Options,
 } from '@hogg/wasm';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNotationContext } from '../Notation/useNotationContext';
 import useRenderOptions from '../Renderer/useRenderOptions';
 import { useSettingsContext } from '../Settings/useSettingsContext';
@@ -32,9 +32,13 @@ export type UsePlayerResult = {
   renderMetrics: Metrics | null;
 };
 
+export type Callbacks = {
+  onEnd?: () => void;
+};
+
 const uid = 'tilings-player';
 
-export const usePlayer = (): UsePlayerResult => {
+export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   const { api } = useWasmApi();
   const { notation } = useNotationContext();
   const {
@@ -133,12 +137,31 @@ export const usePlayer = (): UsePlayerResult => {
     });
   }, []);
 
-  const play = () => api.tilings.controlPlayerPlay([]);
-  const pause = () => api.tilings.controlPlayerPause([]);
-  const forward = () => api.tilings.controlPlayerStepForward([]);
-  const backward = () => api.tilings.controlPlayerStepBackward([]);
-  const toStart = () => api.tilings.controlPlayerToStart([]);
-  const toEnd = () => api.tilings.controlPlayerToEnd([]);
+  const play = useCallback(() => api.tilings.controlPlayerPlay([]), [api]);
+  const pause = useCallback(() => api.tilings.controlPlayerPause([]), [api]);
+  const forward = useCallback(
+    () => api.tilings.controlPlayerStepForward([]),
+    [api]
+  );
+  const backward = useCallback(
+    () => api.tilings.controlPlayerStepBackward([]),
+    [api]
+  );
+  const toStart = useCallback(
+    () => api.tilings.controlPlayerToStart([]),
+    [api]
+  );
+  const toEnd = useCallback(() => api.tilings.controlPlayerToEnd([]), [api]);
+
+  useEffect(() => {
+    play();
+  }, [play]);
+
+  useEffect(() => {
+    if (percent === 1 && callbacks.onEnd) {
+      callbacks.onEnd();
+    }
+  }, [callbacks, percent]);
 
   return {
     play,

@@ -6,7 +6,7 @@ export type ImageModule = { default: string };
 export const results = uniqueTilings;
 export type OutputResult = (typeof results)[number];
 
-export const getRandomNotation = (previous: string): string => {
+export const getRandomNotation = (previous?: string): string => {
   const randomResult = results[Math.floor(Math.random() * results.length)];
   return randomResult.notation === previous
     ? getRandomNotation(previous)

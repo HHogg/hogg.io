@@ -1,6 +1,6 @@
 import { useWasmApi } from '@hogg/wasm';
 import { useLocalStorage } from 'preshape';
-import { PropsWithChildren, useCallback, useRef } from 'react';
+import { PropsWithChildren, useCallback, useEffect, useRef } from 'react';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 import { NotationContext } from './useNotationContext';
 
@@ -54,6 +54,10 @@ export default function NotationProvider({
   }, [api, expansionPhases, handleSetNotation]);
 
   const notationSplit = notation.split('/');
+
+  useEffect(() => {
+    handleSetNotation(initialNotation);
+  }, [handleSetNotation, initialNotation]);
 
   const value = {
     notation,

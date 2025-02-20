@@ -92,7 +92,7 @@ impl Hash {
     }
   }
 
-  fn update_from_hash(&mut self, tiling: &Tiling, edge_hash: &super::edge::Hash) {}
+  fn update_from_hash(&mut self, _tiling: &Tiling, _edge_hash: &super::edge::Hash) {}
 
   fn update_vertex_sequence(
     &mut self,

@@ -79,11 +79,11 @@ impl Hash {
     }
   }
 
-  fn update_from_hash(&mut self, tiling: &Tiling, shape_hash: &super::shape::Hash) {}
+  fn update_from_hash(&mut self, _tiling: &Tiling, _shape_hash: &super::shape::Hash) {}
 
   fn update_edge_point_sequence(
     &mut self,
-    tiling: &Tiling,
+    _tiling: &Tiling,
     edge_sequences: &mut SpatialGridMap<PointSequence>,
     edge_sequence_store: &mut SequenceStore,
     edge_point: &Point,

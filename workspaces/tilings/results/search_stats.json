@@ -1,6 +1,6 @@
 {
-  "total_paths_visited": 25,
-  "total_tilings_rendered": 9818,
-  "total_valid_tilings_found": 453,
-  "total_seconds_searching": 10
+  "total_paths_visited": 106359,
+  "total_tilings_rendered": 115959682,
+  "total_valid_tilings_found": 62135,
+  "total_seconds_searching": 31040
 }

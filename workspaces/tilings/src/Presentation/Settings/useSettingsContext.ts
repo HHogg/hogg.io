@@ -32,7 +32,7 @@ type SettingsContextValue = Settings & {
 export const defaultSettings: Settings = {
   ...defaultOptions,
   expansionPhases: defaultExpansionPhases,
-  speed: 1,
+  speed: 2,
 };
 
 const noop = () => {

@@ -76,7 +76,7 @@ impl Hash {
     }
   }
 
-  fn update_from_hash(&mut self, tiling: &Tiling, vertex_hash: &super::vertex::Hash) {}
+  fn update_from_hash(&mut self, _tiling: &Tiling, _vertex_hash: &super::vertex::Hash) {}
 
   fn update_shape_point_sequence(
     &mut self,

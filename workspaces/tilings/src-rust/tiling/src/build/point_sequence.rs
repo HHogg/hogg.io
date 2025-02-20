@@ -1,8 +1,8 @@
 use hogg_circular_sequence::Sequence;
 use hogg_geometry::Point;
-use hogg_spatial_grid_map::{ utils::radians_equal, Fxx, PI, PI2 };
+use hogg_spatial_grid_map::{utils::radians_equal, Fxx, PI, PI2};
 use ordered_float::OrderedFloat;
-use serde::{ Deserialize, Serialize };
+use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -73,8 +73,7 @@ impl PointSequence {
   }
 
   pub fn is_complete(&self) -> bool {
-    hogg_circular_sequence::get_length(&self.sequence) ==
-      (self.max_size as usize)
+    hogg_circular_sequence::get_length(&self.sequence) == (self.max_size as usize)
   }
 }
 

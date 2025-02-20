@@ -3,35 +3,19 @@
 mod tests;
 
 use hogg_circular_sequence::SequenceStore;
-use hogg_geometry::{ ConvexHull, LineSegment, Point };
-use hogg_spatial_grid_map::{
-  location,
-  MutBucketEntry,
-  ResizeMethod,
-  SpatialGridMap,
-  PI,
-};
-use serde::{ Deserialize, Serialize };
+use hogg_geometry::{ConvexHull, LineSegment, Point};
+use hogg_spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap, PI};
+use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::tile::Tile;
 use super::vertex_types::VertexTypes;
-use super::{ Metrics, PointSequence, Stage };
+use super::{Metrics, PointSequence, Stage};
 use crate::notation::{
-  Node,
-  Notation,
-  Operation,
-  OriginIndex,
-  OriginType,
-  Path,
-  Separator,
-  Shape,
-  Transform,
-  TransformContinuous,
-  TransformEccentric,
-  TransformValue,
+  Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
+  TransformContinuous, TransformEccentric, TransformValue,
 };
-use crate::validation::{ self, Validator };
+use crate::validation::{self, Validator};
 use crate::TilingError;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -90,10 +74,7 @@ impl Plane {
     self
   }
 
-  pub fn with_validations(
-    mut self,
-    validations: Option<Vec<validation::Flag>>
-  ) -> Self {
+  pub fn with_validations(mut self, validations: Option<Vec<validation::Flag>>) -> Self {
     self.validator = validations.into();
     self
   }
@@ -104,21 +85,25 @@ impl Plane {
 
     if !notation.transforms.list.is_empty() {
       for (index, transform) in notation.transforms.list.iter().enumerate() {
-        self.apply_transform(transform, Stage::Transform {
-          index: index as u8,
-          repetition_index: 0,
-        })?;
+        self.apply_transform(
+          transform,
+          Stage::Transform {
+            index: index as u8,
+            repetition_index: 0,
+          },
+        )?;
       }
 
       if self.repetitions > 0 {
         for repetition_index in 0..self.repetitions {
-          for (index, transform) in notation.transforms.list
-            .iter()
-            .enumerate() {
-            self.apply_transform(transform, Stage::Transform {
-              index: index as u8,
-              repetition_index,
-            })?;
+          for (index, transform) in notation.transforms.list.iter().enumerate() {
+            self.apply_transform(
+              transform,
+              Stage::Transform {
+                index: index as u8,
+                repetition_index,
+              },
+            )?;
           }
         }
 
@@ -156,76 +141,75 @@ impl Plane {
     // original points (for vertex_types).
     let mut points_counter = 0;
 
-    path.nodes.iter().try_for_each::<_, Result<(), TilingError>>(|node| {
-      match node {
-        Node::Seed(seed) => {
-          let tile = Tile::default()
-            .with_stage(Stage::Seed)
-            .with_shape(seed.shape)
-            .with_offset(seed.offset)
-            .at_center();
+    path
+      .nodes
+      .iter()
+      .try_for_each::<_, Result<(), TilingError>>(|node| {
+        match node {
+          Node::Seed(seed) => {
+            let tile = Tile::default()
+              .with_stage(Stage::Seed)
+              .with_shape(seed.shape)
+              .with_offset(seed.offset)
+              .at_center();
 
-          self.line_segments_by_shape_group.push(
-            SpatialGridMap::new(
-              "line_segments_by_shape_group.seed"
-            ).with_resize_method(ResizeMethod::First)
-          );
-          self.seed_tile = Some(tile.clone());
-          self.add_tile(Stage::Placement, tile)?;
+            self.line_segments_by_shape_group.push(
+              SpatialGridMap::new("line_segments_by_shape_group.seed")
+                .with_resize_method(ResizeMethod::First),
+            );
+            self.seed_tile = Some(tile.clone());
+            self.add_tile(Stage::Placement, tile)?;
 
-          shape_counter += 1;
-          points_counter += seed.shape as u8;
+            shape_counter += 1;
+            points_counter += seed.shape as u8;
 
-          self.complete_stage(Stage::Placement);
-        }
-        Node::Shape(Shape::Skip) => {
-          skip += 1;
-        }
-        Node::Shape(shape) => {
-          let line_segment = group_counter
-            .checked_sub(1)
-            .and_then(|group_index|
-              self.get_available_line_segment_from_group(group_index, skip)
-            )
-            .ok_or(TilingError::InvalidShapeInGroup {
-              shape: shape.to_string(),
-              group: group_counter.to_string(),
-              reason: "no available line segment".into(),
+            self.complete_stage(Stage::Placement);
+          }
+          Node::Shape(Shape::Skip) => {
+            skip += 1;
+          }
+          Node::Shape(shape) => {
+            let line_segment = group_counter
+              .checked_sub(1)
+              .and_then(|group_index| self.get_available_line_segment_from_group(group_index, skip))
+              .ok_or(TilingError::InvalidShapeInGroup {
+                shape: shape.to_string(),
+                group: group_counter.to_string(),
+                reason: "no available line segment".into(),
+              })?;
+
+            let tile = Tile::default()
+              .with_shape(*shape)
+              .with_stage(Stage::Placement)
+              .with_index(shape_counter)
+              .with_stage_index(self.stages.len() as u16)
+              .on_line_segment(&line_segment.flip(), points_counter - 1);
+
+            self.add_tile(Stage::Placement, tile)?;
+
+            shape_counter += 1;
+            points_counter += (*shape as u8) - 2;
+
+            self.complete_stage(Stage::Placement);
+          }
+          Node::Separator(Separator::Group) => {
+            self.line_segments_by_shape_group.push(
+              SpatialGridMap::new("line_segments_by_shape_group.group")
+                .with_resize_method(ResizeMethod::First),
+            );
+            group_counter += 1;
+            skip = 0;
+          }
+          Node::Separator(Separator::Shape) => {}
+          Node::Separator(Separator::Transform) => {
+            Err(TilingError::Application {
+              reason: "a transform separator made it's way into the Path".into(),
             })?;
-
-          let tile = Tile::default()
-            .with_shape(*shape)
-            .with_stage(Stage::Placement)
-            .with_index(shape_counter)
-            .with_stage_index(self.stages.len() as u16)
-            .on_line_segment(&line_segment.flip(), points_counter - 1);
-
-          self.add_tile(Stage::Placement, tile)?;
-
-          shape_counter += 1;
-          points_counter += (*shape as u8) - 2;
-
-          self.complete_stage(Stage::Placement);
+          }
         }
-        Node::Separator(Separator::Group) => {
-          self.line_segments_by_shape_group.push(
-            SpatialGridMap::new(
-              "line_segments_by_shape_group.group"
-            ).with_resize_method(ResizeMethod::First)
-          );
-          group_counter += 1;
-          skip = 0;
-        }
-        Node::Separator(Separator::Shape) => {}
-        Node::Separator(Separator::Transform) => {
-          Err(TilingError::Application {
-            reason: "a transform separator made it's way into the Path".into(),
-          })?;
-        }
-      }
 
-      Ok(())
-    })?;
+        Ok(())
+      })?;
 
     self.metrics.finish(Stage::Placement.to_string().as_str());
     self.metrics.finish(validation::Flag::Overlaps.into());
@@ -239,36 +223,38 @@ impl Plane {
     let tile_location = tile.get_location();
 
     if self.tiles.contains(&tile_location) {
-      self.metrics.increment(stage.to_string().as_str(), "polygons_skipped");
+      self
+        .metrics
+        .increment(stage.to_string().as_str(), "polygons_skipped");
       return Ok(());
     }
 
     let tile_size = tile.get_size();
     let is_placement_tile = stage == Stage::Placement;
-    let is_touching_placement_tile =
-      !is_placement_tile && self.is_touching_placement_tile(&tile);
+    let is_touching_placement_tile = !is_placement_tile && self.is_touching_placement_tile(&tile);
 
     // We add the polygon first so we can see it
     // if there are any errors
-    self.tiles.insert(tile_location, tile_size, None, tile.clone());
+    self
+      .tiles
+      .insert(tile_location, tile_size, None, tile.clone());
 
     // We also add the polygon to the polygons to transform
     // to picked up on the next transform stage
     self.tiles_to_transform.push(tile.clone());
 
     self.stage_added_tile = true;
-    self.metrics.increment(stage.to_string().as_str(), "polygons_added");
+    self
+      .metrics
+      .increment(stage.to_string().as_str(), "polygons_added");
 
     if is_placement_tile {
       // We store the polygons from the placement phase
       // for convenience as they are the only original polygons,
       // all the other polygons after are transformed copies.
-      self.tiles_from_placement.insert(
-        tile_location,
-        tile_size,
-        None,
-        tile.clone()
-      );
+      self
+        .tiles_from_placement
+        .insert(tile_location, tile_size, None, tile.clone());
 
       self.points_center.insert(
         tile_location,
@@ -276,24 +262,22 @@ impl Plane {
         None,
         PointSequence::default()
           .with_center(tile.geometry.centroid)
-          .with_max_size(tile.shape.into())
+          .with_max_size(tile.shape.into()),
       );
     } else if is_touching_placement_tile {
       if !self.points_center.contains(&tile_location) {
-        let point_sequence = self.points_center_peripheral
+        let point_sequence = self
+          .points_center_peripheral
           .take(&tile_location)
-          .unwrap_or_else(||
+          .unwrap_or_else(|| {
             PointSequence::default()
               .with_center(tile.geometry.centroid)
               .with_max_size(tile.shape.into())
-          );
+          });
 
-        self.points_center_extended.insert(
-          tile_location,
-          tile_size,
-          None,
-          point_sequence
-        );
+        self
+          .points_center_extended
+          .insert(tile_location, tile_size, None, point_sequence);
       }
     } else if !self.points_center_extended.contains(&tile_location) {
       self.points_center_peripheral.insert(
@@ -302,7 +286,7 @@ impl Plane {
         None,
         PointSequence::default()
           .with_center(tile.geometry.centroid)
-          .with_max_size(tile.shape.into())
+          .with_max_size(tile.shape.into()),
       );
     }
 
@@ -310,12 +294,13 @@ impl Plane {
       let mid_point = line_segment.mid_point();
       let mid_point_location: location::Point = mid_point.into();
 
-      self.line_segments
+      self
+        .line_segments
         .insert(
           mid_point_location,
           line_segment.length(),
           Some(line_segment.theta()),
-          *line_segment
+          *line_segment,
         )
         .increment_counter("count");
 
@@ -328,14 +313,15 @@ impl Plane {
       if is_placement_tile {
         // Store the polygon's line segments
         // for looking up in the shape placement stage
-        self.line_segments_by_shape_group
+        self
+          .line_segments_by_shape_group
           .last_mut()
           .map(|line_segments| {
             line_segments.insert(
               mid_point_location,
               line_segment.length(),
               Some(line_segment.theta()),
-              *line_segment
+              *line_segment,
             )
           });
 
@@ -345,21 +331,26 @@ impl Plane {
           mid_point_location,
           line_segment.length(),
           Some(line_segment.theta()),
-          PointSequence::default().with_center(mid_point).with_max_size(2)
+          PointSequence::default()
+            .with_center(mid_point)
+            .with_max_size(2),
         );
       } else if is_touching_placement_tile {
         if !self.points_mid.contains(&mid_point_location) {
-          let point_sequence = self.points_mid_peripheral
+          let point_sequence = self
+            .points_mid_peripheral
             .take(&mid_point_location)
-            .unwrap_or_else(||
-              PointSequence::default().with_center(mid_point).with_max_size(2)
-            );
+            .unwrap_or_else(|| {
+              PointSequence::default()
+                .with_center(mid_point)
+                .with_max_size(2)
+            });
 
           self.points_mid_extended.insert(
             mid_point_location,
             line_segment.length(),
             Some(line_segment.theta()),
-            point_sequence
+            point_sequence,
           );
         }
       } else if !self.points_mid_extended.contains(&mid_point_location) {
@@ -367,7 +358,9 @@ impl Plane {
           mid_point_location,
           line_segment.length(),
           Some(line_segment.theta()),
-          PointSequence::default().with_center(mid_point).with_max_size(2)
+          PointSequence::default()
+            .with_center(mid_point)
+            .with_max_size(2),
         );
       }
 
@@ -378,15 +371,9 @@ impl Plane {
       // With the opposite tile we can start to fill in the
       // the shape and edge types.
       if let Some(opposite_tile) = self.get_opposite_tile(&tile, &mid_point) {
-        self.update_center_point_sequence(
-          &tile.geometry.centroid,
-          &opposite_tile
-        );
+        self.update_center_point_sequence(&tile.geometry.centroid, &opposite_tile);
 
-        self.update_center_point_sequence(
-          &opposite_tile.geometry.centroid,
-          &tile
-        );
+        self.update_center_point_sequence(&opposite_tile.geometry.centroid, &tile);
       }
     }
 
@@ -400,27 +387,25 @@ impl Plane {
           location_point,
           1.0,
           None,
-          PointSequence::default().with_center(*point)
+          PointSequence::default().with_center(*point),
         );
       } else if is_touching_placement_tile {
         if !self.points_end.contains(&location_point) {
-          let point_sequence = self.points_end_peripheral
+          let point_sequence = self
+            .points_end_peripheral
             .take(&location_point)
             .unwrap_or_else(|| PointSequence::default().with_center(*point));
 
-          self.points_end_extended.insert(
-            location_point,
-            1.0,
-            None,
-            point_sequence
-          );
+          self
+            .points_end_extended
+            .insert(location_point, 1.0, None, point_sequence);
         }
       } else if !self.points_end_extended.contains(&location_point) {
         self.points_end_peripheral.insert(
           location_point,
           1.0,
           None,
-          PointSequence::default().with_center(*point)
+          PointSequence::default().with_center(*point),
         );
       }
 
@@ -455,34 +440,32 @@ impl Plane {
   fn get_opposite_tile(&self, tile: &Tile, mid_point: &Point) -> Option<Tile> {
     self
       .get_mid_point_sequence(mid_point)
-      .and_then(|mid_point_sequence|
-        mid_point_sequence.find_opposite(&tile.geometry.centroid)
-      )
+      .and_then(|mid_point_sequence| mid_point_sequence.find_opposite(&tile.geometry.centroid))
       .and_then(|entry| self.tiles.get_value(&entry.point.into()))
       .cloned()
   }
 
-  fn update_center_point_sequence(
-    &mut self,
-    center_point: &Point,
-    tile: &Tile
-  ) {
-    if
-      let Some(mut sequence) = self.get_center_point_sequence_mut(center_point)
-    {
-      sequence.value.insert(tile.geometry.centroid, tile.shape.into());
+  fn update_center_point_sequence(&mut self, center_point: &Point, tile: &Tile) {
+    if let Some(mut sequence) = self.get_center_point_sequence_mut(center_point) {
+      sequence
+        .value
+        .insert(tile.geometry.centroid, tile.shape.into());
     }
   }
 
   fn update_mid_point_sequence(&mut self, mid_point: &Point, tile: &Tile) {
     if let Some(mut sequence) = self.get_mid_point_sequence_mut(mid_point) {
-      sequence.value.insert(tile.geometry.centroid, tile.shape.into());
+      sequence
+        .value
+        .insert(tile.geometry.centroid, tile.shape.into());
     }
   }
 
   fn update_end_point_sequence(&mut self, end_point: &Point, tile: &Tile) {
     if let Some(mut sequence) = self.get_end_point_sequence_mut(end_point) {
-      sequence.value.insert(tile.geometry.centroid, tile.shape.into());
+      sequence
+        .value
+        .insert(tile.geometry.centroid, tile.shape.into());
     }
   }
 
@@ -498,13 +481,16 @@ impl Plane {
   }
 
   pub fn is_line_segment_available(&self, line_segment: &LineSegment) -> bool {
-    self.line_segments
+    self
+      .line_segments
       .get_counter(&line_segment.mid_point().into(), "count")
       .map_or(false, |count| *count <= 1)
   }
 
   pub fn get_line_segment_edges(&self) -> SpatialGridMap<LineSegment> {
-    self.line_segments.filter(|entry| self.is_line_segment_available(entry))
+    self
+      .line_segments
+      .filter(|entry| self.is_line_segment_available(entry))
   }
 
   /// Returns the line segments that only have a single shape
@@ -513,7 +499,7 @@ impl Plane {
   /// clockwise from the origin of the plane.
   fn get_available_line_segments_from_group(
     &self,
-    group_index: usize
+    group_index: usize,
   ) -> impl Iterator<Item = &LineSegment> {
     self.line_segments_by_shape_group[group_index]
       .iter_values()
@@ -526,9 +512,11 @@ impl Plane {
   fn get_available_line_segment_from_group(
     &self,
     group_index: usize,
-    skip: usize
+    skip: usize,
   ) -> Option<&LineSegment> {
-    self.get_available_line_segments_from_group(group_index).nth(skip)
+    self
+      .get_available_line_segments_from_group(group_index)
+      .nth(skip)
   }
 
   /// Return the total number of points for a given origin type.
@@ -546,32 +534,30 @@ impl Plane {
   pub fn get_point_by_index_and_type(
     &self,
     origin_type: &OriginType,
-    origin_index: &OriginIndex
+    origin_index: &OriginIndex,
   ) -> Option<Point> {
     match origin_type {
-      OriginType::CenterPoint =>
-        self.points_center
-          .iter_points()
-          .nth(origin_index.value as usize)
-          .map(|point| (*point).into()),
-      OriginType::MidPoint =>
-        self.points_mid
-          .iter_points()
-          .nth(origin_index.value as usize)
-          .map(|point| (*point).into()),
-      OriginType::EndPoint =>
-        self.points_end
-          .iter_points()
-          .nth(origin_index.value as usize)
-          .map(|point| (*point).into()),
+      OriginType::CenterPoint => self
+        .points_center
+        .iter_points()
+        .nth(origin_index.value as usize)
+        .map(|point| (*point).into()),
+      OriginType::MidPoint => self
+        .points_mid
+        .iter_points()
+        .nth(origin_index.value as usize)
+        .map(|point| (*point).into()),
+      OriginType::EndPoint => self
+        .points_end
+        .iter_points()
+        .nth(origin_index.value as usize)
+        .map(|point| (*point).into()),
     }
   }
 
-  pub fn get_center_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
-    self.points_center
+  pub fn get_center_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    self
+      .points_center
       .get_value(&point.into())
       .or_else(|| self.points_center_extended.get_value(&point.into()))
       .or_else(|| self.points_center_peripheral.get_value(&point.into()))
@@ -579,29 +565,25 @@ impl Plane {
 
   pub fn get_center_point_sequence_mut(
     &mut self,
-    point: &Point
+    point: &Point,
   ) -> Option<MutBucketEntry<'_, PointSequence>> {
-    self.points_center
+    self
+      .points_center
       .get_value_mut(&point.into())
       .or_else(|| self.points_center_extended.get_value_mut(&point.into()))
       .or_else(|| self.points_center_peripheral.get_value_mut(&point.into()))
   }
 
-  pub fn get_core_center_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
+  pub fn get_core_center_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     let location_point: location::Point = point.into();
 
-    self.points_center
+    self
+      .points_center
       .get_value(&location_point)
       .or_else(|| self.points_center_extended.get_value(&location_point))
   }
 
-  pub fn get_core_center_complete_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
+  pub fn get_core_center_complete_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     self
       .get_core_center_point_sequence(point)
       .filter(|point_sequence| point_sequence.is_complete())
@@ -609,20 +591,19 @@ impl Plane {
 
   pub fn get_core_center_point_sequence_mut(
     &mut self,
-    point: &Point
+    point: &Point,
   ) -> Option<MutBucketEntry<'_, PointSequence>> {
     let location_point: location::Point = point.into();
 
-    self.points_center
+    self
+      .points_center
       .get_value_mut(&location_point)
       .or_else(|| self.points_center_extended.get_value_mut(&location_point))
   }
 
-  pub fn get_end_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
-    self.points_end
+  pub fn get_end_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
+    self
+      .points_end
       .get_value(&point.into())
       .or_else(|| self.points_end_extended.get_value(&point.into()))
       .or_else(|| self.points_end_peripheral.get_value(&point.into()))
@@ -630,51 +611,43 @@ impl Plane {
 
   pub fn get_end_point_sequence_mut(
     &mut self,
-    point: &Point
+    point: &Point,
   ) -> Option<MutBucketEntry<'_, PointSequence>> {
-    self.points_end
+    self
+      .points_end
       .get_value_mut(&point.into())
       .or_else(|| self.points_end_extended.get_value_mut(&point.into()))
       .or_else(|| self.points_end_peripheral.get_value_mut(&point.into()))
   }
 
-  pub fn get_core_end_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
+  pub fn get_core_end_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     let location_point: location::Point = point.into();
 
-    self.points_end
+    self
+      .points_end
       .get_value(&location_point)
       .or_else(|| self.points_end_extended.get_value(&location_point))
   }
 
-  pub fn get_core_end_complete_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
+  pub fn get_core_end_complete_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     self
       .get_core_end_point_sequence(point)
-      .filter(|point_sequence|
-        self.vertex_types.matches_exactly(&point_sequence.sequence)
-      )
+      .filter(|point_sequence| self.vertex_types.matches_exactly(&point_sequence.sequence))
   }
 
   pub fn get_core_end_point_sequence_mut(
     &mut self,
-    point: &Point
+    point: &Point,
   ) -> Option<MutBucketEntry<'_, PointSequence>> {
     let location_point: location::Point = point.into();
 
-    self.points_end
+    self
+      .points_end
       .get_value_mut(&location_point)
       .or_else(|| self.points_end_extended.get_value_mut(&location_point))
   }
 
-  pub fn get_mid_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
+  pub fn get_mid_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     self
       .get_core_mid_point_sequence(point)
       .or_else(|| self.points_mid_peripheral.get_value(&point.into()))
@@ -682,31 +655,27 @@ impl Plane {
 
   pub fn get_mid_point_sequence_mut(
     &mut self,
-    point: &Point
+    point: &Point,
   ) -> Option<MutBucketEntry<'_, PointSequence>> {
     let location_point: location::Point = point.into();
 
-    self.points_mid
+    self
+      .points_mid
       .get_value_mut(&location_point)
       .or_else(|| self.points_mid_extended.get_value_mut(&location_point))
       .or_else(|| self.points_mid_peripheral.get_value_mut(&location_point))
   }
 
-  pub fn get_core_mid_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
+  pub fn get_core_mid_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     let location_point: location::Point = point.into();
 
-    self.points_mid
+    self
+      .points_mid
       .get_value(&location_point)
       .or_else(|| self.points_mid_extended.get_value(&location_point))
   }
 
-  pub fn get_core_mid_complete_point_sequence(
-    &self,
-    point: &Point
-  ) -> Option<&PointSequence> {
+  pub fn get_core_mid_complete_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     self
       .get_core_mid_point_sequence(point)
       .filter(|point_sequence| point_sequence.is_complete())
@@ -714,42 +683,38 @@ impl Plane {
 
   pub fn get_core_mid_point_sequence_mut(
     &mut self,
-    point: &Point
+    point: &Point,
   ) -> Option<MutBucketEntry<'_, PointSequence>> {
     let location_point: location::Point = point.into();
 
-    self.points_mid
+    self
+      .points_mid
       .get_value_mut(&location_point)
       .or_else(|| self.points_mid_extended.get_value_mut(&location_point))
   }
 
-  pub fn iter_core_center_complete_point_sequences(
-    &self
-  ) -> impl Iterator<Item = &PointSequence> {
-    self.points_center
+  pub fn iter_core_center_complete_point_sequences(&self) -> impl Iterator<Item = &PointSequence> {
+    self
+      .points_center
       .iter_values()
       .chain(self.points_center_extended.iter_values())
       .filter(|point_sequence| point_sequence.is_complete())
   }
 
-  pub fn iter_core_mid_complete_point_sequences(
-    &self
-  ) -> impl Iterator<Item = &PointSequence> {
-    self.points_mid
+  pub fn iter_core_mid_complete_point_sequences(&self) -> impl Iterator<Item = &PointSequence> {
+    self
+      .points_mid
       .iter_values()
       .chain(self.points_mid_extended.iter_values())
       .filter(|point_sequence| point_sequence.is_complete())
   }
 
-  pub fn iter_core_end_complete_point_sequences(
-    &self
-  ) -> impl Iterator<Item = &PointSequence> {
-    self.points_end
+  pub fn iter_core_end_complete_point_sequences(&self) -> impl Iterator<Item = &PointSequence> {
+    self
+      .points_end
       .iter_values()
       .chain(self.points_end_extended.iter_values())
-      .filter(|point_sequence|
-        self.vertex_types.matches_exactly(&point_sequence.sequence)
-      )
+      .filter(|point_sequence| self.vertex_types.matches_exactly(&point_sequence.sequence))
   }
 
   pub fn get_shape_types(&self) -> SequenceStore {
@@ -779,30 +744,27 @@ impl Plane {
   pub fn get_reflection_line(
     &self,
     origin_index: &OriginIndex,
-    origin_type: &OriginType
+    origin_type: &OriginType,
   ) -> Option<LineSegment> {
     self
       .get_point_by_index_and_type(origin_type, origin_index)
-      .and_then(|origin| {
-        match origin_type {
-          OriginType::MidPoint =>
-            self.line_segments.get_value(&origin.into()).cloned(),
-          _ => {
-            if origin.eq(&Point::default()) {
-              return Some(
-                LineSegment::default()
-                  .with_start(Point::at(-1.0, 0.0))
-                  .with_end(Point::at(1.0, 0.0))
-              );
-            }
-
-            Some(
+      .and_then(|origin| match origin_type {
+        OriginType::MidPoint => self.line_segments.get_value(&origin.into()).cloned(),
+        _ => {
+          if origin.eq(&Point::default()) {
+            return Some(
               LineSegment::default()
-                .with_start(Point::default())
-                .with_end(origin.multiply(2.0))
-                .rotate(PI * 0.5, None)
-            )
+                .with_start(Point::at(-1.0, 0.0))
+                .with_end(Point::at(1.0, 0.0)),
+            );
           }
+
+          Some(
+            LineSegment::default()
+              .with_start(Point::default())
+              .with_end(origin.multiply(2.0))
+              .rotate(PI * 0.5, None),
+          )
         }
       })
   }
@@ -813,7 +775,7 @@ impl Plane {
   pub fn apply_transform(
     &mut self,
     transform: &Transform,
-    stage: Stage
+    stage: Stage,
   ) -> Result<(), TilingError> {
     let metric_key = stage.to_string();
     self.metrics.start(&metric_key);
@@ -823,16 +785,12 @@ impl Plane {
       Transform::Continuous(TransformContinuous { operation, value }) => {
         self.apply_continuous_transform(transform, stage, operation, value)?;
       }
-      Transform::Eccentric(
-        TransformEccentric { operation, origin_type, origin_index },
-      ) => {
-        self.apply_eccentric_transform(
-          transform,
-          stage,
-          operation,
-          origin_type,
-          origin_index
-        )?;
+      Transform::Eccentric(TransformEccentric {
+        operation,
+        origin_type,
+        origin_index,
+      }) => {
+        self.apply_eccentric_transform(transform, stage, operation, origin_type, origin_index)?;
       }
     }
 
@@ -849,13 +807,11 @@ impl Plane {
     transform: &Transform,
     stage: Stage,
     operation: &Operation,
-    value: &TransformValue
+    value: &TransformValue,
   ) -> Result<(), TilingError> {
     match operation {
-      Operation::Reflect =>
-        self.apply_continuous_reflect_transform(transform, stage, value),
-      Operation::Rotate =>
-        self.apply_continuous_rotate_transform(transform, stage, value),
+      Operation::Reflect => self.apply_continuous_reflect_transform(transform, stage, value),
+      Operation::Rotate => self.apply_continuous_rotate_transform(transform, stage, value),
     }
   }
 
@@ -867,24 +823,14 @@ impl Plane {
     stage: Stage,
     operation: &Operation,
     origin_type: &OriginType,
-    origin_index: &OriginIndex
+    origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
     match operation {
       Operation::Reflect => {
-        self.apply_eccentric_reflect_transform(
-          transform,
-          stage,
-          origin_type,
-          origin_index
-        )
+        self.apply_eccentric_reflect_transform(transform, stage, origin_type, origin_index)
       }
       Operation::Rotate => {
-        self.apply_eccentric_rotate_transform(
-          transform,
-          stage,
-          origin_type,
-          origin_index
-        )
+        self.apply_eccentric_rotate_transform(transform, stage, origin_type, origin_index)
       }
     }
   }
@@ -894,7 +840,7 @@ impl Plane {
     &mut self,
     _transform: &Transform,
     stage: Stage,
-    transform_value: &TransformValue
+    transform_value: &TransformValue,
   ) -> Result<(), TilingError> {
     for value in transform_value.get_transform_values() {
       let stage_index = self.stages.len() as u16;
@@ -903,7 +849,8 @@ impl Plane {
       let line_segment = LineSegment::default().with_start(p1).with_end(p2);
 
       for i in 0..self.tiles_to_transform.len() {
-        let tile = self.tiles_to_transform
+        let tile = self
+          .tiles_to_transform
           .get(i)
           .ok_or(TilingError::InvalidTransform {
             transform: "reflect".into(),
@@ -930,13 +877,14 @@ impl Plane {
     &mut self,
     _transform: &Transform,
     stage: Stage,
-    transform_value: &TransformValue
+    transform_value: &TransformValue,
   ) -> Result<(), TilingError> {
     for value in transform_value.get_transform_values() {
       let stage_index = self.stages.len() as u16;
 
       for i in 0..self.tiles_to_transform.len() {
-        let tile = self.tiles_to_transform
+        let tile = self
+          .tiles_to_transform
           .get(i)
           .ok_or(TilingError::InvalidTransform {
             transform: "rotate".into(),
@@ -964,19 +912,19 @@ impl Plane {
     transform: &Transform,
     stage: Stage,
     origin_type: &OriginType,
-    origin_index: &OriginIndex
+    origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
-    let line_segment = self
-      .get_reflection_line(origin_index, origin_type)
-      .ok_or(TilingError::InvalidTransform {
-        transform: transform.to_string(),
-        reason: "reflection line segment not found".into(),
-      })?;
+    let line_segment =
+      self
+        .get_reflection_line(origin_index, origin_type)
+        .ok_or(TilingError::InvalidTransform {
+          transform: transform.to_string(),
+          reason: "reflection line segment not found".into(),
+        })?;
 
     let stage_index = self.stages.len() as u16;
 
-    std::mem
-      ::take(&mut self.tiles_to_transform)
+    std::mem::take(&mut self.tiles_to_transform)
       .iter()
       .map(|tile| {
         tile
@@ -998,7 +946,7 @@ impl Plane {
     transform: &Transform,
     stage: Stage,
     origin_type: &OriginType,
-    origin_index: &OriginIndex
+    origin_index: &OriginIndex,
   ) -> Result<(), TilingError> {
     let tiles = std::mem::take(&mut self.tiles_to_transform);
 
@@ -1030,7 +978,7 @@ impl Plane {
   fn validate_overlaps(
     &mut self,
     tile: &Tile,
-    line_segment: &LineSegment
+    line_segment: &LineSegment,
   ) -> Result<(), TilingError> {
     self.metrics.resume(validation::Flag::Overlaps.into());
     let result = self.validator.validate_overlaps(self, tile, line_segment);
@@ -1068,47 +1016,30 @@ impl Default for Plane {
       validator: Validator::default(),
       vertex_types: VertexTypes::default(),
 
-      line_segments: SpatialGridMap::new("line_segments").with_resize_method(
-        ResizeMethod::First
-      ),
+      line_segments: SpatialGridMap::new("line_segments").with_resize_method(ResizeMethod::First),
       line_segments_by_shape_group: Vec::new(),
 
-      points_center: SpatialGridMap::new("points_center").with_resize_method(
-        ResizeMethod::Minimum
-      ),
-      points_center_extended: SpatialGridMap::new(
-        "points_center_extended"
-      ).with_resize_method(ResizeMethod::Minimum),
-      points_center_peripheral: SpatialGridMap::new(
-        "points_center_peripheral"
-      ).with_resize_method(ResizeMethod::Minimum),
+      points_center: SpatialGridMap::new("points_center").with_resize_method(ResizeMethod::Minimum),
+      points_center_extended: SpatialGridMap::new("points_center_extended")
+        .with_resize_method(ResizeMethod::Minimum),
+      points_center_peripheral: SpatialGridMap::new("points_center_peripheral")
+        .with_resize_method(ResizeMethod::Minimum),
 
-      points_end: SpatialGridMap::new("points_end").with_resize_method(
-        ResizeMethod::First
-      ),
-      points_end_extended: SpatialGridMap::new(
-        "points_end_extended"
-      ).with_resize_method(ResizeMethod::First),
-      points_end_peripheral: SpatialGridMap::new(
-        "points_end_peripheral"
-      ).with_resize_method(ResizeMethod::First),
+      points_end: SpatialGridMap::new("points_end").with_resize_method(ResizeMethod::First),
+      points_end_extended: SpatialGridMap::new("points_end_extended")
+        .with_resize_method(ResizeMethod::First),
+      points_end_peripheral: SpatialGridMap::new("points_end_peripheral")
+        .with_resize_method(ResizeMethod::First),
 
-      points_mid: SpatialGridMap::new("points_mid").with_resize_method(
-        ResizeMethod::First
-      ),
-      points_mid_extended: SpatialGridMap::new(
-        "points_mid_extended"
-      ).with_resize_method(ResizeMethod::First),
-      points_mid_peripheral: SpatialGridMap::new(
-        "points_mid_peripheral"
-      ).with_resize_method(ResizeMethod::First),
+      points_mid: SpatialGridMap::new("points_mid").with_resize_method(ResizeMethod::First),
+      points_mid_extended: SpatialGridMap::new("points_mid_extended")
+        .with_resize_method(ResizeMethod::First),
+      points_mid_peripheral: SpatialGridMap::new("points_mid_peripheral")
+        .with_resize_method(ResizeMethod::First),
 
-      tiles: SpatialGridMap::new("tiles").with_resize_method(
-        ResizeMethod::Minimum
-      ),
-      tiles_from_placement: SpatialGridMap::new(
-        "tiles_placement"
-      ).with_resize_method(ResizeMethod::Minimum),
+      tiles: SpatialGridMap::new("tiles").with_resize_method(ResizeMethod::Minimum),
+      tiles_from_placement: SpatialGridMap::new("tiles_placement")
+        .with_resize_method(ResizeMethod::Minimum),
       tiles_to_transform: Vec::new(),
 
       seed_tile: None,

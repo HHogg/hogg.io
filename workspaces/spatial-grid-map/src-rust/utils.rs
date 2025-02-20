@@ -33,11 +33,11 @@ pub fn coordinate_equals(a: Fxx, b: Fxx) -> bool {
 }
 
 pub fn radians_equal(a: Fxx, b: Fxx) -> bool {
-  (compare_fxx(a, 0.0, TOLERANCE_RADIAN) == Ordering::Equal &&
-    compare_fxx(b, PI2, TOLERANCE_RADIAN) == Ordering::Equal) ||
-    (compare_fxx(b, 0.0, TOLERANCE_RADIAN) == Ordering::Equal &&
-      compare_fxx(a, PI2, TOLERANCE_RADIAN) == Ordering::Equal) ||
-    compare_fxx(a, b, TOLERANCE_RADIAN) == Ordering::Equal
+  (compare_fxx(a, 0.0, TOLERANCE_RADIAN) == Ordering::Equal
+    && compare_fxx(b, PI2, TOLERANCE_RADIAN) == Ordering::Equal)
+    || (compare_fxx(b, 0.0, TOLERANCE_RADIAN) == Ordering::Equal
+      && compare_fxx(a, PI2, TOLERANCE_RADIAN) == Ordering::Equal)
+    || compare_fxx(a, b, TOLERANCE_RADIAN) == Ordering::Equal
 }
 
 pub fn normalize_radian(mut radian: Fxx) -> Fxx {
