@@ -77,6 +77,7 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   const [renderResult, setRenderResult] = useState<Result | null>(null);
   const [renderMetrics, setRenderMetrics] = useState<Metrics | null>(null);
   const refUpdateRenderMetrics = useRef(true);
+  const isPlaying = snapshot.isPlaying;
 
   useEffect(() => {
     api.tilings.startPlayer([uid]);
@@ -158,10 +159,10 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   }, [play]);
 
   useEffect(() => {
-    if (percent === 1 && callbacks.onEnd) {
+    if (isPlaying && percent === 1 && callbacks.onEnd) {
       callbacks.onEnd();
     }
-  }, [callbacks, percent]);
+  }, [callbacks, percent, isPlaying]);
 
   return {
     play,

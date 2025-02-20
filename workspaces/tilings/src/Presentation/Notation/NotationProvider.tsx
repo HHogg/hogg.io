@@ -1,6 +1,12 @@
 import { useWasmApi } from '@hogg/wasm';
 import { useLocalStorage } from 'preshape';
-import { PropsWithChildren, useCallback, useEffect, useRef } from 'react';
+import {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 import { NotationContext } from './useNotationContext';
 
@@ -20,6 +26,7 @@ export default function NotationProvider({
     initialNotation
   );
   const { expansionPhases } = useSettingsContext();
+  const [hasCustomNotation, setHasCustomNotation] = useState(false);
   const notationRef = useRef<string>(initialNotation);
 
   const handleSetNotation = useCallback(
@@ -29,6 +36,14 @@ export default function NotationProvider({
       onChange?.(notation);
     },
     [setNotation, onChange]
+  );
+
+  const handleSetCustomNotation = useCallback(
+    (notation: string) => {
+      setHasCustomNotation(true);
+      handleSetNotation(notation);
+    },
+    [handleSetNotation]
   );
 
   const handlePreviousNotation = useCallback(async () => {
@@ -56,15 +71,17 @@ export default function NotationProvider({
   const notationSplit = notation.split('/');
 
   useEffect(() => {
-    handleSetNotation(initialNotation);
-  }, [handleSetNotation, initialNotation]);
+    if (!hasCustomNotation) {
+      handleSetNotation(initialNotation);
+    }
+  }, [handleSetNotation, initialNotation, hasCustomNotation]);
 
   const value = {
     notation,
     notationRef,
     path: notationSplit[0],
     transforms: notationSplit.slice(1),
-    setNotation: handleSetNotation,
+    setNotation: handleSetCustomNotation,
     previousNotation: handlePreviousNotation,
     nextNotation: handleNextNotation,
   };
