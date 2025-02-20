@@ -30,9 +30,9 @@ pub struct SpatialGridMap<TEntryValue: Clone + std::fmt::Debug + Default> {
   #[typeshare(serialized_as = "Vec<Location>")]
   locations: BTreeSet<Location>,
   /// The minimum location in the grid.
-  location_min: location::Point,
+  location_min: Option<location::Point>,
   /// The maximum location in the grid.
-  location_max: location::Point,
+  location_max: Option<location::Point>,
   /// Resizing
   resize_method: ResizeMethod,
   /// Bucket store.
@@ -52,8 +52,8 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       spacing: None,
 
       locations: BTreeSet::new(),
-      location_min: location::Point(Fxx::MAX, Fxx::MAX),
-      location_max: location::Point(Fxx::MIN, Fxx::MIN),
+      location_min: None,
+      location_max: None,
     }
   }
 
@@ -72,10 +72,14 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
   }
 
   pub fn get_grid_size(&self) -> u64 {
-    let x = (self.location_max.0 - self.location_min.0).abs() as u64;
-    let y = (self.location_max.1 - self.location_min.1).abs() as u64;
+    if let (Some(min), Some(max)) = (self.location_min, self.location_max) {
+      let x = min.0.abs().max(max.0.abs());
+      let y = min.1.abs().max(max.1.abs());
 
-    x.max(y)
+      x.max(y).ceil() as u64
+    } else {
+      0
+    }
   }
 
   fn get_location(&self, point: &location::Point, rotation: &Option<Fxx>) -> Location {
@@ -197,6 +201,8 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     if inserted {
       self.locations.insert(location.clone());
 
+      self.update_location_bounds(&location);
+
       if update_size_check {
         self.update_spacing(size);
       }
@@ -303,6 +309,26 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
         None
       }
     })
+  }
+
+  fn update_location_bounds(&mut self, location: &Location) {
+    if let Some(min) = self.location_min {
+      self.location_min = Some(location::Point(
+        location.point.0.min(min.0),
+        location.point.1.min(min.1),
+      ));
+    } else {
+      self.location_min = Some(location.point);
+    }
+
+    if let Some(max) = self.location_max {
+      self.location_max = Some(location::Point(
+        location.point.0.max(max.0),
+        location.point.1.max(max.1),
+      ));
+    } else {
+      self.location_max = Some(location.point);
+    }
   }
 
   fn update_spacing(&mut self, new_spacing: Fxx) {

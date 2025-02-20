@@ -62,9 +62,9 @@ export interface SpatialGridMap<TEntryValue> {
 	/** Sorted set of all occupied locations in the grid. */
 	locations: Location[];
 	/** The minimum location in the grid. */
-	location_min: Point;
+	location_min?: Point;
 	/** The maximum location in the grid. */
-	location_max: Point;
+	location_max?: Point;
 	/** Resizing */
 	resize_method: ResizeMethod;
 	/** Bucket store. */
