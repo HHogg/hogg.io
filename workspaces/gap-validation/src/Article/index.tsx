@@ -68,7 +68,7 @@ const Article = () => {
             <TilingRenderer
               uid="example-tiling-with-gaps"
               height={200}
-              notation="3-4-3-4/r60/m(h2)"
+              notation="3-4-3-4/r60"
               expansionPhases={4}
               options={tilingRendererOptions}
             />

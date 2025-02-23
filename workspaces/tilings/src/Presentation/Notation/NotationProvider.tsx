@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { usePlayerContext } from '../Player/usePlayerContext';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 import { NotationContext } from './useNotationContext';
 
@@ -25,6 +26,7 @@ export default function NotationProvider({
     'com.hogg.io.notation.input',
     initialNotation
   );
+  const { updateNotation, reset } = usePlayerContext();
   const { expansionPhases } = useSettingsContext();
   const [hasCustomNotation, setHasCustomNotation] = useState(false);
   const notationRef = useRef<string>(initialNotation);
@@ -33,17 +35,19 @@ export default function NotationProvider({
     (notation: string) => {
       notationRef.current = notation;
       setNotation(notation);
+      updateNotation(notation);
       onChange?.(notation);
     },
-    [setNotation, onChange]
+    [setNotation, updateNotation, onChange]
   );
 
   const handleSetCustomNotation = useCallback(
     (notation: string) => {
+      reset();
       setHasCustomNotation(true);
       handleSetNotation(notation);
     },
-    [handleSetNotation]
+    [handleSetNotation, reset]
   );
 
   const handlePreviousNotation = useCallback(async () => {
@@ -53,9 +57,9 @@ export default function NotationProvider({
     ]);
 
     if (previousNotation) {
-      handleSetNotation(previousNotation);
+      handleSetCustomNotation(previousNotation);
     }
-  }, [api, expansionPhases, handleSetNotation]);
+  }, [api, expansionPhases, handleSetCustomNotation]);
 
   const handleNextNotation = useCallback(async () => {
     const nextNotation = await api.tilings.findNextTiling([
@@ -64,9 +68,9 @@ export default function NotationProvider({
     ]);
 
     if (nextNotation) {
-      handleSetNotation(nextNotation);
+      handleSetCustomNotation(nextNotation);
     }
-  }, [api, expansionPhases, handleSetNotation]);
+  }, [api, expansionPhases, handleSetCustomNotation]);
 
   const notationSplit = notation.split('/');
 
@@ -74,7 +78,7 @@ export default function NotationProvider({
     if (!hasCustomNotation) {
       handleSetNotation(initialNotation);
     }
-  }, [handleSetNotation, initialNotation, hasCustomNotation]);
+  }, [handleSetNotation, initialNotation, hasCustomNotation, updateNotation]);
 
   const value = {
     notation,

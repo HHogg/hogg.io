@@ -63,11 +63,11 @@ export default function Presentation({}) {
   return (
     <WasmApiLoadingScreen>
       <SettingsProvider>
-        <NotationProvider notation={defaultNotation}>
-          <PlayerProvider onEnd={refreshNotation}>
+        <PlayerProvider onEnd={refreshNotation}>
+          <NotationProvider notation={defaultNotation}>
             <PresentationInner />
-          </PlayerProvider>
-        </NotationProvider>
+          </NotationProvider>
+        </PlayerProvider>
       </SettingsProvider>
     </WasmApiLoadingScreen>
   );

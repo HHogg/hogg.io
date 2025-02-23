@@ -7,7 +7,6 @@ import {
   Options,
 } from '@hogg/wasm';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNotationContext } from '../Notation/useNotationContext';
 import useRenderOptions from '../Renderer/useRenderOptions';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 
@@ -24,6 +23,8 @@ export type UsePlayerResult = {
   backward: () => void;
   toStart: () => void;
   toEnd: () => void;
+  updateNotation: (notation: string) => void;
+  reset: () => void;
   uid: string;
   error?: string;
   percent: number;
@@ -40,7 +41,6 @@ const uid = 'tilings-player';
 
 export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   const { api } = useWasmApi();
-  const { notation } = useNotationContext();
   const {
     autoRotate,
     expansionPhases,
@@ -79,6 +79,14 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   const refUpdateRenderMetrics = useRef(true);
   const isPlaying = snapshot.isPlaying;
 
+  const updateNotation = useCallback(
+    (notation: string) => {
+      refUpdateRenderMetrics.current = true;
+      api.tilings.setPlayerNotation([notation]);
+    },
+    [api]
+  );
+
   useEffect(() => {
     api.tilings.startPlayer([uid]);
 
@@ -92,17 +100,8 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   }, [api, expansionPhases]);
 
   useEffect(() => {
-    api.tilings.setPlayerNotation([notation]);
-  }, [api, notation]);
-
-  useEffect(() => {
     api.tilings.setPlayerRenderOptions([options]);
   }, [api, options]);
-
-  useEffect(() => {
-    refUpdateRenderMetrics.current = true;
-    api.tilings.setPlayerNotation([notation]);
-  }, [api, notation]);
 
   useEffect(() => {
     api.tilings.setPlayerSpeed([speed]);
@@ -154,6 +153,11 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   );
   const toEnd = useCallback(() => api.tilings.controlPlayerToEnd([]), [api]);
 
+  const reset = useCallback(() => {
+    pause();
+    toEnd();
+  }, [toEnd, pause]);
+
   useEffect(() => {
     play();
   }, [play]);
@@ -171,6 +175,8 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
     forward,
     toStart,
     toEnd,
+    updateNotation,
+    reset,
     uid,
     error,
     percent,

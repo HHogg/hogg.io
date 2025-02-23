@@ -21,6 +21,12 @@ export default function NotationInput() {
   const error = renderResult?.error ?? null;
   const refErrorString = useRef(tilingErrorToString(error));
 
+  const handleClearInput = () => {
+    if (notation) {
+      setNotation(notation);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNotation(value);
@@ -52,6 +58,7 @@ export default function NotationInput() {
           grow
           size="x5"
           onChange={handleInputChange}
+          onClick={handleClearInput}
           placeholder="Notation"
           placeholderTextColor="text-shade-3"
           value={notation}
