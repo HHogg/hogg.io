@@ -57,13 +57,11 @@ export default function PlayerControls() {
 
       <Box alignChildren="middle" flex="horizontal" gap="x6" grow>
         <ProjectControlGroup>
-          <Media greaterThanOrEqual="desktop">
-            <ProjectControl
-              title="Beginning"
-              Icon={ChevronFirstIcon}
-              onClick={toStart}
-            />
-          </Media>
+          <ProjectControl
+            title="Beginning"
+            Icon={ChevronFirstIcon}
+            onClick={toStart}
+          />
 
           <ProjectControl
             title="Step backwards"
@@ -72,9 +70,7 @@ export default function PlayerControls() {
           />
         </ProjectControlGroup>
 
-        <Media greaterThanOrEqual="desktop" grow>
-          <PlayerControlBar />
-        </Media>
+        <PlayerControlBar />
 
         <ProjectControlGroup>
           <ProjectControl
@@ -83,35 +79,25 @@ export default function PlayerControls() {
             onClick={forward}
           />
 
-          <Media greaterThanOrEqual="desktop">
-            <ProjectControl
-              title="End"
-              Icon={ChevronLastIcon}
-              onClick={toEnd}
-            />
-          </Media>
+          <ProjectControl title="End" Icon={ChevronLastIcon} onClick={toEnd} />
         </ProjectControlGroup>
       </Box>
 
       <ProjectControlGroup>
         {!isFullScreen && (
-          <Media greaterThanOrEqual="desktop">
-            <ProjectControl
-              title="Enter fullscreen"
-              Icon={MaximizeIcon}
-              onClick={fullScreenEnter}
-            />
-          </Media>
+          <ProjectControl
+            title="Enter fullscreen"
+            Icon={MaximizeIcon}
+            onClick={fullScreenEnter}
+          />
         )}
 
         {isFullScreen && (
-          <Media greaterThanOrEqual="desktop">
-            <ProjectControl
-              title="Exit fullscreen"
-              Icon={MinimizeIcon}
-              onClick={fullScreenExit}
-            />
-          </Media>
+          <ProjectControl
+            title="Exit fullscreen"
+            Icon={MinimizeIcon}
+            onClick={fullScreenExit}
+          />
         )}
 
         <ProjectControl

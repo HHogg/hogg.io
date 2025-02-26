@@ -4,16 +4,19 @@ import {
   PlayerStateSnapshot,
   Metrics,
   Result,
-  Options,
 } from '@hogg/wasm';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNotationContext } from '../Notation/useNotationContext';
 import useRenderOptions from '../Renderer/useRenderOptions';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 
+export type Callbacks = {
+  onEnd?: () => void;
+};
+
 export type UsePlayerProps = {
-  uid: string;
-  expansionPhases?: number;
-  options?: Options;
+  callbacks?: Callbacks;
+  playAtStart?: boolean;
 };
 
 export type UsePlayerResult = {
@@ -23,7 +26,6 @@ export type UsePlayerResult = {
   backward: () => void;
   toStart: () => void;
   toEnd: () => void;
-  updateNotation: (notation: string) => void;
   reset: () => void;
   uid: string;
   error?: string;
@@ -33,13 +35,12 @@ export type UsePlayerResult = {
   renderMetrics: Metrics | null;
 };
 
-export type Callbacks = {
-  onEnd?: () => void;
-};
-
 const uid = 'tilings-player';
 
-export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
+export const usePlayer = ({
+  callbacks,
+  playAtStart,
+}: UsePlayerProps = {}): UsePlayerResult => {
   const { api } = useWasmApi();
   const {
     autoRotate,
@@ -50,7 +51,8 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
     showLayers,
     speed,
   } = useSettingsContext();
-
+  const { notation } = useNotationContext();
+  const { onEnd } = callbacks || {};
   const options = useRenderOptions(
     useMemo(
       () => ({
@@ -76,15 +78,47 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   const [percent, setPercent] = useState(0);
   const [renderResult, setRenderResult] = useState<Result | null>(null);
   const [renderMetrics, setRenderMetrics] = useState<Metrics | null>(null);
-  const refUpdateRenderMetrics = useRef(true);
   const isPlaying = snapshot.isPlaying;
+
+  const refCurrentNotation = useRef('');
+  const refUpdateRenderMetrics = useRef(true);
+
+  const play = useCallback(() => api.tilings.controlPlayerPlay([]), [api]);
+
+  const pause = useCallback(() => api.tilings.controlPlayerPause([]), [api]);
+
+  const forward = useCallback(
+    () => api.tilings.controlPlayerStepForward([]),
+    [api]
+  );
+  const backward = useCallback(
+    () => api.tilings.controlPlayerStepBackward([]),
+    [api]
+  );
+  const toStart = useCallback(
+    () => api.tilings.controlPlayerToStart([]),
+    [api]
+  );
+  const toEnd = useCallback(() => api.tilings.controlPlayerToEnd([]), [api]);
+
+  const reset = useCallback(() => {
+    if (playAtStart) {
+      api.tilings.controlPlayerToStart([]);
+      api.tilings.controlPlayerPlay([]);
+    } else {
+      api.tilings.controlPlayerPause([]);
+      api.tilings.controlPlayerToEnd([]);
+    }
+  }, [api.tilings, playAtStart]);
 
   const updateNotation = useCallback(
     (notation: string) => {
       refUpdateRenderMetrics.current = true;
       api.tilings.setPlayerNotation([notation]);
+      refCurrentNotation.current = notation;
+      reset();
     },
-    [api]
+    [api, reset]
   );
 
   useEffect(() => {
@@ -106,6 +140,20 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
   useEffect(() => {
     api.tilings.setPlayerSpeed([speed]);
   }, [api, speed]);
+
+  useEffect(() => {
+    play();
+  }, [play]);
+
+  useEffect(() => {
+    updateNotation(notation);
+  }, [updateNotation, notation]);
+
+  useEffect(() => {
+    if (isPlaying && percent === 1) {
+      onEnd?.();
+    }
+  }, [isPlaying, percent, onEnd]);
 
   useEffect(() => {
     return addEventListener('error', ({ data }) => {
@@ -137,37 +185,6 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
     });
   }, []);
 
-  const play = useCallback(() => api.tilings.controlPlayerPlay([]), [api]);
-  const pause = useCallback(() => api.tilings.controlPlayerPause([]), [api]);
-  const forward = useCallback(
-    () => api.tilings.controlPlayerStepForward([]),
-    [api]
-  );
-  const backward = useCallback(
-    () => api.tilings.controlPlayerStepBackward([]),
-    [api]
-  );
-  const toStart = useCallback(
-    () => api.tilings.controlPlayerToStart([]),
-    [api]
-  );
-  const toEnd = useCallback(() => api.tilings.controlPlayerToEnd([]), [api]);
-
-  const reset = useCallback(() => {
-    pause();
-    toEnd();
-  }, [toEnd, pause]);
-
-  useEffect(() => {
-    play();
-  }, [play]);
-
-  useEffect(() => {
-    if (isPlaying && percent === 1 && callbacks.onEnd) {
-      callbacks.onEnd();
-    }
-  }, [callbacks, percent, isPlaying]);
-
   return {
     play,
     pause,
@@ -175,7 +192,6 @@ export const usePlayer = (callbacks: Callbacks = {}): UsePlayerResult => {
     forward,
     toStart,
     toEnd,
-    updateNotation,
     reset,
     uid,
     error,

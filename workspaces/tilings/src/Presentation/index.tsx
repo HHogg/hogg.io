@@ -1,8 +1,8 @@
 import { ProjectWindow, ProjectTabs, ProjectTab } from '@hogg/common';
 import { WasmApiLoadingScreen } from '@hogg/wasm';
 import { BookOpenIcon, ChartNoAxesCombinedIcon, InfoIcon } from 'lucide-react';
-import { Box } from 'preshape';
-import { useCallback, useState } from 'react';
+import { Box, useLocalStorage } from 'preshape';
+import { useCallback } from 'react';
 import ArrangementInformation from './ArrangementInformation/ArrangementInformation';
 import ArrangementStats from './ArrangementStats/ArrangementStats';
 import Library from './Library/Library';
@@ -53,21 +53,50 @@ function PresentationInner() {
   );
 }
 
+const initialNotation = getRandomNotation();
+
 export default function Presentation({}) {
-  const [defaultNotation, setDefaultNotation] = useState(getRandomNotation());
+  const [hasCustomNotation, setHasCustomNotation] = useLocalStorage(
+    'com.hogg.io.notation.isCustom',
+    false
+  );
+  const [notation, setNotation] = useLocalStorage(
+    'com.hogg.io.notation.input',
+    initialNotation
+  );
+
+  const handleReset = useCallback(() => {
+    setHasCustomNotation(false);
+    setNotation(getRandomNotation());
+  }, [setHasCustomNotation, setNotation]);
+
+  const handleUpdateNotation = useCallback(
+    (notation: string) => {
+      setHasCustomNotation(true);
+      setNotation(notation);
+    },
+    [setHasCustomNotation, setNotation]
+  );
 
   const refreshNotation = useCallback(() => {
-    setDefaultNotation(getRandomNotation);
-  }, []);
+    if (hasCustomNotation) {
+      return;
+    }
+
+    setNotation(getRandomNotation());
+  }, [hasCustomNotation, setNotation]);
 
   return (
     <WasmApiLoadingScreen>
-      <SettingsProvider>
-        <PlayerProvider onEnd={refreshNotation}>
-          <NotationProvider notation={defaultNotation}>
+      <SettingsProvider onReset={handleReset}>
+        <NotationProvider onChange={handleUpdateNotation} notation={notation}>
+          <PlayerProvider
+            onEnd={refreshNotation}
+            playAtStart={!hasCustomNotation}
+          >
             <PresentationInner />
-          </NotationProvider>
-        </PlayerProvider>
+          </PlayerProvider>
+        </NotationProvider>
       </SettingsProvider>
     </WasmApiLoadingScreen>
   );

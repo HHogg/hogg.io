@@ -2,7 +2,6 @@ import { createContext, useContext } from 'react';
 
 type NotationContextProps = {
   notation: string;
-  notationRef: React.MutableRefObject<string>;
   path: string;
   transforms: string[];
   isValid?: boolean;
@@ -13,7 +12,6 @@ type NotationContextProps = {
 
 export const NotationContext = createContext<NotationContextProps>({
   notation: '',
-  notationRef: { current: '' },
   path: '',
   transforms: [],
   setNotation: () => {},

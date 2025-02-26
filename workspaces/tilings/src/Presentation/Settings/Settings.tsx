@@ -7,10 +7,12 @@ import {
   Repeat1Icon,
   RotateCwIcon,
   ScalingIcon,
+  ListRestartIcon,
 } from 'lucide-react';
 import {
   Box,
   ConfigMenu,
+  MenuConfigEntryAction,
   MenuConfigEntryBoolean,
   MenuConfigEntryManyOf,
   MenuConfigEntryNumber,
@@ -37,6 +39,7 @@ export default function Settings() {
     setScaleMode,
     setShowLayers,
     setSpeed,
+    resetAllSettings,
   } = useSettingsContext();
 
   const handleLayersChange = (layers: Layer[]) => {
@@ -120,6 +123,13 @@ export default function Settings() {
     onChange: handleLayersChange,
   };
 
+  const resetPlayer: MenuConfigEntryAction = {
+    label: 'Reset',
+    icon: ListRestartIcon,
+    type: 'action',
+    onAction: resetAllSettings,
+  };
+
   return (
     <Box
       absolute="bottom-right"
@@ -137,7 +147,14 @@ export default function Settings() {
           showLayersConfig,
           scaleModeConfig,
           speedConfig,
-        ].sort((a, b) => a.label.localeCompare(b.label))}
+          resetPlayer,
+        ].sort((a, b) => {
+          if (a.type === 'action' && b.type !== 'action') {
+            return 1;
+          }
+
+          return a.label.localeCompare(b.label);
+        })}
         visible={showSettings}
       />
     </Box>

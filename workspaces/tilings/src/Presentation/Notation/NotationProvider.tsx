@@ -1,13 +1,5 @@
 import { useWasmApi } from '@hogg/wasm';
-import { useLocalStorage } from 'preshape';
-import {
-  PropsWithChildren,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { usePlayerContext } from '../Player/usePlayerContext';
+import { PropsWithChildren, useCallback } from 'react';
 import { useSettingsContext } from '../Settings/useSettingsContext';
 import { NotationContext } from './useNotationContext';
 
@@ -18,86 +10,48 @@ export type NotationProviderProps = {
 
 export default function NotationProvider({
   children,
-  notation: initialNotation,
+  notation,
   onChange,
 }: PropsWithChildren<NotationProviderProps>) {
   const { api } = useWasmApi();
-  const [notation, setNotation] = useLocalStorage(
-    'com.hogg.io.notation.input',
-    initialNotation
-  );
-  const { updateNotation, reset } = usePlayerContext();
   const { expansionPhases } = useSettingsContext();
-  const [hasCustomNotation, setHasCustomNotation] = useState(false);
-
-  const notationRef = useRef<string>('');
-  const delayRef = useRef<number | null>(null);
 
   const handleSetNotation = useCallback(
     (notation: string) => {
-      if (notation === notationRef.current) {
-        return;
-      }
-
-      notationRef.current = notation;
-      setNotation(notation);
-      updateNotation(notation);
       onChange?.(notation);
     },
-    [setNotation, updateNotation, onChange]
-  );
-
-  const handleSetCustomNotation = useCallback(
-    (notation: string) => {
-      reset();
-      setHasCustomNotation(true);
-      handleSetNotation(notation);
-    },
-    [handleSetNotation, reset]
+    [onChange]
   );
 
   const handlePreviousNotation = useCallback(async () => {
     const previousNotation = await api.tilings.findPreviousTiling([
-      notationRef.current,
+      notation,
       expansionPhases,
     ]);
 
     if (previousNotation) {
-      handleSetCustomNotation(previousNotation);
+      handleSetNotation(previousNotation);
     }
-  }, [api, expansionPhases, handleSetCustomNotation]);
+  }, [api, expansionPhases, notation, handleSetNotation]);
 
   const handleNextNotation = useCallback(async () => {
     const nextNotation = await api.tilings.findNextTiling([
-      notationRef.current,
+      notation,
       expansionPhases,
     ]);
 
     if (nextNotation) {
-      handleSetCustomNotation(nextNotation);
+      handleSetNotation(nextNotation);
     }
-  }, [api, expansionPhases, handleSetCustomNotation]);
+  }, [api, expansionPhases, notation, handleSetNotation]);
 
   const notationSplit = notation.split('/');
 
-  useEffect(() => {
-    if (!hasCustomNotation) {
-      if (delayRef.current) {
-        window.clearTimeout(delayRef.current);
-      }
-
-      delayRef.current = window.setTimeout(() => {
-        handleSetNotation(initialNotation);
-      }, 1_000);
-    }
-  }, [handleSetNotation, initialNotation, hasCustomNotation]);
-
   const value = {
     notation,
-    notationRef,
     path: notationSplit[0],
     transforms: notationSplit.slice(1),
-    setNotation: handleSetCustomNotation,
+    setNotation: handleSetNotation,
     previousNotation: handlePreviousNotation,
     nextNotation: handleNextNotation,
   };

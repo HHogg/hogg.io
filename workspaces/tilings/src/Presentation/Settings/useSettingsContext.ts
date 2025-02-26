@@ -24,6 +24,7 @@ type SettingsContextValue = Settings & {
   setShowLayers: (layers: Record<Layer, boolean>) => void;
   setShowSettings: (show: boolean) => void;
   setSpeed: (speed: number) => void;
+  resetAllSettings: () => void;
   toggleSettings: () => void;
   expansionPhases: number;
   showSettings: boolean;
@@ -50,6 +51,7 @@ export const SettingsContext = createContext<SettingsContextValue>({
   setShowLayers: noop,
   setShowSettings: noop,
   setSpeed: noop,
+  resetAllSettings: noop,
   toggleSettings: noop,
 });
 

@@ -9,10 +9,12 @@ import {
 
 type SettingsProviderProps = {
   settings?: Partial<Settings>;
+  onReset?: () => void;
 };
 
 export default function SettingsProvider({
   settings: settingsProps,
+  onReset,
   ...rest
 }: PropsWithChildren<SettingsProviderProps>) {
   const [settings, setSettings] = useLocalStorage(
@@ -49,6 +51,14 @@ export default function SettingsProvider({
 
   const setSpeed = (speed: number) => setSettings({ ...settings, speed });
 
+  const resetAllSettings = () => {
+    setSettings({ ...defaultSettings, ...settingsProps });
+
+    if (onReset) {
+      onReset();
+    }
+  };
+
   const value = {
     ...settings,
     setAutoRotate,
@@ -59,6 +69,7 @@ export default function SettingsProvider({
     setShowLayers,
     setSpeed,
     setShowSettings,
+    resetAllSettings,
     toggleSettings,
     elapsed: 0,
     showSettings,
