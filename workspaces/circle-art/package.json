@@ -12,7 +12,7 @@
     "classnames": "^2.3.2",
     "file-saver": "^2.0.5",
     "lucide-react": "0.447.0",
-    "preshape": "^19.1.5",
+    "preshape": "^19.1.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "10.0.0"

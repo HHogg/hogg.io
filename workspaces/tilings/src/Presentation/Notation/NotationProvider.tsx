@@ -29,10 +29,16 @@ export default function NotationProvider({
   const { updateNotation, reset } = usePlayerContext();
   const { expansionPhases } = useSettingsContext();
   const [hasCustomNotation, setHasCustomNotation] = useState(false);
-  const notationRef = useRef<string>(initialNotation);
+
+  const notationRef = useRef<string>('');
+  const delayRef = useRef<number | null>(null);
 
   const handleSetNotation = useCallback(
     (notation: string) => {
+      if (notation === notationRef.current) {
+        return;
+      }
+
       notationRef.current = notation;
       setNotation(notation);
       updateNotation(notation);
@@ -76,9 +82,15 @@ export default function NotationProvider({
 
   useEffect(() => {
     if (!hasCustomNotation) {
-      handleSetNotation(initialNotation);
+      if (delayRef.current) {
+        window.clearTimeout(delayRef.current);
+      }
+
+      delayRef.current = window.setTimeout(() => {
+        handleSetNotation(initialNotation);
+      }, 1_000);
     }
-  }, [handleSetNotation, initialNotation, hasCustomNotation, updateNotation]);
+  }, [handleSetNotation, initialNotation, hasCustomNotation]);
 
   const value = {
     notation,

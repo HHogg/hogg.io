@@ -784,7 +784,7 @@ __metadata:
     classnames: ^2.3.2
     file-saver: ^2.0.5
     lucide-react: 0.447.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
     uuid: 10.0.0
@@ -801,7 +801,7 @@ __metadata:
     classnames: ^2.3.2
     framer-motion: 11.5.6
     lucide-react: 0.445.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
   languageName: unknown
@@ -816,7 +816,7 @@ __metadata:
     "@hogg/wasm": "workspace:^"
     "@types/react": ^18.0.28
     lucide-react: 0.445.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     typescript: ^5.0.4
   languageName: unknown
@@ -831,7 +831,7 @@ __metadata:
     framer-motion: 11.5.6
     lucide-react: 0.445.0
     luxon: 3.5.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
@@ -848,7 +848,7 @@ __metadata:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
     lucide-react: 0.445.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     typescript: ^5.0.4
   languageName: unknown
@@ -863,7 +863,7 @@ __metadata:
     "@hogg/tilings": "workspace:^"
     "@hogg/wasm": "workspace:^"
     "@types/react": ^18.0.28
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     typescript: ^5.0.4
   languageName: unknown
@@ -875,7 +875,7 @@ __metadata:
   dependencies:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     typescript: ^5.0.4
   languageName: unknown
@@ -892,7 +892,7 @@ __metadata:
     "@types/react-dom": ^18.0.11
     framer-motion: 11.5.4
     lucide-react: 0.445.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
   languageName: unknown
@@ -921,7 +921,7 @@ __metadata:
     lodash: ^4.17.21
     lucide-react: 0.445.0
     numbro: ^2.5.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
@@ -935,7 +935,7 @@ __metadata:
   dependencies:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     typescript: ^5.0.4
   languageName: unknown
@@ -956,7 +956,7 @@ __metadata:
     gl-matrix: ^3.4.3
     lodash: ^4.17.21
     numbro: ^2.5.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.20.1
@@ -986,7 +986,7 @@ __metadata:
     lucide-react: 0.447.0
     luxon: ^3.5.0
     open-color: ^1.9.1
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     puppeteer: 23.3.0
     react: ^18.2.0
     react-dom: ^18.2.0
@@ -1004,11 +1004,12 @@ __metadata:
     "@hogg/common": "workspace:^"
     "@hogg/line-segment-extending": "workspace:^"
     "@types/lodash.get": ^4.4.9
+    "@types/node": 22.13.5
     "@types/react": ^18.0.28
     "@types/react-dom": ^18.0.11
     lodash.get: ^4.4.2
     lucide-react: 0.445.0
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
     uuid: 10.0.0
@@ -1041,7 +1042,7 @@ __metadata:
     framer-motion: 11.5.6
     lucide-react: 0.447.0
     luxon: ^3.4.4
-    preshape: ^19.1.5
+    preshape: ^19.1.7
     react: ^18.2.0
     react-dom: ^18.2.0
     react-helmet-async: ^2.0.3
@@ -2571,6 +2572,15 @@ __metadata:
   version: 13.7.1
   resolution: "@types/node@npm:13.7.1"
   checksum: 03fd4dec2c26f05e008f074679189af3b1a8423e00d8ca41a548a4fe3daf40a402a726ff76a97c7ba5f23380d71409d9508204880d98d6d20543e107a3e14f70
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:22.13.5":
+  version: 22.13.5
+  resolution: "@types/node@npm:22.13.5"
+  dependencies:
+    undici-types: ~6.20.0
+  checksum: 8789d9bc3efd212819fd03f7bbd429901b076703e9852ccf4950c8c7cd300d5d5a05f273d0936cbaf28194485d2bd0c265a1a25390720e353a53359526c28fb3
   languageName: node
   linkType: hard
 
@@ -11790,9 +11800,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"preshape@npm:^19.1.5":
-  version: 19.1.5
-  resolution: "preshape@npm:19.1.5"
+"preshape@npm:^19.1.7":
+  version: 19.1.7
+  resolution: "preshape@npm:19.1.7"
   dependencies:
     "@floating-ui/react": 0.26.24
     classnames: ^2.5.1
@@ -11812,7 +11822,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-router-dom: ^6.11.1
-  checksum: 4601ca65cf2cc95aae67cffea4940789509979391e96d12bcc824a1cf3e00742694bd18ebad560f2aca02ea5402d83728d4a64c0300d4def05127c24667a28d4
+  checksum: 4c753e5f68e7dcc40a53d86112be3aba2d135540261ee1347e01361746ac8764146ac607aff5b7dc5ae7d7ad267181f0cbb42733cafa17ce6a43f8f6808fa4ce
   languageName: node
   linkType: hard
 
@@ -14672,6 +14682,13 @@ __metadata:
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
   checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.20.0":
+  version: 6.20.0
+  resolution: "undici-types@npm:6.20.0"
+  checksum: b7bc50f012dc6afbcce56c9fd62d7e86b20a62ff21f12b7b5cbf1973b9578d90f22a9c7fe50e638e96905d33893bf2f9f16d98929c4673c2480de05c6c96ea8b
   languageName: node
   linkType: hard
 

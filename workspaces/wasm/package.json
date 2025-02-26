@@ -18,13 +18,14 @@
     "@hogg/line-segment-extending": "workspace:^",
     "lodash.get": "^4.4.2",
     "lucide-react": "0.445.0",
-    "preshape": "^19.1.5",
+    "preshape": "^19.1.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "uuid": "10.0.0"
   },
   "devDependencies": {
     "@types/lodash.get": "^4.4.9",
+    "@types/node": "22.13.5",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11"
   }

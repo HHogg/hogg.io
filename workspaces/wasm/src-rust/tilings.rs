@@ -75,6 +75,7 @@ pub fn render_tiling(
   let tiling = Tiling::default()
     .with_validations(None)
     .with_expansion_phases(expansion_phases)
+    .with_type_ahead()
     .from_string(notation);
 
   draw(&tiling, &offscreen_canvas, &options)?;

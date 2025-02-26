@@ -124,6 +124,7 @@ impl RenderLoopInner {
           Tiling::default()
             .with_validations(Some(Flag::all()))
             .with_expansion_phases(state.expansion_phases)
+            .with_type_ahead()
             .from_string(state.notation.as_str()),
         );
 

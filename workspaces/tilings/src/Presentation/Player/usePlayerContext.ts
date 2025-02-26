@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react';
 import { UsePlayerResult } from './usePlayer';
 
 const noop = () => {
-  throw new Error('usePlayerContext was not initialized');
+  // throw new Error('usePlayerContext was not initialized');
 };
 
 const initialContext: UsePlayerResult = {

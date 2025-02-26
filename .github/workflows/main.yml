@@ -32,4 +32,4 @@ jobs:
       - name: 'Test'
         run: yarn test:ci
       - name: 'Deploy'
-        run: 'yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}'
+        run: yarn firebase deploy

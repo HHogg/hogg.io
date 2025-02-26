@@ -183,3 +183,23 @@ export function handleMessageEvent(event: WasmWorkerEvent) {
   eventListeners['__all']?.forEach((listener) => listener(event));
   eventListeners[event.name]?.forEach((listener) => listener(event));
 }
+
+export function wasmWorkerMessageResponseToString(
+  response: WasmWorkerMessageResponse
+): string {
+  if (response.error) {
+    return `[${response.key}] -> ${response.error}`;
+  }
+
+  if (response.result) {
+    return `[${response.key}] -> ${JSON.stringify(response.result)}`;
+  }
+
+  return `[${response.key}]`;
+}
+
+export function wasmWorkerMessageRequestToString(
+  request: WasmWorkerMessageRequest
+): string {
+  return request.key;
+}
