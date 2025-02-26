@@ -31,5 +31,9 @@ jobs:
         run: yarn lint
       - name: 'Test'
         run: yarn test:ci
+      - name: Prepare Google Application Credentials for Firebase deploy
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}" | base64 --decode > "$RUNNER_TEMP/gcp-key.json"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$RUNNER_TEMP/gcp-key.json" >> "$GITHUB_ENV"
       - name: 'Deploy'
         run: yarn firebase deploy
