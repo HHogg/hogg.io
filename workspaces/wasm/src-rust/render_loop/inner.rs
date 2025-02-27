@@ -1,9 +1,10 @@
 use hogg_spatial_grid_map::Fxx;
 use hogg_tiling::build::Metrics;
-use hogg_tiling::validation::Flag;
+use hogg_tiling::FeatureToggle;
 use hogg_tiling::Tiling;
 use hogg_tiling_renderer::draw;
 use std::cell::RefCell;
+use std::collections::HashMap;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -63,6 +64,7 @@ pub struct RenderLoopState {
 
   canvas: Option<OffscreenCanvas>,
   expansion_phases: u8,
+  feature_toggles: HashMap<FeatureToggle, bool>,
   notation: String,
   render_options: hogg_tiling_renderer::Options,
   speed: Fxx,
@@ -85,6 +87,7 @@ impl Default for RenderLoopState {
 
       canvas: None,
       expansion_phases: 0,
+      feature_toggles: HashMap::new(),
       notation: String::new(),
       render_options: hogg_tiling_renderer::Options::default(),
       speed: 1.0,
@@ -122,7 +125,7 @@ impl RenderLoopInner {
         *needs_render = false;
         *tiling = Some(
           Tiling::default()
-            .with_validations(Some(Flag::all()))
+            .with_feature_toggles(Some(state.feature_toggles.clone()))
             .with_expansion_phases(state.expansion_phases)
             .with_type_ahead()
             .from_string(state.notation.as_str()),
@@ -245,6 +248,15 @@ impl RenderLoopInner {
     self.state.borrow_mut().expansion_phases = expansion_phases;
     self.set_render();
 
+    Ok(())
+  }
+
+  pub fn set_feature_toggles(
+    &self,
+    feature_toggles: HashMap<FeatureToggle, bool>,
+  ) -> Result<(), JsValue> {
+    self.state.borrow_mut().feature_toggles = feature_toggles;
+    self.set_render();
     Ok(())
   }
 

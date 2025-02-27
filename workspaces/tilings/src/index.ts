@@ -7,7 +7,7 @@ export { default as TilingRenderer } from './TilingRenderer';
 export const meta: Project = {
   id: ProjectKey.tilings,
   image,
-  name: 'Searching, generating, validating and rendering Euclidean tilings',
+  name: 'Searching, generating, validating and rendering lattice structures',
   description: `A long term project to generate Euclidean tilings by developing a notation to describe them, a structure generator, a validator and a renderer.`,
   wip: true,
   deploy: true,

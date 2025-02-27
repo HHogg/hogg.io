@@ -45,6 +45,7 @@ export const usePlayer = ({
   const {
     autoRotate,
     expansionPhases,
+    featureToggles,
     colorMode,
     colorPalette,
     scaleMode,
@@ -130,10 +131,17 @@ export const usePlayer = ({
   }, [api]);
 
   useEffect(() => {
+    refUpdateRenderMetrics.current = true;
     api.tilings.setPlayerExpansionPhases([expansionPhases]);
   }, [api, expansionPhases]);
 
   useEffect(() => {
+    refUpdateRenderMetrics.current = true;
+    api.tilings.setPlayerFeatureToggles([featureToggles]);
+  }, [api, featureToggles]);
+
+  useEffect(() => {
+    refUpdateRenderMetrics.current = true;
     api.tilings.setPlayerRenderOptions([options]);
   }, [api, options]);
 

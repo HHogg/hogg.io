@@ -1,15 +1,17 @@
+use std::collections::HashMap;
+
 use hogg_gap_validation::has_single_circuit;
 use hogg_geometry::LineSegment;
 use hogg_spatial_grid_map::location;
 
-use super::{Error, Flag};
-use crate::build::{Plane, Tile};
+use super::Error;
+use crate::build::{FeatureToggle, Plane, Tile};
 
 #[derive(Clone, Debug, Default)]
 pub struct Validator {
   option_validate_expansion: bool,
   option_validate_gaps: bool,
-  option_validate_overlap: bool,
+  option_validate_overlaps: bool,
   option_validate_vertex_types: bool,
 }
 
@@ -26,7 +28,7 @@ impl Validator {
     tile: &Tile,
     line_segment: &LineSegment,
   ) -> Result<(), Error> {
-    if !self.option_validate_overlap {
+    if !self.option_validate_overlaps {
       return Ok(());
     }
 
@@ -126,29 +128,25 @@ impl Validator {
   }
 }
 
-impl From<Option<Vec<Flag>>> for Validator {
-  fn from(flags: Option<Vec<Flag>>) -> Self {
-    let mut option_validate_expansion = false;
-    let mut option_validate_gaps = false;
-    let mut option_validate_overlap = false;
-    let mut option_validate_vertex_types = false;
-
-    if let Some(flags) = flags {
-      for flag in flags {
-        match flag {
-          Flag::Expanded => option_validate_expansion = true,
-          Flag::Gaps => option_validate_gaps = true,
-          Flag::Overlaps => option_validate_overlap = true,
-          Flag::VertexTypes => option_validate_vertex_types = true,
-        }
-      }
-    }
-
+impl From<&HashMap<FeatureToggle, bool>> for Validator {
+  fn from(feature_toggles: &HashMap<FeatureToggle, bool>) -> Self {
     Self {
-      option_validate_expansion,
-      option_validate_gaps,
-      option_validate_overlap,
-      option_validate_vertex_types,
+      option_validate_expansion: feature_toggles
+        .get(&FeatureToggle::ValidateExpanded)
+        .copied()
+        .unwrap_or(false),
+      option_validate_gaps: feature_toggles
+        .get(&FeatureToggle::ValidateGaps)
+        .copied()
+        .unwrap_or(false),
+      option_validate_overlaps: feature_toggles
+        .get(&FeatureToggle::ValidateOverlaps)
+        .copied()
+        .unwrap_or(false),
+      option_validate_vertex_types: feature_toggles
+        .get(&FeatureToggle::ValidateVertexTypes)
+        .copied()
+        .unwrap_or(false),
     }
   }
 }

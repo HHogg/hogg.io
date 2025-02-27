@@ -1,6 +1,7 @@
 use std::rc::Rc;
 
 use hogg_spatial_grid_map::Fxx;
+use hogg_tiling::FeatureToggle;
 use inner::RenderLoopInner;
 use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
 use web_sys::OffscreenCanvas;
@@ -44,6 +45,14 @@ impl RenderLoop {
 
   pub fn set_expansion_phases(&self, expansion_phases: u8) -> Result<(), JsValue> {
     self.inner.set_expansion_phases(expansion_phases)
+  }
+
+  pub fn set_feature_toggles(&self, feature_toggles: &JsValue) -> Result<(), JsValue> {
+    let feature_toggles = serde_wasm_bindgen::from_value::<
+      std::collections::HashMap<FeatureToggle, bool>,
+    >(feature_toggles.to_owned())?;
+
+    self.inner.set_feature_toggles(feature_toggles)
   }
 
   pub fn set_notation(&self, notation: &str) -> Result<(), JsValue> {

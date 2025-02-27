@@ -1,4 +1,10 @@
-import { ColorMode, ColorPalette, Layer, ScaleMode } from '@hogg/wasm';
+import {
+  ColorMode,
+  ColorPalette,
+  FeatureToggle,
+  Layer,
+  ScaleMode,
+} from '@hogg/wasm';
 import {
   GaugeIcon,
   LayersIcon,
@@ -8,6 +14,7 @@ import {
   RotateCwIcon,
   ScalingIcon,
   ListRestartIcon,
+  ToggleLeftIcon,
 } from 'lucide-react';
 import {
   Box,
@@ -21,6 +28,9 @@ import {
 import { useSettingsContext } from './useSettingsContext';
 
 const layersOptions = Object.values(Layer).sort((a, b) => a.localeCompare(b));
+const featureTogglesOptions = Object.values(FeatureToggle).sort((a, b) =>
+  a.localeCompare(b)
+);
 
 export default function Settings() {
   const {
@@ -28,6 +38,7 @@ export default function Settings() {
     colorMode,
     colorPalette,
     expansionPhases,
+    featureToggles,
     scaleMode,
     showLayers,
     showSettings,
@@ -36,6 +47,7 @@ export default function Settings() {
     setColorMode,
     setColorPalette,
     setExpansionPhases,
+    setFeatureToggles,
     setScaleMode,
     setShowLayers,
     setSpeed,
@@ -50,6 +62,18 @@ export default function Settings() {
           [layer]: layers.includes(layer),
         }),
         {} as typeof showLayers
+      )
+    );
+  };
+
+  const handleFeatureTogglesChange = (featureTogglesNext: FeatureToggle[]) => {
+    setFeatureToggles(
+      featureTogglesOptions.reduce(
+        (acc, featureToggle) => ({
+          ...acc,
+          [featureToggle]: featureTogglesNext.includes(featureToggle),
+        }),
+        {} as typeof featureToggles
       )
     );
   };
@@ -130,6 +154,17 @@ export default function Settings() {
     onAction: resetAllSettings,
   };
 
+  const featureTogglesConfig: MenuConfigEntryManyOf<FeatureToggle> = {
+    label: 'Feature toggles',
+    icon: ToggleLeftIcon,
+    type: 'manyOf',
+    value: Object.keys(featureToggles).filter(
+      (key) => featureToggles[key as FeatureToggle]
+    ) as FeatureToggle[],
+    options: featureTogglesOptions,
+    onChange: handleFeatureTogglesChange,
+  };
+
   return (
     <Box
       absolute="bottom-right"
@@ -144,6 +179,7 @@ export default function Settings() {
           colorModeConfig,
           colorPaletteConfig,
           expansionPhasesConfig,
+          featureTogglesConfig,
           showLayersConfig,
           scaleModeConfig,
           speedConfig,

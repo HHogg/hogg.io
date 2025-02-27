@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling::{validation, ApplicationError, Tiling, TilingError};
+use hogg_tiling::{ApplicationError, FeatureToggle, Tiling, TilingError};
 
 use super::{messages::VisitResult, Visit};
 
@@ -20,7 +20,7 @@ impl Handler<Visit> for Worker {
     let Visit { path, sender } = message;
 
     let mut tiling = Tiling::default()
-      .with_validations(Some(validation::Flag::all()))
+      .with_feature_toggles(Some(FeatureToggle::all()))
       .with_expansion_phases(3)
       .with_path(path.clone())
       .with_first_transform();

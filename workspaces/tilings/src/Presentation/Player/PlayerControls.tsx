@@ -1,5 +1,4 @@
 import {
-  Media,
   ProjectControl,
   ProjectControlGroup,
   ProjectControls,

@@ -2,6 +2,8 @@
 #[cfg(test)]
 mod tests;
 
+use std::collections::HashMap;
+
 use hogg_circular_sequence::SequenceStore;
 use hogg_geometry::{ConvexHull, LineSegment, Point};
 use hogg_spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap, PI};
@@ -10,7 +12,7 @@ use typeshare::typeshare;
 
 use super::tile::Tile;
 use super::vertex_types::VertexTypes;
-use super::{Metrics, PointSequence, Stage};
+use super::{FeatureToggle, Metrics, PointSequence, Stage};
 use crate::notation::{
   Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
   TransformContinuous, TransformEccentric, TransformValue,
@@ -22,6 +24,8 @@ use crate::TilingError;
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Plane {
+  pub option_hashing: bool,
+
   // Lookup<Tile.geometry.centroid> -> Tile
   pub tiles: SpatialGridMap<Tile>,
   // Lookup<Tile.geometry.centroid> -> Tile
@@ -74,10 +78,19 @@ impl Plane {
     self
   }
 
-  pub fn with_validations(mut self, validations: Option<Vec<validation::Flag>>) -> Self {
-    self.validator = validations.into();
+  pub fn with_feature_toggles(
+    mut self,
+    option_feature_toggles: &HashMap<FeatureToggle, bool>,
+  ) -> Self {
+    self.option_hashing = option_feature_toggles
+      .get(&FeatureToggle::Hashing)
+      .copied()
+      .unwrap_or(false);
+
+    self.validator = option_feature_toggles.into();
     self
   }
+
   pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
     self.metrics.start("build");
 
@@ -231,7 +244,11 @@ impl Plane {
 
     let tile_size = tile.get_size();
     let is_placement_tile = stage == Stage::Placement;
-    let is_touching_placement_tile = !is_placement_tile && self.is_touching_placement_tile(&tile);
+    let is_touching_placement_tile = if is_placement_tile || !self.option_hashing {
+      false
+    } else {
+      self.is_touching_placement_tile(&tile)
+    };
 
     // We add the polygon first so we can see it
     // if there are any errors
@@ -264,30 +281,32 @@ impl Plane {
           .with_center(tile.geometry.centroid)
           .with_max_size(tile.shape.into()),
       );
-    } else if is_touching_placement_tile {
-      if !self.points_center.contains(&tile_location) {
-        let point_sequence = self
-          .points_center_peripheral
-          .take(&tile_location)
-          .unwrap_or_else(|| {
-            PointSequence::default()
-              .with_center(tile.geometry.centroid)
-              .with_max_size(tile.shape.into())
-          });
+    } else if self.option_hashing {
+      if is_touching_placement_tile {
+        if !self.points_center.contains(&tile_location) {
+          let point_sequence = self
+            .points_center_peripheral
+            .take(&tile_location)
+            .unwrap_or_else(|| {
+              PointSequence::default()
+                .with_center(tile.geometry.centroid)
+                .with_max_size(tile.shape.into())
+            });
 
-        self
-          .points_center_extended
-          .insert(tile_location, tile_size, None, point_sequence);
+          self
+            .points_center_extended
+            .insert(tile_location, tile_size, None, point_sequence);
+        }
+      } else if !self.points_center_extended.contains(&tile_location) {
+        self.points_center_peripheral.insert(
+          tile_location,
+          tile_size,
+          None,
+          PointSequence::default()
+            .with_center(tile.geometry.centroid)
+            .with_max_size(tile.shape.into()),
+        );
       }
-    } else if !self.points_center_extended.contains(&tile_location) {
-      self.points_center_peripheral.insert(
-        tile_location,
-        tile_size,
-        None,
-        PointSequence::default()
-          .with_center(tile.geometry.centroid)
-          .with_max_size(tile.shape.into()),
-      );
     }
 
     for line_segment in &tile.geometry.line_segments {
@@ -335,33 +354,35 @@ impl Plane {
             .with_center(mid_point)
             .with_max_size(2),
         );
-      } else if is_touching_placement_tile {
-        if !self.points_mid.contains(&mid_point_location) {
-          let point_sequence = self
-            .points_mid_peripheral
-            .take(&mid_point_location)
-            .unwrap_or_else(|| {
-              PointSequence::default()
-                .with_center(mid_point)
-                .with_max_size(2)
-            });
+      } else if self.option_hashing {
+        if is_touching_placement_tile {
+          if !self.points_mid.contains(&mid_point_location) {
+            let point_sequence = self
+              .points_mid_peripheral
+              .take(&mid_point_location)
+              .unwrap_or_else(|| {
+                PointSequence::default()
+                  .with_center(mid_point)
+                  .with_max_size(2)
+              });
 
-          self.points_mid_extended.insert(
+            self.points_mid_extended.insert(
+              mid_point_location,
+              line_segment.length(),
+              Some(line_segment.theta()),
+              point_sequence,
+            );
+          }
+        } else if !self.points_mid_extended.contains(&mid_point_location) {
+          self.points_mid_peripheral.insert(
             mid_point_location,
             line_segment.length(),
             Some(line_segment.theta()),
-            point_sequence,
+            PointSequence::default()
+              .with_center(mid_point)
+              .with_max_size(2),
           );
         }
-      } else if !self.points_mid_extended.contains(&mid_point_location) {
-        self.points_mid_peripheral.insert(
-          mid_point_location,
-          line_segment.length(),
-          Some(line_segment.theta()),
-          PointSequence::default()
-            .with_center(mid_point)
-            .with_max_size(2),
-        );
       }
 
       // Updating the mid point sequence to link this
@@ -372,7 +393,6 @@ impl Plane {
       // the shape and edge types.
       if let Some(opposite_tile) = self.get_opposite_tile(&tile, &mid_point) {
         self.update_center_point_sequence(&tile.geometry.centroid, &opposite_tile);
-
         self.update_center_point_sequence(&opposite_tile.geometry.centroid, &tile);
       }
     }
@@ -389,24 +409,26 @@ impl Plane {
           None,
           PointSequence::default().with_center(*point),
         );
-      } else if is_touching_placement_tile {
-        if !self.points_end.contains(&location_point) {
-          let point_sequence = self
-            .points_end_peripheral
-            .take(&location_point)
-            .unwrap_or_else(|| PointSequence::default().with_center(*point));
+      } else if self.option_hashing {
+        if is_touching_placement_tile {
+          if !self.points_end.contains(&location_point) {
+            let point_sequence = self
+              .points_end_peripheral
+              .take(&location_point)
+              .unwrap_or_else(|| PointSequence::default().with_center(*point));
 
-          self
-            .points_end_extended
-            .insert(location_point, 1.0, None, point_sequence);
+            self
+              .points_end_extended
+              .insert(location_point, 1.0, None, point_sequence);
+          }
+        } else if !self.points_end_extended.contains(&location_point) {
+          self.points_end_peripheral.insert(
+            location_point,
+            1.0,
+            None,
+            PointSequence::default().with_center(*point),
+          );
         }
-      } else if !self.points_end_extended.contains(&location_point) {
-        self.points_end_peripheral.insert(
-          location_point,
-          1.0,
-          None,
-          PointSequence::default().with_center(*point),
-        );
       }
 
       self.update_end_point_sequence(point, &tile);
@@ -1011,6 +1033,8 @@ impl Plane {
 impl Default for Plane {
   fn default() -> Self {
     Self {
+      option_hashing: false,
+
       repetitions: 0,
       metrics: Metrics::default(),
       validator: Validator::default(),

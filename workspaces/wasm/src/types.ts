@@ -324,6 +324,7 @@ export interface PointSequence {
 }
 
 export interface Plane {
+	optionHashing: boolean;
 	tiles: SpatialGridMap<Tile>;
 	tilesFromPlacement: SpatialGridMap<Tile>;
 	seedTile?: Tile;
@@ -470,24 +471,6 @@ export interface TransformEccentric {
 	originIndex: OriginIndex;
 }
 
-export enum Flag {
-	Overlaps = "Overlaps",
-	Gaps = "Gaps",
-	Expanded = "Expanded",
-	VertexTypes = "VertexTypes",
-}
-
-export interface Tiling {
-	notation: string;
-	plane: Plane;
-	result: Result;
-	optionExpansionPhases: number;
-	optionFirstTransform: boolean;
-	optionLinkPaths: boolean;
-	optionTypeAhead: boolean;
-	optionValidations?: Flag[];
-}
-
 export interface DrawStateSnapshot {
 	metrics: Metrics;
 }
@@ -506,6 +489,14 @@ export interface PlayerStateSnapshot {
 
 export interface RenderStateSnapshot {
 	result: Result;
+}
+
+export enum FeatureToggle {
+	Hashing = "Hashing",
+	ValidateOverlaps = "ValidateOverlaps",
+	ValidateGaps = "ValidateGaps",
+	ValidateExpanded = "ValidateExpanded",
+	ValidateVertexTypes = "ValidateVertexTypes",
 }
 
 export enum Separator {
@@ -532,6 +523,13 @@ export type ValidationError =
 	| { type: "ShapeType", content: {
 	sequence: string;
 }};
+
+export enum Flag {
+	Overlaps = "Overlaps",
+	Gaps = "Gaps",
+	Expanded = "Expanded",
+	VertexTypes = "VertexTypes",
+}
 
 export type WasmWorkerEvent = 
 	| { name: "draw", data: DrawStateSnapshot }

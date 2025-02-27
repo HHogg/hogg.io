@@ -1,4 +1,11 @@
-import { Options, ColorPalette, ScaleMode, Layer, ColorMode } from '@hogg/wasm';
+import {
+  Options,
+  ColorPalette,
+  ScaleMode,
+  Layer,
+  ColorMode,
+  FeatureToggle,
+} from '@hogg/wasm';
 import { ThemeColorMap, colorNegativeShade4 } from 'preshape';
 
 type NoUndefinedField<T> = {
@@ -6,6 +13,14 @@ type NoUndefinedField<T> = {
 };
 
 export const defaultExpansionPhases = 10;
+
+export const defaultFeatureToggles = {
+  [FeatureToggle.Hashing]: true,
+  [FeatureToggle.ValidateOverlaps]: true,
+  [FeatureToggle.ValidateGaps]: true,
+  [FeatureToggle.ValidateExpanded]: true,
+  [FeatureToggle.ValidateVertexTypes]: true,
+};
 
 export const defaultOptions: Pick<
   NoUndefinedField<Options>,

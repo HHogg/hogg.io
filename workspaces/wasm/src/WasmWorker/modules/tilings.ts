@@ -1,12 +1,11 @@
 import {
-  parse_notation as _parseNotation,
   parse_transform as _parseTransform,
   find_previous_tiling as _findPreviousTiling,
   find_next_tiling as _findNextTiling,
   render_tiling as _renderTiling,
   RenderLoop,
 } from '@hogg/wasm/pkg';
-import { Options, Tiling, Transform } from '../../types';
+import { FeatureToggle, Options, Transform } from '../../types';
 
 const canvases = new Map<string, OffscreenCanvas>();
 
@@ -20,6 +19,7 @@ export function renderTiling(
   width: number,
   height: number,
   expansionPhases: number,
+  featureToggles?: Record<FeatureToggle, boolean>,
   options?: Options
 ) {
   const canvas = canvases.get(id);
@@ -31,11 +31,7 @@ export function renderTiling(
   canvas.width = width;
   canvas.height = height;
 
-  _renderTiling(canvas, notation, expansionPhases, options);
-}
-
-export function parseNotation(notation: string): Tiling {
-  return _parseNotation(notation);
+  _renderTiling(canvas, notation, expansionPhases, featureToggles, options);
 }
 
 export function parseTransform(transform: string, path: string): Transform {
@@ -44,16 +40,18 @@ export function parseTransform(transform: string, path: string): Transform {
 
 export function findPreviousTiling(
   notation: string,
-  expansionPhases: number
+  expansionPhases: number,
+  featureToggles?: Record<FeatureToggle, boolean>
 ): string | undefined {
-  return _findPreviousTiling(notation, expansionPhases);
+  return _findPreviousTiling(notation, expansionPhases, featureToggles);
 }
 
 export function findNextTiling(
   notation: string,
-  expansionPhases: number
+  expansionPhases: number,
+  featureToggles?: Record<FeatureToggle, boolean>
 ): string | undefined {
-  return _findNextTiling(notation, expansionPhases);
+  return _findNextTiling(notation, expansionPhases, featureToggles);
 }
 
 // Player related functions
@@ -111,6 +109,16 @@ export function setPlayerExpansionPhases(expansionPhases: number) {
   }
 
   loop.set_expansion_phases(expansionPhases);
+}
+
+export function setPlayerFeatureToggles(
+  featureToggles: Record<FeatureToggle, boolean>
+) {
+  if (loop === null) {
+    return;
+  }
+
+  loop.set_feature_toggles(featureToggles);
 }
 
 export function setPlayerNotation(notation: string) {

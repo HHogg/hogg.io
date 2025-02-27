@@ -1,5 +1,5 @@
 import { DeepPartial } from '@hogg/common';
-import { Options, useWasmApi } from '@hogg/wasm';
+import { FeatureToggle, Options, useWasmApi } from '@hogg/wasm';
 import { BoxProps, useResizeObserver } from 'preshape';
 import { useEffect, useState } from 'react';
 import { useNotationContext } from '../Notation/useNotationContext';
@@ -10,6 +10,7 @@ import useRenderOptions from './useRenderOptions';
 export type RendererProps = {
   notation?: string;
   expansionPhases?: number;
+  featureToggles?: Record<FeatureToggle, boolean>;
   options?: DeepPartial<Options>;
   uid: string;
   height?: number;
@@ -20,6 +21,7 @@ export type RendererProps = {
 export default function Renderer({
   notation: notationProps,
   expansionPhases = defaultExpansionPhases,
+  featureToggles,
   options: optionsProps,
   uid,
   height: heightProps,
@@ -58,12 +60,22 @@ export default function Renderer({
         scaledWidth,
         scaledHeight,
         expansionPhases,
+        featureToggles,
         options,
       ]);
     } catch (error) {
       setError((error as Error).message);
     }
-  }, [api, uid, height, width, notation, options, expansionPhases]);
+  }, [
+    api,
+    uid,
+    height,
+    width,
+    notation,
+    options,
+    expansionPhases,
+    featureToggles,
+  ]);
 
   return (
     <Canvas

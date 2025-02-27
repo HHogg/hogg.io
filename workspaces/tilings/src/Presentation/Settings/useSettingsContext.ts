@@ -1,7 +1,14 @@
-import { ColorPalette, ScaleMode, Layer, ColorMode } from '@hogg/wasm';
+import {
+  ColorPalette,
+  ScaleMode,
+  Layer,
+  ColorMode,
+  FeatureToggle,
+} from '@hogg/wasm';
 import { createContext, useContext } from 'react';
 import {
   defaultExpansionPhases,
+  defaultFeatureToggles,
   defaultOptions,
 } from '../Renderer/defaultOptions';
 
@@ -10,6 +17,7 @@ export type Settings = {
   colorMode: ColorMode;
   colorPalette: ColorPalette;
   expansionPhases: number;
+  featureToggles: Record<FeatureToggle, boolean>;
   scaleMode: ScaleMode;
   speed: number;
   showLayers: Record<Layer, boolean>;
@@ -20,6 +28,7 @@ type SettingsContextValue = Settings & {
   setColorMode: (colorMode: ColorMode) => void;
   setColorPalette: (colorPalette: ColorPalette) => void;
   setExpansionPhases: (count: number) => void;
+  setFeatureToggles: (featureToggles: Record<FeatureToggle, boolean>) => void;
   setScaleMode: (scaleMode: ScaleMode) => void;
   setShowLayers: (layers: Record<Layer, boolean>) => void;
   setShowSettings: (show: boolean) => void;
@@ -33,6 +42,7 @@ type SettingsContextValue = Settings & {
 export const defaultSettings: Settings = {
   ...defaultOptions,
   expansionPhases: defaultExpansionPhases,
+  featureToggles: defaultFeatureToggles,
   speed: 2,
 };
 
@@ -47,6 +57,7 @@ export const SettingsContext = createContext<SettingsContextValue>({
   setColorMode: noop,
   setColorPalette: noop,
   setExpansionPhases: noop,
+  setFeatureToggles: noop,
   setScaleMode: noop,
   setShowLayers: noop,
   setShowSettings: noop,

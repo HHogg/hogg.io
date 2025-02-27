@@ -3,31 +3,29 @@
 mod tests;
 
 use core::fmt;
+use std::collections::HashMap;
 
 use serde::de::{self, MapAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use serde_with::serde_as;
-use typeshare::typeshare;
 
-use crate::build::Plane;
+use crate::build::{FeatureToggle, Plane};
 use crate::notation::{Direction, Notation, Path};
-use crate::{build, validation, TilingError};
+use crate::{build, TilingError};
 
 #[serde_as]
 #[derive(Clone, Debug, Default, Serialize)]
 #[serde(rename_all = "camelCase")]
-#[typeshare]
 pub struct Tiling {
-  #[typeshare(serialized_as = "String")]
   pub notation: Notation,
   pub plane: build::Plane,
   pub result: build::Result,
 
   option_expansion_phases: u8,
+  option_feature_toggles: HashMap<FeatureToggle, bool>,
   option_first_transform: bool,
   option_link_paths: bool,
   option_type_ahead: bool,
-  option_validations: Option<Vec<validation::Flag>>,
 }
 
 impl Tiling {
@@ -38,6 +36,14 @@ impl Tiling {
 
   pub fn with_first_transform(mut self) -> Self {
     self.option_first_transform = true;
+    self
+  }
+
+  pub fn with_feature_toggles(
+    mut self,
+    option_feature_toggles: Option<HashMap<FeatureToggle, bool>>,
+  ) -> Self {
+    self.option_feature_toggles = option_feature_toggles.unwrap_or_default();
     self
   }
 
@@ -71,15 +77,6 @@ impl Tiling {
       Err(err) => self.result.error = Some(err),
     }
 
-    self
-  }
-
-  /// Setting this skips the validation that happens as
-  /// the tiling is being built up. This should only be
-  /// used when the notation provided is known to be valid,
-  /// and can be used to speed up the process of building.
-  pub fn with_validations(mut self, validations: Option<Vec<validation::Flag>>) -> Self {
-    self.option_validations = validations;
     self
   }
 
@@ -160,7 +157,7 @@ impl Tiling {
   pub fn build(&mut self, on_visit: &Option<&dyn Fn(&build::Result)>) -> Result<(), TilingError> {
     self.plane = Plane::default()
       .with_expansion_phases(self.option_expansion_phases)
-      .with_validations(self.option_validations.clone());
+      .with_feature_toggles(&self.option_feature_toggles);
 
     let build_result = self.plane.build(&self.notation);
 

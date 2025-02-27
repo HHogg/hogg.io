@@ -1,4 +1,10 @@
-import { ColorMode, ColorPalette, Layer, ScaleMode } from '@hogg/wasm';
+import {
+  ColorMode,
+  ColorPalette,
+  FeatureToggle,
+  Layer,
+  ScaleMode,
+} from '@hogg/wasm';
 import { useLocalStorage } from 'preshape';
 import { PropsWithChildren, useMemo, useState } from 'react';
 import {
@@ -18,7 +24,7 @@ export default function SettingsProvider({
   ...rest
 }: PropsWithChildren<SettingsProviderProps>) {
   const [settings, setSettings] = useLocalStorage(
-    'com.hogg.io.tilings.player.settings',
+    'com.hogg.io.tilings.player.settings.v1',
     useMemo(
       () => ({
         ...defaultSettings,
@@ -43,6 +49,9 @@ export default function SettingsProvider({
   const setExpansionPhases = (expansionPhases: number) =>
     setSettings({ ...settings, expansionPhases });
 
+  const setFeatureToggles = (featureToggles: Record<FeatureToggle, boolean>) =>
+    setSettings({ ...settings, featureToggles });
+
   const setScaleMode = (scaleMode: ScaleMode) =>
     setSettings({ ...settings, scaleMode });
 
@@ -65,6 +74,7 @@ export default function SettingsProvider({
     setColorMode,
     setColorPalette,
     setExpansionPhases,
+    setFeatureToggles,
     setScaleMode,
     setShowLayers,
     setSpeed,

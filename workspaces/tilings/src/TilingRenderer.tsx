@@ -4,20 +4,10 @@ import Renderer, { RendererProps } from './Presentation/Renderer/Renderer';
 
 export type TilingRendererProps = BoxProps & RendererProps;
 
-export default function TilingRenderer({
-  expansionPhases,
-  notation,
-  options,
-  ...rest
-}: TilingRendererProps) {
+export default function TilingRenderer(props: TilingRendererProps) {
   return (
     <WasmApiLoadingScreen>
-      <Renderer
-        {...rest}
-        expansionPhases={expansionPhases}
-        notation={notation}
-        options={options}
-      />
+      <Renderer {...props} />
     </WasmApiLoadingScreen>
   );
 }
