@@ -7,6 +7,13 @@ pub struct VertexTypes {
 }
 
 impl VertexTypes {
+  pub fn matches(&self, sequence: &Sequence) -> bool {
+    matches!(
+      self.store.get_match(sequence),
+      hogg_circular_sequence::Match::Exact(_) | hogg_circular_sequence::Match::Partial(_)
+    )
+  }
+
   pub fn matches_exactly(&self, sequence: &Sequence) -> bool {
     matches!(
       self.store.get_match(sequence),

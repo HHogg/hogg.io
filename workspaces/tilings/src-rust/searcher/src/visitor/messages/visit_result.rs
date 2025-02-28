@@ -1,6 +1,7 @@
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling::{notation::Path, ApplicationError};
+use hogg_tiling::notation::Path;
+use hogg_tiling::ApplicationError;
 use hogg_tiling_datastore::tilings;
 use serde::Serialize;
 

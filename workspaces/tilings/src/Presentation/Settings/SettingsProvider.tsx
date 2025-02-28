@@ -24,7 +24,7 @@ export default function SettingsProvider({
   ...rest
 }: PropsWithChildren<SettingsProviderProps>) {
   const [settings, setSettings] = useLocalStorage(
-    'com.hogg.io.tilings.player.settings.v1',
+    'com.hogg.io.tilings.player.settings.v2',
     useMemo(
       () => ({
         ...defaultSettings,
@@ -46,8 +46,8 @@ export default function SettingsProvider({
   const setColorPalette = (colorPalette: ColorPalette) =>
     setSettings({ ...settings, colorPalette });
 
-  const setExpansionPhases = (expansionPhases: number) =>
-    setSettings({ ...settings, expansionPhases });
+  const setRepetitions = (repetitions: number) =>
+    setSettings({ ...settings, repetitions });
 
   const setFeatureToggles = (featureToggles: Record<FeatureToggle, boolean>) =>
     setSettings({ ...settings, featureToggles });
@@ -73,7 +73,7 @@ export default function SettingsProvider({
     setAutoRotate,
     setColorMode,
     setColorPalette,
-    setExpansionPhases,
+    setRepetitions,
     setFeatureToggles,
     setScaleMode,
     setShowLayers,

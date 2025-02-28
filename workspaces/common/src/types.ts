@@ -5,7 +5,6 @@ export enum ProjectKey {
   circle_art = 'circle-art',
   circle_intersections = 'circle-intersections',
   circular_sequence = 'circular-sequence',
-  gap_validation = 'gap-validation',
   grahams_scan = 'grahams-scan',
   evolution = 'evolution',
   line_segment_extending = 'line-segment-extending',
@@ -13,6 +12,9 @@ export enum ProjectKey {
   spatial_grid_map = 'spatial-grid-map',
   spirals = 'spirals',
   tilings = 'tilings',
+  tilings_validate_gaps = 'tilings-validate-gaps',
+  tilings_validate_overlaps = 'tilings-validate-overlaps',
+  tilings_validate_vertex_types = 'tilings-validate-vertex-types',
   wasm = 'wasm',
 }
 

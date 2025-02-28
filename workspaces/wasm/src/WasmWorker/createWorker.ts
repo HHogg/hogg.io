@@ -39,7 +39,7 @@ const apisAvailable: Record<WasmApiKey, boolean> = {
   ['tilings.startPlayer']: true,
   ['tilings.stopPlayer']: true,
   ['tilings.setPlayerCanvasSize']: true,
-  ['tilings.setPlayerExpansionPhases']: true,
+  ['tilings.setPlayerRepetitions']: true,
   ['tilings.setPlayerFeatureToggles']: true,
   ['tilings.setPlayerNotation']: true,
   ['tilings.setPlayerRenderOptions']: true,

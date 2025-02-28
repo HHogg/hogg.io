@@ -7,7 +7,8 @@ use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use super::{point::sort_points_around_origin, BBox, LineSegment, Point};
+use super::point::sort_points_around_origin;
+use super::{BBox, LineSegment, Point};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

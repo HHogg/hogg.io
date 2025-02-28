@@ -8,9 +8,9 @@
   "scripts": {
     "build": "yarn build:types && yarn build:wasm",
     "build:types": "typeshare --lang=typescript --output-file=./src/types.ts  ../",
-    "build:wasm": "wasm-pack build --target web",
+    "build:wasm": "wasm-pack build --target web --debug",
     "clean": "rm -rf ./pkg && rm -rf ./src/types.ts",
-    "dev": "cargo watch -w ./src-rust -w ../circular-sequence/src-rust -w ../gap-validation/src-rust -w ../geometry/src -w ../line-segment-extending/src-rust -w ../spatial-grid-map/src-rust -w ../tilings/src-rust -q -s 'yarn workspace @hogg/wasm run build'"
+    "dev": "./watch.sh"
   },
   "dependencies": {
     "@hogg/circular-sequence": "workspace:^",

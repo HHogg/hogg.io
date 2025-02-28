@@ -2,11 +2,11 @@
 #[cfg(test)]
 mod grid_tests;
 
-use serde::{Deserialize, Serialize};
-use typeshare::typeshare;
-
 use std::collections::{BTreeSet, HashMap};
 use std::mem;
+
+use serde::{Deserialize, Serialize};
+use typeshare::typeshare;
 
 use crate::bucket::{Bucket, BucketEntry, MutBucketEntry};
 use crate::location::{self, Location};
@@ -183,11 +183,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     self.get_value(point).is_some()
   }
 
-  fn insert_entry(
-    &mut self,
-    entry: BucketEntry<TEntryValue>,
-    update_size_check: bool,
-  ) -> MutBucketEntry<TEntryValue> {
+  fn insert_entry(&mut self, entry: BucketEntry<TEntryValue>, update_size_check: bool) -> bool {
     let BucketEntry {
       point,
       rotation,
@@ -208,9 +204,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       }
     }
 
-    self
-      .get_value_mut(&point)
-      .expect("Value not found after insert")
+    inserted
   }
 
   /// Inserts a point into the grid, returning false if it's already present.
@@ -221,7 +215,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
     size: Fxx,
     rotation: Option<Fxx>,
     value: TEntryValue,
-  ) -> MutBucketEntry<TEntryValue> {
+  ) -> bool {
     self.insert_entry(
       BucketEntry::default()
         .with_point(point)

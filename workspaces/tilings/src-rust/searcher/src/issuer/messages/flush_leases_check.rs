@@ -14,6 +14,6 @@ impl Handler<FlushLeasesCheck> for Issuer {
   fn handle(&mut self, _msg: FlushLeasesCheck, _ctx: &mut Self::Context) -> Self::Result {
     let leases = self.leases.clone();
 
-    Box::pin(async move { leases.lock().await.len() == 0 })
+    Box::pin(async move { leases.lock().await.is_empty() })
   }
 }

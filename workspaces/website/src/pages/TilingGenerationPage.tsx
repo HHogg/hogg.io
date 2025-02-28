@@ -17,7 +17,7 @@ export default function TilingGenerationPage() {
   return (
     <TilingRenderer
       uid="tiling-generation-page"
-      expansionPhases={15}
+      repetitions={15}
       notation={notation}
       options={options}
     />

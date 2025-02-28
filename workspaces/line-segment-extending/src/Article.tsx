@@ -56,7 +56,7 @@ const Article = ({}: Props) => {
               uid="article/line-segment-extending/reflective-tiling-transformation"
               height={300}
               notation="12-4-3,6/m30/m(c4)"
-              expansionPhases={0}
+              repetitions={0}
               options={tilingRendererOptions}
             />
           </ArticleFig>
@@ -341,7 +341,7 @@ let intercepts_max_x = y_for_max_x >= min_y && y_for_max_x <= max_y;
               uid="article/line-segment-extending/rotational-tiling-transformation"
               height={300}
               options={tilingRendererOptions}
-              expansionPhases={0}
+              repetitions={0}
               notation="6-3-4,4-3/m90/r(h13)"
             />
           </ArticleFig>

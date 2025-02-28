@@ -123,26 +123,22 @@ impl Scale {
     Ok(())
   }
 
-  /**
-   * Canvas value = JS caller value
-   * Content value = Scaled canvas value
-   *
-   * Use this function to convert a value from the
-   * canvas space to the content space. Usually called
-   * in getting values from a Style object.
-   */
+  /// Canvas value = JS caller value
+  /// Content value = Scaled canvas value
+  ///
+  /// Use this function to convert a value from the
+  /// canvas space to the content space. Usually called
+  /// in getting values from a Style object.
   pub fn scale_value_to_content(&self, value: Fxx) -> Fxx {
     value * (1.0 / self.scale)
   }
 
-  /**
-   * Canvas value = JS caller value
-   * Content value = Scaled canvas value
-   *
-   * Use this function to convert a value from the
-   * content space to the canvas space. Usually called
-   * in setting value to store on a Style object.
-   */
+  /// Canvas value = JS caller value
+  /// Content value = Scaled canvas value
+  ///
+  /// Use this function to convert a value from the
+  /// content space to the canvas space. Usually called
+  /// in setting value to store on a Style object.
   pub fn scale_value_to_canvas(&self, value: Fxx) -> Fxx {
     value * self.scale
   }

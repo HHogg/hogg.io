@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
-use super::*;
-
 use insta::assert_debug_snapshot;
 use rand::seq::SliceRandom;
+
+use super::*;
 
 #[test]
 fn center() {

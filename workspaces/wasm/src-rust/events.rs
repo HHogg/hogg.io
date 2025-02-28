@@ -14,7 +14,7 @@ pub enum WasmWorkerEvent {
   FindPreviousTiling(String),
   FindNextTiling(String),
   Player(PlayerStateSnapshot),
-  Render(RenderStateSnapshot),
+  Render(Box<RenderStateSnapshot>),
 }
 
 #[derive(Debug, Default, Serialize)]

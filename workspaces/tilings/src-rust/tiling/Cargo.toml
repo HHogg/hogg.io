@@ -16,10 +16,12 @@ chrono.workspace = true
 console_error_panic_hook.workspace = true
 console_log.workspace = true
 hogg_circular_sequence = { path = "../../../circular-sequence" }
-hogg_gap_validation = { path = "../../../gap-validation" }
 hogg_geometry = { path = "../../../geometry" }
 hogg_line_segment_extending = { path = "../../../line-segment-extending" }
 hogg_spatial_grid_map = { path = "../../../spatial-grid-map" }
+hogg_tilings_validation_gaps = { path = "../../../tilings-validation-gaps" }
+hogg_tilings_validation_overlaps = { path = "../../../tilings-validation-overlaps" }
+hogg_tilings_validation_vertex_types = { path = "../../../tilings-validation-vertex-types" }
 log.workspace = true
 ordered-float.workspace = true
 serde_json.workspace = true

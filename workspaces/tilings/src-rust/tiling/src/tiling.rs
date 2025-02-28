@@ -21,16 +21,17 @@ pub struct Tiling {
   pub plane: build::Plane,
   pub result: build::Result,
 
-  option_expansion_phases: u8,
   option_feature_toggles: HashMap<FeatureToggle, bool>,
   option_first_transform: bool,
+  option_hashing: bool,
   option_link_paths: bool,
+  option_repetitions: u8,
   option_type_ahead: bool,
 }
 
 impl Tiling {
-  pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
-    self.option_expansion_phases = expansion_phases;
+  pub fn with_repetitions(mut self, repetitions: u8) -> Self {
+    self.option_repetitions = repetitions;
     self
   }
 
@@ -44,6 +45,11 @@ impl Tiling {
     option_feature_toggles: Option<HashMap<FeatureToggle, bool>>,
   ) -> Self {
     self.option_feature_toggles = option_feature_toggles.unwrap_or_default();
+    self.option_hashing = self
+      .option_feature_toggles
+      .get(&FeatureToggle::Hashing)
+      .copied()
+      .unwrap_or(false);
     self
   }
 
@@ -156,19 +162,26 @@ impl Tiling {
 
   pub fn build(&mut self, on_visit: &Option<&dyn Fn(&build::Result)>) -> Result<(), TilingError> {
     self.plane = Plane::default()
-      .with_expansion_phases(self.option_expansion_phases)
+      .with_repetitions(self.option_repetitions)
       .with_feature_toggles(&self.option_feature_toggles);
 
-    let build_result = self.plane.build(&self.notation);
+    let mut build_result = self.plane.build(&self.notation);
 
-    self.result = self.into();
-    self.result.error = build_result.clone().err();
-
-    if let Some(on_visit) = on_visit {
-      on_visit(&self.result);
+    if self.option_hashing && build_result.error.is_none() {
+      build_result.create_hash(self);
     }
 
-    build_result
+    if let Some(on_visit) = on_visit {
+      on_visit(&build_result);
+    }
+
+    if build_result.error.is_some() {
+      Err(build_result.error.unwrap())
+    } else {
+      self.result = build_result;
+
+      Ok(())
+    }
   }
 }
 

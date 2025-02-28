@@ -9,14 +9,17 @@ codegen-units = 1
 lto = true
 strip = true
 
+
 [workspace]
 members = [
   "workspaces/circular-sequence",
-  "workspaces/gap-validation",
   "workspaces/geometry",
   "workspaces/line-segment-extending",
   "workspaces/spatial-grid-map",
   "workspaces/tilings/src-rust/*",
+  "workspaces/tilings-validation-gaps",
+  "workspaces/tilings-validation-overlaps",
+  "workspaces/tilings-validation-vertex-types",
   "workspaces/wasm",
 ]
 resolver = "2"

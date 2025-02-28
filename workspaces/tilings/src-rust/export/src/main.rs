@@ -64,7 +64,12 @@ async fn main() -> Result<()> {
   export_valid_tilings(&pool, create_output_file("./results/valid_tilings.txt")?).await?;
 
   // Output all the valid tilings found to show on the website
-  export_unique_tilings(&pool, create_output_file("./results/output.json")?).await?;
+  export_unique_tilings(
+    &pool,
+    create_output_file("./results/output.json")?,
+    create_output_file("./results/output.csv")?,
+  )
+  .await?;
 
   // Output the stats of the search to display on the website
   export_stats(&pool, create_output_file("./results/search_stats.json")?).await?;

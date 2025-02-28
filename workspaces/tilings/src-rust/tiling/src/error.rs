@@ -1,9 +1,8 @@
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 use typeshare::typeshare;
 
-use crate::validation;
-
-#[derive(Clone, Debug, thiserror::Error, Serialize, Deserialize)]
+#[derive(Clone, Debug, Error, Serialize, Deserialize)]
 #[serde(tag = "name", content = "data")]
 #[typeshare]
 pub enum TilingError {
@@ -35,7 +34,7 @@ pub enum TilingError {
   #[error("Invalid state -> {reason}")]
   InvalidState { reason: String },
   #[error("Invalid tiling -> {0}")]
-  InvalidTiling(validation::Error),
+  InvalidTiling(ValidationError),
   #[error("Invalid transform \"{transform}\" -> {reason}")]
   InvalidTransform { transform: String, reason: String },
   #[error("Invalid transform value \"{value}\" -> {reason}")]
@@ -44,8 +43,8 @@ pub enum TilingError {
   InvalidVertexType { value: String },
 }
 
-impl From<validation::Error> for TilingError {
-  fn from(error: validation::Error) -> Self {
+impl From<ValidationError> for TilingError {
+  fn from(error: ValidationError) -> Self {
     Self::InvalidTiling(error)
   }
 }
@@ -55,4 +54,22 @@ impl From<validation::Error> for TilingError {
 pub struct ApplicationError {
   pub tiling: String,
   pub reason: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Error, Serialize)]
+#[serde(tag = "type", content = "content")]
+#[typeshare]
+pub enum ValidationError {
+  #[error("Application error -> {reason}")]
+  Application { reason: String },
+  #[error("Gaps between shapes")]
+  Gaps,
+  #[error("Shapes overlap -> {reason}")]
+  Overlaps { reason: String },
+  #[error("Invalid vertex type -> {reason}")]
+  VertexType { reason: String },
+  #[error("Invalid edge type -> {sequence}")]
+  EdgeType { sequence: String },
+  #[error("Invalid shape type -> {sequence}")]
+  ShapeType { sequence: String },
 }

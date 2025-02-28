@@ -1,29 +1,25 @@
-use hogg_spatial_grid_map::Fxx;
-use hogg_tiling::build::Metrics;
-use hogg_tiling::FeatureToggle;
-use hogg_tiling::Tiling;
-use hogg_tiling_renderer::draw;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use std::rc::Rc;
+
+use hogg_spatial_grid_map::Fxx;
+use hogg_tiling::build::Metrics;
+use hogg_tiling::{FeatureToggle, Tiling};
+use hogg_tiling_renderer::draw;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::js_sys;
-use web_sys::OffscreenCanvas;
-use web_sys::WorkerGlobalScope;
+use web_sys::{js_sys, OffscreenCanvas, WorkerGlobalScope};
 
-use crate::events::post_event;
-use crate::events::DrawStateSnapshot;
-use crate::events::PlayerStateSnapshot;
-use crate::events::RenderStateSnapshot;
-use crate::events::WasmWorkerEvent;
+use crate::events::{
+  post_event, DrawStateSnapshot, PlayerStateSnapshot, RenderStateSnapshot, WasmWorkerEvent,
+};
 
 static BASE_SPEED: Fxx = 250.0;
 
 fn post_render_event(tiling: &Tiling) {
-  post_event(WasmWorkerEvent::Render(RenderStateSnapshot {
+  post_event(WasmWorkerEvent::Render(Box::new(RenderStateSnapshot {
     result: tiling.result.clone(),
-  }));
+  })));
 }
 
 fn post_draw_event(metrics: Metrics) {
@@ -63,9 +59,9 @@ pub struct RenderLoopState {
   is_playing: bool,
 
   canvas: Option<OffscreenCanvas>,
-  expansion_phases: u8,
   feature_toggles: HashMap<FeatureToggle, bool>,
   notation: String,
+  repetitions: u8,
   render_options: hogg_tiling_renderer::Options,
   speed: Fxx,
   width: u32,
@@ -86,7 +82,7 @@ impl Default for RenderLoopState {
       is_playing: false,
 
       canvas: None,
-      expansion_phases: 0,
+      repetitions: 0,
       feature_toggles: HashMap::new(),
       notation: String::new(),
       render_options: hogg_tiling_renderer::Options::default(),
@@ -126,7 +122,7 @@ impl RenderLoopInner {
         *tiling = Some(
           Tiling::default()
             .with_feature_toggles(Some(state.feature_toggles.clone()))
-            .with_expansion_phases(state.expansion_phases)
+            .with_repetitions(state.repetitions)
             .with_type_ahead()
             .from_string(state.notation.as_str()),
         );
@@ -240,12 +236,12 @@ impl RenderLoopInner {
     Ok(())
   }
 
-  pub fn set_expansion_phases(&self, expansion_phases: u8) -> Result<(), JsValue> {
-    if self.state.borrow().expansion_phases == expansion_phases {
+  pub fn set_repetitions(&self, repetitions: u8) -> Result<(), JsValue> {
+    if self.state.borrow().repetitions == repetitions {
       return Ok(());
     }
 
-    self.state.borrow_mut().expansion_phases = expansion_phases;
+    self.state.borrow_mut().repetitions = repetitions;
     self.set_render();
 
     Ok(())

@@ -1,12 +1,11 @@
-use serde_wasm_bindgen::from_value;
-use wasm_bindgen::prelude::wasm_bindgen;
-use wasm_bindgen::{JsError, JsValue};
-
 use hogg_circular_sequence::{
   get_length as get_length_internal, get_min_permutation as get_min_permutation_internal,
   get_symmetry_index as get_symmetry_index_internal, is_symmetrical as is_symmetrical_internal,
   sort as sort_internal, to_string as to_string_internal, Sequence,
 };
+use serde_wasm_bindgen::from_value;
+use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::{JsError, JsValue};
 
 #[wasm_bindgen]
 pub fn get_symmetry_index(sequence: &JsValue) -> Result<Option<usize>, JsError> {

@@ -1,12 +1,10 @@
-use crate::notation::{Direction, Notation, OriginType};
-
 use super::{OriginIndex, Plane};
+use crate::notation::{Direction, Notation, OriginType};
 
 #[test]
 fn first_center_point_from_start() -> Result<(), Box<dyn std::error::Error>> {
   let notation = Notation::default().from_string("3", false, false)?;
-  let mut plane = Plane::default();
-  plane.build(&notation)?;
+  let plane = Plane::default().from_notation(&notation)?;
   let first = OriginIndex::first(
     &Some(&plane),
     &OriginType::CenterPoint,
@@ -21,8 +19,7 @@ fn first_center_point_from_start() -> Result<(), Box<dyn std::error::Error>> {
 #[test]
 fn first_center_point_from_end() -> Result<(), Box<dyn std::error::Error>> {
   let notation = Notation::default().from_string("3", false, false)?;
-  let mut plane = Plane::default();
-  plane.build(&notation)?;
+  let plane = Plane::default().from_notation(&notation)?;
   let first = OriginIndex::first(&Some(&plane), &OriginType::CenterPoint, &Direction::FromEnd);
 
   assert_eq!(first, OriginIndex { value: 0 });
@@ -33,8 +30,7 @@ fn first_center_point_from_end() -> Result<(), Box<dyn std::error::Error>> {
 #[test]
 fn first_mid_point_from_start() -> Result<(), Box<dyn std::error::Error>> {
   let notation = Notation::default().from_string("3", false, false)?;
-  let mut plane = Plane::default();
-  plane.build(&notation)?;
+  let plane = Plane::default().from_notation(&notation)?;
   let first = OriginIndex::first(&Some(&plane), &OriginType::MidPoint, &Direction::FromStart);
 
   assert_eq!(first, OriginIndex { value: 0 });
@@ -45,8 +41,7 @@ fn first_mid_point_from_start() -> Result<(), Box<dyn std::error::Error>> {
 #[test]
 fn first_mid_point_from_end() -> Result<(), Box<dyn std::error::Error>> {
   let notation = Notation::default().from_string("3", false, false)?;
-  let mut plane = Plane::default();
-  plane.build(&notation)?;
+  let plane = Plane::default().from_notation(&notation)?;
   let first = OriginIndex::first(&Some(&plane), &OriginType::MidPoint, &Direction::FromEnd);
 
   assert_eq!(first, OriginIndex { value: 2 });
@@ -57,8 +52,7 @@ fn first_mid_point_from_end() -> Result<(), Box<dyn std::error::Error>> {
 #[test]
 fn first_end_point_from_start() -> Result<(), Box<dyn std::error::Error>> {
   let notation = Notation::default().from_string("3", false, false)?;
-  let mut plane = Plane::default();
-  plane.build(&notation)?;
+  let plane = Plane::default().from_notation(&notation)?;
   let first = OriginIndex::first(&Some(&plane), &OriginType::EndPoint, &Direction::FromStart);
 
   assert_eq!(first, OriginIndex { value: 0 });
@@ -69,8 +63,7 @@ fn first_end_point_from_start() -> Result<(), Box<dyn std::error::Error>> {
 #[test]
 fn first_end_point_from_end() -> Result<(), Box<dyn std::error::Error>> {
   let notation = Notation::default().from_string("3", false, false)?;
-  let mut plane = Plane::default();
-  plane.build(&notation)?;
+  let plane = Plane::default().from_notation(&notation)?;
   let first = OriginIndex::first(&Some(&plane), &OriginType::EndPoint, &Direction::FromEnd);
 
   assert_eq!(first, OriginIndex { value: 2 });

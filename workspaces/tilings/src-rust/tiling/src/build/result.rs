@@ -3,16 +3,16 @@ use hogg_circular_sequence::SequenceStore;
 use serde::Serialize;
 use typeshare::typeshare;
 
-use crate::{hash::Hash, Tiling, TilingError};
-
 use super::Metrics;
+use crate::hash::Hash;
+use crate::{Tiling, TilingError};
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Result {
   pub notation: String,
-  pub expansion_phases: u8,
+  pub repetitions: u8,
   pub error: Option<TilingError>,
   #[typeshare(serialized_as = "string")]
   pub hash: Hash,
@@ -34,8 +34,8 @@ impl Result {
     self
   }
 
-  pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
-    self.expansion_phases = expansion_phases;
+  pub fn with_repetitions(mut self, repetitions: u8) -> Self {
+    self.repetitions = repetitions;
     self
   }
 
@@ -69,14 +69,13 @@ impl Result {
     self
   }
 
-  pub fn create_hash(mut self, tiling: &Tiling) -> Self {
+  pub fn create_hash(&mut self, tiling: &Tiling) {
     self.hash = Hash::build(
       tiling,
       &self.vertex_types,
       &self.edge_types,
       &self.shape_types,
     );
-    self
   }
 
   pub fn get_hash(&self) -> String {
@@ -90,7 +89,7 @@ impl Default for Result {
       notation: String::new(),
       hash: Hash::default(),
       error: None,
-      expansion_phases: 0,
+      repetitions: 0,
       transform_index: 0,
       timestamp: Utc::now().naive_utc(),
       metrics: Metrics::default(),
@@ -98,19 +97,5 @@ impl Default for Result {
       edge_types: SequenceStore::default(),
       shape_types: SequenceStore::default(),
     }
-  }
-}
-
-impl From<&mut Tiling> for Result {
-  fn from(tiling: &mut Tiling) -> Self {
-    Self::default()
-      .with_notation(tiling.notation.to_string())
-      .with_expansion_phases(tiling.plane.repetitions)
-      .with_transform_index(tiling.notation.transforms.index)
-      .with_metrics(tiling.plane.metrics.clone())
-      .with_vertex_types(tiling.plane.get_vertex_types())
-      .with_edge_types(tiling.plane.get_edge_types())
-      .with_shape_types(tiling.plane.get_shape_types())
-      .create_hash(tiling)
   }
 }

@@ -1,0 +1,16 @@
+[package]
+name = "hogg_tilings_validation_overlaps"
+version = "0.0.0"
+edition = "2021"
+authors = ["Harry Hogg <harry@hogg.io>"]
+description = ""
+license = "MIT/Apache-2.0"
+repository = "https://github.com/hhogg/hogg.io"
+
+[lib]
+name = "hogg_tilings_validation_overlaps"
+path = "src-rust/lib.rs"
+
+[dependencies]
+hogg_geometry = { path = "../geometry" }
+hogg_spatial_grid_map = { path = "../spatial-grid-map" }

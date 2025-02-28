@@ -1,6 +1,11 @@
-import { Flag } from '@hogg/wasm';
+import { FeatureToggle } from '@hogg/wasm';
 import { useMemo } from 'react';
 import { usePlayerContext } from '../Player/usePlayerContext';
+
+export type Validation =
+  | FeatureToggle.ValidateGaps
+  | FeatureToggle.ValidateOverlaps
+  | FeatureToggle.ValidateVertexTypes;
 
 export type ArrangementStats = {
   totalDuration: number;
@@ -21,7 +26,7 @@ export type ArrangementStats = {
   }[];
   validations: Partial<
     Record<
-      Flag,
+      Validation,
       {
         totalDuration: number;
         totalDurationSeries: number[];
@@ -96,7 +101,7 @@ export default function useArrangementStats(): ArrangementStats {
       }
 
       if (event.key.startsWith('validation')) {
-        const flag = event.key.split('_')[1] as Flag; // Proper validation?
+        const flag = event.key.split('_')[1] as Validation; // Proper validation?
 
         stats.stageDurationValidation += event.duration;
 

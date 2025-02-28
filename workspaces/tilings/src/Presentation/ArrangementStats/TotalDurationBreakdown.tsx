@@ -37,7 +37,7 @@ export default function TotalDurationBreakdown() {
           </Text>
 
           <Text align="middle" size="x2">
-            ({renderResult?.expansionPhases} repetitions)
+            ({renderResult?.repetitions} repetitions)
           </Text>
         </Box>
       </Box>

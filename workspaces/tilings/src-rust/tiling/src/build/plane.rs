@@ -4,41 +4,36 @@ mod tests;
 
 use std::collections::HashMap;
 
-use hogg_circular_sequence::SequenceStore;
+use hogg_circular_sequence::{PointSequence, SequenceStore};
 use hogg_geometry::{ConvexHull, LineSegment, Point};
 use hogg_spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap, PI};
+use hogg_tilings_validation_gaps::validate_gaps;
+use hogg_tilings_validation_overlaps::validate_overlaps;
+use hogg_tilings_validation_vertex_types::validate_vertex_type;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::tile::Tile;
 use super::vertex_types::VertexTypes;
-use super::{FeatureToggle, Metrics, PointSequence, Stage};
+use super::{FeatureToggle, Metrics, Stage};
+use crate::error::ValidationError;
 use crate::notation::{
   Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
   TransformContinuous, TransformEccentric, TransformValue,
 };
-use crate::validation::{self, Validator};
 use crate::TilingError;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Plane {
+  //
   pub option_hashing: bool,
+  pub option_repetitions: u8,
+  pub option_validate_gaps: bool,
+  pub option_validate_overlaps: bool,
+  pub option_validate_vertex_types: bool,
 
-  // Lookup<Tile.geometry.centroid> -> Tile
-  pub tiles: SpatialGridMap<Tile>,
-  // Lookup<Tile.geometry.centroid> -> Tile
-  pub tiles_from_placement: SpatialGridMap<Tile>,
-  pub seed_tile: Option<Tile>,
-
-  // TODO: These shouldn't be needed for deserialization
-  // but can be rebuilt from the Tiles. Would that be
-  // a more performant approach to lower the data going
-  // across workers?
-  pub repetitions: u8,
-  // Lookup<LineSegment.midPoint> -> LineSegmentEntry
-  pub line_segments: SpatialGridMap<LineSegment>,
   // Lookup<Tile.geometry.centroid> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_center: SpatialGridMap<PointSequence>,
   // Lookup<Tile.geometry.centroid> -> [(Tile.geometry.centroid, Tile.shape)]
@@ -47,6 +42,7 @@ pub struct Plane {
   pub points_center_peripheral: SpatialGridMap<PointSequence>,
   // Lookup<Vertex> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_end: SpatialGridMap<PointSequence>,
+  pub points_end_updated: bool,
   // Lookup<Vertex> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_end_extended: SpatialGridMap<PointSequence>,
   // Lookup<Vertex> -> [(Tile.geometry.centroid, Tile.shape)]
@@ -57,24 +53,33 @@ pub struct Plane {
   pub points_mid_extended: SpatialGridMap<PointSequence>,
   // Lookup<LineSegment.midPoint> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_mid_peripheral: SpatialGridMap<PointSequence>,
+
+  // Lookup<LineSegment.midPoint> -> LineSegmentEntry
+  pub line_segments: SpatialGridMap<LineSegment>,
+  #[serde(skip)]
+  pub line_segments_by_shape_group: Vec<SpatialGridMap<LineSegment>>,
+
+  // Lookup<Tile.geometry.centroid> -> Tile
+  pub tiles: SpatialGridMap<Tile>,
+  // Lookup<Tile.geometry.centroid> -> Tile
+  pub tiles_from_placement: SpatialGridMap<Tile>,
+  #[serde(skip)]
+  pub tiles_to_transform: Vec<Tile>,
+
   pub metrics: Metrics,
   pub stages: Vec<Stage>,
 
   #[serde(skip)]
-  pub line_segments_by_shape_group: Vec<SpatialGridMap<LineSegment>>,
-  #[serde(skip)]
-  pub tiles_to_transform: Vec<Tile>,
-  #[serde(skip)]
   pub stage_added_tile: bool,
-  #[serde(skip)]
-  pub validator: Validator,
+  // #[serde(skip)]
+  // pub validator: Validator,
   #[serde(skip)]
   pub vertex_types: VertexTypes,
 }
 
 impl Plane {
-  pub fn with_expansion_phases(mut self, expansion_phases: u8) -> Self {
-    self.repetitions = expansion_phases;
+  pub fn with_repetitions(mut self, options_repetitions: u8) -> Self {
+    self.option_repetitions = options_repetitions;
     self
   }
 
@@ -87,11 +92,52 @@ impl Plane {
       .copied()
       .unwrap_or(false);
 
-    self.validator = option_feature_toggles.into();
+    self.option_validate_gaps = option_feature_toggles
+      .get(&FeatureToggle::ValidateGaps)
+      .copied()
+      .unwrap_or(false);
+
+    self.option_validate_overlaps = option_feature_toggles
+      .get(&FeatureToggle::ValidateOverlaps)
+      .copied()
+      .unwrap_or(false);
+
+    self.option_validate_vertex_types = option_feature_toggles
+      .get(&FeatureToggle::ValidateVertexTypes)
+      .copied()
+      .unwrap_or(false);
+
     self
   }
 
-  pub fn build(&mut self, notation: &Notation) -> Result<(), TilingError> {
+  pub fn from_notation(mut self, notation: &Notation) -> Result<Self, TilingError> {
+    self.build_unchecked(notation)?;
+    Ok(self)
+  }
+
+  pub fn build(&mut self, notation: &Notation) -> super::Result {
+    match self.build_unchecked(notation) {
+      Ok(_) => super::Result::default()
+        .with_notation(notation.to_string())
+        .with_repetitions(self.option_repetitions)
+        .with_transform_index(notation.transforms.index)
+        .with_metrics(self.metrics.clone())
+        .with_vertex_types(self.get_vertex_types())
+        .with_edge_types(self.get_edge_types())
+        .with_shape_types(self.get_shape_types()),
+      Err(err) => super::Result::default()
+        .with_notation(notation.to_string())
+        .with_repetitions(self.option_repetitions)
+        .with_transform_index(notation.transforms.index)
+        .with_metrics(self.metrics.clone())
+        .with_vertex_types(self.get_vertex_types())
+        .with_edge_types(self.get_edge_types())
+        .with_shape_types(self.get_shape_types())
+        .with_error(err),
+    }
+  }
+
+  fn build_unchecked(&mut self, notation: &Notation) -> Result<(), TilingError> {
     self.metrics.start("build");
 
     self.apply_path(&notation.path)?;
@@ -107,8 +153,8 @@ impl Plane {
         )?;
       }
 
-      if self.repetitions > 0 {
-        for repetition_index in 0..self.repetitions {
+      if self.option_repetitions > 0 {
+        for repetition_index in 0..self.option_repetitions {
           for (index, transform) in notation.transforms.list.iter().enumerate() {
             self.apply_transform(
               transform,
@@ -118,10 +164,10 @@ impl Plane {
               },
             )?;
           }
+
+          self.validate_gaps()?;
         }
 
-        self.validate_expanded()?;
-        self.validate_gaps()?;
         self.validate_vertex_types()?;
       }
     }
@@ -133,7 +179,10 @@ impl Plane {
 
   pub fn apply_path(&mut self, path: &Path) -> Result<(), TilingError> {
     self.metrics.start(Stage::Placement.to_string().as_str());
-    self.metrics.create(validation::Flag::Overlaps.into());
+
+    if self.option_validate_overlaps {
+      self.metrics.create(FeatureToggle::ValidateOverlaps.into());
+    }
 
     // Keep track of the number of line segments that need to be
     // skipped as we go around placing shapes.
@@ -170,7 +219,6 @@ impl Plane {
               SpatialGridMap::new("line_segments_by_shape_group.seed")
                 .with_resize_method(ResizeMethod::First),
             );
-            self.seed_tile = Some(tile.clone());
             self.add_tile(Stage::Placement, tile)?;
 
             shape_counter += 1;
@@ -225,7 +273,10 @@ impl Plane {
       })?;
 
     self.metrics.finish(Stage::Placement.to_string().as_str());
-    self.metrics.finish(validation::Flag::Overlaps.into());
+
+    if self.option_validate_overlaps {
+      self.metrics.finish(FeatureToggle::ValidateOverlaps.into());
+    }
 
     Ok(())
   }
@@ -313,21 +364,22 @@ impl Plane {
       let mid_point = line_segment.mid_point();
       let mid_point_location: location::Point = mid_point.into();
 
+      self.line_segments.insert(
+        mid_point_location,
+        line_segment.length(),
+        Some(line_segment.theta()),
+        *line_segment,
+      );
+
       self
         .line_segments
-        .insert(
-          mid_point_location,
-          line_segment.length(),
-          Some(line_segment.theta()),
-          *line_segment,
-        )
-        .increment_counter("count");
+        .increment_counter(&mid_point_location, "count");
 
       // Check that the line segment is not intersecting with any
       // other line segments around it. However we should only need to do
       // this up until the first transforms have been applied, after that
       // any future line segments should be valid.
-      self.validate_overlaps(&tile, line_segment)?;
+      self.validate_overlaps(line_segment)?;
 
       if is_placement_tile {
         // Store the polygon's line segments
@@ -431,7 +483,7 @@ impl Plane {
         }
       }
 
-      self.update_end_point_sequence(point, &tile);
+      self.update_end_point_sequence(point, &tile)?;
     }
 
     Ok(())
@@ -483,12 +535,43 @@ impl Plane {
     }
   }
 
-  fn update_end_point_sequence(&mut self, end_point: &Point, tile: &Tile) {
-    if let Some(mut sequence) = self.get_end_point_sequence_mut(end_point) {
-      sequence
+  fn update_end_point_sequence(&mut self, point: &Point, tile: &Tile) -> Result<(), TilingError> {
+    let mut is_primary_point = false;
+
+    let sequence = self
+      .points_end
+      .get_value_mut(&point.into())
+      .inspect(|_| {
+        is_primary_point = true;
+      })
+      .or_else(|| self.points_end_extended.get_value_mut(&point.into()))
+      .or_else(|| self.points_end_peripheral.get_value_mut(&point.into()));
+
+    if let Some(mut sequence) = sequence {
+      let inserted = sequence
         .value
         .insert(tile.geometry.centroid, tile.shape.into());
+
+      if self.option_validate_vertex_types && is_primary_point && inserted {
+        self.points_end_updated = true;
+
+        self
+          .metrics
+          .start(FeatureToggle::ValidateVertexTypes.into());
+
+        let result = validate_vertex_type(sequence);
+
+        self
+          .metrics
+          .finish(FeatureToggle::ValidateVertexTypes.into());
+
+        if let Err(reason) = result {
+          return Err(ValidationError::VertexType { reason }.into());
+        }
+      }
     }
+
+    Ok(())
   }
 
   pub fn get_convex_hull(&self) -> ConvexHull {
@@ -506,7 +589,7 @@ impl Plane {
     self
       .line_segments
       .get_counter(&line_segment.mid_point().into(), "count")
-      .map_or(false, |count| *count <= 1)
+      .is_some_and(|count| *count <= 1)
   }
 
   pub fn get_line_segment_edges(&self) -> SpatialGridMap<LineSegment> {
@@ -801,7 +884,10 @@ impl Plane {
   ) -> Result<(), TilingError> {
     let metric_key = stage.to_string();
     self.metrics.start(&metric_key);
-    self.metrics.create(validation::Flag::Overlaps.into());
+
+    if self.option_validate_overlaps {
+      self.metrics.create(FeatureToggle::ValidateOverlaps.into());
+    }
 
     match transform {
       Transform::Continuous(TransformContinuous { operation, value }) => {
@@ -816,8 +902,11 @@ impl Plane {
       }
     }
 
-    self.metrics.finish(validation::Flag::Overlaps.into());
     self.metrics.finish(&metric_key);
+
+    if self.option_validate_overlaps {
+      self.metrics.finish(FeatureToggle::ValidateOverlaps.into());
+    }
 
     Ok(())
   }
@@ -997,36 +1086,53 @@ impl Plane {
     Ok(())
   }
 
-  fn validate_overlaps(
-    &mut self,
-    tile: &Tile,
-    line_segment: &LineSegment,
-  ) -> Result<(), TilingError> {
-    self.metrics.resume(validation::Flag::Overlaps.into());
-    let result = self.validator.validate_overlaps(self, tile, line_segment);
-    self.metrics.pause(validation::Flag::Overlaps.into());
-    result.map_err(|error| error.into())
-  }
-
   fn validate_gaps(&mut self) -> Result<(), TilingError> {
-    self.metrics.start(validation::Flag::Gaps.into());
-    let result = self.validator.validate_gaps(self);
-    self.metrics.finish(validation::Flag::Gaps.into());
-    result.map_err(|error| error.into())
+    if !self.option_validate_gaps {
+      return Ok(());
+    }
+
+    self.metrics.start(FeatureToggle::ValidateGaps.into());
+    let is_valid = validate_gaps(self.get_line_segment_edges());
+    self.metrics.finish(FeatureToggle::ValidateGaps.into());
+
+    if is_valid {
+      Ok(())
+    } else {
+      Err(ValidationError::Gaps.into())
+    }
   }
 
-  fn validate_expanded(&mut self) -> Result<(), TilingError> {
-    self.metrics.start(validation::Flag::Expanded.into());
-    let result = self.validator.validate_expanded(self);
-    self.metrics.finish(validation::Flag::Expanded.into());
-    result.map_err(|error| error.into())
+  fn validate_overlaps(&mut self, line_segment: &LineSegment) -> Result<(), TilingError> {
+    if !self.option_validate_overlaps {
+      return Ok(());
+    }
+
+    self.metrics.resume(FeatureToggle::ValidateOverlaps.into());
+    let result = validate_overlaps(&self.line_segments, line_segment);
+    self.metrics.pause(FeatureToggle::ValidateOverlaps.into());
+    result.map_err(|reason| ValidationError::Overlaps { reason }.into())
   }
 
   fn validate_vertex_types(&mut self) -> Result<(), TilingError> {
-    self.metrics.start(validation::Flag::VertexTypes.into());
-    let result = self.validator.validate_vertex_types(self);
-    self.metrics.finish(validation::Flag::VertexTypes.into());
-    result.map_err(|error| error.into())
+    if !self.option_validate_vertex_types {
+      return Ok(());
+    }
+
+    let are_all_complete = self
+      .points_end
+      .iter_values()
+      .all(|point_sequence| point_sequence.is_complete());
+
+    if !are_all_complete {
+      return Err(
+        ValidationError::VertexType {
+          reason: "vertex types did not increase".into(),
+        }
+        .into(),
+      );
+    }
+
+    Ok(())
   }
 }
 
@@ -1034,10 +1140,12 @@ impl Default for Plane {
   fn default() -> Self {
     Self {
       option_hashing: false,
+      option_repetitions: 0,
+      option_validate_gaps: false,
+      option_validate_overlaps: false,
+      option_validate_vertex_types: false,
 
-      repetitions: 0,
       metrics: Metrics::default(),
-      validator: Validator::default(),
       vertex_types: VertexTypes::default(),
 
       line_segments: SpatialGridMap::new("line_segments").with_resize_method(ResizeMethod::First),
@@ -1050,6 +1158,7 @@ impl Default for Plane {
         .with_resize_method(ResizeMethod::Minimum),
 
       points_end: SpatialGridMap::new("points_end").with_resize_method(ResizeMethod::First),
+      points_end_updated: false,
       points_end_extended: SpatialGridMap::new("points_end_extended")
         .with_resize_method(ResizeMethod::First),
       points_end_peripheral: SpatialGridMap::new("points_end_peripheral")
@@ -1066,7 +1175,6 @@ impl Default for Plane {
         .with_resize_method(ResizeMethod::Minimum),
       tiles_to_transform: Vec::new(),
 
-      seed_tile: None,
       stage_added_tile: false,
       stages: Vec::new(),
     }

@@ -37,7 +37,7 @@ export default function ArrangementCard({
           borderColor="background-shade-4"
           width="100%"
         >
-          <TilingRenderer {...rest} expansionPhases={0} notation={notation} />
+          <TilingRenderer {...rest} repetitions={0} notation={notation} />
 
           {footer && (
             <Text align="middle" size="x2" weight="x2">

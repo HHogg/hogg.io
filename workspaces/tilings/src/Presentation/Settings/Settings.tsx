@@ -37,7 +37,7 @@ export default function Settings() {
     autoRotate,
     colorMode,
     colorPalette,
-    expansionPhases,
+    repetitions,
     featureToggles,
     scaleMode,
     showLayers,
@@ -46,7 +46,7 @@ export default function Settings() {
     setAutoRotate,
     setColorMode,
     setColorPalette,
-    setExpansionPhases,
+    setRepetitions,
     setFeatureToggles,
     setScaleMode,
     setShowLayers,
@@ -78,15 +78,15 @@ export default function Settings() {
     );
   };
 
-  const expansionPhasesConfig: MenuConfigEntryNumber = {
-    label: 'Expansion phases',
+  const repetitionsConfig: MenuConfigEntryNumber = {
+    label: 'Repetitions',
     icon: Repeat1Icon,
     type: 'number',
-    value: expansionPhases,
+    value: repetitions,
     min: 0,
     max: 20,
     step: 2,
-    onChange: setExpansionPhases,
+    onChange: setRepetitions,
   };
 
   const speedConfig: MenuConfigEntryOneOf<number> = {
@@ -178,7 +178,7 @@ export default function Settings() {
           autoRotateConfig,
           colorModeConfig,
           colorPaletteConfig,
-          expansionPhasesConfig,
+          repetitionsConfig,
           featureTogglesConfig,
           showLayersConfig,
           scaleModeConfig,

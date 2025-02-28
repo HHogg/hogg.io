@@ -9,20 +9,29 @@ pub enum FeatureToggle {
   Hashing,
   ValidateOverlaps,
   ValidateGaps,
-  ValidateExpanded,
   ValidateVertexTypes,
 }
 
 impl FeatureToggle {
   pub fn all() -> HashMap<Self, bool> {
     vec![
-      (Self::Hashing, false),
-      (Self::ValidateOverlaps, false),
-      (Self::ValidateGaps, false),
-      (Self::ValidateExpanded, false),
-      (Self::ValidateVertexTypes, false),
+      (Self::Hashing, true),
+      (Self::ValidateOverlaps, true),
+      (Self::ValidateGaps, true),
+      (Self::ValidateVertexTypes, true),
     ]
     .into_iter()
     .collect()
+  }
+}
+
+impl From<FeatureToggle> for &'static str {
+  fn from(feature_toggle: FeatureToggle) -> Self {
+    match feature_toggle {
+      FeatureToggle::Hashing => "hashing",
+      FeatureToggle::ValidateOverlaps => "validation_Overlaps",
+      FeatureToggle::ValidateGaps => "validation_Gaps",
+      FeatureToggle::ValidateVertexTypes => "validation_VertexTypes",
+    }
   }
 }

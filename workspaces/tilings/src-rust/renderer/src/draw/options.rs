@@ -4,9 +4,8 @@ use hogg_spatial_grid_map::Fxx;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::canvas::{ScaleMode, Style};
-
 use super::layers::Layer;
+use crate::canvas::{ScaleMode, Style};
 
 #[derive(Clone, Default, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]

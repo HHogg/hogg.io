@@ -5,8 +5,10 @@ import { launch } from 'puppeteer';
 import sharp from 'sharp';
 import tilings from '../results/output.json' assert { type: 'json' };
 
-const outputDir = path.resolve('./results/images');
+const TIMEOUT = 60_000;
+const MAX_RENDER_ATTEMPTS = 20;
 
+const outputDir = path.resolve('./results/images');
 const toId = (notation) => notation.replace(/\//g, ':');
 
 const generateTilingImage = async (page, notation, filePath) => {
@@ -15,7 +17,7 @@ const generateTilingImage = async (page, notation, filePath) => {
   );
 
   const element = await page.waitForSelector('canvas', {
-    timeout: 60_000,
+    timeout: TIMEOUT,
   });
 
   if (!element) {
@@ -28,15 +30,15 @@ const generateTilingImage = async (page, notation, filePath) => {
   while (data === 'data:,' || data === TRANSPARENT_IMAGE) {
     rerenderAttempts += 1;
 
-    if (rerenderAttempts > 3) {
+    if (rerenderAttempts % 5 === 0) {
       console.log('Waiting for canvas to render...');
     }
 
-    if (rerenderAttempts > 10) {
+    if (rerenderAttempts > MAX_RENDER_ATTEMPTS) {
       throw new Error('Canvas did not render');
     }
 
-    await new Promise((r) => setTimeout(r, 250));
+    await new Promise((r) => setTimeout(r, TIMEOUT / MAX_RENDER_ATTEMPTS));
     data = await element.evaluate((canvas) => canvas.toDataURL());
   }
 

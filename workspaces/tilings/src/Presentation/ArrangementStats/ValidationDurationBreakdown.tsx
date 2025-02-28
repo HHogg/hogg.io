@@ -1,14 +1,15 @@
 import { meta as circularSequenceProject } from '@hogg/circular-sequence';
 import { ProjectPageLink } from '@hogg/common';
-import { meta as gapValidationProject } from '@hogg/gap-validation';
 import { meta as spatialGridMapProject } from '@hogg/spatial-grid-map';
-import { Flag } from '@hogg/wasm';
+import { meta as gapValidationProject } from '@hogg/tilings-validation-gaps';
+import { FeatureToggle } from '@hogg/wasm';
 import { Box, Separator, Text, useThemeContext } from 'preshape';
 import { formatMs, formatPercent } from '../utils/formatting';
 import BreakdownBar from './BreakdownBar/BreakdownBar';
 import StageCard from './StageCard';
 import StageCards from './StageCards';
 import { colorValidation } from './constants';
+import { Validation } from './useArrangementStats';
 import { useArrangementStatsContext } from './useArrangementStatsContext';
 
 export default function ValidationDurationBreakdown() {
@@ -16,21 +17,14 @@ export default function ValidationDurationBreakdown() {
   const { validations, totalDuration, stageDurationValidation } =
     useArrangementStatsContext();
 
-  const validationNames: Record<Flag, string> = {
-    [Flag.Expanded]: 'Tiling expanded',
-    [Flag.Gaps]: 'Gaps between shapes',
-    [Flag.Overlaps]: 'Shape overlaps',
-    [Flag.VertexTypes]: 'Only contains valid vertex types',
+  const validationNames: Record<Validation, string> = {
+    [FeatureToggle.ValidateGaps]: 'Gaps between shapes',
+    [FeatureToggle.ValidateOverlaps]: 'Shape overlaps',
+    [FeatureToggle.ValidateVertexTypes]: 'Only contains valid vertex types',
   };
 
-  const validationDescriptions: Record<Flag, JSX.Element> = {
-    [Flag.Expanded]: (
-      <>
-        A check that the tiling has expanded, by ensuring all shapes from the
-        fist placement stage have adjacent shapes
-      </>
-    ),
-    [Flag.Gaps]: (
+  const validationDescriptions: Record<Validation, JSX.Element> = {
+    [FeatureToggle.ValidateGaps]: (
       <>
         A checks for gaps between other shapes, using{' '}
         <ProjectPageLink
@@ -40,7 +34,7 @@ export default function ValidationDurationBreakdown() {
         .'
       </>
     ),
-    [Flag.Overlaps]: (
+    [FeatureToggle.ValidateOverlaps]: (
       <>
         A check for overlapping shapes, by performing line intersections
         efficiently using{' '}
@@ -51,7 +45,7 @@ export default function ValidationDurationBreakdown() {
         .
       </>
     ),
-    [Flag.VertexTypes]: (
+    [FeatureToggle.ValidateVertexTypes]: (
       <>
         A check that the vertex types are part of the known set, using{' '}
         <ProjectPageLink
@@ -118,10 +112,12 @@ export default function ValidationDurationBreakdown() {
               >
                 <Text basis="0" grow="3">
                   <Text weight="x2" margin="x2">
-                    {validationNames[flag as Flag]}
+                    {validationNames[flag as Validation]}
                   </Text>
 
-                  <Text size="x2">{validationDescriptions[flag as Flag]}</Text>
+                  <Text size="x2">
+                    {validationDescriptions[flag as Validation]}
+                  </Text>
                 </Text>
 
                 <Text basis="0" grow="1" weight="x2">

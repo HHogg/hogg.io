@@ -18,7 +18,7 @@ export function renderTiling(
   notation: string,
   width: number,
   height: number,
-  expansionPhases: number,
+  repetitions: number,
   featureToggles?: Record<FeatureToggle, boolean>,
   options?: Options
 ) {
@@ -31,7 +31,7 @@ export function renderTiling(
   canvas.width = width;
   canvas.height = height;
 
-  _renderTiling(canvas, notation, expansionPhases, featureToggles, options);
+  _renderTiling(canvas, notation, repetitions, featureToggles, options);
 }
 
 export function parseTransform(transform: string, path: string): Transform {
@@ -40,18 +40,18 @@ export function parseTransform(transform: string, path: string): Transform {
 
 export function findPreviousTiling(
   notation: string,
-  expansionPhases: number,
+  repetitions: number,
   featureToggles?: Record<FeatureToggle, boolean>
 ): string | undefined {
-  return _findPreviousTiling(notation, expansionPhases, featureToggles);
+  return _findPreviousTiling(notation, repetitions, featureToggles);
 }
 
 export function findNextTiling(
   notation: string,
-  expansionPhases: number,
+  repetitions: number,
   featureToggles?: Record<FeatureToggle, boolean>
 ): string | undefined {
-  return _findNextTiling(notation, expansionPhases, featureToggles);
+  return _findNextTiling(notation, repetitions, featureToggles);
 }
 
 // Player related functions
@@ -103,12 +103,12 @@ export function setPlayerCanvasSize(
   loop.set_dimensions(width, height);
 }
 
-export function setPlayerExpansionPhases(expansionPhases: number) {
+export function setPlayerRepetitions(repetitions: number) {
   if (loop === null) {
     return;
   }
 
-  loop.set_expansion_phases(expansionPhases);
+  loop.set_repetitions(repetitions);
 }
 
 export function setPlayerFeatureToggles(

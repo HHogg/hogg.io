@@ -13,12 +13,12 @@
     "dev:searcher": "cargo watch -w workspaces/spatial-grid-map/src-rust -w workspaces/circular-sequence/src-rust -w workspaces/line-segment-extending/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --refresh-insights --reset --migrations-dir=workspaces/tilings/migrations\"",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
-    "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file"
+    "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file",
+    "verify:results": "./scripts/detect-result-changes.sh ./results/output.csv"
   },
   "dependencies": {
     "@hogg/circular-sequence": "workspace:^",
     "@hogg/common": "workspace:^",
-    "@hogg/gap-validation": "workspace:^",
     "@hogg/spatial-grid-map": "workspace:^",
     "@hogg/wasm": "workspace:^",
     "@visx/curve": "^3.3.0",

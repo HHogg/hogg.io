@@ -14,6 +14,19 @@ export interface Point {
 	index: number;
 }
 
+export interface Entry {
+	point: Point;
+	value: number;
+	radians: Fxx;
+}
+
+export interface PointSequence {
+	sequence: Sequence;
+	center: Point;
+	maxSize: number;
+	entries: Entry[];
+}
+
 export interface BBox {
 	center: Point;
 	width: Fxx;
@@ -310,35 +323,25 @@ export interface Tile {
 	stageIndex: number;
 }
 
-export interface Entry {
-	point: Point;
-	value: number;
-	radians: Fxx;
-}
-
-export interface PointSequence {
-	sequence: Sequence;
-	center: Point;
-	maxSize: number;
-	entries: Entry[];
-}
-
 export interface Plane {
 	optionHashing: boolean;
-	tiles: SpatialGridMap<Tile>;
-	tilesFromPlacement: SpatialGridMap<Tile>;
-	seedTile?: Tile;
-	repetitions: number;
-	lineSegments: SpatialGridMap<LineSegment>;
+	optionRepetitions: number;
+	optionValidateGaps: boolean;
+	optionValidateOverlaps: boolean;
+	optionValidateVertexTypes: boolean;
 	pointsCenter: SpatialGridMap<PointSequence>;
 	pointsCenterExtended: SpatialGridMap<PointSequence>;
 	pointsCenterPeripheral: SpatialGridMap<PointSequence>;
 	pointsEnd: SpatialGridMap<PointSequence>;
+	pointsEndUpdated: boolean;
 	pointsEndExtended: SpatialGridMap<PointSequence>;
 	pointsEndPeripheral: SpatialGridMap<PointSequence>;
 	pointsMid: SpatialGridMap<PointSequence>;
 	pointsMidExtended: SpatialGridMap<PointSequence>;
 	pointsMidPeripheral: SpatialGridMap<PointSequence>;
+	lineSegments: SpatialGridMap<LineSegment>;
+	tiles: SpatialGridMap<Tile>;
+	tilesFromPlacement: SpatialGridMap<Tile>;
 	metrics: Metrics;
 	stages: Stage[];
 }
@@ -383,7 +386,7 @@ export type TilingError =
 	| { name: "InvalidState", data: {
 	reason: string;
 }}
-	| { name: "InvalidTiling", data: Error }
+	| { name: "InvalidTiling", data: ValidationError }
 	| { name: "InvalidTransform", data: {
 	transform: string;
 	reason: string;
@@ -398,7 +401,7 @@ export type TilingError =
 
 export interface Result {
 	notation: string;
-	expansionPhases: number;
+	repetitions: number;
 	error?: TilingError;
 	hash: string;
 	transformIndex: number;
@@ -495,27 +498,19 @@ export enum FeatureToggle {
 	Hashing = "Hashing",
 	ValidateOverlaps = "ValidateOverlaps",
 	ValidateGaps = "ValidateGaps",
-	ValidateExpanded = "ValidateExpanded",
 	ValidateVertexTypes = "ValidateVertexTypes",
-}
-
-export enum Separator {
-	Group = "Group",
-	Shape = "Shape",
-	Transform = "Transform",
 }
 
 export type ValidationError = 
 	| { type: "Application", content: {
 	reason: string;
 }}
-	| { type: "Expansion", content?: undefined }
 	| { type: "Gaps", content?: undefined }
 	| { type: "Overlaps", content: {
 	reason: string;
 }}
 	| { type: "VertexType", content: {
-	sequence: string;
+	reason: string;
 }}
 	| { type: "EdgeType", content: {
 	sequence: string;
@@ -524,11 +519,10 @@ export type ValidationError =
 	sequence: string;
 }};
 
-export enum Flag {
-	Overlaps = "Overlaps",
-	Gaps = "Gaps",
-	Expanded = "Expanded",
-	VertexTypes = "VertexTypes",
+export enum Separator {
+	Group = "Group",
+	Shape = "Shape",
+	Transform = "Transform",
 }
 
 export type WasmWorkerEvent = 

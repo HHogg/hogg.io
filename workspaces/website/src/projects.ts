@@ -3,7 +3,6 @@ import * as CircleIntersections from '@hogg/circle-intersections';
 import * as CircularSequence from '@hogg/circular-sequence';
 import { Project, ProjectKey, ProjectPageProps } from '@hogg/common';
 import * as Evolution from '@hogg/evolution';
-import * as GapValidation from '@hogg/gap-validation';
 import * as GrahamsScan from '@hogg/grahams-scan';
 import * as LineSegmentExtending from '@hogg/line-segment-extending';
 import * as Preshape from '@hogg/preshape';
@@ -11,6 +10,9 @@ import * as Snake from '@hogg/snake';
 import * as SpatialGridMap from '@hogg/spatial-grid-map';
 import * as Spirals from '@hogg/spirals';
 import * as Tilings from '@hogg/tilings';
+import * as TilingsValidationGaps from '@hogg/tilings-validation-gaps';
+import * as TilingsValidationOverlaps from '@hogg/tilings-validation-overlaps';
+import * as TilingsValidationVertexTypes from '@hogg/tilings-validation-vertex-types';
 import { ComponentType } from '@react-spring/web';
 
 export const projects: {
@@ -57,8 +59,16 @@ export const projects: {
     Component: SpatialGridMap.Project,
   },
   {
-    meta: GapValidation.meta,
-    Component: GapValidation.Project,
+    meta: TilingsValidationGaps.meta,
+    Component: TilingsValidationGaps.Project,
+  },
+  {
+    meta: TilingsValidationOverlaps.meta,
+    Component: TilingsValidationOverlaps.Project,
+  },
+  {
+    meta: TilingsValidationVertexTypes.meta,
+    Component: TilingsValidationVertexTypes.Project,
   },
   {
     meta: GrahamsScan.meta,

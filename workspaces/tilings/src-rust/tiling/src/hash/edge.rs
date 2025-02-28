@@ -1,8 +1,8 @@
-use hogg_circular_sequence::SequenceStore;
+use hogg_circular_sequence::{PointSequence, SequenceStore};
 use hogg_geometry::Point;
 use hogg_spatial_grid_map::{location, SpatialGridMap};
 
-use crate::{build::PointSequence, Tiling};
+use crate::Tiling;
 
 // The edge types is a unique line from a shape. It is
 // determined by the shape sequence of unique shape faces

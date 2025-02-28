@@ -1,12 +1,11 @@
-use std::{
-  collections::HashMap,
-  ops::{Deref, DerefMut},
-};
+use std::collections::HashMap;
+use std::ops::{Deref, DerefMut};
 
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
-use crate::{location, utils::coordinate_equals, Fxx};
+use crate::utils::coordinate_equals;
+use crate::{location, Fxx};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
@@ -31,6 +30,7 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> Bucket<TEntryValue> {
   pub fn iter_values(&self) -> impl Iterator<Item = &TEntryValue> {
     self.entries.iter().map(|entry| &entry.value)
   }
+
   pub fn get_entry_index(&self, point: &location::Point) -> Option<usize> {
     self.entries.iter().position(
       |BucketEntry {

@@ -3,7 +3,8 @@ use std::rc::Rc;
 use hogg_spatial_grid_map::Fxx;
 use hogg_tiling::FeatureToggle;
 use inner::RenderLoopInner;
-use wasm_bindgen::{prelude::wasm_bindgen, JsCast, JsValue};
+use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::{JsCast, JsValue};
 use web_sys::OffscreenCanvas;
 
 mod inner;
@@ -43,8 +44,8 @@ impl RenderLoop {
     self.inner.set_dimensions(width, height)
   }
 
-  pub fn set_expansion_phases(&self, expansion_phases: u8) -> Result<(), JsValue> {
-    self.inner.set_expansion_phases(expansion_phases)
+  pub fn set_repetitions(&self, repetitions: u8) -> Result<(), JsValue> {
+    self.inner.set_repetitions(repetitions)
   }
 
   pub fn set_feature_toggles(&self, feature_toggles: &JsValue) -> Result<(), JsValue> {

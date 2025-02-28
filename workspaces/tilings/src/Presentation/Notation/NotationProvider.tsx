@@ -14,7 +14,7 @@ export default function NotationProvider({
   onChange,
 }: PropsWithChildren<NotationProviderProps>) {
   const { api } = useWasmApi();
-  const { expansionPhases, featureToggles } = useSettingsContext();
+  const { repetitions, featureToggles } = useSettingsContext();
 
   const handleSetNotation = useCallback(
     (notation: string) => {
@@ -26,26 +26,26 @@ export default function NotationProvider({
   const handlePreviousNotation = useCallback(async () => {
     const previousNotation = await api.tilings.findPreviousTiling([
       notation,
-      expansionPhases,
+      repetitions,
       featureToggles,
     ]);
 
     if (previousNotation) {
       handleSetNotation(previousNotation);
     }
-  }, [api, expansionPhases, featureToggles, notation, handleSetNotation]);
+  }, [api, repetitions, featureToggles, notation, handleSetNotation]);
 
   const handleNextNotation = useCallback(async () => {
     const nextNotation = await api.tilings.findNextTiling([
       notation,
-      expansionPhases,
+      repetitions,
       featureToggles,
     ]);
 
     if (nextNotation) {
       handleSetNotation(nextNotation);
     }
-  }, [api, expansionPhases, featureToggles, notation, handleSetNotation]);
+  }, [api, repetitions, featureToggles, notation, handleSetNotation]);
 
   const notationSplit = notation.split('/');
 

@@ -1,11 +1,10 @@
 use std::collections::HashMap;
 
-use wasm_bindgen::prelude::wasm_bindgen;
-use wasm_bindgen::{JsCast, JsError, JsValue};
-
 use hogg_tiling::notation::{Path, Transform};
 use hogg_tiling::{FeatureToggle, Tiling};
 use hogg_tiling_renderer::{draw, Options};
+use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::{JsCast, JsError, JsValue};
 use web_sys::OffscreenCanvas;
 
 use crate::events::{post_event, WasmWorkerEvent};
@@ -21,7 +20,7 @@ pub fn parse_transform(transform: &str, path: &str) -> Result<JsValue, JsError> 
 #[wasm_bindgen]
 pub fn find_previous_tiling(
   notation: &str,
-  expansion_phases: u8,
+  repetitions: u8,
   feature_toggles: &JsValue,
 ) -> Result<Option<String>, JsError> {
   let feature_toggles = serde_wasm_bindgen::from_value::<Option<HashMap<FeatureToggle, bool>>>(
@@ -29,7 +28,7 @@ pub fn find_previous_tiling(
   )?;
 
   let mut tiling = Tiling::default()
-    .with_expansion_phases(expansion_phases)
+    .with_repetitions(repetitions)
     .with_first_transform()
     .with_link_paths()
     .with_feature_toggles(feature_toggles)
@@ -47,7 +46,7 @@ pub fn find_previous_tiling(
 #[wasm_bindgen]
 pub fn find_next_tiling(
   notation: &str,
-  expansion_phases: u8,
+  repetitions: u8,
   feature_toggles: &JsValue,
 ) -> Result<Option<String>, JsError> {
   let feature_toggles = serde_wasm_bindgen::from_value::<Option<HashMap<FeatureToggle, bool>>>(
@@ -55,7 +54,7 @@ pub fn find_next_tiling(
   )?;
 
   let mut tiling = Tiling::default()
-    .with_expansion_phases(expansion_phases)
+    .with_repetitions(repetitions)
     .with_first_transform()
     .with_link_paths()
     .with_feature_toggles(feature_toggles)
@@ -74,7 +73,7 @@ pub fn find_next_tiling(
 pub fn render_tiling(
   canvas: JsValue,
   notation: &str,
-  expansion_phases: u8,
+  repetitions: u8,
   feature_toggles: &JsValue,
   options: &JsValue,
 ) -> Result<(), JsError> {
@@ -85,7 +84,7 @@ pub fn render_tiling(
 
   let options = serde_wasm_bindgen::from_value::<Options>(options.to_owned())?;
   let tiling = Tiling::default()
-    .with_expansion_phases(expansion_phases)
+    .with_repetitions(repetitions)
     .with_feature_toggles(feature_toggles)
     .with_type_ahead()
     .from_string(notation);

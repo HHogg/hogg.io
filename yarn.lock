@@ -854,21 +854,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hogg/gap-validation@workspace:^, @hogg/gap-validation@workspace:workspaces/gap-validation":
-  version: 0.0.0-use.local
-  resolution: "@hogg/gap-validation@workspace:workspaces/gap-validation"
-  dependencies:
-    "@hogg/common": "workspace:^"
-    "@hogg/spatial-grid-map": "workspace:^"
-    "@hogg/tilings": "workspace:^"
-    "@hogg/wasm": "workspace:^"
-    "@types/react": ^18.0.28
-    preshape: ^19.1.7
-    react: ^18.2.0
-    typescript: ^5.0.4
-  languageName: unknown
-  linkType: soft
-
 "@hogg/grahams-scan@workspace:^, @hogg/grahams-scan@workspace:workspaces/graphams-scan":
   version: 0.0.0-use.local
   resolution: "@hogg/grahams-scan@workspace:workspaces/graphams-scan"
@@ -965,13 +950,51 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@hogg/tilings-validation-gaps@workspace:^, @hogg/tilings-validation-gaps@workspace:workspaces/tilings-validation-gaps":
+  version: 0.0.0-use.local
+  resolution: "@hogg/tilings-validation-gaps@workspace:workspaces/tilings-validation-gaps"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@hogg/spatial-grid-map": "workspace:^"
+    "@hogg/tilings": "workspace:^"
+    "@hogg/wasm": "workspace:^"
+    "@types/react": ^18.0.28
+    preshape: ^19.1.7
+    react: ^18.2.0
+    typescript: ^5.0.4
+  languageName: unknown
+  linkType: soft
+
+"@hogg/tilings-validation-overlaps@workspace:^, @hogg/tilings-validation-overlaps@workspace:workspaces/tilings-validation-overlaps":
+  version: 0.0.0-use.local
+  resolution: "@hogg/tilings-validation-overlaps@workspace:workspaces/tilings-validation-overlaps"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@types/react": ^18.0.28
+    preshape: ^19.1.7
+    react: ^18.2.0
+    typescript: ^5.0.4
+  languageName: unknown
+  linkType: soft
+
+"@hogg/tilings-validation-vertex-types@workspace:^, @hogg/tilings-validation-vertex-types@workspace:workspaces/tilings-validation-vertex-types":
+  version: 0.0.0-use.local
+  resolution: "@hogg/tilings-validation-vertex-types@workspace:workspaces/tilings-validation-vertex-types"
+  dependencies:
+    "@hogg/common": "workspace:^"
+    "@types/react": ^18.0.28
+    preshape: ^19.1.7
+    react: ^18.2.0
+    typescript: ^5.0.4
+  languageName: unknown
+  linkType: soft
+
 "@hogg/tilings@workspace:^, @hogg/tilings@workspace:workspaces/tilings":
   version: 0.0.0-use.local
   resolution: "@hogg/tilings@workspace:workspaces/tilings"
   dependencies:
     "@hogg/circular-sequence": "workspace:^"
     "@hogg/common": "workspace:^"
-    "@hogg/gap-validation": "workspace:^"
     "@hogg/spatial-grid-map": "workspace:^"
     "@hogg/wasm": "workspace:^"
     "@types/lodash": ^4.17.10
@@ -1025,7 +1048,6 @@ __metadata:
     "@hogg/circular-sequence": "workspace:^"
     "@hogg/common": "workspace:^"
     "@hogg/evolution": "workspace:^"
-    "@hogg/gap-validation": "workspace:^"
     "@hogg/grahams-scan": "workspace:^"
     "@hogg/line-segment-extending": "workspace:^"
     "@hogg/preshape": "workspace:^"
@@ -1033,6 +1055,9 @@ __metadata:
     "@hogg/spatial-grid-map": "workspace:^"
     "@hogg/spirals": "workspace:^"
     "@hogg/tilings": "workspace:^"
+    "@hogg/tilings-validation-gaps": "workspace:^"
+    "@hogg/tilings-validation-overlaps": "workspace:^"
+    "@hogg/tilings-validation-vertex-types": "workspace:^"
     "@hogg/wasm": "workspace:^"
     "@react-spring/web": ^9.7.3
     "@types/luxon": ^3.4.1

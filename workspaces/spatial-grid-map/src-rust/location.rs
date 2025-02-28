@@ -7,10 +7,10 @@ use std::cmp::Ordering;
 use ordered_float::NotNan;
 use serde::{Deserialize, Serialize};
 
-use crate::{
-  utils::{coordinate_equals, get_radians_for_x_y, radians_equal, PI2, TOLERANCE_COORDINATE},
-  Fxx,
+use crate::utils::{
+  coordinate_equals, get_radians_for_x_y, radians_equal, PI2, TOLERANCE_COORDINATE,
 };
+use crate::Fxx;
 
 pub type Key = (i64, i64);
 

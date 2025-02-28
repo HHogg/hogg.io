@@ -31,10 +31,12 @@ impl Metrics {
   }
 
   pub fn resume(&mut self, key: &str) {
-    let event = self
-      .events_pending
-      .get_mut(key)
-      .expect("No Metrics event to resume. Start a new event first.");
+    let event = self.events_pending.get_mut(key).unwrap_or_else(|| {
+      panic!(
+        "No Metrics event to resume. Start a new event first ({}).",
+        key
+      )
+    });
 
     event.time_started = Some(Utc::now().timestamp_millis());
   }
@@ -43,14 +45,16 @@ impl Metrics {
     self
       .events_pending
       .get(key)
-      .map_or(false, |event| event.time_started.is_some())
+      .is_some_and(|event| event.time_started.is_some())
   }
 
   pub fn pause(&mut self, key: &str) {
-    let event = self
-      .events_pending
-      .get_mut(key)
-      .expect("No Metrics event to pause. Start a new event first.");
+    let event = self.events_pending.get_mut(key).unwrap_or_else(|| {
+      panic!(
+        "No Metrics event to pause. Start a new event first ({}).",
+        key
+      )
+    });
 
     let time_started = event
       .time_started
@@ -67,10 +71,12 @@ impl Metrics {
       self.pause(key);
     }
 
-    let event = self
-      .events_pending
-      .remove(key)
-      .expect("No Metrics event to finish. Start a new event first.");
+    let event = self.events_pending.remove(key).unwrap_or_else(|| {
+      panic!(
+        "No Metrics event to finish. Start a new event first ({})",
+        key
+      )
+    });
 
     self.events.push(event);
   }
@@ -80,7 +86,12 @@ impl Metrics {
       .events_pending
       .get_mut(key)
       .or_else(|| self.events.last_mut())
-      .expect("No Metrics event to increment. Start a new event first.");
+      .unwrap_or_else(|| {
+        panic!(
+          "No Metrics event to increment. Start a new event first ({}).",
+          key
+        )
+      });
 
     let counter = event.counters.entry(counter.to_string()).or_insert(0);
     *counter += 1;

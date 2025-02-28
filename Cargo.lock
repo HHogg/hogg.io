@@ -1088,20 +1088,15 @@ dependencies = [
 name = "hogg_circular_sequence"
 version = "0.0.0"
 dependencies = [
+ "hogg_geometry",
+ "hogg_spatial_grid_map",
+ "ordered-float",
  "pretty_assertions",
  "serde",
  "serde-wasm-bindgen",
  "serde_json",
  "typeshare",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "hogg_gap_validation"
-version = "0.0.0"
-dependencies = [
- "hogg_geometry",
- "hogg_spatial_grid_map",
 ]
 
 [[package]]
@@ -1155,10 +1150,12 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "hogg_circular_sequence",
- "hogg_gap_validation",
  "hogg_geometry",
  "hogg_line_segment_extending",
  "hogg_spatial_grid_map",
+ "hogg_tilings_validation_gaps",
+ "hogg_tilings_validation_overlaps",
+ "hogg_tilings_validation_vertex_types",
  "insta",
  "log",
  "ordered-float",
@@ -1257,6 +1254,31 @@ dependencies = [
  "tracing-appender",
  "tracing-subscriber",
  "typeshare",
+]
+
+[[package]]
+name = "hogg_tilings_validation_gaps"
+version = "0.0.0"
+dependencies = [
+ "hogg_geometry",
+ "hogg_spatial_grid_map",
+]
+
+[[package]]
+name = "hogg_tilings_validation_overlaps"
+version = "0.0.0"
+dependencies = [
+ "hogg_geometry",
+ "hogg_spatial_grid_map",
+]
+
+[[package]]
+name = "hogg_tilings_validation_vertex_types"
+version = "0.0.0"
+dependencies = [
+ "hogg_circular_sequence",
+ "hogg_geometry",
+ "hogg_spatial_grid_map",
 ]
 
 [[package]]

@@ -12,13 +12,12 @@ type NoUndefinedField<T> = {
   [P in keyof T]-?: NoUndefinedField<NonNullable<T[P]>>;
 };
 
-export const defaultExpansionPhases = 10;
+export const defaultRepetitions = 10;
 
-export const defaultFeatureToggles = {
+export const defaultFeatureToggles: Record<FeatureToggle, boolean> = {
   [FeatureToggle.Hashing]: true,
   [FeatureToggle.ValidateOverlaps]: true,
   [FeatureToggle.ValidateGaps]: true,
-  [FeatureToggle.ValidateExpanded]: true,
   [FeatureToggle.ValidateVertexTypes]: true,
 };
 

@@ -12,6 +12,9 @@ name = "hogg_circular_sequence"
 path = "src-rust/lib.rs"
 
 [dependencies]
+hogg_geometry = { path = "../geometry" }
+hogg_spatial_grid_map = { path = "../spatial-grid-map" }
+ordered-float.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 serde-wasm-bindgen.workspace = true

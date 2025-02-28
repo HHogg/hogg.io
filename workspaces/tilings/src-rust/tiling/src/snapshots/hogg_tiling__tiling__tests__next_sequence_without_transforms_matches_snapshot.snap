@@ -1,0 +1,5 @@
+---
+source: workspaces/tilings/src-rust/tiling/src/./tiling_tests.rs
+expression: NEXT_WITHOUT_TRANSFORMS
+---
+[]

@@ -7,7 +7,7 @@ import {
 } from '@hogg/wasm';
 import { createContext, useContext } from 'react';
 import {
-  defaultExpansionPhases,
+  defaultRepetitions,
   defaultFeatureToggles,
   defaultOptions,
 } from '../Renderer/defaultOptions';
@@ -16,32 +16,32 @@ export type Settings = {
   autoRotate: boolean;
   colorMode: ColorMode;
   colorPalette: ColorPalette;
-  expansionPhases: number;
   featureToggles: Record<FeatureToggle, boolean>;
+  repetitions: number;
   scaleMode: ScaleMode;
-  speed: number;
   showLayers: Record<Layer, boolean>;
+  speed: number;
 };
 
 type SettingsContextValue = Settings & {
+  repetitions: number;
+  resetAllSettings: () => void;
   setAutoRotate: (autoRotate: boolean) => void;
   setColorMode: (colorMode: ColorMode) => void;
   setColorPalette: (colorPalette: ColorPalette) => void;
-  setExpansionPhases: (count: number) => void;
   setFeatureToggles: (featureToggles: Record<FeatureToggle, boolean>) => void;
+  setRepetitions: (count: number) => void;
   setScaleMode: (scaleMode: ScaleMode) => void;
   setShowLayers: (layers: Record<Layer, boolean>) => void;
   setShowSettings: (show: boolean) => void;
   setSpeed: (speed: number) => void;
-  resetAllSettings: () => void;
-  toggleSettings: () => void;
-  expansionPhases: number;
   showSettings: boolean;
+  toggleSettings: () => void;
 };
 
 export const defaultSettings: Settings = {
   ...defaultOptions,
-  expansionPhases: defaultExpansionPhases,
+  repetitions: defaultRepetitions,
   featureToggles: defaultFeatureToggles,
   speed: 2,
 };
@@ -52,17 +52,17 @@ const noop = () => {
 
 export const SettingsContext = createContext<SettingsContextValue>({
   ...defaultSettings,
-  showSettings: false,
+  resetAllSettings: noop,
   setAutoRotate: noop,
   setColorMode: noop,
   setColorPalette: noop,
-  setExpansionPhases: noop,
   setFeatureToggles: noop,
+  setRepetitions: noop,
   setScaleMode: noop,
   setShowLayers: noop,
   setShowSettings: noop,
   setSpeed: noop,
-  resetAllSettings: noop,
+  showSettings: false,
   toggleSettings: noop,
 });
 

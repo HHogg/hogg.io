@@ -4,7 +4,8 @@ use actix::prelude::*;
 use anyhow::Result;
 use hogg_tiling::{ApplicationError, FeatureToggle, Tiling, TilingError};
 
-use super::{messages::VisitResult, Visit};
+use super::messages::VisitResult;
+use super::Visit;
 
 #[derive(Debug, Default)]
 pub struct Worker {}
@@ -21,7 +22,7 @@ impl Handler<Visit> for Worker {
 
     let mut tiling = Tiling::default()
       .with_feature_toggles(Some(FeatureToggle::all()))
-      .with_expansion_phases(3)
+      .with_repetitions(3)
       .with_path(path.clone())
       .with_first_transform();
 

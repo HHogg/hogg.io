@@ -44,7 +44,7 @@ export const usePlayer = ({
   const { api } = useWasmApi();
   const {
     autoRotate,
-    expansionPhases,
+    repetitions,
     featureToggles,
     colorMode,
     colorPalette,
@@ -132,8 +132,8 @@ export const usePlayer = ({
 
   useEffect(() => {
     refUpdateRenderMetrics.current = true;
-    api.tilings.setPlayerExpansionPhases([expansionPhases]);
-  }, [api, expansionPhases]);
+    api.tilings.setPlayerRepetitions([repetitions]);
+  }, [api, repetitions]);
 
   useEffect(() => {
     refUpdateRenderMetrics.current = true;

@@ -4,29 +4,29 @@ import { BoxProps, useResizeObserver } from 'preshape';
 import { useEffect, useState } from 'react';
 import { useNotationContext } from '../Notation/useNotationContext';
 import Canvas from './Canvas';
-import { defaultExpansionPhases } from './defaultOptions';
+import { defaultRepetitions } from './defaultOptions';
 import useRenderOptions from './useRenderOptions';
 
 export type RendererProps = {
-  notation?: string;
-  expansionPhases?: number;
   featureToggles?: Record<FeatureToggle, boolean>;
-  options?: DeepPartial<Options>;
-  uid: string;
   height?: number;
-  width?: number;
+  notation?: string;
+  options?: DeepPartial<Options>;
+  repetitions?: number;
   square?: boolean;
+  uid: string;
+  width?: number;
 };
 
 export default function Renderer({
-  notation: notationProps,
-  expansionPhases = defaultExpansionPhases,
   featureToggles,
-  options: optionsProps,
-  uid,
   height: heightProps,
-  width: widthProps,
+  notation: notationProps,
+  options: optionsProps,
+  repetitions = defaultRepetitions,
   square,
+  uid,
+  width: widthProps,
   ...rest
 }: BoxProps & RendererProps) {
   const { api } = useWasmApi();
@@ -59,23 +59,14 @@ export default function Renderer({
         notation,
         scaledWidth,
         scaledHeight,
-        expansionPhases,
+        repetitions,
         featureToggles,
         options,
       ]);
     } catch (error) {
       setError((error as Error).message);
     }
-  }, [
-    api,
-    uid,
-    height,
-    width,
-    notation,
-    options,
-    expansionPhases,
-    featureToggles,
-  ]);
+  }, [api, uid, height, width, notation, options, repetitions, featureToggles]);
 
   return (
     <Canvas
