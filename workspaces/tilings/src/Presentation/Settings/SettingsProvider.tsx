@@ -5,13 +5,13 @@ import {
   Layer,
   ScaleMode,
 } from '@hogg/wasm';
-import { useLocalStorage } from 'preshape';
-import { PropsWithChildren, useMemo, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
 import {
   Settings,
   SettingsContext,
   defaultSettings,
 } from './useSettingsContext';
+import useVersionedSettings from './useVersionedSettings';
 
 type SettingsProviderProps = {
   settings?: Partial<Settings>;
@@ -23,16 +23,7 @@ export default function SettingsProvider({
   onReset,
   ...rest
 }: PropsWithChildren<SettingsProviderProps>) {
-  const [settings, setSettings] = useLocalStorage(
-    'com.hogg.io.tilings.player.settings.v2',
-    useMemo(
-      () => ({
-        ...defaultSettings,
-        ...settingsProps,
-      }),
-      [settingsProps]
-    )
-  );
+  const [settings, setSettings] = useVersionedSettings(settingsProps);
 
   const [showSettings, setShowSettings] = useState(false);
   const toggleSettings = () => setShowSettings(!showSettings);
