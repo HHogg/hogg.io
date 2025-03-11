@@ -100,8 +100,8 @@ export default function useArrangementStats(): ArrangementStats {
         }
       }
 
-      if (event.key.startsWith('validation')) {
-        const flag = event.key.split('_')[1] as Validation; // Proper validation?
+      if (event.key.startsWith('Validate')) {
+        const flag = event.key as Validation; // TODO? Proper validation?
 
         stats.stageDurationValidation += event.duration;
 

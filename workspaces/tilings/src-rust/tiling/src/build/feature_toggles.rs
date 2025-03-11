@@ -28,10 +28,10 @@ impl FeatureToggle {
 impl From<FeatureToggle> for &'static str {
   fn from(feature_toggle: FeatureToggle) -> Self {
     match feature_toggle {
-      FeatureToggle::Hashing => "hashing",
-      FeatureToggle::ValidateOverlaps => "validation_Overlaps",
-      FeatureToggle::ValidateGaps => "validation_Gaps",
-      FeatureToggle::ValidateVertexTypes => "validation_VertexTypes",
+      FeatureToggle::Hashing => "Hashing",
+      FeatureToggle::ValidateOverlaps => "ValidateOverlaps",
+      FeatureToggle::ValidateGaps => "ValidateGaps",
+      FeatureToggle::ValidateVertexTypes => "ValidateVertexTypes",
     }
   }
 }
