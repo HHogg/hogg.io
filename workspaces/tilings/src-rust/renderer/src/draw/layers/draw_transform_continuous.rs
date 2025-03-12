@@ -1,6 +1,6 @@
 use hogg_spatial_grid_map::utils::coordinate_equals;
 use hogg_spatial_grid_map::PI;
-use hogg_tiling::notation::{Operation, TransformValue};
+use hogg_tiling_generator::notation::{Operation, TransformValue};
 
 use super::Layer;
 use crate::canvas::{ArcArrow, Canvas, LineSegment, LineSegmentArrows, Point, Style};

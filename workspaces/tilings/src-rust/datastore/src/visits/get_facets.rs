@@ -1,7 +1,7 @@
 use std::fmt::{Display, Formatter};
 
 use anyhow::Result;
-use hogg_tiling::notation::Shape;
+use hogg_tiling_generator::notation::Shape;
 use serde::{Deserialize, Serialize};
 use sqlx::{FromRow, Pool, Postgres};
 use typeshare::typeshare;

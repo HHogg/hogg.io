@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use hogg_tiling::notation::Shape;
+use hogg_tiling_generator::notation::Shape;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 

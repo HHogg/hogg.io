@@ -1,6 +1,6 @@
 use anyhow::Result;
 use futures_util::future::try_join_all;
-use hogg_tiling::ApplicationError;
+use hogg_tiling_generator::ApplicationError;
 use sqlx::{Pool, Postgres};
 
 pub async fn insert(pool: &Pool<Postgres>, errors: Vec<ApplicationError>) -> Result<()> {

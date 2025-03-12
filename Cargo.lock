@@ -1142,7 +1142,47 @@ dependencies = [
 ]
 
 [[package]]
-name = "hogg_tiling"
+name = "hogg_tiling_datastore"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "futures-util",
+ "hogg_tiling_generator",
+ "local-ip-address",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "sysinfo",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
+ "typeshare",
+]
+
+[[package]]
+name = "hogg_tiling_export"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "hogg_tiling_datastore",
+ "hogg_tiling_generator",
+ "serde",
+ "serde_json",
+ "sqlx",
+ "tokio",
+ "tokio-util",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "hogg_tiling_generator"
 version = "0.0.0"
 dependencies = [
  "anyhow",
@@ -1171,46 +1211,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "hogg_tiling_datastore"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "chrono",
- "futures-util",
- "hogg_tiling",
- "local-ip-address",
- "serde",
- "serde_json",
- "sqlx",
- "sysinfo",
- "tokio",
- "tokio-util",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
- "typeshare",
-]
-
-[[package]]
-name = "hogg_tiling_export"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "hogg_tiling",
- "hogg_tiling_datastore",
- "serde",
- "serde_json",
- "sqlx",
- "tokio",
- "tokio-util",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "hogg_tiling_renderer"
 version = "0.0.0"
 dependencies = [
@@ -1222,7 +1222,7 @@ dependencies = [
  "hogg_circular_sequence",
  "hogg_geometry",
  "hogg_spatial_grid_map",
- "hogg_tiling",
+ "hogg_tiling_generator",
  "log",
  "rand",
  "serde",
@@ -1242,8 +1242,8 @@ dependencies = [
  "anyhow",
  "async-channel 2.3.1",
  "clap",
- "hogg_tiling",
  "hogg_tiling_datastore",
+ "hogg_tiling_generator",
  "nanoid",
  "serde",
  "serde_json",
@@ -1290,7 +1290,7 @@ dependencies = [
  "hogg_circular_sequence",
  "hogg_line_segment_extending",
  "hogg_spatial_grid_map",
- "hogg_tiling",
+ "hogg_tiling_generator",
  "hogg_tiling_renderer",
  "log",
  "pretty_assertions",

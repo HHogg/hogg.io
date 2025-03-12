@@ -8,7 +8,7 @@ use std::collections::{BTreeMap, HashMap, VecDeque};
 use anyhow::Result;
 use hogg_geometry::BBox;
 use hogg_spatial_grid_map::Fxx;
-use hogg_tiling::Tiling;
+use hogg_tiling_generator::Tiling;
 use wasm_bindgen::JsCast;
 
 use self::collision::Theia;

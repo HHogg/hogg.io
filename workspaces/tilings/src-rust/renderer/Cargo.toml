@@ -16,7 +16,7 @@ console_error_panic_hook.workspace = true
 hogg_circular_sequence = { path = "../../../circular-sequence" }
 hogg_geometry = { path = "../../../geometry" }
 hogg_spatial_grid_map = { path = "../../../spatial-grid-map" }
-hogg_tiling = { path = "../tiling" }
+hogg_tiling_generator = { path = "../generator" }
 log.workspace = true
 rand = "0.8.5"
 serde.workspace = true

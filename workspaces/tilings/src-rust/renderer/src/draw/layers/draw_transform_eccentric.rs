@@ -1,6 +1,6 @@
 use hogg_spatial_grid_map::PI;
-use hogg_tiling::notation::{Operation, OriginIndex, OriginType};
-use hogg_tiling::Tiling;
+use hogg_tiling_generator::notation::{Operation, OriginIndex, OriginType};
+use hogg_tiling_generator::Tiling;
 
 use super::Layer;
 use crate::canvas::{ArcArrow, Canvas, LineSegment, LineSegmentArrows, Point, Style};

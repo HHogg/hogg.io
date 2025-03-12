@@ -1,0 +1,20 @@
+---
+source: workspaces/tilings/src-rust/generator/src/notation/./transform_tests.rs
+expression: "Transform::from_string(\"r60\", &Shape::Triangle.into())"
+---
+Ok(
+    Continuous(
+        TransformContinuous {
+            operation: Rotate,
+            value: TransformValue {
+                increment: 60,
+                operation: Rotate,
+                seed: Seed {
+                    shape: Triangle,
+                    offset: Center,
+                },
+                value: 60,
+            },
+        },
+    ),
+)

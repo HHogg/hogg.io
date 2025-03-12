@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use hogg_tiling::notation::{Path, Transform};
-use hogg_tiling::{FeatureToggle, Tiling};
+use hogg_tiling_generator::notation::{Path, Transform};
+use hogg_tiling_generator::{FeatureToggle, Tiling};
 use hogg_tiling_renderer::{draw, Options};
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsError, JsValue};

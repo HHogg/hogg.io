@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling::notation::Path;
+use hogg_tiling_generator::notation::Path;
 use hogg_tiling_datastore::state::State;
 use tokio::sync::Mutex;
 

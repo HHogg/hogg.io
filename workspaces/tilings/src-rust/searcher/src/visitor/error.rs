@@ -1,4 +1,4 @@
-use hogg_tiling::TilingError;
+use hogg_tiling_generator::TilingError;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]

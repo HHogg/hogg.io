@@ -1,7 +1,7 @@
 use std::str::FromStr;
 
 use anyhow::Result;
-use hogg_tiling::notation::Path;
+use hogg_tiling_generator::notation::Path;
 use sqlx::PgPool;
 
 use super::State;

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use anyhow::Result;
 use colorgrad::{Gradient, GradientBuilder};
-use hogg_tiling::Tiling;
+use hogg_tiling_generator::Tiling;
 use rand::seq::SliceRandom;
 use rand::thread_rng;
 

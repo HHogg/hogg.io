@@ -1,5 +1,5 @@
 use anyhow::Result;
-use hogg_tiling::notation::Path;
+use hogg_tiling_generator::notation::Path;
 use serde::Deserialize;
 use sqlx::{Pool, Postgres};
 use typeshare::typeshare;

@@ -1,0 +1,9 @@
+---
+source: workspaces/tilings/src-rust/generator/src/notation/./path_tests.rs
+expression: "Path::default().from_string(\"\", true)"
+---
+Ok(
+    Path {
+        nodes: [],
+    },
+)

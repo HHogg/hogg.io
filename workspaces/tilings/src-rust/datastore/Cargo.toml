@@ -14,7 +14,7 @@ path = "src/lib.rs"
 anyhow.workspace = true
 chrono.workspace = true
 futures-util.workspace = true
-hogg_tiling = { path = "../tiling" }
+hogg_tiling_generator = { path = "../generator" }
 local-ip-address = "0.6.1"
 serde.workspace = true
 serde_json.workspace = true

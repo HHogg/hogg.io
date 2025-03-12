@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use hogg_spatial_grid_map::Fxx;
-use hogg_tiling::FeatureToggle;
+use hogg_tiling_generator::FeatureToggle;
 use inner::RenderLoopInner;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsValue};

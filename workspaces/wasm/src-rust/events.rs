@@ -1,4 +1,4 @@
-use hogg_tiling::build::{self, Metrics};
+use hogg_tiling_generator::build::{self, Metrics};
 use serde::Serialize;
 use typeshare::typeshare;
 use wasm_bindgen::{JsCast, JsValue};

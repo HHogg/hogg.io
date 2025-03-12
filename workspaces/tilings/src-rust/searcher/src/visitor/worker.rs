@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling::{ApplicationError, FeatureToggle, Tiling, TilingError};
+use hogg_tiling_generator::{ApplicationError, FeatureToggle, Tiling, TilingError};
 
 use super::messages::VisitResult;
 use super::Visit;
@@ -29,7 +29,7 @@ impl Handler<Visit> for Worker {
     let visit_result = RefCell::new(VisitResult::default().with_path(path));
 
     while let Some(result) =
-      tiling.find_next_tiling(Some(&|result: &hogg_tiling::build::Result| {
+      tiling.find_next_tiling(Some(&|result: &hogg_tiling_generator::build::Result| {
         visit_result.borrow_mut().increment_total_tilings();
 
         if let Some(TilingError::Application { reason }) = result.error.as_ref() {

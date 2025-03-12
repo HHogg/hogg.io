@@ -1,4 +1,4 @@
-use hogg_tiling::notation::Path;
+use hogg_tiling_generator::notation::Path;
 
 mod get;
 mod set;

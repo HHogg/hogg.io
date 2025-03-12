@@ -1,0 +1,19 @@
+---
+source: workspaces/tilings/src-rust/generator/src/notation/./path_tests.rs
+expression: "Path::default().from_string(\"3-\", true)"
+---
+Ok(
+    Path {
+        nodes: [
+            Seed(
+                Seed {
+                    shape: Triangle,
+                    offset: Center,
+                },
+            ),
+            Separator(
+                Group,
+            ),
+        ],
+    },
+)

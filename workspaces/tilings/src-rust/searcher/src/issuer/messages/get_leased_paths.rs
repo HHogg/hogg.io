@@ -1,5 +1,5 @@
 use actix::prelude::*;
-use hogg_tiling::notation::Path;
+use hogg_tiling_generator::notation::Path;
 
 use crate::issuer::Issuer;
 

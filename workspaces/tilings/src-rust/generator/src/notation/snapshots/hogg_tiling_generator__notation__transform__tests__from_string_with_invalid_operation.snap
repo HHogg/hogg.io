@@ -1,0 +1,10 @@
+---
+source: workspaces/tilings/src-rust/generator/src/notation/./transform_tests.rs
+expression: "Transform::from_string(\"t\", &Shape::Triangle.into())"
+---
+Err(
+    InvalidOperation {
+        operation: "t",
+        reason: "invalid",
+    },
+)

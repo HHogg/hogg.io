@@ -1,5 +1,5 @@
 use anyhow::Result;
-use hogg_tiling::notation::{Path, Shape};
+use hogg_tiling_generator::notation::{Path, Shape};
 use sqlx::{Pool, Postgres};
 
 pub struct InsertRequest {

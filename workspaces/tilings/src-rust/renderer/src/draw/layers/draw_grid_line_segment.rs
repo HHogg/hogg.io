@@ -1,5 +1,5 @@
 use anyhow::Result;
-use hogg_tiling::Tiling;
+use hogg_tiling_generator::Tiling;
 
 use super::Layer;
 use crate::canvas::{Canvas, Grid};

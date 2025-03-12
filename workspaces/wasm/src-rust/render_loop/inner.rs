@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use std::rc::Rc;
 
 use hogg_spatial_grid_map::Fxx;
-use hogg_tiling::build::Metrics;
-use hogg_tiling::{FeatureToggle, Tiling};
+use hogg_tiling_generator::build::Metrics;
+use hogg_tiling_generator::{FeatureToggle, Tiling};
 use hogg_tiling_renderer::draw;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;

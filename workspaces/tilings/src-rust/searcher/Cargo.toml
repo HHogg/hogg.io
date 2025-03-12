@@ -16,7 +16,7 @@ actix = "0.13.0"
 anyhow.workspace = true
 async-channel = "2.2.1"
 clap = { version = "4.1.8", features = ["derive"] }
-hogg_tiling = { path = "../tiling" }
+hogg_tiling_generator = { path = "../generator" }
 hogg_tiling_datastore = { path = "../datastore" }
 nanoid = "0.4.0"
 serde_json.workspace = true
