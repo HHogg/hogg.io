@@ -4,6 +4,7 @@ import { usePlayerContext } from '../Player/usePlayerContext';
 import { formatMs } from '../utils/formatting';
 import BreakdownBar from './BreakdownBar/BreakdownBar';
 import {
+  colorOther,
   colorPath,
   colorRender,
   colorTransform,
@@ -16,6 +17,7 @@ export default function TotalDurationBreakdown() {
     useNotationContext();
   const { renderResult } = usePlayerContext();
   const {
+    otherDuration,
     totalDuration,
     transforms,
     stageDurationPlacement,
@@ -64,6 +66,11 @@ export default function TotalDurationBreakdown() {
             name: 'render',
             color: colorRender,
             value: stageDurationDraw + stageDurationRender,
+          },
+          {
+            name: 'other',
+            color: colorOther,
+            value: otherDuration,
           },
         ]}
       />

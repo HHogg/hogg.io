@@ -9,6 +9,7 @@ export type Validation =
 
 export type ArrangementStats = {
   totalDuration: number;
+  otherDuration: number;
   stageDurationPlacement: number;
   stageDurationTransform: number;
   stageDurationValidation: number;
@@ -37,6 +38,7 @@ export type ArrangementStats = {
 
 const createStats = (): ArrangementStats => ({
   totalDuration: 0,
+  otherDuration: 0,
   stageDurationPlacement: 0,
   stageDurationTransform: 0,
   stageDurationValidation: 0,
@@ -63,6 +65,7 @@ export default function useArrangementStats(): ArrangementStats {
 
   return useMemo(() => {
     const stats = createStats();
+    let totalDuration = 0;
 
     for (const event of combinedMetricEvents) {
       stats.polygonsAdded += event.counters.get('polygons_added') ?? 0;
@@ -72,12 +75,14 @@ export default function useArrangementStats(): ArrangementStats {
       stats.polygonsSkippedSeries.push(stats.polygonsSkipped);
 
       if (event.key == 'placement') {
+        totalDuration += event.duration;
         stats.stageDurationPlacement += event.duration;
       }
 
       if (event.key.startsWith('transform')) {
         const index = parseInt(event.key.split('_')[1], 10);
 
+        totalDuration += event.duration;
         stats.stageDurationTransform += event.duration;
 
         if (!stats.transforms[index]) {
@@ -103,6 +108,7 @@ export default function useArrangementStats(): ArrangementStats {
       if (event.key.startsWith('Validate')) {
         const flag = event.key as Validation; // TODO? Proper validation?
 
+        totalDuration += event.duration;
         stats.stageDurationValidation += event.duration;
 
         if (!stats.validations[flag]) {
@@ -125,15 +131,19 @@ export default function useArrangementStats(): ArrangementStats {
       }
 
       if (event.key == 'draw_shapes') {
+        totalDuration += event.duration;
         stats.stageDurationDraw += event.duration;
         stats.totalDuration += event.duration;
       }
 
       if (event.key == 'render') {
+        totalDuration += event.duration;
         stats.stageDurationRender += event.duration;
         stats.totalDuration += event.duration;
       }
     }
+
+    stats.otherDuration = stats.totalDuration - totalDuration;
 
     return stats;
   }, [combinedMetricEvents]);
