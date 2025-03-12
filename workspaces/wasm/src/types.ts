@@ -300,6 +300,7 @@ export interface Event {
 export interface Metrics {
 	events: Event[];
 	eventsPending: Record<string, Event>;
+	eventsRecording: string[];
 }
 
 export enum Offset {

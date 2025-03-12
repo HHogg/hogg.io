@@ -272,11 +272,11 @@ impl Plane {
         Ok(())
       })?;
 
-    self.metrics.finish(Stage::Placement.to_string().as_str());
-
     if self.option_validate_overlaps {
       self.metrics.finish(FeatureToggle::ValidateOverlaps.into());
     }
+
+    self.metrics.finish(Stage::Placement.to_string().as_str());
 
     Ok(())
   }
@@ -902,11 +902,11 @@ impl Plane {
       }
     }
 
-    self.metrics.finish(&metric_key);
-
     if self.option_validate_overlaps {
       self.metrics.finish(FeatureToggle::ValidateOverlaps.into());
     }
+
+    self.metrics.finish(&metric_key);
 
     Ok(())
   }
