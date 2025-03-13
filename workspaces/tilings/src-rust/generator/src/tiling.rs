@@ -2,11 +2,9 @@
 #[cfg(test)]
 mod tests;
 
-use core::fmt;
 use std::collections::HashMap;
 
-use serde::de::{self, MapAccess, Visitor};
-use serde::{Deserialize, Deserializer, Serialize};
+use serde::Serialize;
 use serde_with::serde_as;
 
 use crate::build::{FeatureToggle, Plane};
@@ -23,7 +21,6 @@ pub struct Tiling {
 
   option_feature_toggles: HashMap<FeatureToggle, bool>,
   option_first_transform: bool,
-  option_hashing: bool,
   option_link_paths: bool,
   option_repetitions: u8,
   option_type_ahead: bool,
@@ -45,11 +42,6 @@ impl Tiling {
     option_feature_toggles: Option<HashMap<FeatureToggle, bool>>,
   ) -> Self {
     self.option_feature_toggles = option_feature_toggles.unwrap_or_default();
-    self.option_hashing = self
-      .option_feature_toggles
-      .get(&FeatureToggle::Hashing)
-      .copied()
-      .unwrap_or(false);
     self
   }
 
@@ -165,11 +157,7 @@ impl Tiling {
       .with_repetitions(self.option_repetitions)
       .with_feature_toggles(&self.option_feature_toggles);
 
-    let mut build_result = self.plane.build(&self.notation);
-
-    if self.option_hashing && build_result.error.is_none() {
-      build_result.create_hash(self);
-    }
+    let build_result = self.plane.build(&self.notation);
 
     if let Some(on_visit) = on_visit {
       on_visit(&build_result);
@@ -182,53 +170,5 @@ impl Tiling {
 
       Ok(())
     }
-  }
-}
-
-struct TilingDeserializerVisitor;
-
-impl<'de> Visitor<'de> for TilingDeserializerVisitor {
-  type Value = Tiling;
-
-  fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-    formatter.write_str("a JSON object with specific fields")
-  }
-
-  fn visit_map<V>(self, mut map: V) -> Result<Self::Value, V::Error>
-  where
-    V: MapAccess<'de>,
-  {
-    let mut notation: Option<String> = None;
-    let mut plane: Option<build::Plane> = None;
-
-    while let Some(key) = map.next_key()? {
-      let key: String = key;
-
-      match key.as_str() {
-        "notation" => notation = Some(map.next_value()?),
-        "plane" => plane = Some(map.next_value()?),
-        _ => {
-          let _: de::IgnoredAny = map.next_value()?;
-        }
-      }
-    }
-
-    let notation = notation.ok_or_else(|| de::Error::missing_field("notation"))?;
-    let plane = plane.ok_or_else(|| de::Error::missing_field("plane"))?;
-
-    Ok(
-      Tiling::default()
-        .with_notation(notation.as_str())
-        .with_plane(plane),
-    )
-  }
-}
-
-impl<'de> Deserialize<'de> for Tiling {
-  fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
-  where
-    D: Deserializer<'de>,
-  {
-    deserializer.deserialize_map(TilingDeserializerVisitor)
   }
 }

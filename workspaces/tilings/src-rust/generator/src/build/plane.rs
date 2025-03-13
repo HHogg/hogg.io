@@ -3,27 +3,28 @@
 mod tests;
 
 use std::collections::HashMap;
+use std::mem;
 
 use hogg_circular_sequence::{PointSequence, SequenceStore};
 use hogg_geometry::{ConvexHull, LineSegment, Point};
 use hogg_spatial_grid_map::{location, MutBucketEntry, ResizeMethod, SpatialGridMap, PI};
 use hogg_tilings_validation_gaps::validate_gaps;
 use hogg_tilings_validation_overlaps::validate_overlaps;
-use hogg_tilings_validation_vertex_types::validate_vertex_type;
-use serde::{Deserialize, Serialize};
+use hogg_tilings_validation_vertex_types::{matches_known_vertex_type, validate_vertex_type};
+use serde::Serialize;
 use typeshare::typeshare;
 
 use super::tile::Tile;
-use super::vertex_types::VertexTypes;
 use super::{FeatureToggle, Metrics, Stage};
 use crate::error::ValidationError;
+use crate::hash::Hash;
 use crate::notation::{
   Node, Notation, Operation, OriginIndex, OriginType, Path, Separator, Shape, Transform,
   TransformContinuous, TransformEccentric, TransformValue,
 };
 use crate::TilingError;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub struct Plane {
@@ -33,6 +34,16 @@ pub struct Plane {
   pub option_validate_gaps: bool,
   pub option_validate_overlaps: bool,
   pub option_validate_vertex_types: bool,
+
+  pub hash: Option<Hash>,
+  pub metrics: Metrics,
+  pub stages: Vec<Stage>,
+  #[serde(skip)]
+  pub stage_added_tile: bool,
+
+  pub shape_types: SequenceStore,
+  pub edge_types: SequenceStore,
+  pub vertex_types: SequenceStore,
 
   // Lookup<Tile.geometry.centroid> -> [(Tile.geometry.centroid, Tile.shape)]
   pub points_center: SpatialGridMap<PointSequence>,
@@ -65,16 +76,6 @@ pub struct Plane {
   pub tiles_from_placement: SpatialGridMap<Tile>,
   #[serde(skip)]
   pub tiles_to_transform: Vec<Tile>,
-
-  pub metrics: Metrics,
-  pub stages: Vec<Stage>,
-
-  #[serde(skip)]
-  pub stage_added_tile: bool,
-  // #[serde(skip)]
-  // pub validator: Validator,
-  #[serde(skip)]
-  pub vertex_types: VertexTypes,
 }
 
 impl Plane {
@@ -116,25 +117,18 @@ impl Plane {
   }
 
   pub fn build(&mut self, notation: &Notation) -> super::Result {
-    match self.build_unchecked(notation) {
-      Ok(_) => super::Result::default()
-        .with_notation(notation.to_string())
-        .with_repetitions(self.option_repetitions)
-        .with_transform_index(notation.transforms.index)
-        .with_metrics(self.metrics.clone())
-        .with_vertex_types(self.get_vertex_types())
-        .with_edge_types(self.get_edge_types())
-        .with_shape_types(self.get_shape_types()),
-      Err(err) => super::Result::default()
-        .with_notation(notation.to_string())
-        .with_repetitions(self.option_repetitions)
-        .with_transform_index(notation.transforms.index)
-        .with_metrics(self.metrics.clone())
-        .with_vertex_types(self.get_vertex_types())
-        .with_edge_types(self.get_edge_types())
-        .with_shape_types(self.get_shape_types())
-        .with_error(err),
-    }
+    let build_result = self.build_unchecked(notation);
+
+    super::Result::default()
+      .with_notation(notation.to_string())
+      .with_repetitions(self.option_repetitions)
+      .with_transform_index(notation.transforms.index)
+      .with_metrics(self.metrics.clone())
+      .with_vertex_types(self.vertex_types.clone())
+      .with_edge_types(self.edge_types.clone())
+      .with_shape_types(self.shape_types.clone())
+      .with_error(build_result.err())
+      .with_hash(self.hash.clone())
   }
 
   fn build_unchecked(&mut self, notation: &Notation) -> Result<(), TilingError> {
@@ -170,6 +164,14 @@ impl Plane {
 
         self.validate_vertex_types()?;
       }
+    }
+
+    self.shape_types = self.get_shape_types();
+    self.edge_types = self.get_edge_types();
+    self.vertex_types = self.get_vertex_types();
+
+    if self.option_hashing {
+      self.create_hash()?;
     }
 
     self.metrics.finish("build");
@@ -210,7 +212,7 @@ impl Plane {
         match node {
           Node::Seed(seed) => {
             let tile = Tile::default()
-              .with_stage(Stage::Seed)
+              .with_stage(Stage::Placement)
               .with_shape(seed.shape)
               .with_offset(seed.offset)
               .at_center();
@@ -219,7 +221,7 @@ impl Plane {
               SpatialGridMap::new("line_segments_by_shape_group.seed")
                 .with_resize_method(ResizeMethod::First),
             );
-            self.add_tile(Stage::Placement, tile)?;
+            self.add_tile(tile)?;
 
             shape_counter += 1;
             points_counter += seed.shape as u8;
@@ -246,7 +248,7 @@ impl Plane {
               .with_stage_index(self.stages.len() as u16)
               .on_line_segment(&line_segment.flip(), points_counter - 1);
 
-            self.add_tile(Stage::Placement, tile)?;
+            self.add_tile(tile)?;
 
             shape_counter += 1;
             points_counter += (*shape as u8) - 2;
@@ -283,23 +285,18 @@ impl Plane {
 
   /// Inserts a polygon into the tiling. If the polygon that occupies the
   /// same space already exists then it is not added.
-  fn add_tile(&mut self, stage: Stage, tile: Tile) -> Result<(), TilingError> {
+  fn add_tile(&mut self, tile: Tile) -> Result<(), TilingError> {
     let tile_location = tile.get_location();
 
     if self.tiles.contains(&tile_location) {
       self
         .metrics
-        .increment(stage.to_string().as_str(), "polygons_skipped");
+        .increment(tile.stage.to_string().as_str(), "polygons_skipped");
       return Ok(());
     }
 
     let tile_size = tile.get_size();
-    let is_placement_tile = stage == Stage::Placement;
-    let is_touching_placement_tile = if is_placement_tile || !self.option_hashing {
-      false
-    } else {
-      self.is_touching_placement_tile(&tile)
-    };
+    let is_placement_tile = tile.stage == Stage::Placement;
 
     // We add the polygon first so we can see it
     // if there are any errors
@@ -314,7 +311,7 @@ impl Plane {
     self.stage_added_tile = true;
     self
       .metrics
-      .increment(stage.to_string().as_str(), "polygons_added");
+      .increment(tile.stage.to_string().as_str(), "polygons_added");
 
     if is_placement_tile {
       // We store the polygons from the placement phase
@@ -323,41 +320,6 @@ impl Plane {
       self
         .tiles_from_placement
         .insert(tile_location, tile_size, None, tile.clone());
-
-      self.points_center.insert(
-        tile_location,
-        tile_size,
-        None,
-        PointSequence::default()
-          .with_center(tile.geometry.centroid)
-          .with_max_size(tile.shape.into()),
-      );
-    } else if self.option_hashing {
-      if is_touching_placement_tile {
-        if !self.points_center.contains(&tile_location) {
-          let point_sequence = self
-            .points_center_peripheral
-            .take(&tile_location)
-            .unwrap_or_else(|| {
-              PointSequence::default()
-                .with_center(tile.geometry.centroid)
-                .with_max_size(tile.shape.into())
-            });
-
-          self
-            .points_center_extended
-            .insert(tile_location, tile_size, None, point_sequence);
-        }
-      } else if !self.points_center_extended.contains(&tile_location) {
-        self.points_center_peripheral.insert(
-          tile_location,
-          tile_size,
-          None,
-          PointSequence::default()
-            .with_center(tile.geometry.centroid)
-            .with_max_size(tile.shape.into()),
-        );
-      }
     }
 
     for line_segment in &tile.geometry.line_segments {
@@ -395,7 +357,65 @@ impl Plane {
               *line_segment,
             )
           });
+      }
+    }
 
+    self.register_tile(&tile, false)
+  }
+
+  pub fn register_tile(
+    &mut self,
+    tile: &Tile,
+    register_extended_tiles: bool,
+  ) -> Result<(), TilingError> {
+    let tile_location = tile.get_location();
+    let tile_size = tile.get_size();
+    let is_placement_tile = tile.stage == Stage::Placement;
+    let is_touching_placement_tile =
+      !is_placement_tile && register_extended_tiles && self.is_touching_placement_tile(tile);
+
+    if is_placement_tile {
+      self.points_center.insert(
+        tile_location,
+        tile_size,
+        None,
+        PointSequence::default()
+          .with_center(tile.geometry.centroid)
+          .with_max_size(tile.shape.into()),
+      );
+    } else if register_extended_tiles {
+      if is_touching_placement_tile {
+        if !self.points_center.contains(&tile_location) {
+          let point_sequence = self
+            .points_center_peripheral
+            .take(&tile_location)
+            .unwrap_or_else(|| {
+              PointSequence::default()
+                .with_center(tile.geometry.centroid)
+                .with_max_size(tile.shape.into())
+            });
+
+          self
+            .points_center_extended
+            .insert(tile_location, tile_size, None, point_sequence);
+        }
+      } else if !self.points_center_extended.contains(&tile_location) {
+        self.points_center_peripheral.insert(
+          tile_location,
+          tile_size,
+          None,
+          PointSequence::default()
+            .with_center(tile.geometry.centroid)
+            .with_max_size(tile.shape.into()),
+        );
+      }
+    }
+
+    for line_segment in &tile.geometry.line_segments {
+      let mid_point = line_segment.mid_point();
+      let mid_point_location: location::Point = mid_point.into();
+
+      if is_placement_tile {
         // Store the line segments mid point
         // for looking up origins for transforms
         self.points_mid.insert(
@@ -406,7 +426,7 @@ impl Plane {
             .with_center(mid_point)
             .with_max_size(2),
         );
-      } else if self.option_hashing {
+      } else if register_extended_tiles {
         if is_touching_placement_tile {
           if !self.points_mid.contains(&mid_point_location) {
             let point_sequence = self
@@ -439,13 +459,13 @@ impl Plane {
 
       // Updating the mid point sequence to link this
       // line segment to the polygon
-      self.update_mid_point_sequence(&mid_point, &tile);
+      self.update_mid_point_sequence(&mid_point, tile);
 
       // With the opposite tile we can start to fill in the
       // the shape and edge types.
-      if let Some(opposite_tile) = self.get_opposite_tile(&tile, &mid_point) {
+      if let Some(opposite_tile) = self.get_opposite_tile(tile, &mid_point) {
         self.update_center_point_sequence(&tile.geometry.centroid, &opposite_tile);
-        self.update_center_point_sequence(&opposite_tile.geometry.centroid, &tile);
+        self.update_center_point_sequence(&opposite_tile.geometry.centroid, tile);
       }
     }
 
@@ -461,7 +481,7 @@ impl Plane {
           None,
           PointSequence::default().with_center(*point),
         );
-      } else if self.option_hashing {
+      } else if register_extended_tiles {
         if is_touching_placement_tile {
           if !self.points_end.contains(&location_point) {
             let point_sequence = self
@@ -483,8 +503,31 @@ impl Plane {
         }
       }
 
-      self.update_end_point_sequence(point, &tile)?;
+      self.update_end_point_sequence(point, tile)?;
     }
+
+    Ok(())
+  }
+
+  pub fn create_hash(&mut self) -> Result<(), TilingError> {
+    self.metrics.start("hashing");
+
+    let tiles = mem::take(&mut self.tiles);
+
+    tiles
+      .iter_values()
+      .filter(|tile| tile.stage != Stage::Placement)
+      .try_for_each(|tile| self.register_tile(tile, true))?;
+
+    self.tiles = tiles;
+    self.hash = Some(Hash::build(
+      self,
+      &self.vertex_types,
+      &self.edge_types,
+      &self.shape_types,
+    ));
+
+    self.metrics.finish("hashing");
 
     Ok(())
   }
@@ -737,7 +780,7 @@ impl Plane {
   pub fn get_core_end_complete_point_sequence(&self, point: &Point) -> Option<&PointSequence> {
     self
       .get_core_end_point_sequence(point)
-      .filter(|point_sequence| self.vertex_types.matches_exactly(&point_sequence.sequence))
+      .filter(|point_sequence| matches_known_vertex_type(&point_sequence.sequence))
   }
 
   pub fn get_core_end_point_sequence_mut(
@@ -819,7 +862,7 @@ impl Plane {
       .points_end
       .iter_values()
       .chain(self.points_end_extended.iter_values())
-      .filter(|point_sequence| self.vertex_types.matches_exactly(&point_sequence.sequence))
+      .filter(|point_sequence| matches_known_vertex_type(&point_sequence.sequence))
   }
 
   pub fn get_shape_types(&self) -> SequenceStore {
@@ -974,7 +1017,7 @@ impl Plane {
           .with_stage_index(stage_index)
           .reflect(&line_segment);
 
-        self.add_tile(stage, next_tile)?;
+        self.add_tile(next_tile)?;
       }
 
       self.complete_stage(stage);
@@ -1008,7 +1051,7 @@ impl Plane {
           .with_stage_index(stage_index)
           .rotate(value, None);
 
-        self.add_tile(stage, next_tile)?;
+        self.add_tile(next_tile)?;
       }
 
       self.complete_stage(stage);
@@ -1044,7 +1087,7 @@ impl Plane {
           .with_stage_index(stage_index)
           .reflect(&line_segment)
       })
-      .try_for_each(|tile| self.add_tile(stage, tile))?;
+      .try_for_each(|tile| self.add_tile(tile))?;
 
     self.complete_stage(stage);
 
@@ -1079,7 +1122,7 @@ impl Plane {
           .with_stage_index(stage_index)
           .rotate(PI, Some(&origin))
       })
-      .try_for_each(|tile| self.add_tile(stage, tile))?;
+      .try_for_each(|tile| self.add_tile(tile))?;
 
     self.complete_stage(stage);
 
@@ -1145,17 +1188,23 @@ impl Default for Plane {
       option_validate_overlaps: false,
       option_validate_vertex_types: false,
 
+      hash: None,
       metrics: Metrics::default(),
-      vertex_types: VertexTypes::default(),
+      stages: Vec::new(),
+      stage_added_tile: false,
+
+      shape_types: SequenceStore::default(),
+      edge_types: SequenceStore::default(),
+      vertex_types: SequenceStore::default(),
 
       line_segments: SpatialGridMap::new("line_segments").with_resize_method(ResizeMethod::First),
       line_segments_by_shape_group: Vec::new(),
 
-      points_center: SpatialGridMap::new("points_center").with_resize_method(ResizeMethod::Minimum),
+      points_center: SpatialGridMap::new("points_center").with_resize_method(ResizeMethod::First),
       points_center_extended: SpatialGridMap::new("points_center_extended")
-        .with_resize_method(ResizeMethod::Minimum),
+        .with_resize_method(ResizeMethod::First),
       points_center_peripheral: SpatialGridMap::new("points_center_peripheral")
-        .with_resize_method(ResizeMethod::Minimum),
+        .with_resize_method(ResizeMethod::First),
 
       points_end: SpatialGridMap::new("points_end").with_resize_method(ResizeMethod::First),
       points_end_updated: false,
@@ -1174,9 +1223,6 @@ impl Default for Plane {
       tiles_from_placement: SpatialGridMap::new("tiles_placement")
         .with_resize_method(ResizeMethod::Minimum),
       tiles_to_transform: Vec::new(),
-
-      stage_added_tile: false,
-      stages: Vec::new(),
     }
   }
 }

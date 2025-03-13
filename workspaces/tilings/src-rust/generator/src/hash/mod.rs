@@ -1,7 +1,7 @@
 use hogg_circular_sequence::SequenceStore;
 use serde::{Serialize, Serializer};
 
-use crate::Tiling;
+use crate::build::Plane;
 
 mod edge;
 mod shape;
@@ -17,7 +17,7 @@ pub struct Hash {
 
 impl Hash {
   pub fn build(
-    tiling: &Tiling,
+    plane: &Plane,
     vertex_sequence_store: &SequenceStore,
     edge_sequence_store: &SequenceStore,
     shape_sequence_store: &SequenceStore,
@@ -33,12 +33,12 @@ impl Hash {
 
       hash
         .vertex_hash
-        .update(tiling, is_first_run, edge_sequence_store, &hash.edge_hash);
+        .update(plane, is_first_run, edge_sequence_store, &hash.edge_hash);
       hash
         .edge_hash
-        .update(tiling, is_first_run, shape_sequence_store, &hash.shape_hash);
+        .update(plane, is_first_run, shape_sequence_store, &hash.shape_hash);
       hash.shape_hash.update(
-        tiling,
+        plane,
         is_first_run,
         vertex_sequence_store,
         &hash.vertex_hash,

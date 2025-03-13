@@ -2,7 +2,7 @@ use hogg_circular_sequence::{PointSequence, SequenceStore};
 use hogg_geometry::Point;
 use hogg_spatial_grid_map::{location, SpatialGridMap};
 
-use crate::Tiling;
+use crate::build::Plane;
 
 // The vertex type is a unique point. It is determined by the
 // unique edge sequence that meet at it. As more edge types are
@@ -18,7 +18,7 @@ pub(super) struct Hash {
 impl Hash {
   pub fn update(
     &mut self,
-    tiling: &Tiling,
+    plane: &Plane,
     is_first_run: bool,
     tiling_edge_sequence_store: &SequenceStore,
     edge_hash: &super::edge::Hash,
@@ -26,9 +26,9 @@ impl Hash {
     self.updated = false;
 
     if is_first_run {
-      self.update_from_tiling(tiling, tiling_edge_sequence_store);
+      self.update_from_tiling(plane, tiling_edge_sequence_store);
     } else {
-      self.update_from_hash(tiling, edge_hash);
+      self.update_from_hash(plane, edge_hash);
     }
   }
 
@@ -41,11 +41,11 @@ impl Hash {
   // it, which gives us access to the vertex points, and
   // then insert the sequence_index for edge_sequence into
   // that vertex point_sequences.
-  fn update_from_tiling(&mut self, tiling: &Tiling, edge_sequence_store: &SequenceStore) {
+  fn update_from_tiling(&mut self, plane: &Plane, edge_sequence_store: &SequenceStore) {
     let mut vertex_sequences = SpatialGridMap::<PointSequence>::new("vertex_sequences");
     let mut vertex_sequence_store = SequenceStore::default();
 
-    for point_sequence in tiling.plane.iter_core_mid_complete_point_sequences() {
+    for point_sequence in plane.iter_core_mid_complete_point_sequences() {
       let PointSequence {
         center: line_segment_midpoint,
         sequence,
@@ -57,14 +57,13 @@ impl Hash {
         .expect("edge sequence index not found")
         + 1;
 
-      let line_segment = tiling
-        .plane
+      let line_segment = plane
         .line_segments
         .get_value(&line_segment_midpoint.into())
         .expect("line_segment not found");
 
       self.update_vertex_sequence(
-        tiling,
+        plane,
         &mut vertex_sequences,
         &mut vertex_sequence_store,
         line_segment_midpoint,
@@ -73,7 +72,7 @@ impl Hash {
       );
 
       self.update_vertex_sequence(
-        tiling,
+        plane,
         &mut vertex_sequences,
         &mut vertex_sequence_store,
         line_segment_midpoint,
@@ -92,11 +91,11 @@ impl Hash {
     }
   }
 
-  fn update_from_hash(&mut self, _tiling: &Tiling, _edge_hash: &super::edge::Hash) {}
+  fn update_from_hash(&mut self, _plane: &Plane, _edge_hash: &super::edge::Hash) {}
 
   fn update_vertex_sequence(
     &mut self,
-    tiling: &Tiling,
+    plane: &Plane,
     vertex_sequences: &mut SpatialGridMap<PointSequence>,
     vertex_sequence_store: &mut SequenceStore,
     line_segment_midpoint: &Point,
@@ -105,8 +104,7 @@ impl Hash {
   ) {
     // Size is the number of shapes/line_segments
     // currently meeting at the vertex
-    let vertex_point_sequence_size = tiling
-      .plane
+    let vertex_point_sequence_size = plane
       .get_core_end_complete_point_sequence(&vertex_point)
       .map(|sequence| hogg_circular_sequence::get_length(&sequence.sequence))
       .unwrap_or_else(|| 0);

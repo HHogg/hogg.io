@@ -4,6 +4,7 @@ import { usePlayerContext } from '../Player/usePlayerContext';
 import { formatMs } from '../utils/formatting';
 import BreakdownBar from './BreakdownBar/BreakdownBar';
 import {
+  colorHashing,
   colorOther,
   colorPath,
   colorRender,
@@ -24,6 +25,7 @@ export default function TotalDurationBreakdown() {
     stageDurationDraw,
     stageDurationRender,
     stageDurationValidation,
+    stageDurationHashing,
   } = useArrangementStatsContext();
 
   return (
@@ -61,6 +63,11 @@ export default function TotalDurationBreakdown() {
             name: 'validations',
             color: colorValidation,
             value: stageDurationValidation,
+          },
+          {
+            name: 'hashing',
+            color: colorHashing,
+            value: stageDurationHashing,
           },
           {
             name: 'render',

@@ -5,7 +5,6 @@ use typeshare::typeshare;
 #[typeshare]
 #[serde(tag = "type", content = "index")]
 pub enum Stage {
-  Seed,
   Placement,
   Transform { index: u8, repetition_index: u8 },
 }
@@ -13,7 +12,6 @@ pub enum Stage {
 impl Stage {
   pub fn next(&self) -> Option<Self> {
     match self {
-      Self::Seed => Some(Self::Placement),
       Self::Placement => Some(Self::Transform {
         index: 0,
         repetition_index: 0,
@@ -31,14 +29,13 @@ impl Stage {
 
 impl Default for Stage {
   fn default() -> Self {
-    Self::Seed
+    Self::Placement
   }
 }
 
 impl std::fmt::Display for Stage {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     match self {
-      Stage::Seed => write!(f, "seed"),
       Stage::Placement => write!(f, "placement"),
       Stage::Transform { index, .. } => write!(f, "transform_{}", index),
     }

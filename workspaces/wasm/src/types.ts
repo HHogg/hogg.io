@@ -209,88 +209,6 @@ export interface VisitsRequest {
 	showValidTilings: boolean;
 }
 
-export interface Style {
-	chevronSize?: Fxx;
-	fill?: string;
-	lineDash?: Fxx[];
-	lineThickness?: Fxx;
-	pointRadius?: Fxx;
-	shadowColor?: string;
-	shadowBlur?: Fxx;
-	strokeColor?: string;
-	strokeWidth?: Fxx;
-	opacity?: Fxx;
-}
-
-export enum ColorMode {
-	Placement = "Placement",
-	Stage = "Stage",
-}
-
-export enum ColorPalette {
-	BlackAndWhite = "BlackAndWhite",
-	None = "None",
-	VaporWave = "VaporWave",
-	VaporWaveRandom = "VaporWaveRandom",
-}
-
-export enum ScaleMode {
-	Cover = "Cover",
-	Contain = "Contain",
-}
-
-/**
- * The layers of the components in the canvas.
- * This order is used to determine the order in which the components are drawn.
- */
-export enum Layer {
-	ShapeFill = "ShapeFill",
-	ShapeBorder = "ShapeBorder",
-	ConvexHull = "ConvexHull",
-	PlaneOutline = "PlaneOutline",
-	Axis = "Axis",
-	GridLineSegment = "GridLineSegment",
-	GridPolygon = "GridPolygon",
-	Transform = "Transform",
-	TransformPoints = "TransformPoints",
-	BoundingBoxes = "BoundingBoxes",
-}
-
-export interface Styles {
-	axis?: Style;
-	boundingBoxes?: Style;
-	grid?: Style;
-	planeOutline?: Style;
-	shape?: Style;
-	transformContinuous?: Style;
-	transformEccentric?: Style;
-	transformPoints?: Style;
-}
-
-export interface Options {
-	autoRotate?: boolean;
-	colorMode?: ColorMode;
-	colorPalette?: ColorPalette;
-	isValid?: boolean;
-	maxStage?: number;
-	padding?: Fxx;
-	scaleMode?: ScaleMode;
-	showLayers?: Record<Layer, boolean>;
-	showTransformIndex?: number;
-	styles: Styles;
-}
-
-export interface Tree {
-	id: NodeId;
-	countTotalChildren?: number;
-	countValidChildren?: number;
-	children: Tree[];
-}
-
-export interface Visit {
-	path: string;
-}
-
 export interface Event {
 	key: string;
 	counters: Map<string, number>;
@@ -303,17 +221,16 @@ export interface Metrics {
 	eventsRecording: string[];
 }
 
-export enum Offset {
-	Center = "Center",
-}
-
 export type Stage = 
-	| { type: "Seed", index?: undefined }
 	| { type: "Placement", index?: undefined }
 	| { type: "Transform", index: {
 	index: number;
 	repetition_index: number;
 }};
+
+export enum Offset {
+	Center = "Center",
+}
 
 export interface Tile {
 	geometry: Polygon;
@@ -330,6 +247,12 @@ export interface Plane {
 	optionValidateGaps: boolean;
 	optionValidateOverlaps: boolean;
 	optionValidateVertexTypes: boolean;
+	hash?: Hash;
+	metrics: Metrics;
+	stages: Stage[];
+	shapeTypes: SequenceStore;
+	edgeTypes: SequenceStore;
+	vertexTypes: SequenceStore;
 	pointsCenter: SpatialGridMap<PointSequence>;
 	pointsCenterExtended: SpatialGridMap<PointSequence>;
 	pointsCenterPeripheral: SpatialGridMap<PointSequence>;
@@ -343,8 +266,6 @@ export interface Plane {
 	lineSegments: SpatialGridMap<LineSegment>;
 	tiles: SpatialGridMap<Tile>;
 	tilesFromPlacement: SpatialGridMap<Tile>;
-	metrics: Metrics;
-	stages: Stage[];
 }
 
 export type TilingError = 
@@ -473,6 +394,88 @@ export interface TransformEccentric {
 	operation: Operation;
 	originType: OriginType;
 	originIndex: OriginIndex;
+}
+
+export interface Style {
+	chevronSize?: Fxx;
+	fill?: string;
+	lineDash?: Fxx[];
+	lineThickness?: Fxx;
+	pointRadius?: Fxx;
+	shadowColor?: string;
+	shadowBlur?: Fxx;
+	strokeColor?: string;
+	strokeWidth?: Fxx;
+	opacity?: Fxx;
+}
+
+export enum ColorMode {
+	Placement = "Placement",
+	Stage = "Stage",
+}
+
+export enum ColorPalette {
+	BlackAndWhite = "BlackAndWhite",
+	None = "None",
+	VaporWave = "VaporWave",
+	VaporWaveRandom = "VaporWaveRandom",
+}
+
+export enum ScaleMode {
+	Cover = "Cover",
+	Contain = "Contain",
+}
+
+/**
+ * The layers of the components in the canvas.
+ * This order is used to determine the order in which the components are drawn.
+ */
+export enum Layer {
+	ShapeFill = "ShapeFill",
+	ShapeBorder = "ShapeBorder",
+	ConvexHull = "ConvexHull",
+	PlaneOutline = "PlaneOutline",
+	Axis = "Axis",
+	GridLineSegment = "GridLineSegment",
+	GridPolygon = "GridPolygon",
+	Transform = "Transform",
+	TransformPoints = "TransformPoints",
+	BoundingBoxes = "BoundingBoxes",
+}
+
+export interface Styles {
+	axis?: Style;
+	boundingBoxes?: Style;
+	grid?: Style;
+	planeOutline?: Style;
+	shape?: Style;
+	transformContinuous?: Style;
+	transformEccentric?: Style;
+	transformPoints?: Style;
+}
+
+export interface Options {
+	autoRotate?: boolean;
+	colorMode?: ColorMode;
+	colorPalette?: ColorPalette;
+	isValid?: boolean;
+	maxStage?: number;
+	padding?: Fxx;
+	scaleMode?: ScaleMode;
+	showLayers?: Record<Layer, boolean>;
+	showTransformIndex?: number;
+	styles: Styles;
+}
+
+export interface Tree {
+	id: NodeId;
+	countTotalChildren?: number;
+	countValidChildren?: number;
+	children: Tree[];
+}
+
+export interface Visit {
+	path: string;
 }
 
 export interface DrawStateSnapshot {

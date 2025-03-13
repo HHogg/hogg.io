@@ -1,6 +1,6 @@
 use std::sync::OnceLock;
 
-use hogg_circular_sequence::{to_string_one, Match, PointSequence, SequenceStore};
+use hogg_circular_sequence::{to_string_one, Match, PointSequence, Sequence, SequenceStore};
 use hogg_spatial_grid_map::MutBucketEntry;
 
 fn known_sequences() -> &'static SequenceStore {
@@ -25,6 +25,13 @@ fn known_sequences() -> &'static SequenceStore {
       [4, 8, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ])
   })
+}
+
+pub fn matches_known_vertex_type(sequence: &Sequence) -> bool {
+  matches!(
+    known_sequences().get_match(sequence),
+    hogg_circular_sequence::Match::Exact(_)
+  )
 }
 
 pub fn validate_vertex_type(

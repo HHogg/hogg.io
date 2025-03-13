@@ -4,7 +4,6 @@ mod plane;
 mod result;
 mod stage;
 mod tile;
-mod vertex_types;
 
 pub use feature_toggles::FeatureToggle;
 pub use metrics::Metrics;

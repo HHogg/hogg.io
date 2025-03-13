@@ -5,7 +5,7 @@ use typeshare::typeshare;
 
 use super::Metrics;
 use crate::hash::Hash;
-use crate::{Tiling, TilingError};
+use crate::TilingError;
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -44,8 +44,8 @@ impl Result {
     self
   }
 
-  pub fn with_error(mut self, error: TilingError) -> Self {
-    self.error = Some(error.clone());
+  pub fn with_error(mut self, error: Option<TilingError>) -> Self {
+    self.error = error;
     self
   }
 
@@ -69,13 +69,12 @@ impl Result {
     self
   }
 
-  pub fn create_hash(&mut self, tiling: &Tiling) {
-    self.hash = Hash::build(
-      tiling,
-      &self.vertex_types,
-      &self.edge_types,
-      &self.shape_types,
-    );
+  pub fn with_hash(mut self, hash: Option<Hash>) -> Self {
+    if let Some(hash) = hash {
+      self.hash = hash;
+    }
+
+    self
   }
 
   pub fn get_hash(&self) -> String {

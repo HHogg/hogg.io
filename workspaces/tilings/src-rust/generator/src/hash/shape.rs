@@ -2,7 +2,7 @@ use hogg_circular_sequence::{PointSequence, SequenceStore};
 use hogg_geometry::Point;
 use hogg_spatial_grid_map::{location, SpatialGridMap};
 
-use crate::Tiling;
+use crate::build::Plane;
 
 // The shape types is a unique shape face. It is determined
 // by the sequence of vertex types that make it up. As the
@@ -18,7 +18,7 @@ pub(super) struct Hash {
 impl Hash {
   pub fn update(
     &mut self,
-    tiling: &Tiling,
+    plane: &Plane,
     is_first_run: bool,
     vertex_sequence_store: &SequenceStore,
     vertex_hash: &super::vertex::Hash,
@@ -26,26 +26,24 @@ impl Hash {
     self.updated = false;
 
     if is_first_run {
-      self.update_from_tiling(tiling, vertex_sequence_store);
+      self.update_from_tiling(plane, vertex_sequence_store);
     } else {
-      self.update_from_hash(tiling, vertex_hash);
+      self.update_from_hash(plane, vertex_hash);
     }
   }
 
-  fn update_from_tiling(&mut self, tiling: &Tiling, vertex_sequence_store: &SequenceStore) {
+  fn update_from_tiling(&mut self, plane: &Plane, vertex_sequence_store: &SequenceStore) {
     let mut shape_sequences = SpatialGridMap::<PointSequence>::new("shape_sequences");
     let mut shape_sequence_store = SequenceStore::default();
 
-    for point_sequence in tiling.plane.iter_core_center_complete_point_sequences() {
-      let polygon = tiling
-        .plane
+    for point_sequence in plane.iter_core_center_complete_point_sequences() {
+      let polygon = plane
         .tiles
         .get_value(&point_sequence.center.into())
         .expect("Polygon not found");
 
       for vertex_point in polygon.geometry.points.iter() {
-        let sequence_index = tiling
-          .plane
+        let sequence_index = plane
           .get_core_end_complete_point_sequence(vertex_point)
           .and_then(|point_sequence| vertex_sequence_store.get_index(&point_sequence.sequence))
           .map(|sequence_index| sequence_index + 1)
@@ -76,7 +74,7 @@ impl Hash {
     }
   }
 
-  fn update_from_hash(&mut self, _tiling: &Tiling, _vertex_hash: &super::vertex::Hash) {}
+  fn update_from_hash(&mut self, _plane: &Plane, _vertex_hash: &super::vertex::Hash) {}
 
   fn update_shape_point_sequence(
     &mut self,

@@ -22,7 +22,13 @@ pub enum ResizeMethod {
   Minimum,
 }
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+impl Default for ResizeMethod {
+  fn default() -> Self {
+    Self::First
+  }
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct SpatialGridMap<TEntryValue: Clone + std::fmt::Debug + Default> {
   id: String,

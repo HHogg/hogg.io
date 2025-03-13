@@ -13,6 +13,7 @@ export type ArrangementStats = {
   stageDurationPlacement: number;
   stageDurationTransform: number;
   stageDurationValidation: number;
+  stageDurationHashing: number;
   stageDurationDraw: number;
   stageDurationRender: number;
   polygonsAdded: number;
@@ -42,6 +43,7 @@ const createStats = (): ArrangementStats => ({
   stageDurationPlacement: 0,
   stageDurationTransform: 0,
   stageDurationValidation: 0,
+  stageDurationHashing: 0,
   stageDurationDraw: 0,
   stageDurationRender: 0,
   polygonsAdded: 0,
@@ -128,6 +130,11 @@ export default function useArrangementStats(): ArrangementStats {
 
       if (event.key === 'build') {
         stats.totalDuration += event.duration;
+      }
+
+      if (event.key === 'hashing') {
+        totalDuration += event.duration;
+        stats.stageDurationHashing += event.duration;
       }
 
       if (event.key == 'draw_shapes') {
