@@ -27,7 +27,7 @@ impl Hash {
     self.updated = false;
 
     if is_first_run {
-      self.update_from_tiling(plane, shape_sequence_store);
+      self.update_from_plane(plane, shape_sequence_store);
     } else {
       self.update_from_hash(plane, shape_hash);
     }
@@ -40,7 +40,7 @@ impl Hash {
   // the shape centroids on either side, which we can use to look up
   // the shape sequence and use it's index in the sequence store
   // to insert into the edge sequences.
-  fn update_from_tiling(&mut self, plane: &Plane, shape_sequence_store: &SequenceStore) {
+  fn update_from_plane(&mut self, plane: &Plane, shape_sequence_store: &SequenceStore) {
     let mut edge_sequences = SpatialGridMap::<PointSequence>::new("edge_sequences");
     let mut edge_sequence_store = SequenceStore::default();
 

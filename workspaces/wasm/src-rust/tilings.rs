@@ -39,7 +39,7 @@ pub fn find_previous_tiling(
       .find_previous_tiling(Some(&|result| {
         post_event(WasmWorkerEvent::FindPreviousTiling(result.notation.clone()));
       }))?
-      .map(|t| t.to_string()),
+      .map(|result| result.notation.clone()),
   )
 }
 

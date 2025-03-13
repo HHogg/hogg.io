@@ -115,7 +115,7 @@ impl Tiling {
   pub fn find_previous_tiling(
     &mut self,
     on_visit: Option<&dyn Fn(&build::Result)>,
-  ) -> Result<Option<Notation>, TilingError> {
+  ) -> Result<Option<&build::Result>, TilingError> {
     loop {
       if let Some(previous_notation) = self
         .notation
@@ -124,7 +124,7 @@ impl Tiling {
         self.notation = previous_notation;
 
         if self.build(&on_visit).is_ok() {
-          return Ok(Some(self.notation.clone()));
+          return Ok(Some(&self.result));
         }
       } else {
         return Ok(None);
