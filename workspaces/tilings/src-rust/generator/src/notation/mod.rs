@@ -40,6 +40,7 @@ use crate::TilingError;
 #[typeshare]
 pub struct Notation {
   pub path: Path,
+  #[serde(skip)]
   pub path_plane: Plane,
   pub transforms: Transforms,
 }

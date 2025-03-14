@@ -57,15 +57,17 @@ fn first_valid_level_1_to_2_tilings_are_correct() {
 }
 
 #[test]
-fn first_valid_level_1_to_2_generate_in_an_acceptable_time() {
+fn first_valid_level_1_to_2_generate_in_a_target_time() {
   before_each();
   let duration = *FIRST_VALID_LEVEL_2_DURATION_MS.lock().unwrap();
-  let target =
+  let lower_bound =
+    FIRST_VALID_LEVEL_2_TILING_TARGET_DURATION_MS - *FIRST_VALID_LEVEL_2_TILING_TARGET_TOLERANCE_MS;
+  let upper_bound =
     FIRST_VALID_LEVEL_2_TILING_TARGET_DURATION_MS + *FIRST_VALID_LEVEL_2_TILING_TARGET_TOLERANCE_MS;
 
   assert!(
-    duration <= target,
-    "Finding first {} valid tilings took too long ({}ms)",
+    lower_bound <= duration && duration <= upper_bound,
+    "Finding first {} valid tilings was not within the target range ({}ms)",
     FIRST_VALID_LEVEL_2_TILING_INDEX,
     duration
   );

@@ -5,8 +5,8 @@ use std::sync::Arc;
 
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling_generator::notation::Path;
 use hogg_tiling_datastore::state::State;
+use hogg_tiling_generator::notation::Path;
 use tokio::sync::Mutex;
 
 use crate::datastore::{errors, state, tilings, visits};

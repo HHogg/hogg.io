@@ -44,10 +44,14 @@ impl Hash {
     let mut edge_sequences = SpatialGridMap::<PointSequence>::new("edge_sequences");
     let mut edge_sequence_store = SequenceStore::default();
 
-    for point_sequence in plane.iter_core_mid_complete_point_sequences() {
+    for point_sequence in plane
+      .point_sequences
+      .iter_core_mid_complete_point_sequences()
+    {
       for entry in point_sequence.iter() {
         let shape_centroid = entry.point;
         let sequence_index = plane
+          .point_sequences
           .get_core_center_complete_point_sequence(&shape_centroid)
           .and_then(|point_sequence| shape_sequence_store.get_index(&point_sequence.sequence))
           .map(|sequence_index| sequence_index + 1)

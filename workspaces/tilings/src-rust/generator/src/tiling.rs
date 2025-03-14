@@ -4,7 +4,6 @@ mod tests;
 
 use std::collections::HashMap;
 
-use serde::Serialize;
 use serde_with::serde_as;
 
 use crate::build::{FeatureToggle, Plane};
@@ -12,8 +11,7 @@ use crate::notation::{Direction, Notation, Path};
 use crate::{build, TilingError};
 
 #[serde_as]
-#[derive(Clone, Debug, Default, Serialize)]
-#[serde(rename_all = "camelCase")]
+#[derive(Clone, Debug, Default)]
 pub struct Tiling {
   pub notation: Notation,
   pub plane: build::Plane,

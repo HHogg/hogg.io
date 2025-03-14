@@ -77,8 +77,8 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
         shape_types.get_index(
           &tiling
             .plane
-            .points_center
-            .get_value(&tile.geometry.centroid.into())
+            .point_sequences
+            .get_primary_center_point_sequence(&tile.geometry.centroid)
             .expect("Expected to find a sequence for point center")
             .sequence,
         ),

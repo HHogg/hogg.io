@@ -1,6 +1,6 @@
 mod get_match;
 mod min_permutation;
-mod point_sequence;
+pub mod point_sequence;
 mod sequence;
 mod sequence_store;
 mod sort;

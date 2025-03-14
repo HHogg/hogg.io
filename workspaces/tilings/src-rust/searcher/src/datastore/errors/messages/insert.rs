@@ -1,7 +1,7 @@
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling_generator::ApplicationError;
 use hogg_tiling_datastore::errors;
+use hogg_tiling_generator::ApplicationError;
 
 use crate::datastore::errors::Store;
 

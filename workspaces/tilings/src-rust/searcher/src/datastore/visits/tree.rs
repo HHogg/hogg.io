@@ -1,6 +1,6 @@
+use hogg_tiling_datastore::visits::Visit;
 use hogg_tiling_generator::notation::{Path, Transform};
 use hogg_tiling_generator::{Tiling, TilingError};
-use hogg_tiling_datastore::visits::Visit;
 use serde::{Serialize, Serializer};
 use typeshare::typeshare;
 

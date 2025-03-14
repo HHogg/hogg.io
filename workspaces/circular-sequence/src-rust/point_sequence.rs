@@ -15,7 +15,7 @@ pub struct PointSequence {
   pub center: Point,
   pub max_size: u8,
 
-  entries: Vec<Entry>,
+  entries: Vec<Entry>, // BTree?
 }
 
 impl PointSequence {

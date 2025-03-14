@@ -221,53 +221,6 @@ export interface Metrics {
 	eventsRecording: string[];
 }
 
-export type Stage = 
-	| { type: "Placement", index?: undefined }
-	| { type: "Transform", index: {
-	index: number;
-	repetition_index: number;
-}};
-
-export enum Offset {
-	Center = "Center",
-}
-
-export interface Tile {
-	geometry: Polygon;
-	index: number;
-	offset: Offset;
-	shape: Shape;
-	stage: Stage;
-	stageIndex: number;
-}
-
-export interface Plane {
-	optionHashing: boolean;
-	optionRepetitions: number;
-	optionValidateGaps: boolean;
-	optionValidateOverlaps: boolean;
-	optionValidateVertexTypes: boolean;
-	hash?: Hash;
-	metrics: Metrics;
-	stages: Stage[];
-	shapeTypes: SequenceStore;
-	edgeTypes: SequenceStore;
-	vertexTypes: SequenceStore;
-	pointsCenter: SpatialGridMap<PointSequence>;
-	pointsCenterExtended: SpatialGridMap<PointSequence>;
-	pointsCenterPeripheral: SpatialGridMap<PointSequence>;
-	pointsEnd: SpatialGridMap<PointSequence>;
-	pointsEndUpdated: boolean;
-	pointsEndExtended: SpatialGridMap<PointSequence>;
-	pointsEndPeripheral: SpatialGridMap<PointSequence>;
-	pointsMid: SpatialGridMap<PointSequence>;
-	pointsMidExtended: SpatialGridMap<PointSequence>;
-	pointsMidPeripheral: SpatialGridMap<PointSequence>;
-	lineSegments: SpatialGridMap<LineSegment>;
-	tiles: SpatialGridMap<Tile>;
-	tilesFromPlacement: SpatialGridMap<Tile>;
-}
-
 export type TilingError = 
 	| { name: "Application", data: {
 	reason: string;
@@ -334,6 +287,26 @@ export interface Result {
 	shapeTypes: string[];
 }
 
+export enum Offset {
+	Center = "Center",
+}
+
+export type Stage = 
+	| { type: "Placement", index?: undefined }
+	| { type: "Transform", index: {
+	index: number;
+	repetition_index: number;
+}};
+
+export interface Tile {
+	geometry: Polygon;
+	index: number;
+	offset: Offset;
+	shape: Shape;
+	stage: Stage;
+	stageIndex: number;
+}
+
 export interface ApplicationError {
 	tiling: string;
 	reason: string;
@@ -354,7 +327,6 @@ export interface Transforms {
 
 export interface Notation {
 	path: Path;
-	path_plane: Plane;
 	transforms: Transforms;
 }
 

@@ -1,7 +1,7 @@
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling_generator::notation::Path;
 use hogg_tiling_datastore::tilings::{self, InsertRequest, VisitResultValid};
+use hogg_tiling_generator::notation::Path;
 
 use crate::datastore::tilings::Store;
 

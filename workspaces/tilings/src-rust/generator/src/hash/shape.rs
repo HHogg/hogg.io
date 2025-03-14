@@ -36,7 +36,10 @@ impl Hash {
     let mut shape_sequences = SpatialGridMap::<PointSequence>::new("shape_sequences");
     let mut shape_sequence_store = SequenceStore::default();
 
-    for point_sequence in plane.iter_core_center_complete_point_sequences() {
+    for point_sequence in plane
+      .point_sequences
+      .iter_core_center_complete_point_sequences()
+    {
       let polygon = plane
         .tiles
         .get_value(&point_sequence.center.into())
@@ -44,6 +47,7 @@ impl Hash {
 
       for vertex_point in polygon.geometry.points.iter() {
         let sequence_index = plane
+          .point_sequences
           .get_core_end_complete_point_sequence(vertex_point)
           .and_then(|point_sequence| vertex_sequence_store.get_index(&point_sequence.sequence))
           .map(|sequence_index| sequence_index + 1)

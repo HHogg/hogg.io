@@ -45,7 +45,10 @@ impl Hash {
     let mut vertex_sequences = SpatialGridMap::<PointSequence>::new("vertex_sequences");
     let mut vertex_sequence_store = SequenceStore::default();
 
-    for point_sequence in plane.iter_core_mid_complete_point_sequences() {
+    for point_sequence in plane
+      .point_sequences
+      .iter_core_mid_complete_point_sequences()
+    {
       let PointSequence {
         center: line_segment_midpoint,
         sequence,
@@ -57,26 +60,11 @@ impl Hash {
         .expect("edge sequence index not found")
         + 1;
 
-      let line_segment = plane
-        .line_segments
-        .get_value(&line_segment_midpoint.into())
-        .expect("line_segment not found");
-
-      self.update_vertex_sequence(
+      self.update_vertex_sequences(
         plane,
         &mut vertex_sequences,
         &mut vertex_sequence_store,
         line_segment_midpoint,
-        line_segment.start,
-        sequence_index,
-      );
-
-      self.update_vertex_sequence(
-        plane,
-        &mut vertex_sequences,
-        &mut vertex_sequence_store,
-        line_segment_midpoint,
-        line_segment.end,
         sequence_index,
       );
     }
@@ -91,7 +79,78 @@ impl Hash {
     }
   }
 
-  fn update_from_hash(&mut self, _plane: &Plane, _edge_hash: &super::edge::Hash) {}
+  fn update_from_hash(&mut self, _plane: &Plane, _edge_hash: &super::edge::Hash) {
+    // let mut vertex_sequences = SpatialGridMap::<PointSequence>::new("vertex_sequences");
+    // let mut vertex_sequence_store = SequenceStore::default();
+
+    // for point_sequence in edge_hash.point_sequences.iter_values() {
+    //   let PointSequence {
+    //     center: line_segment_midpoint,
+    //     sequence,
+    //     ..
+    //   } = point_sequence;
+
+    // if edge_hash.sequence_store.get_index(sequence).is_none() {
+    //   log::info!("sequence not found: {:?}", sequence);
+    //   log::info!("sequence_store: {:?}", edge_hash.sequence_store);
+    // }
+
+    // let sequence_index = edge_hash
+    //   .sequence_store
+    //   .get_index(sequence)
+    //   .expect("edge sequence index not found")
+    //   + 1;
+
+    // self.update_vertex_sequences(
+    //   plane,
+    //   &mut vertex_sequences,
+    //   &mut vertex_sequence_store,
+    //   line_segment_midpoint,
+    //   sequence_index,
+    // );
+    // }
+
+    // let hash = vertex_sequence_store.to_string();
+
+    // if hash != self.hash {
+    //   self.updated = true;
+    //   self.hash = hash;
+    //   self.point_sequences = vertex_sequences;
+    //   self.sequence_store = vertex_sequence_store;
+    // }
+  }
+
+  fn update_vertex_sequences(
+    &mut self,
+    plane: &Plane,
+    vertex_sequences: &mut SpatialGridMap<PointSequence>,
+    vertex_sequence_store: &mut SequenceStore,
+    line_segment_midpoint: &Point,
+    sequence_index: u8,
+  ) {
+    let line_segment = plane
+      .line_segments
+      .get_value(&line_segment_midpoint.into())
+      .expect("line_segment not found");
+
+    self.update_vertex_sequence(
+      plane,
+      vertex_sequences,
+      vertex_sequence_store,
+      line_segment_midpoint,
+      line_segment.start,
+      sequence_index,
+    );
+
+    self.update_vertex_sequence(
+      plane,
+      vertex_sequences,
+      vertex_sequence_store,
+      line_segment_midpoint,
+      line_segment.end,
+      sequence_index,
+    );
+  }
 
   fn update_vertex_sequence(
     &mut self,
@@ -105,6 +164,7 @@ impl Hash {
     // Size is the number of shapes/line_segments
     // currently meeting at the vertex
     let vertex_point_sequence_size = plane
+      .point_sequences
       .get_core_end_complete_point_sequence(&vertex_point)
       .map(|sequence| hogg_circular_sequence::get_length(&sequence.sequence))
       .unwrap_or_else(|| 0);

@@ -1,4 +1,3 @@
-use hogg_spatial_grid_map::location;
 use hogg_tiling_generator::Tiling;
 
 use super::draw_shapes::VAPOR_WAVE_COLOR_PALETTE;
@@ -17,21 +16,33 @@ pub fn draw_transform_points(
   draw_transform_points_group(
     canvas,
     &style,
-    tiling.plane.points_center.iter_points().cloned(),
+    tiling
+      .plane
+      .point_sequences
+      .iter_center_points_primary()
+      .map(|point_sequence| point_sequence.center),
     VAPOR_WAVE_COLOR_PALETTE[0],
   )?;
 
   draw_transform_points_group(
     canvas,
     &style,
-    tiling.plane.points_end.iter_points().cloned(),
+    tiling
+      .plane
+      .point_sequences
+      .iter_end_points_primary()
+      .map(|point_sequence| point_sequence.center),
     VAPOR_WAVE_COLOR_PALETTE[1],
   )?;
 
   draw_transform_points_group(
     canvas,
     &style,
-    tiling.plane.points_mid.iter_points().cloned(),
+    tiling
+      .plane
+      .point_sequences
+      .iter_mid_points_primary()
+      .map(|point_sequence| point_sequence.center),
     VAPOR_WAVE_COLOR_PALETTE[2],
   )?;
 
@@ -41,7 +52,11 @@ pub fn draw_transform_points(
       &canvas.scale,
       Some(style.get_point_radius(&canvas.scale) * 0.5),
     ),
-    tiling.plane.points_center_extended.iter_points().cloned(),
+    tiling
+      .plane
+      .point_sequences
+      .iter_center_points_secondary()
+      .map(|point_sequence| point_sequence.center),
     "black",
   )?;
 
@@ -51,7 +66,11 @@ pub fn draw_transform_points(
       &canvas.scale,
       Some(style.get_point_radius(&canvas.scale) * 0.5),
     ),
-    tiling.plane.points_end_extended.iter_points().cloned(),
+    tiling
+      .plane
+      .point_sequences
+      .iter_end_points_secondary()
+      .map(|point_sequence| point_sequence.center),
     "black",
   )?;
 
@@ -61,7 +80,11 @@ pub fn draw_transform_points(
       &canvas.scale,
       Some(style.get_point_radius(&canvas.scale) * 0.5),
     ),
-    tiling.plane.points_mid_extended.iter_points().cloned(),
+    tiling
+      .plane
+      .point_sequences
+      .iter_mid_points_secondary()
+      .map(|point_sequence| point_sequence.center),
     "black",
   )?;
 
@@ -74,8 +97,9 @@ pub fn draw_transform_points(
     ),
     tiling
       .plane
+      .point_sequences
       .iter_core_center_complete_point_sequences()
-      .map(|point_sequence| point_sequence.center.into()),
+      .map(|point_sequence| point_sequence.center),
     "red",
   )?;
 
@@ -87,8 +111,9 @@ pub fn draw_transform_points(
     ),
     tiling
       .plane
+      .point_sequences
       .iter_core_mid_complete_point_sequences()
-      .map(|point_sequence| point_sequence.center.into()),
+      .map(|point_sequence| point_sequence.center),
     "red",
   )?;
 
@@ -100,8 +125,9 @@ pub fn draw_transform_points(
     ),
     tiling
       .plane
+      .point_sequences
       .iter_core_end_complete_point_sequences()
-      .map(|point_sequence| point_sequence.center.into()),
+      .map(|point_sequence| point_sequence.center),
     "red",
   )?;
 
@@ -111,7 +137,7 @@ pub fn draw_transform_points(
 fn draw_transform_points_group(
   canvas: &mut Canvas,
   style: &Style,
-  points: impl Iterator<Item = location::Point>,
+  points: impl Iterator<Item = hogg_geometry::Point>,
   color: &str,
 ) -> Result<(), Error> {
   for point in points {
@@ -119,7 +145,7 @@ fn draw_transform_points_group(
       Layer::TransformPoints,
       Point::default()
         .non_interactive()
-        .with_point((point).into())
+        .with_point(point)
         .with_style(style.clone().set_fill(Some(color.to_string())))
         .into(),
     )?;

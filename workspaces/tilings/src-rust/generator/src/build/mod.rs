@@ -1,6 +1,7 @@
 mod feature_toggles;
 mod metrics;
 mod plane;
+mod point_sequences;
 mod result;
 mod stage;
 mod tile;

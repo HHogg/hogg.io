@@ -1,4 +1,3 @@
-use hogg_circular_sequence::SequenceStore;
 use serde::{Serialize, Serializer};
 
 use crate::build::Plane;
@@ -16,12 +15,7 @@ pub struct Hash {
 }
 
 impl Hash {
-  pub fn build(
-    plane: &Plane,
-    vertex_sequence_store: &SequenceStore,
-    edge_sequence_store: &SequenceStore,
-    shape_sequence_store: &SequenceStore,
-  ) -> Self {
+  pub fn build(plane: &Plane) -> Self {
     let mut hash = Hash::default();
 
     while hash.iterations == 0
@@ -33,16 +27,15 @@ impl Hash {
 
       hash
         .vertex_hash
-        .update(plane, is_first_run, edge_sequence_store, &hash.edge_hash);
+        .update(plane, is_first_run, &plane.edge_types, &hash.edge_hash);
+
       hash
         .edge_hash
-        .update(plane, is_first_run, shape_sequence_store, &hash.shape_hash);
-      hash.shape_hash.update(
-        plane,
-        is_first_run,
-        vertex_sequence_store,
-        &hash.vertex_hash,
-      );
+        .update(plane, is_first_run, &plane.shape_types, &hash.shape_hash);
+
+      hash
+        .shape_hash
+        .update(plane, is_first_run, &plane.vertex_types, &hash.vertex_hash);
 
       hash.iterations += 1;
     }
