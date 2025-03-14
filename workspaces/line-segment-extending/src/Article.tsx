@@ -23,7 +23,7 @@ import {
 
 type Props = {};
 
-const tilingRendererOptions: DeepPartial<Options> = {
+const tilingRenderer1Options: DeepPartial<Options> = {
   scaleMode: ScaleMode.Contain,
   showTransformIndex: 1,
   showLayers: {
@@ -31,6 +31,13 @@ const tilingRendererOptions: DeepPartial<Options> = {
   },
 };
 
+const tilingRenderer2Options: DeepPartial<Options> = {
+  scaleMode: ScaleMode.Contain,
+  showTransformIndex: 0,
+  showLayers: {
+    [Layer.Transform]: true,
+  },
+};
 const Article = ({}: Props) => {
   return (
     <ArticlePage>
@@ -57,7 +64,7 @@ const Article = ({}: Props) => {
               height={300}
               notation="12-4-3,6/m30/m(c4)"
               repetitions={0}
-              options={tilingRendererOptions}
+              options={tilingRenderer1Options}
             />
           </ArticleFig>
         </ArticleFigs>
@@ -340,9 +347,9 @@ let intercepts_max_x = y_for_max_x >= min_y && y_for_max_x <= max_y;
             <TilingRenderer
               uid="article/line-segment-extending/rotational-tiling-transformation"
               height={300}
-              options={tilingRendererOptions}
+              options={tilingRenderer2Options}
               repetitions={0}
-              notation="6-3-4,4-3/m90/r(h13)"
+              notation="3-3-6-3-3-3,6/r60/r(h6)"
             />
           </ArticleFig>
         </ArticleFigs>
