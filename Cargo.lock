@@ -1096,7 +1096,6 @@ dependencies = [
  "serde-wasm-bindgen",
  "serde_json",
  "typeshare",
- "wasm-bindgen",
 ]
 
 [[package]]
