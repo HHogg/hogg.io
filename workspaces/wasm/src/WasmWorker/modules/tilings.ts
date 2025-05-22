@@ -3,7 +3,7 @@ import {
   find_previous_tiling as _findPreviousTiling,
   find_next_tiling as _findNextTiling,
   render_tiling as _renderTiling,
-  RenderLoop,
+  TilingsPlayer,
 } from '@hogg/wasm/pkg';
 import { FeatureToggle, Options, Transform } from '../../types';
 
@@ -55,10 +55,10 @@ export function findNextTiling(
 }
 
 // Player related functions
-let loop: RenderLoop | null = null;
+let player: TilingsPlayer | null = null;
 
 export function startPlayer(uid: string) {
-  if (loop !== null) {
+  if (player !== null) {
     return;
   }
 
@@ -68,18 +68,18 @@ export function startPlayer(uid: string) {
     throw new Error(`Canvas with id ${uid} not found`);
   }
 
-  loop = new RenderLoop();
-  loop.set_canvas(canvas);
-  loop.start();
+  player = new TilingsPlayer();
+  player.set_canvas(canvas);
+  player.start();
 }
 
 export function stopPlayer() {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.stop();
-  loop = null;
+  player.stop();
+  player = null;
 }
 
 export function setPlayerCanvasSize(
@@ -87,7 +87,7 @@ export function setPlayerCanvasSize(
   width: number,
   height: number
 ) {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
@@ -100,95 +100,95 @@ export function setPlayerCanvasSize(
   canvas.width = width;
   canvas.height = height;
 
-  loop.set_dimensions(width, height);
+  player.set_dimensions(width, height);
 }
 
 export function setPlayerRepetitions(repetitions: number) {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.set_repetitions(repetitions);
+  player.set_repetitions(repetitions);
 }
 
 export function setPlayerFeatureToggles(
   featureToggles: Record<FeatureToggle, boolean>
 ) {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.set_feature_toggles(featureToggles);
+  player.set_feature_toggles(featureToggles);
 }
 
 export function setPlayerNotation(notation: string) {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.set_notation(notation);
+  player.set_notation(notation);
 }
 
 export function setPlayerRenderOptions(options: Options) {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.set_render_options(options);
+  player.set_render_options(options);
 }
 
 export function setPlayerSpeed(speed: number) {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.set_speed(speed);
+  player.set_speed(speed);
 }
 
 export function controlPlayerPlay() {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.play();
+  player.play();
 }
 
 export function controlPlayerPause() {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.pause();
+  player.pause();
 }
 
 export function controlPlayerStepForward() {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.step_forward();
+  player.step_forward();
 }
 
 export function controlPlayerStepBackward() {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.step_backward();
+  player.step_backward();
 }
 
 export function controlPlayerToStart() {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.to_start();
+  player.to_start();
 }
 
 export function controlPlayerToEnd() {
-  if (loop === null) {
+  if (player === null) {
     return;
   }
 
-  loop.to_end();
+  player.to_end();
 }

@@ -45,7 +45,7 @@ fn get_max_stage_from_tiling(tiling: &Option<&Tiling>) -> u16 {
 }
 
 #[derive(Default)]
-pub struct RenderLoopInner {
+pub struct TilingsPlayerInner {
   handle: RefCell<Option<i32>>,
   tiling: Rc<RefCell<Option<Tiling>>>,
   state: Rc<RefCell<RenderLoopState>>,
@@ -93,7 +93,7 @@ impl Default for RenderLoopState {
   }
 }
 
-impl RenderLoopInner {
+impl TilingsPlayerInner {
   pub fn new() -> Self {
     Self {
       handle: RefCell::new(None),

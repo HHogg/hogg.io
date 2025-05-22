@@ -1,8 +1,8 @@
 mod circular_sequence;
 mod events;
 mod line_segment_extending;
-mod render_loop;
 mod tilings;
+mod tilings_player;
 
 use std::panic;
 

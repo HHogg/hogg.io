@@ -2,7 +2,7 @@ use std::rc::Rc;
 
 use hogg_spatial_grid_map::Fxx;
 use hogg_tiling_generator::FeatureToggle;
-use inner::RenderLoopInner;
+use inner::TilingsPlayerInner;
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::OffscreenCanvas;
@@ -11,16 +11,16 @@ mod inner;
 
 #[wasm_bindgen]
 #[derive(Default)]
-pub struct RenderLoop {
-  inner: Rc<RenderLoopInner>,
+pub struct TilingsPlayer {
+  inner: Rc<TilingsPlayerInner>,
 }
 
 #[wasm_bindgen]
-impl RenderLoop {
+impl TilingsPlayer {
   #[wasm_bindgen(constructor)]
   pub fn new() -> Self {
     Self {
-      inner: Rc::new(RenderLoopInner::new()),
+      inner: Rc::new(TilingsPlayerInner::new()),
     }
   }
 
