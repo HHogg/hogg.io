@@ -41,16 +41,18 @@ export default function ProjectPageDualView({
         <Box>
           <Box>{article}</Box>
 
-          <ImageCover
-            backgroundColor="text-shade-1"
-            borderRadius="x2"
-            borderSize="x1"
-            borderColor="background-shade-4"
-            height="200px"
-            margin="x16"
-            maxWidth="800px"
-            src={image}
-          />
+          {image && (
+            <ImageCover
+              backgroundColor="text-shade-1"
+              borderRadius="x2"
+              borderSize="x1"
+              borderColor="background-shade-4"
+              height="200px"
+              margin="x16"
+              maxWidth="800px"
+              src={image}
+            />
+          )}
         </Box>
       </Box>
 
