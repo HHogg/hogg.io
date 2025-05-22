@@ -76,7 +76,13 @@ export const projects: {
   },
 ];
 
-projects.sort((a, b) => (a.meta.created > b.meta.created ? -1 : 1));
+projects.sort((a, b) => {
+  if (a.meta.created === b.meta.created) {
+    return a.meta.name.localeCompare(b.meta.name);
+  }
+
+  return a.meta.created > b.meta.created ? -1 : 1;
+});
 
 export const shouldShowProject = (project: Project) => {
   return !import.meta.env.PROD || project.deploy;
