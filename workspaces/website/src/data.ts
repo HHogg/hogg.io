@@ -1,5 +1,6 @@
 import BitriseLogo from './assets/logos/bitrise.webp';
 import BrandwatchLogo from './assets/logos/brandwatch.webp';
+import FigmaLogo from './assets/logos/figma.webp';
 import Pure360Logo from './assets/logos/pure360.webp';
 import ReedsyLogo from './assets/logos/reedsy.webp';
 import SpotifyLogo from './assets/logos/spotify.webp';
@@ -7,6 +8,13 @@ import { Data } from './types';
 
 const data: Data = {
   placements: [
+    {
+      company: 'Figma',
+      logo: FigmaLogo,
+      date: '2025-03-24',
+      role: 'Software Engineer',
+      tags: ['backend', 'frontend', 'ruby', 'typescript', 'rust'],
+    },
     {
       company: 'Spotify',
       logo: SpotifyLogo,

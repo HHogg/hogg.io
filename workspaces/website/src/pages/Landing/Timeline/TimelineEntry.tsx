@@ -32,11 +32,13 @@ export default function TimelineEntry({
         </Box>
       </Box>
 
-      <Text>
-        <Markdown>{description}</Markdown>
-      </Text>
+      {description && (
+        <Text>
+          <Markdown>{description}</Markdown>
+        </Text>
+      )}
 
-      <Labels>
+      <Labels margin="x4">
         {tags.map((tag) => (
           <Label
             key={tag}
