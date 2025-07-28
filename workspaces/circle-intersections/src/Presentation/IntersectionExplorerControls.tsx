@@ -69,8 +69,6 @@ export default function IntersectionExplorerControls() {
         }, getGraphEdgeTransitionDurationMs(speed));
 
         return () => clearInterval(interval);
-      } else {
-        setIsRunning(false);
       }
     }
   }, [connectNextNode, graph, speed, isRunning]);

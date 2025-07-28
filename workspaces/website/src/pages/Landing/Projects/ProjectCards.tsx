@@ -4,7 +4,7 @@ import ProjectCard from './ProjectCard';
 
 export default function ProjectCards() {
   return (
-    <Grid gap="x16" repeatWidthMin="320px" repeatWidthMax="1fr">
+    <Grid gap="x16" repeatWidthMin="280px" repeatWidthMax="1fr">
       {projects
         .filter(({ meta }) => shouldShowProject(meta))
         .map((project) => (

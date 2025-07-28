@@ -14,7 +14,7 @@ jobs:
           cache: true
           cache-workspaces: true
           components: clippy, rustfmt
-          toolchain: 1.83.0
+          toolchain: 1.85.0
       - name: 'Install dependencies: Node'
         run: yarn
       - name: 'Install dependencies: Rust'

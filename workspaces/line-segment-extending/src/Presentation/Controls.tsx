@@ -16,7 +16,7 @@ export default function Controls() {
   };
 
   return (
-    <ProjectControls alignChildrenHorizontal="between">
+    <ProjectControls alignChildrenHorizontal="end">
       <ProjectControlGroup>
         <ProjectControl
           Icon={SettingsIcon}

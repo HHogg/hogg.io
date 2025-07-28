@@ -9,6 +9,7 @@ use web_sys::{console, js_sys, DedicatedWorkerGlobalScope};
 #[serde(rename_all = "camelCase")]
 #[typeshare]
 pub enum WasmWorkerEvent {
+  Init(bool),
   Draw(DrawStateSnapshot),
   Error(WasmError),
   FindPreviousTiling(String),

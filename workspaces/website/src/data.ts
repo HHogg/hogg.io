@@ -13,7 +13,7 @@ const data: Data = {
       logo: FigmaLogo,
       date: '2025-03-24',
       role: 'Software Engineer',
-      tags: ['backend', 'frontend', 'ruby', 'typescript', 'rust'],
+      tags: ['backend', 'frontend', 'ruby', 'typescript', 'rust', 'aws'],
     },
     {
       company: 'Spotify',

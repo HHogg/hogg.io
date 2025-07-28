@@ -1,4 +1,4 @@
-import { Box, Text, TextProps } from 'preshape';
+import { Box, Link, Text, TextProps } from 'preshape';
 
 const startedYear = 2012;
 const currentYear = new Date().getFullYear();
@@ -24,24 +24,33 @@ export default function AboutMe() {
       </Text>
 
       <Text>
-        The last +3 years I've been working at <Strong>Spotify</Strong>. The
-        previous 7 years were spent working at <Strong>startups</Strong> in
-        Brighton and London within various industries. Before that, for 2 years
-        I was shipping jQuery and PHP over FTP (it still counts).
+        Now at <Strong>Figma</Strong>, the previous 3 years I was working at{' '}
+        <Strong>Spotify</Strong>. Before that, for 7 years I was at{' '}
+        <Strong>startups</Strong> in Brighton and London within various
+        industries. Where I started, for 2 years I was shipping jQuery and PHP
+        over FTP (it still counts).
       </Text>
 
       <Text>
         I've worked all parts of the stack; product, design and engineering.
         I've lead 5 <Strong>design system</Strong> projects,{' '}
-        <Strong>Scala dataflow</Strong> pipelines, a <Strong>Rust</Strong>{' '}
-        network tiling search and renderer system, a{' '}
-        <Strong>realtime collaborative</Strong> book editor,{' '}
+        <Strong>Scala dataflow</Strong> pipelines, <Strong>Ruby/Rails</Strong>{' '}
+        backends, a <Strong>Rust</Strong> network tiling search and renderer
+        system, a <Strong>realtime collaborative</Strong> book editor,{' '}
         <Strong>GIS</Strong> infrastructure management, a{' '}
         <Strong>drag and drop</Strong> email editor, <Strong>WebGL</Strong>,{' '}
         <Strong>Canvas</Strong> and <Strong>SVG</Strong> infrastructure
         visualisations used by Netflix, internal{' '}
         <Strong>engineering platforms</Strong>, and the <Strong>desktop</Strong>{' '}
         application at Spotify.
+      </Text>
+
+      <Text>
+        I published{' '}
+        <Link href="https://www.mdpi.com/2073-8994/13/12/2376">
+          something in a journal
+        </Link>{' '}
+        once.
       </Text>
     </Box>
   );

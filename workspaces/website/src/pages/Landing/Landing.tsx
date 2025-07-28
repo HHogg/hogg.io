@@ -33,7 +33,7 @@ export default function Landing() {
       </Box>
 
       <Box flex="vertical" gap="x12">
-        <SectionTitle maxWidthTop={800} title="Prjcts ////" />
+        <SectionTitle maxWidthTop={800} title="Projects" />
         <ProjectCards />
       </Box>
 
@@ -41,7 +41,7 @@ export default function Landing() {
         <SectionTitle
           maxWidthTop={1200}
           maxWidthBottom={600}
-          title="Plcemnts {!!}"
+          title="Placements"
         />
         <Timeline style={{ maxWidth: 640 }} />
       </Box>

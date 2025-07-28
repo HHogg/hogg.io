@@ -41,7 +41,9 @@ export default function Project({ Component, meta }: Props) {
         gap="x16"
       >
         <Header alignChildrenVertical="middle">
-          <PageBackButton title="Home" path="/" />
+          <Media greaterThanOrEqual="desktop">
+            <PageBackButton title="Home" path="/" />
+          </Media>
         </Header>
 
         {shouldShowProject(meta) ? (

@@ -28,7 +28,7 @@ export type WasmApiKey = NestedKeyOf<WasmApi>;
 
 init({}).then(() => {
   ready = true;
-  postMessage({ key: '_init', result: ready });
+  postMessage({ key: 'init', result: ready });
 });
 
 onmessage = async ({ data }: MessageEvent<WasmWorkerMessageRequest>) => {

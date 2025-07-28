@@ -29,12 +29,6 @@ export default function IntersectionExplorerProvider({
     setActiveTraversalIndex(-1);
   };
 
-  const disableInteractions = () => {
-    if (refContainer.current) {
-      refContainer.current.style.pointerEvents = 'none';
-    }
-  };
-
   const enableInteractions = () => {
     if (refContainer.current) {
       refContainer.current.style.pointerEvents = '';
@@ -55,10 +49,6 @@ export default function IntersectionExplorerProvider({
     setSpeed,
     ...rest,
   };
-
-  useEffect(() => {
-    disableInteractions();
-  }, [rest.graph]);
 
   useEffect(() => {
     setActiveNodeIndex(activeNodeIndex ?? -1);

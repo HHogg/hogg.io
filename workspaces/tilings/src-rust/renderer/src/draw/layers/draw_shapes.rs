@@ -103,7 +103,7 @@ pub fn draw_shapes(canvas: &mut Canvas, options: &Options, tiling: &Tiling) -> R
 
     let fill = gradient
       .as_ref()
-      .map(|gradient| gradient.at(color_index).to_hex_string())
+      .map(|gradient| gradient.at(color_index).to_css_hex())
       .or_else(|| Some(shape_style.get_fill()));
 
     canvas.add_component(

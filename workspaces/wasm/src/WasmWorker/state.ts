@@ -26,15 +26,15 @@ export type WasmWorkerEventByName<TName extends WasmWorkerEventName> = Extract<
 type WasmWorkerMessagesStore = Record<string, WasmWorkerMessagesStoreEntry>;
 
 type WasmWorkerMessagesStoreEntry = {
-  key: WasmApiKey | '_init';
+  key: WasmApiKey | 'init';
   initiated: number;
   reject?: (reason?: any) => void;
   resolve?: (value: any) => any;
 };
 
 export type WasmWorkerState = {
-  errors: Partial<Record<WasmApiKey | '_init', string>>;
-  loadings: Partial<Record<WasmApiKey | '_init', boolean>>;
+  errors: Partial<Record<WasmApiKey | 'init', string>>;
+  loadings: Partial<Record<WasmApiKey | 'init', boolean>>;
   isLoading: boolean;
 };
 
@@ -44,13 +44,19 @@ type WasmWorkerEventListener<TEventName extends WasmWorkerEventName> = (
 ) => void;
 
 const messages: WasmWorkerMessagesStore = {
-  _init: { key: '_init', initiated: Date.now() },
+  init: { key: 'init', initiated: Date.now() },
 };
 
 const errors: WasmWorkerState['errors'] = {};
-const loadings: WasmWorkerState['loadings'] = { _init: true };
-const eventListeners: Record<string, WasmWorkerEventListener<any>[]> = {};
+const loadings: WasmWorkerState['loadings'] = { init: true };
 const stateChangeListeners: Record<string, WasmWorkerStateListener> = {};
+const eventListeners: Record<string, WasmWorkerEventListener<any>[]> = {
+  init: [
+    () => {
+      loadings.init = false;
+    },
+  ],
+};
 
 export function isWorkerMessageResponse(
   message: WasmWorkerMessageResponse | WasmWorkerEvent
@@ -122,6 +128,13 @@ export function addEventListener<TName extends WasmWorkerEventName>(
 
   if (!eventListeners[key]) {
     eventListeners[key] = [];
+  }
+
+  if (key === 'init' && !loadings.init) {
+    listener({
+      name: 'init',
+      data: true,
+    } as WasmWorkerEventByName<TName>);
   }
 
   eventListeners[key].push(listener);

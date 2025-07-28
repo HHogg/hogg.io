@@ -502,6 +502,7 @@ export enum Separator {
 }
 
 export type WasmWorkerEvent = 
+	| { name: "init", data: boolean }
 	| { name: "draw", data: DrawStateSnapshot }
 	| { name: "error", data: WasmError }
 	| { name: "findPreviousTiling", data: string }
