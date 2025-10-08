@@ -50,13 +50,7 @@ const messages: WasmWorkerMessagesStore = {
 const errors: WasmWorkerState['errors'] = {};
 const loadings: WasmWorkerState['loadings'] = { init: true };
 const stateChangeListeners: Record<string, WasmWorkerStateListener> = {};
-const eventListeners: Record<string, WasmWorkerEventListener<any>[]> = {
-  init: [
-    () => {
-      loadings.init = false;
-    },
-  ],
-};
+const eventListeners: Record<string, WasmWorkerEventListener<any>[]> = {};
 
 export function isWorkerMessageResponse(
   message: WasmWorkerMessageResponse | WasmWorkerEvent
@@ -105,6 +99,10 @@ export function addStateChangeListener(
 ): () => void {
   const id = v4();
   stateChangeListeners[id] = listener;
+
+  // Call the listener immediately with the current state
+  listener(getState());
+
   return () => delete stateChangeListeners[id];
 }
 

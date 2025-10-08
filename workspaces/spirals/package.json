@@ -14,9 +14,9 @@
     "gl-matrix": "^3.4.3",
     "lodash": "^4.17.21",
     "numbro": "^2.5.0",
-    "preshape": "^19.1.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "preshape": "^19.3.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "react-router-dom": "^6.20.1",
     "regl": "^2.1.0"
   },

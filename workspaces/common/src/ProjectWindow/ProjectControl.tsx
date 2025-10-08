@@ -13,7 +13,7 @@ export default function ProjectControl({
   ...rest
 }: ButtonProps & ProjectControlProps) {
   return (
-    <Tooltip content={title}>
+    <Tooltip content={title} delay={300}>
       <Button {...rest} variant={variant}>
         <Icon size="1.5rem" />
       </Button>

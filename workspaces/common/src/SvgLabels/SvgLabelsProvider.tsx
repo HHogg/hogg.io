@@ -35,9 +35,10 @@ export default function SvgLabelsProvider({
   ...props
 }: PropsWithChildren<SvgLabelsProviderProps>) {
   const refTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const refLabels = useRef<Label[]>([]);
+  const refLabels = useRef<string[]>([]);
+  const refLabelsMap = useRef<Record<string, Label>>({});
   const refObstacles = useRef<Obstacle[]>([]);
-  const [shifts, setShifts] = useState<LabelShiftResult[]>([]);
+  const [shifts, setShifts] = useState<Record<string, LabelShiftResult>>({});
 
   const points = useMemo<Point[]>(
     () => getPoints(1000, width, height),
@@ -45,7 +46,13 @@ export default function SvgLabelsProvider({
   );
 
   const refreshLabelShifts = useCallback(() => {
-    setShifts(getLabelShifts(points, refLabels.current, refObstacles.current));
+    setShifts(
+      getLabelShifts(
+        points,
+        Object.values(refLabelsMap.current),
+        refObstacles.current
+      )
+    );
   }, [points]);
 
   const queueReposition = useCallback(() => {
@@ -60,12 +67,12 @@ export default function SvgLabelsProvider({
   }, [refreshLabelShifts]);
 
   const registerLabel = useCallback(
-    (label: Label) => {
-      refLabels.current.push(label);
+    (aId: string) => {
+      refLabels.current.push(aId);
       queueReposition();
 
       return () => {
-        refLabels.current = refLabels.current.filter((l) => l !== label);
+        refLabels.current = refLabels.current.filter((bId) => bId !== aId);
         queueReposition();
       };
     },
@@ -86,18 +93,25 @@ export default function SvgLabelsProvider({
     [queueReposition]
   );
 
+  const updateLabel = useCallback(
+    (label: Label) => {
+      refLabelsMap.current[label.id] = label;
+      queueReposition();
+    },
+    [queueReposition]
+  );
+
   const getLabelShift = useCallback(
-    (label: Label): LabelShiftResult => {
-      return (
-        shifts[refLabels.current.indexOf(label)] ??
-        createDefaultShiftResult(label)
-      );
+    (id: string) => {
+      const label: Label | undefined = refLabelsMap.current[id];
+      return shifts[label?.id] ?? createDefaultShiftResult(label);
     },
     [shifts]
   );
 
   const value = {
     getLabelShift,
+    updateLabel,
     registerLabel,
     registerObstacle,
   };

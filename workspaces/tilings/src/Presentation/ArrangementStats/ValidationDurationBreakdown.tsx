@@ -1,7 +1,9 @@
-import { meta as circularSequenceProject } from '@hogg/circular-sequence';
-import { ProjectPageLink } from '@hogg/common';
-import { meta as spatialGridMapProject } from '@hogg/spatial-grid-map';
-import { meta as gapValidationProject } from '@hogg/tilings-validation-gaps';
+import {
+  ProjectPageLink,
+  circularSequenceMeta as circularSequenceProject,
+  spatialGridMapMeta as spatialGridMapProject,
+  tilingsValidationGapsMeta as gapValidationProject,
+} from '@hogg/common';
 import { FeatureToggle } from '@hogg/wasm';
 import { Box, Separator, Text, useThemeContext } from 'preshape';
 import { formatMs, formatPercent } from '../utils/formatting';

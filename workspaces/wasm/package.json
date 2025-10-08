@@ -13,17 +13,17 @@
     "dev": "./watch.sh"
   },
   "dependencies": {
-    "@hogg/circular-sequence": "workspace:^",
     "@hogg/common": "workspace:^",
-    "@hogg/line-segment-extending": "workspace:^",
     "lodash.get": "^4.4.2",
     "lucide-react": "0.445.0",
-    "preshape": "^19.1.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "preshape": "^19.3.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "uuid": "10.0.0"
   },
   "devDependencies": {
+    "@hogg/circular-sequence": "workspace:^",
+    "@hogg/line-segment-extending": "workspace:^",
     "@types/lodash.get": "^4.4.9",
     "@types/node": "22.13.5",
     "@types/react": "^18.0.28",

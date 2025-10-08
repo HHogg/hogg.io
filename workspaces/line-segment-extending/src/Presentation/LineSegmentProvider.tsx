@@ -118,7 +118,14 @@ export default function LineSegmentProvider({ children }: PropsWithChildren) {
     getExtendedLineSegment([lineSegment, bounds, extendStart, extendEnd]).then(
       setExtendedLineSegmentToBounds
     );
-  }, [bounds, extendEnd, extendStart, getExtendedLineSegment, lineSegment]);
+  }, [
+    showBounds,
+    bounds,
+    extendEnd,
+    extendStart,
+    getExtendedLineSegment,
+    lineSegment,
+  ]);
 
   const value = {
     animate,

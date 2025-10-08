@@ -1,13 +1,11 @@
-import {
-  meta as circleIntersectionMeta,
-  useGraph,
-} from '@hogg/circle-intersections';
+import { useGraph } from '@hogg/circle-intersections';
 import {
   ArticleFig,
   ArticleFigLink,
   ArticleFigs,
   ArticlePage,
   ProjectPageLink,
+  circleIntersectionsMeta as circleIntersectionMeta,
 } from '@hogg/common';
 import {
   ArticleHeading,

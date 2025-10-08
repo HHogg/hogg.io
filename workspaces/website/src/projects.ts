@@ -1,11 +1,28 @@
 import * as CircleArt from '@hogg/circle-art';
 import * as CircleIntersections from '@hogg/circle-intersections';
 import * as CircularSequence from '@hogg/circular-sequence';
-import { Project, ProjectKey, ProjectPageProps } from '@hogg/common';
+import {
+  Project,
+  ProjectKey,
+  ProjectPageProps,
+  circleArtMeta,
+  circleIntersectionsMeta,
+  circularSequenceMeta,
+  evolutionMeta,
+  grahamsScanMeta,
+  lineSegmentExtendingMeta,
+  preshapeMeta,
+  snakeMeta,
+  spatialGridMapMeta,
+  spiralsMeta,
+  tilingsMeta,
+  tilingsValidationGapsMeta,
+  tilingsValidationOverlapsMeta,
+  tilingsValidationVertexTypesMeta,
+} from '@hogg/common';
 import * as Evolution from '@hogg/evolution';
 import * as GrahamsScan from '@hogg/grahams-scan';
 import * as LineSegmentExtending from '@hogg/line-segment-extending';
-import * as Preshape from '@hogg/preshape';
 import * as Snake from '@hogg/snake';
 import * as SpatialGridMap from '@hogg/spatial-grid-map';
 import * as Spirals from '@hogg/spirals';
@@ -20,58 +37,58 @@ export const projects: {
   Component?: ComponentType<Pick<ProjectPageProps, 'layout'>>;
 }[] = [
   {
-    meta: CircleIntersections.meta,
+    meta: circleIntersectionsMeta,
     Component: CircleIntersections.Project,
   },
   {
-    meta: CircleArt.meta,
+    meta: circleArtMeta,
     Component: CircleArt.Project,
   },
   {
-    meta: Preshape.meta,
+    meta: preshapeMeta,
   },
   {
-    meta: Snake.meta,
+    meta: snakeMeta,
     Component: Snake.Project,
   },
   {
-    meta: Spirals.meta,
+    meta: spiralsMeta,
     Component: Spirals.Project,
   },
   {
-    meta: Tilings.meta,
+    meta: tilingsMeta,
     Component: Tilings.Project,
   },
   {
-    meta: CircularSequence.meta,
+    meta: circularSequenceMeta,
     Component: CircularSequence.Project,
   },
   {
-    meta: LineSegmentExtending.meta,
+    meta: lineSegmentExtendingMeta,
     Component: LineSegmentExtending.Project,
   },
   {
-    meta: Evolution.meta,
+    meta: evolutionMeta,
     Component: Evolution.Project,
   },
   {
-    meta: SpatialGridMap.meta,
+    meta: spatialGridMapMeta,
     Component: SpatialGridMap.Project,
   },
   {
-    meta: TilingsValidationGaps.meta,
+    meta: tilingsValidationGapsMeta,
     Component: TilingsValidationGaps.Project,
   },
   {
-    meta: TilingsValidationOverlaps.meta,
+    meta: tilingsValidationOverlapsMeta,
     Component: TilingsValidationOverlaps.Project,
   },
   {
-    meta: TilingsValidationVertexTypes.meta,
+    meta: tilingsValidationVertexTypesMeta,
     Component: TilingsValidationVertexTypes.Project,
   },
   {
-    meta: GrahamsScan.meta,
+    meta: grahamsScanMeta,
     Component: GrahamsScan.Project,
   },
 ];

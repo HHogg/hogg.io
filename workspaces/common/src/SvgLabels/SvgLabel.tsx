@@ -1,4 +1,4 @@
-import { motion, useSpring } from 'framer-motion';
+import { motion, SpringOptions, useSpring } from 'framer-motion';
 import {
   Box,
   Text,
@@ -10,6 +10,12 @@ import {
 import { useEffect, useMemo, useRef } from 'react';
 import { Label } from './types';
 import { useLabelShift } from './useLabelShift';
+
+const springOptions: SpringOptions = {
+  damping: 50,
+  stiffness: 400,
+  mass: 0.5,
+};
 
 type SvgLabelProps = Omit<
   TextProps,
@@ -74,11 +80,11 @@ export default function SvgLabel({
     isVisible,
   });
 
-  const shiftedXSpring = useSpring(labelObstacle.geometry.x);
-  const shiftedYSpring = useSpring(labelObstacle.geometry.y);
+  const shiftedXSpring = useSpring(labelObstacle.geometry.x, springOptions);
+  const shiftedYSpring = useSpring(labelObstacle.geometry.y, springOptions);
 
-  const lineXSpring = useSpring(labelLineObstacle.geometry.x1);
-  const lineYSpring = useSpring(labelLineObstacle.geometry.y1);
+  const lineXSpring = useSpring(labelLineObstacle.geometry.x1, springOptions);
+  const lineYSpring = useSpring(labelLineObstacle.geometry.y1, springOptions);
 
   useEffect(() => {
     shiftedXSpring.set(labelObstacle.geometry.x);

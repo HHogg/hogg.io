@@ -6,6 +6,17 @@ export type LabelShiftResult = {
   labelLineObstacle: Obstacle<Line>;
 };
 
+const defaultLabel: Label = {
+  id: 'default',
+  width: 0,
+  height: 0,
+  padding: 0,
+  offsetX: 0,
+  offsetY: 0,
+  targetX: 0,
+  targetY: 0,
+};
+
 const createLabelObstacle = (label: Label, x = 0, y = 0): Obstacle<Rect> => ({
   id: `label-${label.id}`,
   type: 'solid',
@@ -33,7 +44,9 @@ const createLabelLineObstacle = (
   },
 });
 
-export const createDefaultShiftResult = (label: Label): LabelShiftResult => ({
+export const createDefaultShiftResult = (
+  label = defaultLabel
+): LabelShiftResult => ({
   labelObstacle: createLabelObstacle(label),
   labelLineObstacle: createLabelLineObstacle(label),
 });
@@ -42,8 +55,8 @@ export const getLabelShifts = (
   shiftPoints: Point[],
   labels: Label[],
   obstacles: Obstacles
-): LabelShiftResult[] => {
-  const shifts: ReturnType<typeof getLabelShifts> = [];
+): Record<string, LabelShiftResult> => {
+  const shifts: ReturnType<typeof getLabelShifts> = {};
   const labelObstacles: Obstacle[] = [];
 
   nextLabel: for (const label of labels) {
@@ -59,10 +72,10 @@ export const getLabelShifts = (
         !hasCollided(labelObstacle.geometry, allObstacles) &&
         !hasCollided(labelLineObstacle.geometry, labelObstacles)
       ) {
-        shifts.push({
+        shifts[label.id] = {
           labelObstacle,
           labelLineObstacle,
-        });
+        };
 
         // Add the placed label and it's line as an obstacle
         // to the following labels
@@ -74,7 +87,7 @@ export const getLabelShifts = (
     }
 
     // If no shift was found, add the target
-    shifts.push(createDefaultShiftResult(label));
+    shifts[label.id] = createDefaultShiftResult(label);
   }
 
   return shifts;

@@ -7,13 +7,17 @@ type UseLabelShiftOpts = {
 };
 
 export function useLabelShift(label: Label, { isVisible }: UseLabelShiftOpts) {
-  const { getLabelShift, registerLabel } = useSvgLabelsContext();
+  const { getLabelShift, registerLabel, updateLabel } = useSvgLabelsContext();
 
   useEffect(() => {
     if (isVisible) {
-      return registerLabel(label);
+      return registerLabel(label.id);
     }
-  }, [registerLabel, label, isVisible]);
+  }, [registerLabel, label.id, isVisible]);
 
-  return getLabelShift(label);
+  useEffect(() => {
+    updateLabel(label);
+  }, [updateLabel, label]);
+
+  return getLabelShift(label.id);
 }

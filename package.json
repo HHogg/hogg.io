@@ -30,7 +30,8 @@
     "test:rust:ci": "cargo test -- --test-threads=1",
     "test:rust:clean": "cargo insta test --unreferenced=delete",
     "test:rust:review": "cargo insta review --include-ignored",
-    "ts:check": "tsc --noEmit --skipLibCheck"
+    "ts:check": "tsc --noEmit --skipLibCheck",
+    "update:preshape": "yarn workspaces foreach -tvR --from @hogg/website add preshape"
   },
   "devDependencies": {
     "@types/node": "^20.11.20",

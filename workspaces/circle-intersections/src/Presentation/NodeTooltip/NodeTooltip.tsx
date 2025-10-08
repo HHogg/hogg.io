@@ -23,6 +23,7 @@ const NodeTooltip = (props: PropsWithChildren<Props>) => {
           <NodeTooltipContent node={node} />
         </Text>
       }
+      delay={500}
       paddingHorizontal="x4"
       paddingVertical="x4"
       style={{ pointerEvents: 'none' }}
