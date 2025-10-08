@@ -53,7 +53,7 @@ function PresentationInner() {
   );
 }
 
-const initialNotation = getRandomNotation();
+const initialNotation = '3-3-6,3-6,6-3/m60/r(h14)';
 
 export default function Presentation({}) {
   const [hasCustomNotation, setHasCustomNotation] = useLocalStorage(
