@@ -1,5 +1,13 @@
 import { ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
-import { Box, Button, CodeBlock, CodeBlockProps, Motion, Text } from 'preshape';
+import {
+  Box,
+  Button,
+  CodeBlock,
+  CodeBlockProps,
+  Grid,
+  Motion,
+  Text,
+} from 'preshape';
 import { useRef, useState, useEffect } from 'react';
 import ArticleFig, { ArticleFigProps } from './ArticleFig';
 
@@ -45,69 +53,71 @@ export default function ArticleFigCodeBlock({
   const contents = lines.map((line) => line.slice(leadingSpaces)).join('\n');
 
   return (
-    <ArticleFig {...rest} flex="horizontal" padding="x0">
-      {presentation && (
-        <Box
-          basis="0"
-          borderRight
-          borderColor="background-shade-4"
-          borderSize="x1"
-          flex="vertical"
-          grow
-          padding="x6"
-          minWidth="0px"
-        >
-          {presentation}
-        </Box>
-      )}
-
-      <Box
-        basis="0"
-        container
-        flex="horizontal"
-        grow
-        minWidth="0px"
-        overflow="hidden"
-      >
-        <Text basis="0" flex="horizontal" grow minWidth={0} size="x3">
-          <Motion
+    <ArticleFig {...rest} padding="x0">
+      <Grid repeatWidthMin="280px" repeatWidthMax="1fr">
+        {presentation && (
+          <Box
             basis="0"
+            borderRight
+            borderColor="background-shade-4"
+            borderSize="x1"
             flex="vertical"
             grow
-            overflow="auto"
-            ref={refCodeBlock}
+            padding="x6"
+            minWidth="320px"
           >
-            <CodeBlock grow language={language} padding="x6">
-              {contents}
-            </CodeBlock>
-          </Motion>
-        </Text>
-
-        {showExpandButton && (
-          <Box absolute="bottom" padding="x3">
-            <Button
-              backgroundColor="transparent"
-              backgroundColorHover="accent-shade-2"
-              backgroundColorActive="accent-shade-1"
-              borderSize="x1"
-              borderColor="background-shade-4"
-              borderColorHover="accent-shade-1"
-              borderColorActive="accent-shade-1"
-              flex="vertical"
-              textColor="text-shade-1"
-              textColorHover="text-shade-1"
-              textColorActive="text-shade-1"
-              onClick={() => setIsExpanded((isExpanded) => !isExpanded)}
-              padding="x2"
-              style={{
-                backdropFilter: 'blur(2px)',
-              }}
-            >
-              {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
-            </Button>
+            {presentation}
           </Box>
         )}
-      </Box>
+
+        <Box
+          basis="0"
+          container
+          flex="horizontal"
+          grow
+          minWidth="320px"
+          overflow="hidden"
+        >
+          <Text basis="0" grow minWidth={0} size="x3">
+            <Motion
+              basis="0"
+              flex="vertical"
+              grow
+              overflow="auto"
+              ref={refCodeBlock}
+            >
+              <CodeBlock grow language={language} padding="x6">
+                {contents}
+              </CodeBlock>
+            </Motion>
+          </Text>
+
+          {showExpandButton && (
+            <Box absolute="bottom" padding="x3">
+              <Button
+                backgroundColor="transparent"
+                backgroundColorHover="accent-shade-2"
+                backgroundColorActive="accent-shade-1"
+                borderSize="x1"
+                borderColor="background-shade-4"
+                borderColorHover="accent-shade-1"
+                borderColorActive="accent-shade-1"
+                flex="vertical"
+                textColor="text-shade-1"
+                textColorHover="text-shade-1"
+                textColorActive="text-shade-1"
+                onClick={() => setIsExpanded((isExpanded) => !isExpanded)}
+                padding="x2"
+                style={{
+                  backdropFilter: 'blur(2px)',
+                }}
+              >
+                {isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
+              </Button>
+            </Box>
+          )}
+        </Box>
+      </Grid>
     </ArticleFig>
   );
 }
