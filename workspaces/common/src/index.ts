@@ -19,6 +19,10 @@ export { default as InView } from './InView/InView';
 
 export { default as Lines } from './Lines/Lines';
 
+export {
+  getArchimedesSpiral,
+  getRectangularSpiral,
+} from './SvgLabels/utils/algorithms';
 export { default as SvgLabel } from './SvgLabels/SvgLabel';
 export { default as SvgLabelsProvider } from './SvgLabels/SvgLabelsProvider';
 export { default as useSvgLabelsContext } from './SvgLabels/useSvgLabelsContext';

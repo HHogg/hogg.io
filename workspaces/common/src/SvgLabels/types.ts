@@ -28,6 +28,7 @@ export type Obstacle<TGeometry = Geometry> = {
   id: string;
   geometry: TGeometry;
   padding?: number;
+  shift?: Point;
   type: ObstacleType;
 };
 

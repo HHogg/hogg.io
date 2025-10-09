@@ -1,3 +1,4 @@
+import { Box } from 'preshape';
 import {
   PropsWithChildren,
   useCallback,
@@ -26,12 +27,15 @@ type SvgLabelsProviderProps = {
   width: number;
   height: number;
   getPoints?: typeof defaultGetPoints;
+  debugShowPoints?: boolean;
 };
 
 export default function SvgLabelsProvider({
+  children,
   width,
   height,
   getPoints = defaultGetPoints,
+  debugShowPoints,
   ...props
 }: PropsWithChildren<SvgLabelsProviderProps>) {
   const refTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,11 +50,12 @@ export default function SvgLabelsProvider({
   );
 
   const refreshLabelShifts = useCallback(() => {
-    setShifts(
+    setShifts((shifts) =>
       getLabelShifts(
         points,
         Object.values(refLabelsMap.current),
-        refObstacles.current
+        refObstacles.current,
+        shifts
       )
     );
   }, [points]);
@@ -116,5 +121,27 @@ export default function SvgLabelsProvider({
     registerObstacle,
   };
 
-  return <SvgLabelsContext.Provider {...props} value={value} />;
+  return (
+    <SvgLabelsContext.Provider {...props} value={value}>
+      {debugShowPoints && (
+        <>
+          {points.map((point, index) => (
+            <Box
+              key={index}
+              borderRadius="full"
+              backgroundColor="text-shade-1"
+              width={2}
+              height={2}
+              style={{
+                position: 'absolute',
+                transform: `translate(${point[0]}px, ${point[1]}px)`,
+              }}
+            />
+          ))}
+        </>
+      )}
+
+      {children}
+    </SvgLabelsContext.Provider>
+  );
 }

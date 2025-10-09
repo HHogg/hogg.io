@@ -26,6 +26,7 @@ export default function Line({
     return registerObstacle({
       id,
       type: 'solid',
+      padding: 10,
       geometry: {
         x1,
         x2,

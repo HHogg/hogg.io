@@ -12,8 +12,8 @@ import {
 } from './state';
 
 const ENABLE_LOGGING =
-  process.env.NODE_ENV === 'development' ||
-  (typeof window !== 'undefined' && window.location.search.includes('debug'));
+  typeof window !== 'undefined' &&
+  window.location.search.includes('debug_wasm');
 
 let ready = false;
 

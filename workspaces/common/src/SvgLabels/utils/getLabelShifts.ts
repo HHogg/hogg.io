@@ -2,6 +2,7 @@ import { Label, Line, Obstacle, Obstacles, Point, Rect } from '../types';
 import { hasCollided } from './hasCollided';
 
 export type LabelShiftResult = {
+  shift: Point;
   labelObstacle: Obstacle<Rect>;
   labelLineObstacle: Obstacle<Line>;
 };
@@ -17,13 +18,27 @@ const defaultLabel: Label = {
   targetY: 0,
 };
 
-const createLabelObstacle = (label: Label, x = 0, y = 0): Obstacle<Rect> => ({
+const createLabelObstacle = (
+  label: Label,
+  testShift = [0, 0],
+  previousShift?: Point
+): Obstacle<Rect> => ({
   id: `label-${label.id}`,
   type: 'solid',
   padding: label.padding,
   geometry: {
-    x: label.targetX - label.width * 0.5 + label.offsetX + x,
-    y: label.targetY - label.height * 0.5 + label.offsetY + y,
+    x:
+      label.targetX -
+      label.width * 0.5 +
+      label.offsetX +
+      testShift[0] +
+      (previousShift?.[0] ?? 0),
+    y:
+      label.targetY -
+      label.height * 0.5 +
+      label.offsetY +
+      testShift[1] +
+      (previousShift?.[1] ?? 0),
     width: label.width,
     height: label.height,
   },
@@ -47,6 +62,7 @@ const createLabelLineObstacle = (
 export const createDefaultShiftResult = (
   label = defaultLabel
 ): LabelShiftResult => ({
+  shift: [0, 0],
   labelObstacle: createLabelObstacle(label),
   labelLineObstacle: createLabelLineObstacle(label),
 });
@@ -54,7 +70,8 @@ export const createDefaultShiftResult = (
 export const getLabelShifts = (
   shiftPoints: Point[],
   labels: Label[],
-  obstacles: Obstacles
+  obstacles: Obstacles,
+  previousShiftsMap?: Record<string, LabelShiftResult>
 ): Record<string, LabelShiftResult> => {
   const shifts: ReturnType<typeof getLabelShifts> = {};
   const labelObstacles: Obstacle[] = [];
@@ -62,10 +79,12 @@ export const getLabelShifts = (
   nextLabel: for (const label of labels) {
     const allObstacles = [...obstacles, ...labelObstacles];
 
-    for (const shift of [undefined, ...shiftPoints]) {
-      const [shiftX, shiftY] = shift ?? [0, 0];
-
-      const labelObstacle = createLabelObstacle(label, shiftX, shiftY);
+    for (const shift of [[0, 0] as Point, ...shiftPoints]) {
+      const labelObstacle = createLabelObstacle(
+        label,
+        shift,
+        previousShiftsMap?.[label.id]?.shift
+      );
       const labelLineObstacle = createLabelLineObstacle(label, labelObstacle);
 
       if (
@@ -73,6 +92,7 @@ export const getLabelShifts = (
         !hasCollided(labelLineObstacle.geometry, labelObstacles)
       ) {
         shifts[label.id] = {
+          shift,
           labelObstacle,
           labelLineObstacle,
         };

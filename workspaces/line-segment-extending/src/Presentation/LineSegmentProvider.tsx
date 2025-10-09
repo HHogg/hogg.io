@@ -15,7 +15,7 @@ import {
   LineSegmentContextValue,
 } from './useLineSegmentContext';
 
-const padding = 0.2;
+const padding = 0.1;
 
 export default function LineSegmentProvider({ children }: PropsWithChildren) {
   const refSvgContainer = useRef<SVGSVGElement>(null);

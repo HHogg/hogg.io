@@ -102,7 +102,7 @@ export default function Bounds() {
       if (!acc.find(([, x, y]) => x === x2 && y === y2)) {
         const v = y2 === bounds[1] ? 'min_y' : 'max_y';
         const h = x2 === bounds[0] ? 'min_x' : 'max_x';
-        const id = `(${v},${h})`;
+        const id = `(${h},${v})`;
 
         acc.push([id, x2, y2]);
       }

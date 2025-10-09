@@ -34,14 +34,20 @@ const lineToSATPolygon = (line: Line, padding = 0) => {
   const dy = line.y2 - line.y1;
   const theta = Math.atan2(dy, dx);
 
-  const x1 = line.x1 + Math.cos(theta + Math.PI / 2) * padding;
-  const y1 = line.y1 + Math.sin(theta + Math.PI / 2) * padding;
-  const x2 = line.x2 + Math.cos(theta + Math.PI / 2) * padding;
-  const y2 = line.y2 + Math.sin(theta + Math.PI / 2) * padding;
-  const x3 = line.x2 + Math.cos(theta - Math.PI / 2) * padding;
-  const y3 = line.y2 + Math.sin(theta - Math.PI / 2) * padding;
-  const x4 = line.x1 + Math.cos(theta - Math.PI / 2) * padding;
-  const y4 = line.y1 + Math.sin(theta - Math.PI / 2) * padding;
+  // Calculate perpendicular vectors for padding
+  const perpX = Math.cos(theta + Math.PI / 2) * padding;
+  const perpY = Math.sin(theta + Math.PI / 2) * padding;
+
+  // Create the four corners of the rectangle around the line
+  // Order vertices counter-clockwise for proper SAT.js polygon
+  const x1 = line.x1 + perpX;
+  const y1 = line.y1 + perpY;
+  const x2 = line.x2 + perpX;
+  const y2 = line.y2 + perpY;
+  const x3 = line.x2 - perpX;
+  const y3 = line.y2 - perpY;
+  const x4 = line.x1 - perpX;
+  const y4 = line.y1 - perpY;
 
   return new SAT.Polygon(new SAT.Vector(0, 0), [
     new SAT.Vector(x1, y1),

@@ -24,8 +24,11 @@
     "lint:rust:clippy": "cargo clippy --all-targets --all-features -- -D warnings",
     "lint:rust:fmt": "cargo fmt --all -- --check",
     "preview": "yarn workspace @hogg/website preview",
-    "test": "yarn test:rust",
-    "test:ci": "yarn test:rust:ci",
+    "test": "yarn test:js && yarn test:rust",
+    "test:ci": "yarn test:js:ci && yarn test:rust:ci",
+    "test:js": "vitest",
+    "test:js:ci": "vitest run",
+    "test:js:ui": "vitest --ui",
     "test:rust": "cargo watch -x 'test -- --test-threads=1'",
     "test:rust:ci": "cargo test -- --test-threads=1",
     "test:rust:clean": "cargo insta test --unreferenced=delete",
@@ -37,6 +40,7 @@
     "@types/node": "^20.11.20",
     "@typescript-eslint/eslint-plugin": "^7.0.2",
     "@typescript-eslint/parser": "^7.0.2",
+    "@vitest/ui": "^3.2.4",
     "eslint": "^8.57.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^8.8.0",
@@ -51,6 +55,7 @@
     "stylelint": "^15.6.1",
     "stylelint-config-standard": "^33.0.0",
     "typescript": "^5.0.4",
-    "vite": "^5.2.9"
+    "vite": "^5.2.9",
+    "vitest": "^3.2.4"
   }
 }

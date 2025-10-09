@@ -17,7 +17,10 @@ export default function Renderer({}: Props) {
   } = useLineSegmentContext();
 
   return (
-    <SvgLabelsProvider width={containerWidth} height={containerHeight}>
+    <SvgLabelsProvider
+      width={containerWidth * 0.5}
+      height={containerHeight * 0.5}
+    >
       <Box container grow ref={refDimensionContainer}>
         {containerHeight !== 0 && containerWidth !== 0 && (
           <Appear animation="Fade" flex="horizontal" grow delay={400}>

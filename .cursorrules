@@ -1,0 +1,303 @@
+# Hogg.io Project Cursor Rules
+
+## Project Structure
+
+- This is a monorepo using Yarn workspaces
+- Main workspaces are in `/workspaces/` directory
+- Each workspace has its own `package.json` and can be a React app, Rust library, or shared component
+- Common shared code is in `workspaces/common/`
+- Rust code is mixed with TypeScript/React in some workspaces
+
+## Code Style & Conventions
+
+### TypeScript/React
+
+- Use TypeScript with strict mode
+- Prefer functional components with hooks
+- Use `framer-motion` for animations
+- Use `preshape` design system components
+- Import order: external libraries first, then internal modules
+- Use trailing commas in objects and arrays
+- Prefer `const` over `let`, avoid `var`
+- Use descriptive variable names
+- Prefer explicit return types for functions
+
+### File Naming
+
+- Use PascalCase for React components: `MyComponent.tsx`
+- Use camelCase for utilities and hooks: `useMyHook.ts`, `myUtility.ts`
+- Use kebab-case for directories: `my-feature/`
+- Test files: `ComponentName.test.ts` or `utility.test.ts`
+
+### React Patterns
+
+- Use custom hooks for complex state logic
+- Prefer composition over inheritance
+- Use `useMemo` and `useCallback` for performance optimization when needed
+- Use `useEffect` with proper dependency arrays
+- Prefer controlled components over uncontrolled
+
+### State Management
+
+- Use React hooks for local state
+- Use context providers for shared state
+- Prefer lifting state up over prop drilling
+- Use `useResizeObserver` from `react-use` for responsive behavior
+
+### Styling
+
+- Use CSS custom properties (CSS variables) for theming
+- Prefer `preshape` components over custom CSS
+- Use `framer-motion` for animations and transitions
+- Use `style` prop for dynamic styles
+
+## Rust Integration
+
+### WASM Integration
+
+- Rust code is compiled to WASM for performance-critical operations
+- Use `wasm-bindgen` for JavaScript-Rust interop
+- Keep Rust code in `src-rust/` directories
+- Use `Cargo.toml` for Rust dependencies
+
+### Rust Code Style
+
+- Follow standard Rust conventions
+- Use `cargo fmt` and `cargo clippy` for formatting and linting
+- Write tests in the same file or separate `*_tests.rs` files
+- Use `cargo insta` for snapshot testing
+
+## Testing
+
+### Rust Testing
+
+- Use `cargo test` for Rust tests
+- Use `cargo insta` for snapshot testing
+- Run tests with `yarn test:rust`
+- Use `--test-threads=1` for deterministic test execution
+
+### TypeScript Testing
+
+- Use Vitest for TypeScript/JavaScript testing
+- Run tests from root level: `yarn test:js` or `yarn test:js:ci`
+- Use `yarn test:js:ui` for interactive test UI
+- Test files should be named `*.test.{ts,tsx}` and placed in workspace directories
+- Use descriptive test names that explain the expected behavior
+- Test edge cases and error conditions
+- Import test functions from 'vitest': `import { describe, it, expect } from 'vitest'`
+
+## Build & Development
+
+### Scripts
+
+- Use `yarn dev` to start development servers
+- Use `yarn build` to build all workspaces
+- Use `yarn lint` to run all linting
+- Use `yarn format` to format code with Prettier
+- Use `yarn test` to run all tests (JS + Rust)
+- Use `yarn test:js` to run JavaScript/TypeScript tests with Vitest
+- Use `yarn test:js:ui` to run tests with interactive UI
+- Use `yarn test:rust` to run Rust tests
+
+### Dependencies
+
+- Use Yarn workspaces for dependency management
+- Keep dependencies up to date
+- Use exact versions for critical dependencies
+- Prefer smaller, focused libraries over large frameworks
+
+## SvgLabels System
+
+### Collision Detection
+
+- Use SAT.js for collision detection
+- Handle edge cases like zero-length lines and endpoint collisions
+- Use proper response object handling for accurate collision detection
+- Test collision detection thoroughly with various geometry types
+
+### Label Positioning
+
+- Use `getLabelShifts` for intelligent label positioning
+- Avoid label overlaps with obstacles
+- Use padding and margins appropriately
+- Handle label line obstacles properly
+
+## Performance
+
+### Optimization
+
+- Use `React.memo` for expensive components
+- Use `useMemo` for expensive calculations
+- Use `useCallback` for stable function references
+- Lazy load components when appropriate
+- Use WASM for computationally intensive tasks
+
+### Bundle Size
+
+- Use dynamic imports for code splitting
+- Tree shake unused code
+- Optimize images and assets
+- Use proper TypeScript configuration for dead code elimination
+
+## Error Handling
+
+### React Components
+
+- Use error boundaries for component error handling
+- Provide fallback UI for error states
+- Use proper TypeScript types to catch errors at compile time
+- Handle loading and error states gracefully
+
+### Rust Code
+
+- Use `Result<T, E>` for error handling
+- Use `Option<T>` for nullable values
+- Provide meaningful error messages
+- Use `unwrap()` only in tests or when you're certain of the value
+
+## Documentation
+
+### Code Comments
+
+- Write comments for complex algorithms
+- Explain the "why" not just the "what"
+- Use JSDoc for function documentation
+- Keep comments up to date with code changes
+
+### README Files
+
+- Keep README files in each workspace
+- Document setup and build instructions
+- Include examples of usage
+- Document any special configuration
+
+## Git Workflow
+
+### Commits
+
+- Use descriptive commit messages
+- Keep commits focused and atomic
+- Use conventional commit format when possible
+- Test changes before committing
+
+### Branching
+
+- Use feature branches for new development
+- Keep main branch stable
+- Use descriptive branch names
+- Clean up merged branches
+
+## Security
+
+### Dependencies
+
+- Keep dependencies updated
+- Use `yarn audit` to check for vulnerabilities
+- Prefer well-maintained, popular libraries
+- Review third-party code before integration
+
+### Code
+
+- Validate user inputs
+- Use proper TypeScript types
+- Avoid `eval()` and similar dangerous functions
+- Sanitize data when necessary
+
+## Accessibility
+
+### React Components
+
+- Use semantic HTML elements
+- Provide proper ARIA labels
+- Ensure keyboard navigation works
+- Test with screen readers
+- Use proper color contrast
+
+### SVG Elements
+
+- Provide proper `aria-label` attributes
+- Use `role` attributes when appropriate
+- Ensure SVG is accessible to assistive technologies
+- Provide text alternatives for visual content
+
+## Common Patterns
+
+### Component Structure
+
+```typescript
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Box } from 'preshape';
+
+interface Props {
+  // Define props with proper types
+}
+
+export default function MyComponent({ prop1, prop2 }: Props) {
+  // Hooks first
+  const [state, setState] = useState();
+
+  // Effects
+  useEffect(() => {
+    // Effect logic
+  }, [dependencies]);
+
+  // Event handlers
+  const handleClick = useCallback(() => {
+    // Handler logic
+  }, [dependencies]);
+
+  // Render
+  return (
+    <motion.div>
+      <Box>{/* Component content */}</Box>
+    </motion.div>
+  );
+}
+```
+
+### Custom Hooks
+
+```typescript
+import { useState, useEffect } from 'react';
+
+export function useMyHook(dependency: string) {
+  const [state, setState] = useState<Type>(initialValue);
+
+  useEffect(() => {
+    // Effect logic
+  }, [dependency]);
+
+  return { state, setState };
+}
+```
+
+### Error Boundaries
+
+```typescript
+import React from 'react';
+
+interface Props {
+  children: React.ReactNode;
+}
+
+export default function ErrorBoundary({ children }: Props) {
+  // Error boundary implementation
+}
+```
+
+## Debugging
+
+### Development Tools
+
+- Use React DevTools for component debugging
+- Use browser DevTools for performance analysis
+- Use `console.log` sparingly, prefer proper logging
+- Use TypeScript strict mode to catch errors early
+
+### Common Issues
+
+- Check for proper dependency arrays in useEffect
+- Ensure proper TypeScript types
+- Verify collision detection edge cases
+- Check for memory leaks in long-running components
