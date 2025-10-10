@@ -1,25 +1,19 @@
 [package]
-name = "hogg_wasm"
+name = "hogg_epigenetics"
 version = "0.0.0"
 edition = "2021"
 authors = ["Harry Hogg <harry@hogg.io>"]
-description = ""
+description = "A library for working with epigenetics"
+license = "MIT/Apache-2.0"
 repository = "https://github.com/hhogg/hogg.io"
 
 [lib]
-crate-type = ["cdylib", "rlib"]
-name = "hogg_wasm"
+name = "hogg_epigenetics"
 path = "src-rust/lib.rs"
 
 [dependencies]
 console_log.workspace = true
 console_error_panic_hook.workspace = true
-hogg_circular_sequence = { path = "../circular-sequence" }
-hogg_epigenetics = { path = "../epigenetics" }
-hogg_line_segment_extending = { path = "../line-segment-extending" }
-hogg_spatial_grid_map = { path = "../spatial-grid-map" }
-hogg_tiling_generator = { path = "../tilings/src-rust/generator" }
-hogg_tiling_renderer = { path = "../tilings/src-rust/renderer" }
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true

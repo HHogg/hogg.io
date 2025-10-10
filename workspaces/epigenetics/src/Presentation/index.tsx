@@ -8,7 +8,7 @@ const Presentation = ({}: {}) => {
       padding="x0"
       tabs={
         <ProjectTabs>
-          <ProjectTab name="Gallery" Icon={GalleryVerticalIcon}></ProjectTab>
+          {/* <ProjectTab name="Gallery" Icon={GalleryVerticalIcon}></ProjectTab> */}
         </ProjectTabs>
       }
     ></ProjectWindow>

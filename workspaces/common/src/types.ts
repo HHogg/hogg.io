@@ -6,7 +6,7 @@ export enum ProjectKey {
   circle_intersections = 'circle-intersections',
   circular_sequence = 'circular-sequence',
   grahams_scan = 'grahams-scan',
-  evolution = 'evolution',
+  epigenetics = 'epigenetics',
   line_segment_extending = 'line-segment-extending',
   snake = 'snake',
   spatial_grid_map = 'spatial-grid-map',

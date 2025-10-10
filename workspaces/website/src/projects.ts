@@ -8,7 +8,7 @@ import {
   circleArtMeta,
   circleIntersectionsMeta,
   circularSequenceMeta,
-  evolutionMeta,
+  epigeneticsMeta,
   grahamsScanMeta,
   lineSegmentExtendingMeta,
   preshapeMeta,
@@ -20,7 +20,7 @@ import {
   tilingsValidationOverlapsMeta,
   tilingsValidationVertexTypesMeta,
 } from '@hogg/common';
-import * as Evolution from '@hogg/evolution';
+import * as Epigenetics from '@hogg/epigenetics';
 import * as GrahamsScan from '@hogg/grahams-scan';
 import * as LineSegmentExtending from '@hogg/line-segment-extending';
 import * as Snake from '@hogg/snake';
@@ -68,8 +68,8 @@ export const projects: {
     Component: LineSegmentExtending.Project,
   },
   {
-    meta: evolutionMeta,
-    Component: Evolution.Project,
+    meta: epigeneticsMeta,
+    Component: Epigenetics.Project,
   },
   {
     meta: spatialGridMapMeta,

@@ -27,7 +27,7 @@
     "@hogg/circle-intersections": "workspace:^",
     "@hogg/circular-sequence": "workspace:^",
     "@hogg/common": "workspace:^",
-    "@hogg/evolution": "workspace:^",
+    "@hogg/epigenetics": "workspace:^",
     "@hogg/grahams-scan": "workspace:^",
     "@hogg/line-segment-extending": "workspace:^",
     "@hogg/snake": "workspace:^",

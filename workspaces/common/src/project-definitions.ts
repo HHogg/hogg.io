@@ -46,8 +46,8 @@ export const circularSequenceMeta: Project = {
   updated: '2024-04-10',
 };
 
-export const evolutionMeta: Project = {
-  id: ProjectKey.evolution,
+export const epigeneticsMeta: Project = {
+  id: ProjectKey.epigenetics,
   name: 'Genes to Phenotype visualisation',
   description:
     'Representing the complexity of how genes are expressed in an organism as its phenotype.',

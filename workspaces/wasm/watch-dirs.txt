@@ -1,5 +1,6 @@
 ./src-rust
 ../circular-sequence/src-rust
+../epigenetics/src-rust
 ../geometry/src
 ../line-segment-extending/src-rust
 ../spatial-grid-map/src-rust

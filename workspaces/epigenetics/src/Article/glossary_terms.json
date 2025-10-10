@@ -1,0 +1,86 @@
+[
+  {
+    "term": "DNA",
+    "definition": "The molecule that carries the genetic instructions for building and maintaining an organism. DNA is composed of sequences of four bases that encode genetic information."
+  },
+  {
+    "term": "Amino Acid",
+    "definition": "A small molecule that is the basic building block of proteins. Each amino acid has a unique side chain that gives it different properties and functions in the protein."
+  },
+  {
+    "term": "Protein",
+    "definition": "A molecule composed of amino acids that performs a wide range of functions within organisms, including structural support, catalysis of chemical reactions (enzymes), signaling, and regulation of other molecules. Proteins are the primary products of gene expression."
+  },
+  {
+    "term": "Trait",
+    "definition": "A specific, measurable feature of an organism, such as height, eye color, blood type, or behavior."
+  },
+  {
+    "term": "Gene",
+    "definition": "A section of DNA that contains the instructions for making a functional product, usually a protein. Each gene contributes to one or more traits in an organism."
+  },
+  {
+    "term": "Allele",
+    "definition": "A variant form of a gene. Different alleles can produce variations in a trait, such as differences in color, shape, or enzyme activity."
+  },
+  {
+    "term": "Genotype",
+    "definition": "The complete set of genes and alleles that an organism carries. It represents the genetic potential for traits but not necessarily how they are expressed."
+  },
+  {
+    "term": "Phenotype",
+    "definition": "The observable characteristics or traits of an organism, resulting from the interaction between its genotype and environmental influences."
+  },
+  {
+    "term": "Pleiotropy",
+    "definition": "A phenomenon where a single gene influences multiple traits. Genes vary in the degree of pleiotropy they exhibit — some primarily affect one trait, while others have widespread effects across many traits."
+  },
+  {
+    "term": "Epistasis",
+    "definition": "An interaction between genes in which the effect of one gene depends on the presence or activity of one or more other genes. This can result in one gene masking, amplifying, or modifying the effect of another."
+  },
+  {
+    "term": "Methylation",
+    "definition": "A small chemical tag called a methyl group is added to certain parts of DNA. This tag usually tells the cell to keep that section of DNA quiet — meaning the gene in that area won’t be used to make proteins as much. It’s one of the ways cells control which genes are active and which are turned off."
+  },
+  {
+    "term": "Histone",
+    "definition": "A protein around which DNA wraps to form a compact structure called chromatin. Chemical modifications to histones can make genes more or less accessible for gene expression."
+  },
+  {
+    "term": "Epigenetic Marker",
+    "definition": "A chemical modification, such as DNA methylation or histone modification, that affects gene expression without changing the underlying DNA sequence."
+  },
+  {
+    "term": "Developmental Reprogramming",
+    "definition": "A process during early development where epigenetic markers are erased and re-established in response to environmental conditions, helping determine which genes will be active in different cells."
+  },
+  {
+    "term": "Environment",
+    "definition": "The external physical, chemical, and biological factors that influence an organism’s development, gene expression, and phenotype."
+  },
+  {
+    "term": "Regulatory Network",
+    "definition": "A system of interacting genes, proteins, and signals that control gene expression through activation, inhibition, or feedback loops."
+  },
+  {
+    "term": "Mutation",
+    "definition": "A change in the DNA sequence that can alter or create new alleles, sometimes affecting an organism’s phenotype."
+  },
+  {
+    "term": "Fitness",
+    "definition": "A measure of how well an organism survives and reproduces in a given environment."
+  },
+  {
+    "term": "Heritability",
+    "definition": "The proportion of variation in a trait among individuals that can be attributed to genetic differences, as opposed to environmental factors."
+  },
+  {
+    "term": "Genetic Drift",
+    "definition": "Random fluctuations in allele frequencies within a population over generations, independent of natural selection."
+  },
+  {
+    "term": "Emergence",
+    "definition": "The appearance of complex behaviors, structures, or patterns arising from the interaction of simpler underlying processes, often without explicit direction or central control."
+  }
+]

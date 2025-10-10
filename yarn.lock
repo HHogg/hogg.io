@@ -1027,7 +1027,6 @@ __metadata:
   dependencies:
     "@artsy/fresnel": ^7.1.4
     "@types/sat": ^0.0.35
-    "@vitest/ui": ^3.2.4
     framer-motion: 11.5.6
     lucide-react: 0.445.0
     luxon: 3.5.0
@@ -1038,13 +1037,12 @@ __metadata:
     react-use: ^17.4.3
     sat: ^0.9.0
     screenfull: ^6.0.2
-    vitest: ^3.2.4
   languageName: unknown
   linkType: soft
 
-"@hogg/evolution@workspace:^, @hogg/evolution@workspace:workspaces/evolution":
+"@hogg/epigenetics@workspace:^, @hogg/epigenetics@workspace:workspaces/epigenetics":
   version: 0.0.0-use.local
-  resolution: "@hogg/evolution@workspace:workspaces/evolution"
+  resolution: "@hogg/epigenetics@workspace:workspaces/epigenetics"
   dependencies:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
@@ -1243,7 +1241,7 @@ __metadata:
     "@hogg/circle-intersections": "workspace:^"
     "@hogg/circular-sequence": "workspace:^"
     "@hogg/common": "workspace:^"
-    "@hogg/evolution": "workspace:^"
+    "@hogg/epigenetics": "workspace:^"
     "@hogg/grahams-scan": "workspace:^"
     "@hogg/line-segment-extending": "workspace:^"
     "@hogg/snake": "workspace:^"

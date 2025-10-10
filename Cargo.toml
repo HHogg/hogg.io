@@ -15,6 +15,7 @@ members = [
   "workspaces/circular-sequence",
   "workspaces/geometry",
   "workspaces/line-segment-extending",
+  "workspaces/epigenetics",
   "workspaces/spatial-grid-map",
   "workspaces/tilings/src-rust/*",
   "workspaces/tilings-validation-gaps",

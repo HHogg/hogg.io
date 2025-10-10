@@ -1105,6 +1105,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "hogg_epigenetics"
+version = "0.0.0"
+dependencies = [
+ "console_error_panic_hook",
+ "console_log",
+ "log",
+ "pretty_assertions",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "typeshare",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "hogg_geometry"
 version = "0.0.0"
 dependencies = [
@@ -1293,6 +1309,7 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "hogg_circular_sequence",
+ "hogg_epigenetics",
  "hogg_line_segment_extending",
  "hogg_spatial_grid_map",
  "hogg_tiling_generator",

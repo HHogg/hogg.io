@@ -1,6 +1,7 @@
 import {
   ArticleCallout,
   ArticleFig,
+  ArticleFigCodeBlock,
   ArticleFigLink,
   ArticleFigs,
   ArticlePage,
@@ -13,6 +14,7 @@ import {
   Link,
   Text,
 } from 'preshape';
+import Glossary from './Glossary';
 
 const Article = () => {
   return (
@@ -22,9 +24,9 @@ const Article = () => {
 
         <ArticleParagraph>
           There are some fantastic evolution simulations I've seen over the
-          years.
+          years.{' '}
           <Link href="https://www.youtube.com/watch?v=N3tRFayqVtk">
-            "Intro I programmed some creatures. They Evolved."
+            "I programmed some creatures. They Evolved."
           </Link>{' '}
           by{' '}
           <Link href="https://www.youtube.com/@davidrandallmiller">
@@ -32,8 +34,8 @@ const Article = () => {
           </Link>{' '}
           is a great example. In that video the author shows a simulator which
           uses a small neural network to control the movement of pixels with
-          their survival determined by their ending position or if they were
-          killed by another pixel.
+          their survival determined by 1. their ending position or 2. if they
+          were killed by another pixel.
         </ArticleParagraph>
 
         <ArticleParagraph>
@@ -46,10 +48,28 @@ const Article = () => {
         </ArticleParagraph>
 
         <ArticleParagraph>
-          This is an article that looks at what a single entity in this
-          simulation would look like, considering the genes, epigenetics and
-          environment out to it's descriptive phenotype.
+          This is an article that describes the design of a single entity in
+          this simulation, considering the genes, epigenetics and environment
+          out to it's descriptive phenotype.
         </ArticleParagraph>
+
+        <ArticleParagraph>
+          All of these terms are covered in the glossary below.
+        </ArticleParagraph>
+      </ArticleSection>
+
+      <ArticleSection>
+        <ArticleHeading>Glossary</ArticleHeading>
+
+        <ArticleParagraph>
+          There's a lot of terminology which was new to me and I needed a place
+          to refresh my memory from time to time. It's useful to read these
+          first.
+        </ArticleParagraph>
+      </ArticleSection>
+
+      <ArticleSection>
+        <Glossary />
       </ArticleSection>
 
       <ArticleSection>
@@ -64,7 +84,7 @@ const Article = () => {
         </ArticleParagraph>
 
         <ArticleParagraph>
-          Genes directly influence different phenotype traits, this is called
+          A single gene influencing multiple phenotypic traits is called
           pleiotropy. Each gene can have different degrees of pleiotropy, with
           some having a primary effect on a single trait and others having a
           more widespread effect on many traits.
@@ -200,9 +220,9 @@ const Article = () => {
           life, after all we don't have millions of years to wait for our
           results.
         </ArticleParagraph>
-      </ArticleSection>
+      </ArticleSection> */}
 
-      <ArticleSection>
+      {/* <ArticleSection>
         <ArticleHeading size="x5">Timing system and lifespan</ArticleHeading>
 
         <ArticleParagraph>
@@ -217,9 +237,9 @@ const Article = () => {
           factor of time, which will be used as a reference point for an
           individuals lifespan and all the events that occur within that time.
         </ArticleParagraph>
-      </ArticleSection>
+      </ArticleSection> */}
 
-      <ArticleFigs>
+      {/* <ArticleFigs>
         <ArticleFigCodeBlock
           id="reproduction-frequency-example"
           description=""
@@ -237,9 +257,9 @@ Individual {
 
           `}
         </ArticleFigCodeBlock>
-      </ArticleFigs>
+      </ArticleFigs> */}
 
-      <ArticleSection>
+      {/* <ArticleSection>
         <ArticleHeading>Species representation</ArticleHeading>
 
         <ArticleParagraph>
@@ -256,13 +276,11 @@ Individual {
             flex="horizontal"
             alignChildren="middle"
             padding="x12"
-          >
-            <Matrix name="E" letters={['e', 'm', 'n']} />
-          </ArticleFig>
+          ></ArticleFig>
         </ArticleFigs>
-      </ArticleSection>
+      </ArticleSection> */}
 
-      <ArticleSection>
+      {/* <ArticleSection>
         <ArticleHeading size="x5">Reproduction</ArticleHeading>
 
         <ArticleParagraph>
@@ -271,9 +289,9 @@ Individual {
           offspring. Over time, these traits become more common in the
           population.
         </ArticleParagraph>
-      </ArticleSection>
+      </ArticleSection> */}
 
-      <ArticleSection>
+      {/* <ArticleSection>
         <ArticleHeading size="x5">Variation</ArticleHeading>
 
         <ArticleParagraph>
@@ -288,18 +306,18 @@ Individual {
           which will represent the probability of a mutation and a weight for
           that mutation respectively.
         </ArticleParagraph>
-      </ArticleSection>
+      </ArticleSection> */}
 
-      <ArticleSection>
+      {/* <ArticleSection>
         <ArticleHeading size="x5">Speciation</ArticleHeading>
 
         <ArticleParagraph>
           As changes accumulate over many generations, populations of a single
           species can diverge enough to become distinct species.
         </ArticleParagraph>
-      </ArticleSection>
+      </ArticleSection> */}
 
-      <ArticleSection>
+      {/* <ArticleSection>
         <ArticleHeading size="x5">Selection</ArticleHeading>
 
         <ArticleParagraph>
