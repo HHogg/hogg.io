@@ -6,5 +6,6 @@ export default defineConfig({
     environment: 'node',
     include: ['workspaces/**/*.test.{ts,tsx}'],
     exclude: ['node_modules', 'dist', '.git'],
+    passWithNoTests: true,
   },
 });

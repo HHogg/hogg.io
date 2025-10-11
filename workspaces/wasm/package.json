@@ -8,7 +8,7 @@
   "scripts": {
     "build": "yarn build:types && yarn build:wasm",
     "build:types": "typeshare --lang=typescript --output-file=./src/types.ts  ../",
-    "build:wasm": "wasm-pack build --target web --debug",
+    "build:wasm": "wasm-pack build --target web",
     "clean": "rm -rf ./pkg && rm -rf ./src/types.ts",
     "dev": "./watch.sh"
   },

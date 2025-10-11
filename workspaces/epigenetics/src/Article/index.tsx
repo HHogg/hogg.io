@@ -1,7 +1,6 @@
 import {
   ArticleCallout,
   ArticleFig,
-  ArticleFigCodeBlock,
   ArticleFigLink,
   ArticleFigs,
   ArticlePage,

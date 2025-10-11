@@ -1,18 +1,7 @@
-import { ProjectTab, ProjectTabs, ProjectWindow } from '@hogg/common';
-import { GalleryVerticalIcon } from 'lucide-react';
+import { ProjectWindow } from '@hogg/common';
 
 const Presentation = ({}: {}) => {
-  return (
-    <ProjectWindow
-      controls={<div />}
-      padding="x0"
-      tabs={
-        <ProjectTabs>
-          {/* <ProjectTab name="Gallery" Icon={GalleryVerticalIcon}></ProjectTab> */}
-        </ProjectTabs>
-      }
-    ></ProjectWindow>
-  );
+  return <ProjectWindow padding="x0"></ProjectWindow>;
 };
 
 export default Presentation;
