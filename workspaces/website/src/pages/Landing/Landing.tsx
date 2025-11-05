@@ -1,6 +1,5 @@
 import { Media } from '@hogg/common';
 import { Box } from 'preshape';
-// import AsciiTagGrid from '../../components/AsciiTagGrid/AsciiTagGrid';
 import Header from '../../components/Header/Header';
 import Page from '../../components/Page/Page';
 import AboutMe from './AboutMe';
@@ -26,10 +25,6 @@ export default function Landing() {
         <Box basis="0" grow style={{ maxWidth: 600 }}>
           <AboutMe />
         </Box>
-
-        {/* <Box basis="0" grow>
-          <AsciiTagGrid />
-        </Box> */}
       </Box>
 
       <Box flex="vertical" gap="x12">

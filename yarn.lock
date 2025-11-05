@@ -1046,6 +1046,7 @@ __metadata:
   dependencies:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
+    comlink: ^4.4.1
     preshape: ^19.3.2
     react: ^19.1.1
     react-dom: ^19.1.1
@@ -5173,6 +5174,13 @@ __metadata:
   dependencies:
     delayed-stream: ~1.0.0
   checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
+"comlink@npm:^4.4.1":
+  version: 4.4.2
+  resolution: "comlink@npm:4.4.2"
+  checksum: 35313f26fdd78c202be21be49a7607f57e9e91963399b524676742ee0cf7db589be500d923ed0809b53f37996461186fb345bf867d93236be22bfae3cb7bd07e
   languageName: node
   linkType: hard
 

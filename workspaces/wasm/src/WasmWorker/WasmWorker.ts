@@ -1,6 +1,7 @@
 import { type NestedKeyOf } from '@hogg/common';
 import get from 'lodash.get';
 import init from '@hogg/wasm/pkg';
+import { devInfo } from '../devLog';
 import * as circularSequence from './modules/circular-sequence';
 import * as lineSegmentExtending from './modules/line-segment-extending';
 import * as tilings from './modules/tilings';
@@ -10,10 +11,6 @@ import {
   WasmWorkerMessageResponse,
   wasmWorkerMessageResponseToString,
 } from './state';
-
-const ENABLE_LOGGING =
-  typeof window !== 'undefined' &&
-  window.location.search.includes('debug_wasm');
 
 let ready = false;
 
@@ -73,16 +70,10 @@ onmessage = async ({ data }: MessageEvent<WasmWorkerMessageRequest>) => {
     };
   }
 
-  if (ENABLE_LOGGING) {
-    if (response) {
-      // eslint-disable-next-line no-console
-      console.info(
-        `ℹ️ Response: ${wasmWorkerMessageResponseToString(response)}`
-      );
-    } else {
-      // eslint-disable-next-line no-console
-      console.info(`🚨 No response: ${wasmWorkerMessageRequestToString(data)}`);
-    }
+  if (response) {
+    devInfo(`ℹ️ Response: ${wasmWorkerMessageResponseToString(response)}`);
+  } else {
+    devInfo(`🚨 No response: ${wasmWorkerMessageRequestToString(data)}`);
   }
 
   if (response) {

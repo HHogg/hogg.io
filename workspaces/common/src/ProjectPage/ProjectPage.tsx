@@ -21,7 +21,9 @@ export default function ProjectPage({
   ...rest
 }: ProjectPageInnerProps) {
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   if (article && presentation) {

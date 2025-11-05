@@ -5,8 +5,15 @@
   "private": true,
   "type": "module",
   "main": "./src/index.ts",
+  "scripts": {
+    "build": "yarn build:wasm",
+    "build:wasm": "wasm-pack build --target web --out-dir pkg/hogg_epigenetics_worker",
+    "clean": "rm -rf ./pkg",
+    "dev": "./watch.sh"
+  },
   "dependencies": {
     "@hogg/common": "workspace:^",
+    "comlink": "^4.4.1",
     "preshape": "^19.3.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

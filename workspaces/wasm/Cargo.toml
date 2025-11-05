@@ -15,7 +15,6 @@ path = "src-rust/lib.rs"
 console_log.workspace = true
 console_error_panic_hook.workspace = true
 hogg_circular_sequence = { path = "../circular-sequence" }
-hogg_epigenetics = { path = "../epigenetics" }
 hogg_line_segment_extending = { path = "../line-segment-extending" }
 hogg_spatial_grid_map = { path = "../spatial-grid-map" }
 hogg_tiling_generator = { path = "../tilings/src-rust/generator" }

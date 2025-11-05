@@ -1110,6 +1110,7 @@ version = "0.0.0"
 dependencies = [
  "console_error_panic_hook",
  "console_log",
+ "js-sys",
  "log",
  "pretty_assertions",
  "serde",
@@ -1309,7 +1310,6 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "hogg_circular_sequence",
- "hogg_epigenetics",
  "hogg_line_segment_extending",
  "hogg_spatial_grid_map",
  "hogg_tiling_generator",

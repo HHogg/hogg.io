@@ -19,7 +19,7 @@ type Props = {
 export default function App({ helmetContext = {} }: Props) {
   return (
     <HelmetProvider context={helmetContext}>
-      <ThemeProvider defaultTheme="night" theme="night" disableSystemTheme>
+      <ThemeProvider defaultTheme="night" disableSystemTheme>
         <MediaContextProvider>
           <WasmApiProvider>
             <Suspense fallback={null}>

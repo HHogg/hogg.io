@@ -8,7 +8,8 @@ license = "MIT/Apache-2.0"
 repository = "https://github.com/hhogg/hogg.io"
 
 [lib]
-name = "hogg_epigenetics"
+crate-type = ["cdylib", "rlib"]
+name = "hogg_epigenetics_worker"
 path = "src-rust/lib.rs"
 
 [dependencies]
@@ -20,12 +21,21 @@ serde_json.workspace = true
 serde-wasm-bindgen.workspace = true
 typeshare.workspace = true
 wasm-bindgen.workspace = true
+js-sys.workspace = true
 web-sys = { workspace = true, features = [
   'console',
   'DedicatedWorkerGlobalScope',
+  'WorkerGlobalScope',
   'OffscreenCanvas',
   'OffscreenCanvasRenderingContext2d',
   'Window',
+  'WebGl2RenderingContext',
+  'WebGlProgram',
+  'WebGlShader',
+  'WebGlBuffer',
+  'WebGlUniformLocation',
+  'WebGlFramebuffer',
+  'WebGlTexture',
 ] }
 
 [dev-dependencies]

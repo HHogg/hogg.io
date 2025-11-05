@@ -11,5 +11,9 @@ export default defineConfig({
     fs: {
       allow: ['..'],
     },
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+    },
   },
 });

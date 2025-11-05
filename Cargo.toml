@@ -13,9 +13,9 @@ strip = true
 [workspace]
 members = [
   "workspaces/circular-sequence",
+  "workspaces/epigenetics",
   "workspaces/geometry",
   "workspaces/line-segment-extending",
-  "workspaces/epigenetics",
   "workspaces/spatial-grid-map",
   "workspaces/tilings/src-rust/*",
   "workspaces/tilings-validation-gaps",
@@ -33,6 +33,7 @@ console_log = "1.0.0"
 futures = "0.3.27"
 futures-util = "0.3.31"
 insta = { version = "1.41.1", features = ["json", "redactions"] }
+js-sys = "0.3.77"
 log = "0.4.22"
 ordered-float = { version = "4.6.0", features = ["serde"] }
 pretty_assertions = "1.4.1"
