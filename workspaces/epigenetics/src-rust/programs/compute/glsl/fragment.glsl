@@ -5,13 +5,13 @@ out vec4 fragColor;
 
 uniform float u_time;
 uniform vec2 u_resolution;
-uniform sampler2D u_previousFrame;  // Previous frame's state for evolution simulation
+uniform sampler2D u_previous_texture;
 
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution;
 
   // Sample previous frame
-  vec4 previous = texture(u_previousFrame, uv);
+  vec4 previous = texture(u_previous_texture, uv);
 
   // Calculate normalized coordinates (matching CPU version)
   float fx = gl_FragCoord.x / u_resolution.x;
@@ -22,11 +22,14 @@ void main() {
   float dist = sqrt((fx - 0.5f) * (fx - 0.5f) + (fy - 0.5f) * (fy - 0.5f));
 
   // RGBA values (matching CPU version)
-  // TODO: Replace this with your evolution simulation logic that uses 'previous'
-  float r = (angle * 0.5f + 0.5f);
-  float g = (sin(dist * 2.0f + u_time * 0.3f) * 0.5f + 0.5f);
-  float b = (sin(fx + fy + u_time * 0.2f) * 0.5f + 0.5f);
+  // Calculate new values based on position and time
+  float r = angle * 0.5f + 0.5f;
+  float g = sin(dist * 2.0f + u_time * 0.3f) * 0.5f + 0.5f;
+  float b = sin(fx + fy + u_time * 0.2f) * 0.5f + 0.5f;
   float a = 1.0f;
 
-  fragColor = vec4(r, g, b, a);
+  // Output the gradient directly
+  // Add previous * 0.0 to prevent shader compiler from optimizing away the uniform
+  vec4 gradient = vec4(r, g, b, a);
+  fragColor = gradient + previous * 0.0f;
 }

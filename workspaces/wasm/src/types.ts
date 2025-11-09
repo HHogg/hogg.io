@@ -470,6 +470,17 @@ export interface RenderStateSnapshot {
 	result: Result;
 }
 
+export type Message = 
+	| { name: "wasmReady", data?: undefined }
+	| { name: "canvasTransferred", data?: undefined }
+	| { name: "dimensionsSet", data?: undefined }
+	| { name: "simulationInit", data?: undefined }
+	| { name: "simulationLoopStarted", data?: undefined }
+	| { name: "simulationLoopStopped", data?: undefined }
+	| { name: "postUpdateIntervalSet", data: number }
+	| { name: "error", data: string }
+	| { name: "log", data: string };
+
 export enum FeatureToggle {
 	Hashing = "Hashing",
 	ValidateOverlaps = "ValidateOverlaps",

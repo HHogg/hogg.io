@@ -36,12 +36,10 @@ impl Metrics {
       self.pause(key);
     }
 
-    let event = self.events_pending.remove(key).unwrap_or_else(|| {
-      panic!(
-        "No Metrics event to finish. Start a new event first ({})",
-        key
-      )
-    });
+    let event = self
+      .events_pending
+      .remove(key)
+      .unwrap_or_else(|| panic!("No Metrics event to finish. Start a new event first ({key})"));
 
     self.events.push(event);
   }
@@ -53,12 +51,10 @@ impl Metrics {
   }
 
   fn resume_event_recording(&mut self, key: &str) {
-    let event = self.events_pending.get_mut(key).unwrap_or_else(|| {
-      panic!(
-        "No Metrics event to resume. Start a new event first ({}).",
-        key
-      )
-    });
+    let event = self
+      .events_pending
+      .get_mut(key)
+      .unwrap_or_else(|| panic!("No Metrics event to resume. Start a new event first ({key})."));
 
     event.time_started = Some(Utc::now().timestamp_millis());
   }
@@ -76,28 +72,20 @@ impl Metrics {
 
     if let Some(last_key) = self.events_recording.pop() {
       if last_key != *key {
-        panic!(
-          "Metric '{}' was not the last in the recording, got '{}'.",
-          key, last_key
-        );
+        panic!("Metric '{key}' was not the last in the recording, got '{last_key}'.");
       }
 
       self.resume_last_event_recording();
     } else {
-      panic!(
-        "No Metrics event to pause. Start a new event first ({}).",
-        key
-      );
+      panic!("No Metrics event to pause. Start a new event first ({key}).");
     }
   }
 
   fn pause_event_recording(&mut self, key: &str) {
-    let event = self.events_pending.get_mut(key).unwrap_or_else(|| {
-      panic!(
-        "No Metrics event to pause. Start a new event first ({}).",
-        key
-      )
-    });
+    let event = self
+      .events_pending
+      .get_mut(key)
+      .unwrap_or_else(|| panic!("No Metrics event to pause. Start a new event first ({key})."));
 
     let time_started = event
       .time_started
@@ -123,12 +111,7 @@ impl Metrics {
       .events_pending
       .get_mut(key)
       .or_else(|| self.events.last_mut())
-      .unwrap_or_else(|| {
-        panic!(
-          "No Metrics event to increment. Start a new event first ({}).",
-          key
-        )
-      });
+      .unwrap_or_else(|| panic!("No Metrics event to increment. Start a new event first ({key})."));
 
     let counter = event.counters.entry(counter.to_string()).or_insert(0);
     *counter += 1;

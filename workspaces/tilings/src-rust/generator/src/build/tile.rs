@@ -95,7 +95,7 @@ impl Tile {
 
         polygon.geometry = polygon
           .geometry
-          .translate(Point::at(max_x * -1.0, max_y * -1.0))
+          .translate(Point::at(-max_x, -max_y))
           .rotate(PI * 0.5, None);
 
         polygon

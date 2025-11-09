@@ -56,7 +56,7 @@ pub fn post_event(event: WasmWorkerEvent) {
     .map_err(|_| console::error_1(&JsValue::from_str("Not in a worker context")));
 
   let js_value = serde_wasm_bindgen::to_value(&event)
-    .map_err(|err| console::error_1(&JsValue::from_str(&format!("Serde error: {}", err))));
+    .map_err(|err| console::error_1(&JsValue::from_str(&format!("Serde error: {err}"))));
 
   if let (Ok(global), Ok(js_value)) = (global, js_value) {
     let _ = global

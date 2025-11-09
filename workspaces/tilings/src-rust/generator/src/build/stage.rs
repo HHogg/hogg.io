@@ -37,7 +37,7 @@ impl std::fmt::Display for Stage {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
     match self {
       Stage::Placement => write!(f, "placement"),
-      Stage::Transform { index, .. } => write!(f, "transform_{}", index),
+      Stage::Transform { index, .. } => write!(f, "transform_{index}"),
     }
   }
 }

@@ -1,71 +1,102 @@
-import { ProjectWindow } from '@hogg/common';
-import { Box, Text, useResizeObserver } from 'preshape';
-import { useCallback, useRef, useState } from 'react';
-import { useCanvasDimensions } from './useCanvasDimensions';
-import { useCanvasTransfer } from './useCanvasTransfer';
-import { useWorkers } from './useWorkers';
+import { ProjectTab, ProjectTabs, ProjectWindow } from '@hogg/common';
+import { TerminalIcon } from 'lucide-react';
+import { Box, ButtonAsync, Text, useResizeObserver } from 'preshape';
+import { useState } from 'react';
+import { useCanvasDimensions } from '../worker/useCanvasDimensions';
+import { useCanvasTransfer } from '../worker/useCanvasTransfer';
+import { useInitSimulation } from '../worker/useInitSimulation';
+import useMessageHandler from '../worker/useMessageHandler';
+import { useTerminateWorker } from '../worker/useTerminateWorker';
+import ConfigMenu from './ConfigMenu';
+import Controls from './Controls';
+import LogsPanel from './LogsPanel';
 
-const Presentation = ({}: {}) => {
+const Presentation = () => {
   const [size, refSize] = useResizeObserver<HTMLDivElement>();
   const { height, width } = size;
-  const refCanvas = useRef<HTMLCanvasElement>(null);
-  const refCanvasTransferred = useRef<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
+  const messageHandler = useMessageHandler();
+  const { isInitializing, initSimulation } = useInitSimulation(messageHandler);
+  const [isConfigMenuOpen, setIsConfigMenuOpen] = useState(false);
 
-  const handleError = useCallback((errorMessage: string) => {
-    setError(errorMessage);
-  }, []);
+  // Initialize worker and shared buffer
+  useTerminateWorker(messageHandler);
 
-  // Initialize workers and shared buffer
-  const sharedBuffer = useWorkers({ onError: handleError });
-
-  // Transfer canvas to render worker when ready and dimensions are available
-  // This also starts the render loop once everything is ready
-  useCanvasTransfer({
-    width,
-    height,
-    canvasRef: refCanvas,
-    isTransferred: refCanvasTransferred,
-    sharedBuffer,
-  });
+  // Transfer canvas to render worker when ready
+  useCanvasTransfer(canvas, messageHandler);
 
   // Handle canvas dimension updates
-  useCanvasDimensions({
-    width,
-    height,
-    canvasRef: refCanvas,
-    isTransferred: refCanvasTransferred,
-  });
+  useCanvasDimensions(width, height, messageHandler);
 
   return (
-    <ProjectWindow padding="x0">
+    <ProjectWindow
+      controls={
+        <Controls
+          messageHandler={messageHandler}
+          isConfigMenuOpen={isConfigMenuOpen}
+          setIsConfigMenuOpen={setIsConfigMenuOpen}
+        />
+      }
+      onClick={() => setIsConfigMenuOpen(false)}
+      padding="x0"
+      tabs={
+        <ProjectTabs>
+          <ProjectTab name="Logs" Icon={TerminalIcon}>
+            <LogsPanel messageHandler={messageHandler} />
+          </ProjectTab>
+        </ProjectTabs>
+      }
+    >
       <Box flex="vertical" grow ref={refSize}>
         <Box basis="0" container grow>
-          <Box
-            absolute="edge-to-edge"
-            ref={refCanvas}
-            tag="canvas"
-            style={{
-              height: `${height || 400}px`,
-              width: `${width || 400}px`,
-              transformOrigin: 'top left',
-            }}
-          />
+          {!!(height && width) && (
+            <Box
+              ref={setCanvas}
+              absolute="edge-to-edge"
+              height={height}
+              width={width}
+              tag="canvas"
+            />
+          )}
 
-          {error && (
-            <Box absolute="center" maxWidth="300px">
-              <Text
-                align="middle"
-                padding="x3"
-                textColor="negative-shade-4"
-                weight="x2"
+          {messageHandler.readyToInit && (
+            <Box absolute="center" flex="horizontal" alignChildren="middle">
+              <ButtonAsync
+                color="positive"
+                error={messageHandler.lastErrorMessage}
+                isError={messageHandler.hasError}
+                isLoading={isInitializing}
+                isSuccess={messageHandler.isSimulationInit}
+                variant="primary"
+                onClick={() => initSimulation()}
               >
-                {error}
-              </Text>
+                Initialize simulation
+              </ButtonAsync>
+            </Box>
+          )}
+
+          {messageHandler.hasError && (
+            <Box absolute="center" maxWidth="300px">
+              {messageHandler.eventsErrors.map((event, index) => (
+                <Text
+                  key={index}
+                  align="middle"
+                  padding="x3"
+                  textColor="negative-shade-4"
+                  weight="x2"
+                >
+                  {event.message}
+                </Text>
+              ))}
             </Box>
           )}
         </Box>
       </Box>
+
+      <ConfigMenu
+        messageHandler={messageHandler}
+        isConfigMenuOpen={isConfigMenuOpen}
+      />
     </ProjectWindow>
   );
 };

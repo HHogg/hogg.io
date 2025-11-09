@@ -1047,6 +1047,7 @@ __metadata:
     "@hogg/common": "workspace:^"
     "@types/react": ^18.0.28
     comlink: ^4.4.1
+    lucide-react: 0.445.0
     preshape: ^19.3.2
     react: ^19.1.1
     react-dom: ^19.1.1

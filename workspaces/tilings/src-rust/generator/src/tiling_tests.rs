@@ -67,9 +67,7 @@ fn first_valid_level_1_to_2_generate_in_a_target_time() {
 
   assert!(
     lower_bound <= duration && duration <= upper_bound,
-    "Finding first {} valid tilings was not within the target range ({}ms)",
-    FIRST_VALID_LEVEL_2_TILING_INDEX,
-    duration
+    "Finding first {FIRST_VALID_LEVEL_2_TILING_INDEX} valid tilings was not within the target range ({duration}ms)"
   );
 }
 

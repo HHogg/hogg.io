@@ -8,7 +8,9 @@
   "ignore": [
     "workspaces/snake/src/Presentation/SolutionRunnerWorker.ts",
     "workspaces/common/.svgrrc.images.cjs",
-    "workspaces/tilings/src/Presentation/**"
+    "workspaces/tilings/src/Presentation/**",
+    "workspaces/epigenetics/src/worker/simulation.worker.ts"
   ],
-  "ignoreBinaries": ["cargo", "typeshare", "wasm-pack"]
+  "ignoreBinaries": ["cargo", "typeshare", "wasm-pack"],
+  "ignoreExportsUsedInFile": true
 }

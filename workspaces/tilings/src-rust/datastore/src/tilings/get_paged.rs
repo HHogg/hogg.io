@@ -35,7 +35,7 @@ impl Display for TilingsRequest {
     let mut conditions = vec![];
 
     if !search.is_empty() {
-      conditions.push(format!("notation LIKE '{}%'", search));
+      conditions.push(format!("notation LIKE '{search}%'"));
     }
 
     if let Some(condition) = get_show_nodes_condition(show_nodes) {
@@ -43,7 +43,8 @@ impl Display for TilingsRequest {
     }
 
     if !show_uniform.is_empty() {
-      conditions.push(format!("uniform IN ({})", show_uniform.join(",")));
+      let uniform_list = show_uniform.join(",");
+      conditions.push(format!("uniform IN ({uniform_list})"));
     }
 
     if conditions.is_empty() {

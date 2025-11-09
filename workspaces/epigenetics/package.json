@@ -6,14 +6,16 @@
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {
-    "build": "yarn build:wasm",
-    "build:wasm": "wasm-pack build --target web --out-dir pkg/hogg_epigenetics_worker",
-    "clean": "rm -rf ./pkg",
+    "build": "yarn build:types && yarn build:wasm",
+    "build:types": "typeshare --lang=typescript --output-file=./src/worker/types.ts .",
+    "build:wasm": "wasm-pack build --target web --out-dir pkg/hogg_epigenetics_worker --no-opt",
+    "clean": "rm -rf ./pkg && rm -rf ./src/worker/types.ts",
     "dev": "./watch.sh"
   },
   "dependencies": {
     "@hogg/common": "workspace:^",
     "comlink": "^4.4.1",
+    "lucide-react": "0.445.0",
     "preshape": "^19.3.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

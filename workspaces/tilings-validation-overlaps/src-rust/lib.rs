@@ -11,10 +11,7 @@ pub fn validate_overlaps(
   // If a line segment has more than 2 polygons touching it
   // then it's overlapping with another line segment
   if *line_segment_count > 2 {
-    return Err(format!(
-      "line segment count of {} is > 2",
-      line_segment_count
-    ));
+    return Err(format!("line segment count of {line_segment_count} is > 2"));
   }
 
   let nearby_line_segments = line_segments

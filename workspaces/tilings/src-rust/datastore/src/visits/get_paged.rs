@@ -35,7 +35,7 @@ impl Display for VisitsRequest {
     let mut conditions = vec![];
 
     if !search.is_empty() {
-      conditions.push(format!("path LIKE '{}%'", search));
+      conditions.push(format!("path LIKE '{search}%'"));
     }
 
     if let Some(condition) = get_results_condition(*show_valid_tilings, *show_invalid_tilings) {

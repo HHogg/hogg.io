@@ -48,9 +48,9 @@ export const circularSequenceMeta: Project = {
 
 export const epigeneticsMeta: Project = {
   id: ProjectKey.epigenetics,
-  name: 'Genes to Phenotype visualisation',
+  name: 'Genotype to Phenotype visualisation',
   description:
-    'Representing the complexity of how genes are expressed in an organism as its phenotype.',
+    'Representing the complexity of how genotypes are expressed in an organism as its phenotype.',
   tags: ['simulation', 'rust'],
   deploy: false,
   wip: true,

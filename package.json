@@ -17,7 +17,7 @@
     "deploy": "firebase deploy",
     "dev": "yarn workspaces foreach -pviR --from @hogg/website -j unlimited run dev",
     "format": "prettier --write .",
-    "lint": "yarn lint:css & yarn lint:js && yarn lint:rust",
+    "lint": "yarn lint:css && yarn lint:js && yarn lint:rust",
     "lint:css": "stylelint workspaces/**/*.css",
     "lint:js": "yarn tsc && yarn knip && eslint 'workspaces/**/*.tsx' 'workspaces/**/*.ts' --fix",
     "lint:rust": "yarn lint:rust:clippy && yarn lint:rust:fmt",
