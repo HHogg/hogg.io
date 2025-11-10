@@ -1,11 +1,14 @@
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
-use web_sys::{DedicatedWorkerGlobalScope, WebGl2RenderingContext, WebGlProgram, WebGlShader};
+use web_sys::DedicatedWorkerGlobalScope;
+use wgpu::TextureDescriptor;
+use wgpu::TextureFormat;
+use wgpu::TextureUsages;
+use wgpu::{util::DeviceExt, Buffer, Device, ShaderModule};
+use wgpu::{Texture, TextureView};
 
-pub fn create_quad_vertices(
-  context: &WebGl2RenderingContext,
-) -> Result<web_sys::WebGlBuffer, JsValue> {
+pub fn create_quad_vertices(device: &Device) -> Buffer {
   // Create a full-screen quad (two triangles)
   let vertices: [f32; 12] = [
     -1.0, -1.0, // bottom-left
@@ -16,81 +19,41 @@ pub fn create_quad_vertices(
     -1.0, 1.0, // top-left
   ];
 
-  let buffer = context
-    .create_buffer()
-    .ok_or_else(|| JsValue::from_str("Unable to create vertex buffer"))?;
-
-  context.bind_buffer(WebGl2RenderingContext::ARRAY_BUFFER, Some(&buffer));
-
-  unsafe {
-    let vert_array = js_sys::Float32Array::view(&vertices);
-    context.buffer_data_with_array_buffer_view(
-      WebGl2RenderingContext::ARRAY_BUFFER,
-      &vert_array,
-      WebGl2RenderingContext::STATIC_DRAW,
-    );
-  }
-
-  Ok(buffer)
+  device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+    label: Some("Quad vertices"),
+    contents: bytemuck::cast_slice(&vertices),
+    usage: wgpu::BufferUsages::VERTEX,
+  })
 }
 
-pub fn compile_shader(
-  context: &WebGl2RenderingContext,
-  shader_type: u32,
-  source: &str,
-) -> Result<WebGlShader, JsValue> {
-  let shader = context
-    .create_shader(shader_type)
-    .ok_or_else(|| JsValue::from_str("Unable to create shader object"))?;
-
-  context.shader_source(&shader, source);
-  context.compile_shader(&shader);
-
-  match context
-    .get_shader_parameter(&shader, WebGl2RenderingContext::COMPILE_STATUS)
-    .as_bool()
-  {
-    Some(true) => Ok(shader),
-    Some(false) => {
-      let error_log = context
-        .get_shader_info_log(&shader)
-        .unwrap_or_else(|| "Unknown error compiling shader".into());
-      Err(JsValue::from_str(&format!(
-        "Failed to compile shader: {error_log}"
-      )))
-    }
-    None => Err(JsValue::from_str("Failed to get compile status")),
-  }
+pub fn create_shader_module(device: &Device, source: &str) -> ShaderModule {
+  device.create_shader_module(wgpu::ShaderModuleDescriptor {
+    label: None,
+    source: wgpu::ShaderSource::Wgsl(source.into()),
+  })
 }
 
-pub fn link_program(
-  context: &WebGl2RenderingContext,
-  vert_shader: &WebGlShader,
-  frag_shader: &WebGlShader,
-) -> Result<WebGlProgram, JsValue> {
-  let program = context
-    .create_program()
-    .ok_or_else(|| JsValue::from_str("Unable to create shader program"))?;
+pub fn create_texture_and_view(device: &Device, width: u32, height: u32) -> (Texture, TextureView) {
+  let texture = device.create_texture(&TextureDescriptor {
+    label: None,
+    size: wgpu::Extent3d {
+      width,
+      height,
+      depth_or_array_layers: 1,
+    },
+    mip_level_count: 1,
+    sample_count: 1,
+    dimension: wgpu::TextureDimension::D2,
+    format: TextureFormat::Rgba8Unorm,
+    usage: TextureUsages::TEXTURE_BINDING
+      | TextureUsages::RENDER_ATTACHMENT
+      | TextureUsages::COPY_DST
+      | TextureUsages::COPY_SRC,
+    view_formats: &[],
+  });
 
-  context.attach_shader(&program, vert_shader);
-  context.attach_shader(&program, frag_shader);
-  context.link_program(&program);
-
-  match context
-    .get_program_parameter(&program, WebGl2RenderingContext::LINK_STATUS)
-    .as_bool()
-  {
-    Some(true) => Ok(program),
-    Some(false) => {
-      let error_log = context
-        .get_program_info_log(&program)
-        .unwrap_or_else(|| "Unknown error linking program".into());
-      Err(JsValue::from_str(&format!(
-        "Failed to link program: {error_log}"
-      )))
-    }
-    None => Err(JsValue::from_str("Failed to get link status")),
-  }
+  let view = texture.create_view(&Default::default());
+  (texture, view)
 }
 
 pub fn set_timeout<T: AsRef<JsValue>>(callback: T, timeout: u32) -> Result<u32, JsValue> {

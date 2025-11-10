@@ -10,10 +10,12 @@ use web_sys::DedicatedWorkerGlobalScope;
 pub enum Message {
   WasmReady,
   CanvasTransferred,
-  DimensionsSet,
   SimulationInit,
   SimulationLoopStarted,
   SimulationLoopStopped,
+  SimulationPaused,
+  SimulationResumed,
+  SimulationReset,
   PostUpdateIntervalSet(u32),
   Error(String),
   Log(String),

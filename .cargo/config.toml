@@ -1,0 +1,7 @@
+[build]
+# Disable build scripts for wasm32 target to avoid OpenSSL dependencies
+target-dir = "target"
+
+[target.wasm32-unknown-unknown]
+# For wasm32, we don't need native dependencies
+runner = "wasm-bindgen-test-runner"

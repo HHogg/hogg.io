@@ -1,0 +1,11 @@
+[workspace]
+members = ["datastore", "export", "generator", "renderer", "searcher"]
+resolver = "2"
+
+[workspace.dependencies]
+sqlx = { version = "0.8.2", features = [
+  "chrono",
+  "macros",
+  "postgres",
+  "runtime-async-std-native-tls",
+] }

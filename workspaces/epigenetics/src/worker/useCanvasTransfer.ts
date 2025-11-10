@@ -1,11 +1,10 @@
 import * as Comlink from 'comlink';
 import { useEffect, useRef } from 'react';
-import { getSimulationWorker } from './simulationWorker';
-import { UseMessageHandlerResult } from './useMessageHandler';
+import { UseSimulationWorkerResult } from './useSimulationWorker';
 
 export function useCanvasTransfer(
   canvas: HTMLCanvasElement | null,
-  { hasError, onError, onMessage }: UseMessageHandlerResult
+  { hasError, getSimulationWorker }: UseSimulationWorkerResult
 ) {
   const refTransferred = useRef<boolean>(false);
 
@@ -28,9 +27,9 @@ export function useCanvasTransfer(
       isTransferring = true;
 
       try {
-        const simulationWorker = getSimulationWorker(onError, onMessage);
         refTransferred.current = true;
 
+        const simulationWorker = getSimulationWorker();
         const offscreenCanvas = canvas.transferControlToOffscreen();
 
         // Transfer OffscreenCanvas to the worker
@@ -38,7 +37,7 @@ export function useCanvasTransfer(
           Comlink.transfer(offscreenCanvas, [offscreenCanvas])
         );
       } catch (err) {
-        onError((err as Error).message);
+        // Error handling is done by the worker's onError callback
         // Reset flag on error so we can retry
         refTransferred.current = false;
       } finally {
@@ -47,5 +46,5 @@ export function useCanvasTransfer(
     };
 
     transferCanvas();
-  }, [canvas, hasError, refTransferred, onError, onMessage]);
+  }, [canvas, hasError, refTransferred, getSimulationWorker]);
 }

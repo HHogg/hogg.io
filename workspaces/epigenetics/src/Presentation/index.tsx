@@ -1,38 +1,28 @@
 import { ProjectTab, ProjectTabs, ProjectWindow } from '@hogg/common';
 import { TerminalIcon } from 'lucide-react';
-import { Box, ButtonAsync, Text, useResizeObserver } from 'preshape';
+import { Box, Text, useResizeObserver } from 'preshape';
 import { useState } from 'react';
-import { useCanvasDimensions } from '../worker/useCanvasDimensions';
 import { useCanvasTransfer } from '../worker/useCanvasTransfer';
-import { useInitSimulation } from '../worker/useInitSimulation';
-import useMessageHandler from '../worker/useMessageHandler';
-import { useTerminateWorker } from '../worker/useTerminateWorker';
+import useSimulationWorker from '../worker/useSimulationWorker';
 import ConfigMenu from './ConfigMenu';
 import Controls from './Controls';
 import LogsPanel from './LogsPanel';
 
 const Presentation = () => {
-  const [size, refSize] = useResizeObserver<HTMLDivElement>();
-  const { height, width } = size;
+  const [canvasSize, refSize] = useResizeObserver<HTMLDivElement>();
+  const { height, width } = canvasSize;
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
-  const messageHandler = useMessageHandler();
-  const { isInitializing, initSimulation } = useInitSimulation(messageHandler);
+  const simulationWorker = useSimulationWorker(width, height);
   const [isConfigMenuOpen, setIsConfigMenuOpen] = useState(false);
 
-  // Initialize worker and shared buffer
-  useTerminateWorker(messageHandler);
-
   // Transfer canvas to render worker when ready
-  useCanvasTransfer(canvas, messageHandler);
-
-  // Handle canvas dimension updates
-  useCanvasDimensions(width, height, messageHandler);
+  useCanvasTransfer(canvas, simulationWorker);
 
   return (
     <ProjectWindow
       controls={
         <Controls
-          messageHandler={messageHandler}
+          simulationWorker={simulationWorker}
           isConfigMenuOpen={isConfigMenuOpen}
           setIsConfigMenuOpen={setIsConfigMenuOpen}
         />
@@ -42,7 +32,7 @@ const Presentation = () => {
       tabs={
         <ProjectTabs>
           <ProjectTab name="Logs" Icon={TerminalIcon}>
-            <LogsPanel messageHandler={messageHandler} />
+            <LogsPanel messageHandler={simulationWorker} />
           </ProjectTab>
         </ProjectTabs>
       }
@@ -59,25 +49,9 @@ const Presentation = () => {
             />
           )}
 
-          {messageHandler.readyToInit && (
-            <Box absolute="center" flex="horizontal" alignChildren="middle">
-              <ButtonAsync
-                color="positive"
-                error={messageHandler.lastErrorMessage}
-                isError={messageHandler.hasError}
-                isLoading={isInitializing}
-                isSuccess={messageHandler.isSimulationInit}
-                variant="primary"
-                onClick={() => initSimulation()}
-              >
-                Initialize simulation
-              </ButtonAsync>
-            </Box>
-          )}
-
-          {messageHandler.hasError && (
+          {simulationWorker.hasError && (
             <Box absolute="center" maxWidth="300px">
-              {messageHandler.eventsErrors.map((event, index) => (
+              {simulationWorker.eventsErrors.map((event, index) => (
                 <Text
                   key={index}
                   align="middle"
@@ -94,7 +68,7 @@ const Presentation = () => {
       </Box>
 
       <ConfigMenu
-        messageHandler={messageHandler}
+        messageHandler={simulationWorker}
         isConfigMenuOpen={isConfigMenuOpen}
       />
     </ProjectWindow>

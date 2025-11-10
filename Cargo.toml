@@ -17,7 +17,6 @@ members = [
   "workspaces/geometry",
   "workspaces/line-segment-extending",
   "workspaces/spatial-grid-map",
-  "workspaces/tilings/src-rust/*",
   "workspaces/tilings-validation-gaps",
   "workspaces/tilings-validation-overlaps",
   "workspaces/tilings-validation-vertex-types",
@@ -43,12 +42,6 @@ serde_arrays = "0.1.0"
 serde_json = { version = "1.0.133", features = ["arbitrary_precision"] }
 serde-wasm-bindgen = "0.6.5"
 serde_with = "3.11.0"
-sqlx = { version = "0.8.2", features = [
-  "chrono",
-  "macros",
-  "postgres",
-  "runtime-async-std-native-tls",
-] }
 thiserror = "2.0.7"
 tokio = { version = "1.42.0", features = ["full"] }
 tokio-util = "0.7.13"
@@ -57,4 +50,7 @@ tracing-appender = "0.2"
 tracing-subscriber = "0.3.19"
 typeshare = { version = "1.0.4" }
 wasm-bindgen = { version = "0.2.99" }
+wasm-bindgen-futures = "0.4.45"
 web-sys = { version = "0.3.76" }
+wgpu = { version = "27", features = ["webgl", "web"] }
+bytemuck = { version = "1.14", features = ["derive"] }

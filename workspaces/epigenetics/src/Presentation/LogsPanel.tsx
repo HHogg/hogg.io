@@ -1,12 +1,12 @@
 import { CheckIcon, XIcon } from 'lucide-react';
 import { Box, Grid, Label, Text } from 'preshape';
 import { Fragment } from 'react';
-import { UseMessageHandlerResult } from '../worker/useMessageHandler';
+import { UseSimulationWorkerResult } from '../worker/useSimulationWorker';
 
 export default function LogsPanel({
   messageHandler,
 }: {
-  messageHandler: UseMessageHandlerResult;
+  messageHandler: UseSimulationWorkerResult;
 }) {
   const { events } = messageHandler;
 

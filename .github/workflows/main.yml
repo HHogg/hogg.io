@@ -29,6 +29,9 @@ jobs:
       - name: 'Lint'
         run: yarn lint
       - name: 'Test'
+        env:
+          CI: true
+          INSTA_WORKSPACE_ROOT: ${{ github.workspace }}
         run: yarn test:ci
       - name: Prepare Google Application Credentials for Firebase deploy
         run: |

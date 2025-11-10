@@ -7,11 +7,14 @@ import {
 import { Message } from './types';
 
 export interface SimulationWorkerApi {
-  initSimulation(): Promise<void>;
-  refreshDimensions(width: number, height: number): Promise<void>;
+  initSimulation(width: number, height: number): Promise<void>;
   setPostUpdateInterval(frames: number): Promise<void>;
   startSimulationLoop(): Promise<void>;
   stopSimulationLoop(): Promise<void>;
+  pauseSimulation(): Promise<void>;
+  resumeSimulation(): Promise<void>;
+  resetSimulation(): Promise<void>;
+  stepSimulationFrame(): Promise<void>;
   transferCanvas(canvas: OffscreenCanvas): Promise<void>;
 }
 
@@ -52,7 +55,12 @@ export function getSimulationWorker(
 
     simulationWorker.addEventListener('error', (event: ErrorEvent) => {
       console.error(event);
-      onError(event.message);
+      const errorMessage =
+        event.message ||
+        event.error?.message ||
+        event.error?.toString() ||
+        'Unknown worker error';
+      onError(errorMessage);
     });
 
     simulationWorker.addEventListener(
@@ -69,10 +77,17 @@ export function getSimulationWorker(
               event.data.name === 'throw' &&
               typeof event.data.value === 'object' &&
               event.data.value &&
-              'message' in event.data.value &&
-              typeof event.data.value.message === 'string'
+              'message' in event.data.value
             ) {
-              onError(event.data.value.message);
+              const errorMessage =
+                typeof event.data.value.message === 'string'
+                  ? event.data.value.message
+                  : String(
+                      event.data.value.message ||
+                        event.data.value ||
+                        'Unknown error'
+                    );
+              onError(errorMessage);
             }
             return;
           }

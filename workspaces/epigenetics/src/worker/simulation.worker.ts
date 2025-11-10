@@ -1,10 +1,13 @@
 import * as Comlink from 'comlink';
 import init, {
   transfer_canvas as wasmTransferCanvas,
-  refresh_dimensions as wasmRefreshDimensions,
   init_simulation as wasmInitSimulation,
   start_simulation_loop as wasmStartSimulationLoop,
   stop_simulation_loop as wasmStopSimulationLoop,
+  pause_simulation as wasmPauseSimulation,
+  resume_simulation as wasmResumeSimulation,
+  reset_simulation as wasmResetSimulation,
+  step_simulation_frame as wasmStepSimulationFrame,
   set_post_update_interval as wasmSetPostUpdateInterval,
 } from '../../pkg/hogg_epigenetics_worker/hogg_epigenetics_worker';
 
@@ -35,14 +38,9 @@ const simulationWorkerApi = {
     wasmTransferCanvas(canvas);
   },
 
-  async refreshDimensions(width: number, height: number) {
+  async initSimulation(width: number, height: number) {
     await waitForWasmReady();
-    wasmRefreshDimensions(width, height);
-  },
-
-  async initSimulation() {
-    await waitForWasmReady();
-    wasmInitSimulation();
+    await wasmInitSimulation(width, height);
   },
 
   async startSimulationLoop() {
@@ -53,6 +51,26 @@ const simulationWorkerApi = {
   async stopSimulationLoop() {
     await waitForWasmReady();
     wasmStopSimulationLoop();
+  },
+
+  async pauseSimulation() {
+    await waitForWasmReady();
+    wasmPauseSimulation();
+  },
+
+  async resumeSimulation() {
+    await waitForWasmReady();
+    wasmResumeSimulation();
+  },
+
+  async resetSimulation() {
+    await waitForWasmReady();
+    wasmResetSimulation();
+  },
+
+  async stepSimulationFrame() {
+    await waitForWasmReady();
+    wasmStepSimulationFrame();
   },
 
   async setPostUpdateInterval(frames: number) {

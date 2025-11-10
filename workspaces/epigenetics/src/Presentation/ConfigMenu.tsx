@@ -5,11 +5,10 @@ import {
   MenuConfigEntryNumber,
 } from 'preshape';
 import { useState, PointerEvent, useCallback } from 'react';
-import { getSimulationWorker } from '../worker/simulationWorker';
-import { UseMessageHandlerResult } from '../worker/useMessageHandler';
+import { UseSimulationWorkerResult } from '../worker/useSimulationWorker';
 
 interface ConfigMenuProps {
-  messageHandler: UseMessageHandlerResult;
+  messageHandler: UseSimulationWorkerResult;
   isConfigMenuOpen: boolean;
 }
 
@@ -21,16 +20,9 @@ export default function ConfigMenu({
 
   const handleSetPostUpdateInterval = useCallback(
     async (value: number) => {
+      const simulationWorker = messageHandler.getSimulationWorker();
       setPostUpdateInterval(value);
-      try {
-        const simulationWorker = getSimulationWorker(
-          messageHandler.onError,
-          messageHandler.onMessage
-        );
-        await simulationWorker.setPostUpdateInterval(value);
-      } catch (error) {
-        messageHandler.onError(error as string);
-      }
+      await simulationWorker.setPostUpdateInterval(value);
     },
     [messageHandler]
   );
