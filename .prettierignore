@@ -1,6 +1,7 @@
 *.css
 *.frag
 *.vert
+*.wgsl
 
 .cache
 .firebase

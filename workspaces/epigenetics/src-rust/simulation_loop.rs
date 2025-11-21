@@ -8,8 +8,12 @@ use crate::post_update::schedule_post_update;
 use crate::simulation_program::SimulationProgram;
 use crate::utils::{clear_timeout, request_animation_frame};
 
-// Global state for the simulation loop
-type LoopClosure = Rc<RefCell<Option<Closure<dyn FnMut()>>>>;
+pub struct SimulationLoop {
+  animation_frame_id: Option<u32>,
+  loop_closure: Option<Rc<RefCell<Option<Closure<dyn FnMut()>>>>>,
+  loop_state: LoopState,
+  program: Option<Rc<RefCell<SimulationProgram>>>,
+}
 
 #[derive(Clone)]
 struct LoopState {
@@ -48,13 +52,6 @@ impl Default for LoopState {
       paused_elapsed_time: 0.0,
     }
   }
-}
-
-pub struct SimulationLoop {
-  animation_frame_id: Option<u32>,
-  loop_closure: Option<LoopClosure>,
-  loop_state: LoopState,
-  program: Option<Rc<RefCell<SimulationProgram>>>,
 }
 
 impl SimulationLoop {

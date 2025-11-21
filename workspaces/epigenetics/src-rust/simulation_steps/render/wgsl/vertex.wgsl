@@ -12,4 +12,3 @@ fn main(input: VertexInput) -> VertexOutput {
   output.position = vec4<f32>(input.a_position, 0.0, 1.0);
   return output;
 }
-
