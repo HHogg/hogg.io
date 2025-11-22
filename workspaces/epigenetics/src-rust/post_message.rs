@@ -3,7 +3,7 @@ use typeshare::typeshare;
 use wasm_bindgen::{JsCast, JsValue};
 use web_sys::DedicatedWorkerGlobalScope;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, Clone)]
 #[serde(tag = "name", content = "data")]
 #[serde(rename_all = "camelCase")]
 #[typeshare]
@@ -21,7 +21,13 @@ pub enum Message {
   Log(String),
 }
 
-pub fn post_message(message: Message) {
+impl Message {
+  pub fn send(&self) {
+    post_message(self.clone());
+  }
+}
+
+fn post_message(message: Message) {
   if let Err(e) = post_message_inner(message) {
     log::error!("post_message: Failed to post message: {:?}", e);
   }

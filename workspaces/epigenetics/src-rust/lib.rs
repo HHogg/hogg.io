@@ -16,7 +16,7 @@ use wasm_bindgen::JsValue;
 use web_sys::OffscreenCanvas;
 
 use crate::error::SimulationError;
-use crate::post_message::{post_message, Message};
+use crate::post_message::Message;
 use crate::simulation_loop::SimulationLoop;
 use crate::simulation_program::SimulationProgram;
 use crate::thread_storage::{
@@ -28,16 +28,16 @@ use crate::thread_storage::{
 fn main() -> Result<(), JsError> {
   console_log::init_with_level(log::Level::Debug).expect("Failed to initialize logger");
   panic::set_hook(Box::new(console_error_panic_hook::hook));
-  post_message(Message::Log("Epigenetics simulation".to_string()));
-  post_message(Message::Log("----------------------".to_string()));
-  post_message(Message::WasmReady);
+  Message::Log("Epigenetics simulation".to_string()).send();
+  Message::Log("----------------------".to_string()).send();
+  Message::WasmReady.send();
   Ok(())
 }
 
 #[wasm_bindgen]
 pub async fn transfer_canvas(canvas: OffscreenCanvas) -> Result<(), JsValue> {
   set_canvas(canvas);
-  post_message(Message::CanvasTransferred);
+  Message::CanvasTransferred.send();
   Ok(())
 }
 
@@ -45,7 +45,7 @@ pub async fn transfer_canvas(canvas: OffscreenCanvas) -> Result<(), JsValue> {
 pub fn set_post_update_interval(frames: u32) -> Result<(), JsValue> {
   let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
   loop_rc.borrow_mut().set_post_update_interval(frames);
-  post_message(Message::PostUpdateIntervalSet(frames));
+  Message::PostUpdateIntervalSet(frames).send();
   Ok(())
 }
 
@@ -68,7 +68,7 @@ pub async fn init_simulation(width: u32, height: u32) -> Result<(), JsValue> {
   // Store the loop in thread-local storage
   set_simulation_loop(loop_rc);
 
-  post_message(Message::SimulationInit);
+  Message::SimulationInit.send();
   Ok(())
 }
 
@@ -84,7 +84,7 @@ pub fn start_simulation_loop() -> Result<(), JsValue> {
     .borrow_mut()
     .start(loop_rc.clone())
     .map_err(JsValue::from)?;
-  post_message(Message::SimulationLoopStarted);
+  Message::SimulationLoopStarted.send();
   Ok(())
 }
 
@@ -96,7 +96,7 @@ pub fn stop_simulation_loop() -> Result<(), JsValue> {
       return Ok(());
     }
     loop_ref.borrow_mut().stop().map_err(JsValue::from)?;
-    post_message(Message::SimulationLoopStopped);
+    Message::SimulationLoopStopped.send();
   }
   Ok(())
 }
@@ -105,7 +105,7 @@ pub fn stop_simulation_loop() -> Result<(), JsValue> {
 pub fn pause_simulation() -> Result<(), JsValue> {
   let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
   loop_rc.borrow_mut().pause().map_err(JsValue::from)?;
-  post_message(Message::SimulationPaused);
+  Message::SimulationPaused.send();
   Ok(())
 }
 
@@ -113,7 +113,7 @@ pub fn pause_simulation() -> Result<(), JsValue> {
 pub fn resume_simulation() -> Result<(), JsValue> {
   let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
   loop_rc.borrow_mut().resume().map_err(JsValue::from)?;
-  post_message(Message::SimulationResumed);
+  Message::SimulationResumed.send();
   Ok(())
 }
 
@@ -131,7 +131,7 @@ pub fn reset_simulation() -> Result<(), JsValue> {
   let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
   // Reset doesn't stop the loop, so if it was running, it will keep running
   loop_rc.borrow_mut().reset().map_err(JsValue::from)?;
-  post_message(Message::SimulationReset);
+  Message::SimulationReset.send();
   Ok(())
 }
 
@@ -144,7 +144,7 @@ pub fn step_simulation_frame() -> Result<(), JsValue> {
 
   // If it was running, send paused message
   if was_running {
-    post_message(Message::SimulationPaused);
+    Message::SimulationPaused.send();
   }
 
   Ok(())

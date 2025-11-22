@@ -8,6 +8,8 @@ use wgpu::TextureUsages;
 use wgpu::{util::DeviceExt, Buffer, Device, ShaderModule};
 use wgpu::{Texture, TextureView};
 
+use crate::post_message::Message;
+
 pub fn create_quad_vertices(device: &Device) -> Buffer {
   // Create a full-screen quad (two triangles)
   let vertices: [f32; 12] = [
@@ -111,4 +113,121 @@ pub fn clear_timeout(timeout_id: u32) -> Result<(), JsValue> {
   }
 
   Ok(())
+}
+
+pub fn log_table(title: &str, rows: &[(&str, &str)]) {
+  if rows.is_empty() {
+    return;
+  }
+
+  // Calculate max width for each column
+  let max_label_width = rows.iter().map(|(label, _)| label.len()).max().unwrap_or(0);
+  let max_value_width = rows.iter().map(|(_, value)| value.len()).max().unwrap_or(0);
+
+  // Calculate total width (label + " │ " + value + borders)
+  let total_width = max_label_width + 3 + max_value_width + 2; // 3 for " │ ", 2 for borders
+
+  // Create horizontal border
+  let horizontal_border = "─".repeat(total_width);
+
+  // Build table rows
+  // Top border with corners
+  let top_border = format!("┌{}┐", horizontal_border);
+  let mut table_rows = vec![top_border];
+
+  // Title row
+  let padded_title = format!("{:<width$}", title, width = total_width - 2);
+  table_rows.push(format!("│ {} │", padded_title));
+
+  // Separator between title and content
+  let title_separator = format!("├{}┤", "─".repeat(total_width));
+  table_rows.push(title_separator);
+
+  // Data rows
+  for (label, value) in rows {
+    let padded_label = format!("{:<width$}", label, width = max_label_width);
+    let padded_value = format!("{:<width$}", value, width = max_value_width);
+    table_rows.push(format!("│ {} │ {} │", padded_label, padded_value));
+  }
+
+  // Bottom border with corners
+  let bottom_border = format!("└{}┘", horizontal_border);
+  table_rows.push(bottom_border);
+
+  // Log the table
+  table_rows
+    .iter()
+    .for_each(|row| Message::Log(row.clone()).send());
+}
+
+pub fn log_device_limits(limits: &wgpu::Limits) {
+  let max_buffer_size_mb = limits.max_buffer_size as f64 / (1024.0 * 1024.0);
+  let max_storage_buffer_binding_size_mb =
+    limits.max_storage_buffer_binding_size as f64 / (1024.0 * 1024.0);
+
+  // Create string values first so we can reference them
+  let texture_dim_3d = format!("{}", limits.max_texture_dimension_3d);
+  let sampled_textures = format!("{}", limits.max_sampled_textures_per_shader_stage);
+  let storage_textures = format!("{}", limits.max_storage_textures_per_shader_stage);
+  let texture_array_layers = format!("{}", limits.max_texture_array_layers);
+  let compute_workgroup_size = format!(
+    "{}x{}x{}",
+    limits.max_compute_workgroup_size_x,
+    limits.max_compute_workgroup_size_y,
+    limits.max_compute_workgroup_size_z
+  );
+  let compute_invocations = format!("{}", limits.max_compute_invocations_per_workgroup);
+  let compute_workgroups = format!("{}", limits.max_compute_workgroups_per_dimension);
+  let compute_storage_size = format!("{} bytes", limits.max_compute_workgroup_storage_size);
+  let buffer_size = format!("{:.2} MB", max_buffer_size_mb);
+  let storage_buffers = format!("{}", limits.max_storage_buffers_per_shader_stage);
+  let storage_buffer_binding_size = format!("{:.2} MB", max_storage_buffer_binding_size_mb);
+  let bindings_per_group = format!("{}", limits.max_bindings_per_bind_group);
+  let bind_groups = format!("{}", limits.max_bind_groups);
+
+  let rows = vec![
+    // Texture limits
+    ("max_texture_dimension_3d", texture_dim_3d.as_str()),
+    (
+      "max_sampled_textures_per_shader_stage",
+      sampled_textures.as_str(),
+    ),
+    (
+      "max_storage_textures_per_shader_stage",
+      storage_textures.as_str(),
+    ),
+    ("max_texture_array_layers", texture_array_layers.as_str()),
+    // Compute shader limits
+    (
+      "max_compute_workgroup_size_x",
+      compute_workgroup_size.as_str(),
+    ),
+    (
+      "max_compute_invocations_per_workgroup",
+      compute_invocations.as_str(),
+    ),
+    (
+      "max_compute_workgroups_per_dimension",
+      compute_workgroups.as_str(),
+    ),
+    (
+      "max_compute_workgroup_storage_size",
+      compute_storage_size.as_str(),
+    ),
+    // Buffer limits
+    ("max_buffer_size", buffer_size.as_str()),
+    (
+      "max_storage_buffers_per_shader_stage",
+      storage_buffers.as_str(),
+    ),
+    (
+      "max_storage_buffer_binding_size",
+      storage_buffer_binding_size.as_str(),
+    ),
+    // Binding limits
+    ("max_bindings_per_bind_group", bindings_per_group.as_str()),
+    ("max_bind_groups", bind_groups.as_str()),
+  ];
+
+  log_table("Device Limits", &rows);
 }

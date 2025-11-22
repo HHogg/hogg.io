@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::Closure;
 
 use crate::error::SimulationError;
-use crate::post_message::{post_message, Message};
+use crate::post_message::Message;
 use crate::post_update::schedule_post_update;
 use crate::simulation_program::SimulationProgram;
 use crate::utils::{clear_timeout, request_animation_frame};
@@ -234,16 +234,14 @@ impl SimulationLoop {
         // Run simulation frame
         if let Err(e) = loop_ref.run_simulation_frame(&program) {
           log::error!("simulation_loop: Error running frame: {:?}", e);
-          post_message(Message::Error(format!("Simulation frame error: {e:?}")));
+          Message::Error(format!("Simulation frame error: {e:?}")).send();
           return;
         }
 
         // Schedule next frame
         if let Err(e) = loop_ref.schedule_next_frame() {
           log::error!("simulation_loop: Error scheduling next frame: {:?}", e);
-          post_message(Message::Error(format!(
-            "Failed to schedule next frame: {e:?}"
-          )));
+          Message::Error(format!("Failed to schedule next frame: {e:?}")).send();
         }
       }
     }) as Box<dyn FnMut()>);
@@ -308,10 +306,7 @@ impl SimulationLoop {
             self.set_animation_frame_id(animation_frame_id);
           }
           Err(e) => {
-            log::error!("simulation_loop: Failed to schedule next frame: {:?}", e);
-            post_message(Message::Error(format!(
-              "Failed to schedule next frame: {e:?}"
-            )));
+            Message::Error(format!("Failed to schedule next frame: {e:?}")).send();
             return Err(SimulationError::AnimationFrameFailed(format!("{e:?}")));
           }
         }

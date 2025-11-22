@@ -61,7 +61,11 @@ export default function LogsPanel({
                   </Label>
                 )}
 
-                {event.type === 'info' && <Text>{event.message}</Text>}
+                {event.type === 'info' && (
+                  <Text>
+                    <Box tag="pre">{event.message}</Box>
+                  </Text>
+                )}
               </Text>
             </Fragment>
           ))}

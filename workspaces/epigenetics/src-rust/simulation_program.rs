@@ -1,7 +1,7 @@
 use wasm_bindgen::JsValue;
 use web_sys::OffscreenCanvas;
 
-use crate::error::SimulationError;
+use crate::{error::SimulationError, post_message::Message};
 use wgpu::{
   AddressMode, Backends, Device, DeviceDescriptor, Features, FilterMode, Instance,
   InstanceDescriptor, Limits, PowerPreference, Queue, RequestAdapterOptions, Sampler,
@@ -10,7 +10,7 @@ use wgpu::{
 
 use crate::{
   simulation_steps::{SimulationStepCompute, SimulationStepRender},
-  utils::create_texture_and_view,
+  utils::{create_texture_and_view, log_device_limits},
 };
 
 pub struct SimulationProgram {
@@ -63,6 +63,10 @@ impl SimulationProgram {
       })
       .await
       .map_err(|e| SimulationError::DeviceRequest(format!("{e:?}")))?;
+
+    Message::Log(format!("Dimensions: {}x{}", width, height)).send();
+    // Log device limits for 3D textures
+    log_device_limits(&device.limits());
 
     let surface_caps = surface.get_capabilities(&adapter);
     let surface_format = surface_caps

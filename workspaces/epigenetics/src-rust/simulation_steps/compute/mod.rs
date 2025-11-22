@@ -1,14 +1,13 @@
-mod shaders;
-
 use wasm_bindgen::JsValue;
 use wgpu::{BindGroupLayout, Buffer, Device, RenderPipeline, SurfaceConfiguration};
 
 use crate::{
   simulation_program::{SimulationRunState, SimulationStep},
-  utils::create_quad_vertices,
+  utils::{create_quad_vertices, create_shader_module},
 };
 
-use self::shaders::{create_fragment_shader, create_vertex_shader};
+const VERTEX_SHADER: &str = include_str!("./wgsl/vertex.wgsl");
+const FRAGMENT_SHADER: &str = include_str!("./wgsl/fragment.wgsl");
 
 pub struct SimulationStepCompute {
   pub pipeline: RenderPipeline,
@@ -20,8 +19,8 @@ pub struct SimulationStepCompute {
 
 impl SimulationStep for SimulationStepCompute {
   fn create(device: &Device, _surface_config: &SurfaceConfiguration) -> Result<Self, JsValue> {
-    let vert_shader = create_vertex_shader(device);
-    let frag_shader = create_fragment_shader(device);
+    let vert_shader = create_shader_module(device, VERTEX_SHADER);
+    let frag_shader = create_shader_module(device, FRAGMENT_SHADER);
     let vertex_buffer = create_quad_vertices(device);
 
     // Create uniform buffers
