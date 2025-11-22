@@ -17,6 +17,7 @@ pub enum Message {
   SimulationResumed,
   SimulationReset,
   PostUpdateIntervalSet(u32),
+  TextureDepthSet(u32),
   Error(String),
   Log(String),
 }

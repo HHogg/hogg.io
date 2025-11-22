@@ -13,8 +13,8 @@ pub struct SimulationStepRender {
   pub pipeline: RenderPipeline,
   pub vertex_buffer: Buffer,
   pub bind_group_layout: BindGroupLayout,
-  pub uniform_time_buffer: Buffer,
   pub uniform_resolution_buffer: Buffer,
+  pub uniform_texture_size_buffer: Buffer,
 }
 
 impl SimulationStep for SimulationStepRender {
@@ -24,13 +24,6 @@ impl SimulationStep for SimulationStepRender {
     let vertex_buffer = create_quad_vertices(device);
 
     // Create uniform buffers
-    let uniform_time_buffer = device.create_buffer(&wgpu::BufferDescriptor {
-      label: Some("Time uniform buffer"),
-      size: std::mem::size_of::<f32>() as u64,
-      usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
-      mapped_at_creation: false,
-    });
-
     let uniform_resolution_buffer = device.create_buffer(&wgpu::BufferDescriptor {
       label: Some("Resolution uniform buffer"),
       size: (std::mem::size_of::<f32>() * 2) as u64,
@@ -38,11 +31,18 @@ impl SimulationStep for SimulationStepRender {
       mapped_at_creation: false,
     });
 
-    // Create bind group layout (same as compute)
+    let uniform_texture_size_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+      label: Some("Texture size uniform buffer"),
+      size: (std::mem::size_of::<u32>() * 3) as u64,
+      usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
+      mapped_at_creation: false,
+    });
+
+    // Create bind group layout
     let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
       label: None,
       entries: &[
-        // u_time uniform buffer
+        // u_resolution uniform buffer
         wgpu::BindGroupLayoutEntry {
           binding: 0,
           visibility: wgpu::ShaderStages::FRAGMENT,
@@ -53,7 +53,7 @@ impl SimulationStep for SimulationStepRender {
           },
           count: None,
         },
-        // u_resolution uniform buffer
+        // u_texture_size uniform buffer
         wgpu::BindGroupLayoutEntry {
           binding: 1,
           visibility: wgpu::ShaderStages::FRAGMENT,
@@ -64,22 +64,24 @@ impl SimulationStep for SimulationStepRender {
           },
           count: None,
         },
-        // compute_texture
+        // simulation_texture (3D texture)
+        // R32Float format is unfilterable, so we set filterable: false
         wgpu::BindGroupLayoutEntry {
           binding: 2,
           visibility: wgpu::ShaderStages::FRAGMENT,
           ty: wgpu::BindingType::Texture {
             multisampled: false,
-            view_dimension: wgpu::TextureViewDimension::D2,
-            sample_type: wgpu::TextureSampleType::Float { filterable: true },
+            view_dimension: wgpu::TextureViewDimension::D3,
+            sample_type: wgpu::TextureSampleType::Float { filterable: false },
           },
           count: None,
         },
-        // compute_sampler
+        // simulation_sampler
+        // Use NonFiltering since R32Float texture is unfilterable
         wgpu::BindGroupLayoutEntry {
           binding: 3,
           visibility: wgpu::ShaderStages::FRAGMENT,
-          ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+          ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::NonFiltering),
           count: None,
         },
       ],
@@ -142,8 +144,8 @@ impl SimulationStep for SimulationStepRender {
       pipeline,
       vertex_buffer,
       bind_group_layout,
-      uniform_time_buffer,
       uniform_resolution_buffer,
+      uniform_texture_size_buffer,
     })
   }
 
@@ -153,25 +155,26 @@ impl SimulationStep for SimulationStepRender {
       queue,
       width,
       height,
-      elapsed_time,
-      read_texture_view,
+      depth,
+      write_texture_view,
       sampler,
       surface,
       ..
     } = state;
 
     // Update uniform buffers
-    queue.write_buffer(
-      &self.uniform_time_buffer,
-      0,
-      bytemuck::cast_slice(&[*elapsed_time as f32]),
-    );
-
     let resolution_values: [f32; 2] = [*width as f32, *height as f32];
     queue.write_buffer(
       &self.uniform_resolution_buffer,
       0,
       bytemuck::cast_slice(&resolution_values),
+    );
+
+    let texture_size_values: [u32; 3] = [*width, *height, *depth];
+    queue.write_buffer(
+      &self.uniform_texture_size_buffer,
+      0,
+      bytemuck::cast_slice(&texture_size_values),
     );
 
     let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
@@ -180,15 +183,15 @@ impl SimulationStep for SimulationStepRender {
       entries: &[
         wgpu::BindGroupEntry {
           binding: 0,
-          resource: self.uniform_time_buffer.as_entire_binding(),
-        },
-        wgpu::BindGroupEntry {
-          binding: 1,
           resource: self.uniform_resolution_buffer.as_entire_binding(),
         },
         wgpu::BindGroupEntry {
+          binding: 1,
+          resource: self.uniform_texture_size_buffer.as_entire_binding(),
+        },
+        wgpu::BindGroupEntry {
           binding: 2,
-          resource: wgpu::BindingResource::TextureView(read_texture_view),
+          resource: wgpu::BindingResource::TextureView(write_texture_view),
         },
         wgpu::BindGroupEntry {
           binding: 3,

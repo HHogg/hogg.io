@@ -480,6 +480,7 @@ export type Message =
 	| { name: "simulationResumed", data?: undefined }
 	| { name: "simulationReset", data?: undefined }
 	| { name: "postUpdateIntervalSet", data: number }
+	| { name: "textureDepthSet", data: number }
 	| { name: "error", data: string }
 	| { name: "log", data: string };
 

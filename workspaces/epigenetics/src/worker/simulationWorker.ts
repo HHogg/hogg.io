@@ -9,6 +9,9 @@ import { Message } from './types';
 export interface SimulationWorkerApi {
   initSimulation(width: number, height: number): Promise<void>;
   setPostUpdateInterval(frames: number): Promise<void>;
+  getMaxTextureDepth(): Promise<number>;
+  getTextureDepth(): Promise<number>;
+  setTextureDepth(depth: number): Promise<void>;
   startSimulationLoop(): Promise<void>;
   stopSimulationLoop(): Promise<void>;
   pauseSimulation(): Promise<void>;

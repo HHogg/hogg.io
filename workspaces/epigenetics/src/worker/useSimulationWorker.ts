@@ -101,6 +101,9 @@ export default function useSimulationWorker(
         case 'postUpdateIntervalSet':
           addEvent('success', 'Post update interval set');
           break;
+        case 'textureDepthSet':
+          addEvent('success', `Texture depth set to ${message.data}`);
+          break;
         case 'error':
           addEvent('error', message.data);
           break;

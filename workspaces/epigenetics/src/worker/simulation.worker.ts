@@ -9,6 +9,9 @@ import init, {
   reset_simulation as wasmResetSimulation,
   step_simulation_frame as wasmStepSimulationFrame,
   set_post_update_interval as wasmSetPostUpdateInterval,
+  get_max_texture_depth as wasmGetMaxTextureDepth,
+  get_texture_depth as wasmGetTextureDepth,
+  set_texture_depth as wasmSetTextureDepth,
 } from '../../pkg/hogg_epigenetics_worker/hogg_epigenetics_worker';
 
 let wasmReady = false;
@@ -76,6 +79,21 @@ const simulationWorkerApi = {
   async setPostUpdateInterval(frames: number) {
     await waitForWasmReady();
     wasmSetPostUpdateInterval(frames);
+  },
+
+  async getMaxTextureDepth() {
+    await waitForWasmReady();
+    return wasmGetMaxTextureDepth();
+  },
+
+  async getTextureDepth() {
+    await waitForWasmReady();
+    return wasmGetTextureDepth();
+  },
+
+  async setTextureDepth(depth: number) {
+    await waitForWasmReady();
+    wasmSetTextureDepth(depth);
   },
 };
 

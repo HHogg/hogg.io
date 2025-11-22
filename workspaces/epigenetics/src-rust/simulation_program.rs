@@ -1,7 +1,7 @@
 use wasm_bindgen::JsValue;
 use web_sys::OffscreenCanvas;
 
-use crate::{error::SimulationError, post_message::Message};
+use crate::{error::SimulationError, utils::log_table};
 use wgpu::{
   AddressMode, Backends, Device, DeviceDescriptor, Features, FilterMode, Instance,
   InstanceDescriptor, Limits, PowerPreference, Queue, RequestAdapterOptions, Sampler,
@@ -10,7 +10,7 @@ use wgpu::{
 
 use crate::{
   simulation_steps::{SimulationStepCompute, SimulationStepRender},
-  utils::{create_texture_and_view, log_device_limits},
+  utils::{create_3d_texture_and_view, create_seed_texture_and_view, log_device_limits},
 };
 
 pub struct SimulationProgram {
@@ -24,6 +24,10 @@ pub struct SimulationProgram {
   pub texture_view_a: TextureView,
   pub texture_b: Texture,
   pub texture_view_b: TextureView,
+  pub seed_texture: Texture,
+  pub seed_texture_view: TextureView,
+  pub depth: u32,
+  pub pass_index: u32,
 }
 
 impl SimulationProgram {
@@ -40,6 +44,8 @@ impl SimulationProgram {
     });
 
     let surface = instance
+      // The SurfaceTarget::OffscreenCanvas is fine here
+      // ignore the build warning that this is bad.
       .create_surface(wgpu::SurfaceTarget::OffscreenCanvas(canvas))
       .map_err(|e| SimulationError::SurfaceCreation(format!("{e:?}")))?;
 
@@ -52,11 +58,19 @@ impl SimulationProgram {
       .await
       .map_err(|e| SimulationError::AdapterRequest(format!("{e:?}")))?;
 
+    // Get adapter limits to request higher buffer size if available
+    let adapter_limits = adapter.limits();
+    let mut required_limits = Limits::default();
+    // Request higher buffer size limit if adapter supports it
+    if adapter_limits.max_buffer_size > required_limits.max_buffer_size {
+      required_limits.max_buffer_size = adapter_limits.max_buffer_size;
+    }
+
     let (device, queue) = adapter
       .request_device(&DeviceDescriptor {
         label: None,
         required_features: Features::empty(),
-        required_limits: Limits::default(),
+        required_limits,
         experimental_features: Default::default(),
         memory_hints: Default::default(),
         trace: wgpu::Trace::default(),
@@ -64,7 +78,6 @@ impl SimulationProgram {
       .await
       .map_err(|e| SimulationError::DeviceRequest(format!("{e:?}")))?;
 
-    Message::Log(format!("Dimensions: {}x{}", width, height)).send();
     // Log device limits for 3D textures
     log_device_limits(&device.limits());
 
@@ -89,9 +102,24 @@ impl SimulationProgram {
 
     surface.configure(&device, &surface_config);
 
-    let (texture_a, texture_view_a) = create_texture_and_view(&device, width, height);
-    let (texture_b, texture_view_b) = create_texture_and_view(&device, width, height);
+    // Limit depth to a reasonable value to avoid memory issues
+    // Calculate max safe depth based on texture size limits
+    // R32Float = 4 bytes per pixel (single channel)
+    // Use max/8 as initial depth (smallest factor option)
+    let max_depth = device.limits().max_texture_dimension_3d;
+    let depth = (max_depth / 8).max(1); // Ensure at least 1 layer
 
+    // Create 3D textures for simulation data
+    let (texture_a, texture_view_a) =
+      create_3d_texture_and_view("texture_a", &device, width, height, depth);
+    let (texture_b, texture_view_b) =
+      create_3d_texture_and_view("texture_b", &device, width, height, depth);
+
+    // Create 2D seed texture with random values
+    let (seed_texture, seed_texture_view) = create_seed_texture_and_view(&device, width, height);
+
+    // Initialize seed texture with random values - will be done in compute shader on first pass
+    // For now, leave it uninitialized (will be zero, which is fine for our hash function)
     let sampler = device.create_sampler(&SamplerDescriptor {
       label: None,
       address_mode_u: AddressMode::ClampToEdge,
@@ -125,10 +153,14 @@ impl SimulationProgram {
       texture_view_a,
       texture_b,
       texture_view_b,
+      seed_texture,
+      seed_texture_view,
+      depth,
+      pass_index: 0,
     })
   }
 
-  pub fn run(&self, elapsed: f64) -> Result<(), SimulationError> {
+  pub fn run(&mut self, _elapsed: f64) -> Result<(), SimulationError> {
     // Note: TextureView, Device, Queue, and Sampler are cloned here because
     // SimulationRunState requires owned values. These are lightweight handles
     // in WebGPU, so cloning is cheap and necessary for the state structure.
@@ -137,9 +169,11 @@ impl SimulationProgram {
       queue: self.queue.clone(),
       width: self.surface_config.width,
       height: self.surface_config.height,
-      elapsed_time: elapsed,
+      depth: self.depth,
+      pass_index: self.pass_index,
       read_texture_view: self.texture_view_a.clone(),
       write_texture_view: self.texture_view_b.clone(),
+      seed_texture_view: self.seed_texture_view.clone(),
       sampler: self.sampler.clone(),
       surface: &self.surface,
     };
@@ -149,6 +183,14 @@ impl SimulationProgram {
         .run(&mut run_state)
         .map_err(|e| SimulationError::StepExecution(format!("{e:?}")))?;
     }
+
+    // Swap buffers AFTER render for next frame
+    // Next frame: what was write becomes read, what was read becomes write
+    std::mem::swap(&mut self.texture_view_a, &mut self.texture_view_b);
+    std::mem::swap(&mut self.texture_a, &mut self.texture_b);
+
+    // Increment pass index
+    self.pass_index += 1;
 
     Ok(())
   }
@@ -163,9 +205,15 @@ impl SimulationProgram {
     self.surface_config.height = height;
     self.surface.configure(&self.device, &self.surface_config);
 
-    // Create new textures
-    let (new_texture_a, new_texture_view_a) = create_texture_and_view(&self.device, width, height);
-    let (new_texture_b, new_texture_view_b) = create_texture_and_view(&self.device, width, height);
+    // Create new 3D textures
+    let (new_texture_a, new_texture_view_a) =
+      create_3d_texture_and_view("texture_a", &self.device, width, height, self.depth);
+    let (new_texture_b, new_texture_view_b) =
+      create_3d_texture_and_view("texture_b", &self.device, width, height, self.depth);
+
+    // Create new seed texture
+    let (new_seed_texture, new_seed_texture_view) =
+      create_seed_texture_and_view(&self.device, width, height);
 
     // Copy old texture data to new textures if dimensions changed
     if old_width != width || old_height != height {
@@ -229,7 +277,120 @@ impl SimulationProgram {
     self.texture_view_a = new_texture_view_a;
     self.texture_b = new_texture_b;
     self.texture_view_b = new_texture_view_b;
+    self.seed_texture = new_seed_texture;
+    self.seed_texture_view = new_seed_texture_view;
 
+    Ok(())
+  }
+
+  pub fn set_texture_depth(&mut self, depth: u32) -> Result<(), SimulationError> {
+    let max_depth = self.device.limits().max_texture_dimension_3d;
+    let new_depth = depth.min(max_depth);
+
+    if new_depth == self.depth {
+      return Ok(()); // No change needed
+    }
+
+    // Store old depth for copying
+    let old_depth = self.depth;
+    let width = self.surface_config.width;
+    let height = self.surface_config.height;
+
+    // Create new 3D textures with new depth
+    let (new_texture_a, new_texture_view_a) =
+      create_3d_texture_and_view("texture_a", &self.device, width, height, new_depth);
+    let (new_texture_b, new_texture_view_b) =
+      create_3d_texture_and_view("texture_b", &self.device, width, height, new_depth);
+
+    // Copy old texture data to new textures
+    // Copy the minimum of old and new depth layers
+    let copy_depth = old_depth.min(new_depth);
+    if copy_depth > 0 {
+      let mut encoder = self
+        .device
+        .create_command_encoder(&wgpu::CommandEncoderDescriptor {
+          label: Some("Set texture depth encoder"),
+        });
+
+      // Copy texture A
+      encoder.copy_texture_to_texture(
+        wgpu::TexelCopyTextureInfo {
+          texture: &self.texture_a,
+          mip_level: 0,
+          origin: wgpu::Origin3d::ZERO,
+          aspect: wgpu::TextureAspect::All,
+        },
+        wgpu::TexelCopyTextureInfo {
+          texture: &new_texture_a,
+          mip_level: 0,
+          origin: wgpu::Origin3d::ZERO,
+          aspect: wgpu::TextureAspect::All,
+        },
+        wgpu::Extent3d {
+          width,
+          height,
+          depth_or_array_layers: copy_depth,
+        },
+      );
+
+      // Copy texture B
+      encoder.copy_texture_to_texture(
+        wgpu::TexelCopyTextureInfo {
+          texture: &self.texture_b,
+          mip_level: 0,
+          origin: wgpu::Origin3d::ZERO,
+          aspect: wgpu::TextureAspect::All,
+        },
+        wgpu::TexelCopyTextureInfo {
+          texture: &new_texture_b,
+          mip_level: 0,
+          origin: wgpu::Origin3d::ZERO,
+          aspect: wgpu::TextureAspect::All,
+        },
+        wgpu::Extent3d {
+          width,
+          height,
+          depth_or_array_layers: copy_depth,
+        },
+      );
+
+      self.queue.submit(std::iter::once(encoder.finish()));
+    }
+
+    // Replace old textures with new ones
+    self.texture_a = new_texture_a;
+    self.texture_view_a = new_texture_view_a;
+    self.texture_b = new_texture_b;
+    self.texture_view_b = new_texture_view_b;
+    self.depth = new_depth;
+
+    // Reset pass index since we're starting fresh
+    self.pass_index = 0;
+
+    Ok(())
+  }
+
+  pub fn log_stats(&self) -> Result<(), SimulationError> {
+    let width = self.surface_config.width;
+    let height = self.surface_config.height;
+    let cells = width * height;
+    let memory_usage = (self.surface_config.width as u64
+      * self.surface_config.height as u64
+      * self.depth as u64
+      * 4) // R32Float = 4 bytes per pixel (single channel)
+      / (1024 * 1024);
+
+    log_table(
+      "Simulation Stats",
+      &[
+        ("Width", width.to_string().as_str()),
+        ("Height", height.to_string().as_str()),
+        ("Cells", cells.to_string().as_str()),
+        ("Depth", self.depth.to_string().as_str()),
+        ("Pass index", self.pass_index.to_string().as_str()),
+        ("Memory usage", format!("{memory_usage} MB").as_str()),
+      ],
+    );
     Ok(())
   }
 }
@@ -239,17 +400,13 @@ pub struct SimulationRunState<'a> {
   pub queue: Queue,
   pub width: u32,
   pub height: u32,
-  pub elapsed_time: f64,
+  pub depth: u32,
+  pub pass_index: u32,
   pub read_texture_view: TextureView,
   pub write_texture_view: TextureView,
+  pub seed_texture_view: TextureView,
   pub sampler: Sampler,
   pub surface: &'a Surface<'a>,
-}
-
-impl<'a> SimulationRunState<'a> {
-  pub fn swap_buffers(&mut self) {
-    std::mem::swap(&mut self.read_texture_view, &mut self.write_texture_view);
-  }
 }
 
 pub trait SimulationStep {

@@ -68,7 +68,7 @@ const Presentation = () => {
       </Box>
 
       <ConfigMenu
-        messageHandler={simulationWorker}
+        simulationWorker={simulationWorker}
         isConfigMenuOpen={isConfigMenuOpen}
       />
     </ProjectWindow>

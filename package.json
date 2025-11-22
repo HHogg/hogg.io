@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build": "yarn workspaces foreach -ptvR --from @hogg/website run build",
+    "ci:check": "yarn ts:check && yarn lint && yarn test:ci && yarn build",
     "clean": "yarn clean:root && yarn clean:workspaces",
     "clean:root": "rm -rf .firebase target yarn-error.log",
     "clean:workspaces": "yarn workspaces foreach -ptvR --from @hogg/website run clean",

@@ -50,6 +50,36 @@ pub fn set_post_update_interval(frames: u32) -> Result<(), JsValue> {
 }
 
 #[wasm_bindgen]
+pub fn get_max_texture_depth() -> Result<u32, JsValue> {
+  let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
+  let max_depth = simulation_program_rc
+    .borrow()
+    .device
+    .limits()
+    .max_texture_dimension_3d;
+  Ok(max_depth)
+}
+
+#[wasm_bindgen]
+pub fn get_texture_depth() -> Result<u32, JsValue> {
+  let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
+  let depth = simulation_program_rc.borrow().depth;
+  Ok(depth)
+}
+
+#[wasm_bindgen]
+pub fn set_texture_depth(depth: u32) -> Result<(), JsValue> {
+  let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
+  let mut simulation_program = simulation_program_rc.borrow_mut();
+  simulation_program
+    .set_texture_depth(depth)
+    .map_err(JsValue::from)?;
+  Message::TextureDepthSet(depth).send();
+  simulation_program.log_stats().map_err(JsValue::from)?;
+  Ok(())
+}
+
+#[wasm_bindgen]
 pub async fn init_simulation(width: u32, height: u32) -> Result<(), JsValue> {
   let canvas = get_canvas().ok_or(SimulationError::MissingCanvas)?;
 
@@ -62,13 +92,14 @@ pub async fn init_simulation(width: u32, height: u32) -> Result<(), JsValue> {
   set_simulation_program(program_rc.clone());
 
   // Create the simulation loop (this will also render the first frame)
-  let loop_instance = SimulationLoop::create(program_rc).map_err(JsValue::from)?;
+  let loop_instance = SimulationLoop::create(program_rc.clone()).map_err(JsValue::from)?;
   let loop_rc = Rc::new(RefCell::new(loop_instance));
 
   // Store the loop in thread-local storage
   set_simulation_loop(loop_rc);
 
   Message::SimulationInit.send();
+  program_rc.borrow().log_stats().map_err(JsValue::from)?;
   Ok(())
 }
 

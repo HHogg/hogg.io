@@ -8,9 +8,11 @@ use crate::post_update::schedule_post_update;
 use crate::simulation_program::SimulationProgram;
 use crate::utils::{clear_timeout, request_animation_frame};
 
+type LoopClosure = Rc<RefCell<Option<Closure<dyn FnMut()>>>>;
+
 pub struct SimulationLoop {
   animation_frame_id: Option<u32>,
-  loop_closure: Option<Rc<RefCell<Option<Closure<dyn FnMut()>>>>>,
+  loop_closure: Option<LoopClosure>,
   loop_state: LoopState,
   program: Option<Rc<RefCell<SimulationProgram>>>,
 }
@@ -76,7 +78,7 @@ impl SimulationLoop {
     // Calculate elapsed time in seconds
     let elapsed = self.loop_state.get_elapsed_seconds();
     program
-      .borrow()
+      .borrow_mut()
       .run(elapsed)
       .map_err(|e| SimulationError::StepExecution(format!("{e:?}")))?;
 
@@ -90,7 +92,7 @@ impl SimulationLoop {
   ) -> Result<(), SimulationError> {
     // Use the provided time instead of elapsed time
     program
-      .borrow()
+      .borrow_mut()
       .run(time)
       .map_err(|e| SimulationError::StepExecution(format!("{e:?}")))?;
 
@@ -279,7 +281,7 @@ impl SimulationLoop {
       // Update simulation time to match elapsed time when running normally
       self.loop_state.simulation_time = elapsed;
       simulation_program
-        .borrow()
+        .borrow_mut()
         .run(elapsed)
         .map_err(|e| SimulationError::StepExecution(format!("{e:?}")))?;
     }

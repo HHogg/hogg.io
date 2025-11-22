@@ -8,7 +8,13 @@ import {
   TransitionBox,
   useResizeObserver,
 } from 'preshape';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import {
+  PropsWithChildren,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import useProjectWindowContext from './useProjectWindowContext';
 
 type ProjectTabProps = {
@@ -30,6 +36,7 @@ export default function ProjectTab({
   } = useProjectWindowContext();
   const [isHovered, setIsHovered] = useState(false);
   const [contentSize, contentRef] = useResizeObserver<HTMLDivElement>();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const isActive = activeTab === name;
 
   useEffect(() => {
@@ -37,6 +44,14 @@ export default function ProjectTab({
       setActiveTabContentHeight(contentSize.height);
     }
   }, [isActive, contentSize.height, setActiveTabContentHeight]);
+
+  // Scroll to bottom when content height changes
+  useLayoutEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop =
+        scrollContainerRef.current.scrollHeight;
+    }
+  }, [contentSize.height]);
 
   return (
     <Box>
@@ -92,6 +107,7 @@ export default function ProjectTab({
       </Motion>
 
       <Box
+        ref={scrollContainerRef}
         backgroundColor="background-shade-2"
         borderColor="background-shade-4"
         borderSize="x1"

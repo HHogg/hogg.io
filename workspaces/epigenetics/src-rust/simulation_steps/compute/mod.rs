@@ -1,39 +1,35 @@
 use wasm_bindgen::JsValue;
-use wgpu::{BindGroupLayout, Buffer, Device, RenderPipeline, SurfaceConfiguration};
+use wgpu::{BindGroupLayout, Buffer, ComputePipeline, Device, SurfaceConfiguration};
 
 use crate::{
   simulation_program::{SimulationRunState, SimulationStep},
-  utils::{create_quad_vertices, create_shader_module},
+  utils::create_shader_module,
 };
 
-const VERTEX_SHADER: &str = include_str!("./wgsl/vertex.wgsl");
-const FRAGMENT_SHADER: &str = include_str!("./wgsl/fragment.wgsl");
+const COMPUTE_SHADER: &str = include_str!("./wgsl/compute.wgsl");
 
 pub struct SimulationStepCompute {
-  pub pipeline: RenderPipeline,
-  pub vertex_buffer: Buffer,
+  pub pipeline: ComputePipeline,
   pub bind_group_layout: BindGroupLayout,
-  pub uniform_time_buffer: Buffer,
-  pub uniform_resolution_buffer: Buffer,
+  pub uniform_pass_index_buffer: Buffer,
+  pub uniform_texture_size_buffer: Buffer,
 }
 
 impl SimulationStep for SimulationStepCompute {
   fn create(device: &Device, _surface_config: &SurfaceConfiguration) -> Result<Self, JsValue> {
-    let vert_shader = create_shader_module(device, VERTEX_SHADER);
-    let frag_shader = create_shader_module(device, FRAGMENT_SHADER);
-    let vertex_buffer = create_quad_vertices(device);
+    let compute_shader = create_shader_module(device, COMPUTE_SHADER);
 
     // Create uniform buffers
-    let uniform_time_buffer = device.create_buffer(&wgpu::BufferDescriptor {
-      label: Some("Time uniform buffer"),
-      size: std::mem::size_of::<f32>() as u64,
+    let uniform_pass_index_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+      label: Some("uniform_pass_index_buffer"),
+      size: std::mem::size_of::<u32>() as u64,
       usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
       mapped_at_creation: false,
     });
 
-    let uniform_resolution_buffer = device.create_buffer(&wgpu::BufferDescriptor {
-      label: Some("Resolution uniform buffer"),
-      size: (std::mem::size_of::<f32>() * 2) as u64,
+    let uniform_texture_size_buffer = device.create_buffer(&wgpu::BufferDescriptor {
+      label: Some("uniform_texture_size_buffer"),
+      size: (std::mem::size_of::<u32>() * 3) as u64,
       usage: wgpu::BufferUsages::UNIFORM | wgpu::BufferUsages::COPY_DST,
       mapped_at_creation: false,
     });
@@ -42,10 +38,10 @@ impl SimulationStep for SimulationStepCompute {
     let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
       label: None,
       entries: &[
-        // u_time uniform buffer
+        // u_pass_index uniform buffer
         wgpu::BindGroupLayoutEntry {
           binding: 0,
-          visibility: wgpu::ShaderStages::FRAGMENT,
+          visibility: wgpu::ShaderStages::COMPUTE,
           ty: wgpu::BindingType::Buffer {
             ty: wgpu::BufferBindingType::Uniform,
             has_dynamic_offset: false,
@@ -53,10 +49,10 @@ impl SimulationStep for SimulationStepCompute {
           },
           count: None,
         },
-        // u_resolution uniform buffer
+        // u_texture_size uniform buffer
         wgpu::BindGroupLayoutEntry {
           binding: 1,
-          visibility: wgpu::ShaderStages::FRAGMENT,
+          visibility: wgpu::ShaderStages::COMPUTE,
           ty: wgpu::BindingType::Buffer {
             ty: wgpu::BufferBindingType::Uniform,
             has_dynamic_offset: false,
@@ -64,86 +60,63 @@ impl SimulationStep for SimulationStepCompute {
           },
           count: None,
         },
-        // compute_texture
+        // seed_texture (2D texture for per-pixel seeds)
         wgpu::BindGroupLayoutEntry {
           binding: 2,
-          visibility: wgpu::ShaderStages::FRAGMENT,
+          visibility: wgpu::ShaderStages::COMPUTE,
           ty: wgpu::BindingType::Texture {
             multisampled: false,
             view_dimension: wgpu::TextureViewDimension::D2,
-            sample_type: wgpu::TextureSampleType::Float { filterable: true },
+            sample_type: wgpu::TextureSampleType::Float { filterable: false },
           },
           count: None,
         },
-        // compute_sampler
+        // read_texture (3D storage texture for reading previous frame)
         wgpu::BindGroupLayoutEntry {
           binding: 3,
-          visibility: wgpu::ShaderStages::FRAGMENT,
-          ty: wgpu::BindingType::Sampler(wgpu::SamplerBindingType::Filtering),
+          visibility: wgpu::ShaderStages::COMPUTE,
+          ty: wgpu::BindingType::StorageTexture {
+            access: wgpu::StorageTextureAccess::ReadOnly,
+            format: wgpu::TextureFormat::R32Float,
+            view_dimension: wgpu::TextureViewDimension::D3,
+          },
+          count: None,
+        },
+        // write_texture (3D storage texture for writing new frame)
+        wgpu::BindGroupLayoutEntry {
+          binding: 4,
+          visibility: wgpu::ShaderStages::COMPUTE,
+          ty: wgpu::BindingType::StorageTexture {
+            access: wgpu::StorageTextureAccess::WriteOnly,
+            format: wgpu::TextureFormat::R32Float,
+            view_dimension: wgpu::TextureViewDimension::D3,
+          },
           count: None,
         },
       ],
     });
 
-    // Create render pipeline
+    // Create compute pipeline
     let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
       label: None,
       bind_group_layouts: &[&bind_group_layout],
       push_constant_ranges: &[],
     });
 
-    let pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
+    let pipeline = device.create_compute_pipeline(&wgpu::ComputePipelineDescriptor {
       label: None,
       layout: Some(&pipeline_layout),
-      vertex: wgpu::VertexState {
-        module: &vert_shader,
-        entry_point: Some("main"),
-        buffers: &[wgpu::VertexBufferLayout {
-          array_stride: (std::mem::size_of::<f32>() * 2) as u64,
-          step_mode: wgpu::VertexStepMode::Vertex,
-          attributes: &[wgpu::VertexAttribute {
-            offset: 0,
-            shader_location: 0,
-            format: wgpu::VertexFormat::Float32x2,
-          }],
-        }],
-        compilation_options: Default::default(),
-      },
-      fragment: Some(wgpu::FragmentState {
-        module: &frag_shader,
-        entry_point: Some("main"),
-        targets: &[Some(wgpu::ColorTargetState {
-          format: wgpu::TextureFormat::Rgba8Unorm,
-          blend: Some(wgpu::BlendState::REPLACE),
-          write_mask: wgpu::ColorWrites::ALL,
-        })],
-        compilation_options: Default::default(),
-      }),
-      primitive: wgpu::PrimitiveState {
-        topology: wgpu::PrimitiveTopology::TriangleList,
-        strip_index_format: None,
-        front_face: wgpu::FrontFace::Ccw,
-        cull_mode: Some(wgpu::Face::Back),
-        polygon_mode: wgpu::PolygonMode::Fill,
-        unclipped_depth: false,
-        conservative: false,
-      },
-      depth_stencil: None,
-      multisample: wgpu::MultisampleState {
-        count: 1,
-        mask: !0,
-        alpha_to_coverage_enabled: false,
-      },
-      multiview: None,
+      module: &compute_shader,
+      entry_point: Some("main"),
+      compilation_options: Default::default(),
       cache: None,
     });
 
     Ok(SimulationStepCompute {
       pipeline,
-      vertex_buffer,
       bind_group_layout,
-      uniform_time_buffer,
-      uniform_resolution_buffer,
+      uniform_pass_index_buffer,
+      uniform_texture_size_buffer,
     })
   }
 
@@ -153,26 +126,27 @@ impl SimulationStep for SimulationStepCompute {
       queue,
       width,
       height,
-      elapsed_time,
+      depth,
+      pass_index,
       read_texture_view,
       write_texture_view,
-      sampler,
+      seed_texture_view,
       ..
     } = state;
 
     // Update uniform buffers
-    let time_value: f32 = *elapsed_time as f32;
+    let pass_index_value: u32 = *pass_index;
     queue.write_buffer(
-      &self.uniform_time_buffer,
+      &self.uniform_pass_index_buffer,
       0,
-      bytemuck::cast_slice(&[time_value]),
+      bytemuck::cast_slice(&[pass_index_value]),
     );
 
-    let resolution_values: [f32; 2] = [*width as f32, *height as f32];
+    let texture_size_values: [u32; 3] = [*width, *height, *depth];
     queue.write_buffer(
-      &self.uniform_resolution_buffer,
+      &self.uniform_texture_size_buffer,
       0,
-      bytemuck::cast_slice(&resolution_values),
+      bytemuck::cast_slice(&texture_size_values),
     );
 
     let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
@@ -181,19 +155,23 @@ impl SimulationStep for SimulationStepCompute {
       entries: &[
         wgpu::BindGroupEntry {
           binding: 0,
-          resource: self.uniform_time_buffer.as_entire_binding(),
+          resource: self.uniform_pass_index_buffer.as_entire_binding(),
         },
         wgpu::BindGroupEntry {
           binding: 1,
-          resource: self.uniform_resolution_buffer.as_entire_binding(),
+          resource: self.uniform_texture_size_buffer.as_entire_binding(),
         },
         wgpu::BindGroupEntry {
           binding: 2,
-          resource: wgpu::BindingResource::TextureView(read_texture_view),
+          resource: wgpu::BindingResource::TextureView(seed_texture_view),
         },
         wgpu::BindGroupEntry {
           binding: 3,
-          resource: wgpu::BindingResource::Sampler(sampler),
+          resource: wgpu::BindingResource::TextureView(read_texture_view),
+        },
+        wgpu::BindGroupEntry {
+          binding: 4,
+          resource: wgpu::BindingResource::TextureView(write_texture_view),
         },
       ],
     });
@@ -202,43 +180,25 @@ impl SimulationStep for SimulationStepCompute {
       device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
 
     {
-      let mut render_pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+      let mut compute_pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
         label: None,
-        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-          view: write_texture_view,
-          resolve_target: None,
-          ops: wgpu::Operations {
-            load: wgpu::LoadOp::Clear(wgpu::Color {
-              r: 0.0,
-              g: 0.0,
-              b: 0.0,
-              a: 1.0,
-            }),
-            store: wgpu::StoreOp::Store,
-          },
-          depth_slice: None,
-        })],
-        depth_stencil_attachment: None,
-        occlusion_query_set: None,
         timestamp_writes: None,
       });
 
       // Set pipeline and bind group
-      render_pass.set_pipeline(&self.pipeline);
-      render_pass.set_bind_group(0, &bind_group, &[]);
+      compute_pass.set_pipeline(&self.pipeline);
+      compute_pass.set_bind_group(0, &bind_group, &[]);
 
-      // Set vertex buffer
-      render_pass.set_vertex_buffer(0, self.vertex_buffer.slice(..));
+      // Dispatch workgroups (8x8x1 workgroup size, so divide dimensions by 8)
+      let workgroup_count_x = (*width).div_ceil(8);
+      let workgroup_count_y = (*height).div_ceil(8);
+      let workgroup_count_z = *depth; // Process one z layer per workgroup
 
-      // Draw
-      render_pass.draw(0..6, 0..1);
+      compute_pass.dispatch_workgroups(workgroup_count_x, workgroup_count_y, workgroup_count_z);
     }
 
     // Submit command buffer
     queue.submit(std::iter::once(encoder.finish()));
-
-    // Swap buffers for next frame
-    state.swap_buffers();
 
     Ok(())
   }

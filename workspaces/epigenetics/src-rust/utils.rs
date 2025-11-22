@@ -35,9 +35,54 @@ pub fn create_shader_module(device: &Device, source: &str) -> ShaderModule {
   })
 }
 
-pub fn create_texture_and_view(device: &Device, width: u32, height: u32) -> (Texture, TextureView) {
+pub fn create_3d_texture_and_view(
+  label: &str,
+  device: &Device,
+  width: u32,
+  height: u32,
+  depth: u32,
+) -> (Texture, TextureView) {
+  let texture_label = format!("texture: {label}");
   let texture = device.create_texture(&TextureDescriptor {
-    label: None,
+    label: Some(&texture_label),
+    size: wgpu::Extent3d {
+      width,
+      height,
+      depth_or_array_layers: depth,
+    },
+    mip_level_count: 1,
+    sample_count: 1,
+    dimension: wgpu::TextureDimension::D3,
+    format: TextureFormat::R32Float,
+    usage: TextureUsages::TEXTURE_BINDING
+      | TextureUsages::STORAGE_BINDING
+      | TextureUsages::COPY_DST
+      | TextureUsages::COPY_SRC,
+    view_formats: &[],
+  });
+
+  let view_label = format!("texture_view: {label}");
+  let view = texture.create_view(&wgpu::TextureViewDescriptor {
+    label: Some(&view_label),
+    format: Some(TextureFormat::R32Float),
+    dimension: Some(wgpu::TextureViewDimension::D3),
+    aspect: wgpu::TextureAspect::All,
+    base_mip_level: 0,
+    mip_level_count: None,
+    base_array_layer: 0,
+    array_layer_count: None,
+    usage: Some(wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING),
+  });
+  (texture, view)
+}
+
+pub fn create_seed_texture_and_view(
+  device: &Device,
+  width: u32,
+  height: u32,
+) -> (Texture, TextureView) {
+  let texture = device.create_texture(&TextureDescriptor {
+    label: Some("seed_texture"),
     size: wgpu::Extent3d {
       width,
       height,
@@ -46,11 +91,8 @@ pub fn create_texture_and_view(device: &Device, width: u32, height: u32) -> (Tex
     mip_level_count: 1,
     sample_count: 1,
     dimension: wgpu::TextureDimension::D2,
-    format: TextureFormat::Rgba8Unorm,
-    usage: TextureUsages::TEXTURE_BINDING
-      | TextureUsages::RENDER_ATTACHMENT
-      | TextureUsages::COPY_DST
-      | TextureUsages::COPY_SRC,
+    format: TextureFormat::R32Float,
+    usage: TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_DST,
     view_formats: &[],
   });
 
@@ -132,12 +174,12 @@ pub fn log_table(title: &str, rows: &[(&str, &str)]) {
 
   // Build table rows
   // Top border with corners
-  let top_border = format!("┌{}┐", horizontal_border);
+  let top_border = format!("┌{horizontal_border}┐");
   let mut table_rows = vec![top_border];
 
   // Title row
   let padded_title = format!("{:<width$}", title, width = total_width - 2);
-  table_rows.push(format!("│ {} │", padded_title));
+  table_rows.push(format!("│ {padded_title} │"));
 
   // Separator between title and content
   let title_separator = format!("├{}┤", "─".repeat(total_width));
@@ -145,13 +187,13 @@ pub fn log_table(title: &str, rows: &[(&str, &str)]) {
 
   // Data rows
   for (label, value) in rows {
-    let padded_label = format!("{:<width$}", label, width = max_label_width);
-    let padded_value = format!("{:<width$}", value, width = max_value_width);
-    table_rows.push(format!("│ {} │ {} │", padded_label, padded_value));
+    let padded_label = format!("{label:<max_label_width$}");
+    let padded_value = format!("{value:<max_value_width$}");
+    table_rows.push(format!("│ {padded_label} │ {padded_value} │"));
   }
 
   // Bottom border with corners
-  let bottom_border = format!("└{}┘", horizontal_border);
+  let bottom_border = format!("└{horizontal_border}┘");
   table_rows.push(bottom_border);
 
   // Log the table
@@ -179,9 +221,9 @@ pub fn log_device_limits(limits: &wgpu::Limits) {
   let compute_invocations = format!("{}", limits.max_compute_invocations_per_workgroup);
   let compute_workgroups = format!("{}", limits.max_compute_workgroups_per_dimension);
   let compute_storage_size = format!("{} bytes", limits.max_compute_workgroup_storage_size);
-  let buffer_size = format!("{:.2} MB", max_buffer_size_mb);
+  let buffer_size = format!("{max_buffer_size_mb:.2} MB");
   let storage_buffers = format!("{}", limits.max_storage_buffers_per_shader_stage);
-  let storage_buffer_binding_size = format!("{:.2} MB", max_storage_buffer_binding_size_mb);
+  let storage_buffer_binding_size = format!("{max_storage_buffer_binding_size_mb:.2} MB");
   let bindings_per_group = format!("{}", limits.max_bindings_per_bind_group);
   let bind_groups = format!("{}", limits.max_bind_groups);
 
