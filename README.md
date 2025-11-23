@@ -4,10 +4,6 @@
   My personal website, which I use as a playground for my own learnings and experiments.
 </p>
 
-<p align="center"  style="margin-top: 0px">
- <img src="./assets/website.png">
-</p>
-
 ### Setup
 
 1. [Install Rust (recommended through rustup)](https://rustup.rs/)

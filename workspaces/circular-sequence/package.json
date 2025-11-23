@@ -9,6 +9,10 @@
     ".": "./src/index.ts",
     "./types": "./src/types.ts"
   },
+  "scripts": {
+    "lint:rust": "cargo clippy --lib -p hogg_circular_sequence",
+    "test:rust": "cargo test --lib -p hogg_circular_sequence -- --test-threads=1"
+  },
   "dependencies": {
     "@hogg/common": "workspace:^",
     "@hogg/tilings": "workspace:^",

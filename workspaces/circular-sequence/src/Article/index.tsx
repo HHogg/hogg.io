@@ -6,7 +6,8 @@ import {
   ArticlePage,
   DeepPartial,
   ProjectPageLink,
- tilingsMeta } from '@hogg/common';
+  tilingsMeta,
+} from '@hogg/common';
 import { TilingRenderer } from '@hogg/tilings';
 import { Options, ScaleMode, Layer } from '@hogg/wasm';
 import {

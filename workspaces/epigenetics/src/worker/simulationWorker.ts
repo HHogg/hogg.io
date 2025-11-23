@@ -4,7 +4,7 @@ import {
   RawWireValue,
   WireValue,
 } from 'comlink/dist/umd/protocol';
-import { Message } from './types';
+import { Message } from './types.generated';
 
 export interface SimulationWorkerApi {
   initSimulation(width: number, height: number): Promise<void>;

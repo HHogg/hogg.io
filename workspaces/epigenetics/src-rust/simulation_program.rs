@@ -1,7 +1,10 @@
 use wasm_bindgen::JsValue;
 use web_sys::OffscreenCanvas;
 
-use crate::{error::SimulationError, utils::log_table};
+use crate::{
+  error::SimulationError,
+  utils::{get_surface_target, log_table},
+};
 use wgpu::{
   AddressMode, Backends, Device, DeviceDescriptor, Features, FilterMode, Instance,
   InstanceDescriptor, Limits, PowerPreference, Queue, RequestAdapterOptions, Sampler,
@@ -10,7 +13,10 @@ use wgpu::{
 
 use crate::{
   simulation_steps::{SimulationStepCompute, SimulationStepRender},
-  utils::{create_3d_texture_and_view, create_seed_texture_and_view, log_device_limits},
+  utils::{
+    create_3d_texture_and_view, create_seed_texture_and_view, get_optimal_workgroup_size,
+    log_device_limits,
+  },
 };
 
 pub struct SimulationProgram {
@@ -28,6 +34,8 @@ pub struct SimulationProgram {
   pub seed_texture_view: TextureView,
   pub depth: u32,
   pub pass_index: u32,
+  pub workgroup_size_x: u32,
+  pub workgroup_size_y: u32,
 }
 
 impl SimulationProgram {
@@ -43,10 +51,12 @@ impl SimulationProgram {
       memory_budget_thresholds: Default::default(),
     });
 
+    // The SurfaceTarget::OffscreenCanvas is fine here
+    // ignore the build warning that this is bad.
+    // This is WASM-only code (uses web_sys::OffscreenCanvas), so rust-analyzer may show an error
+    // when using host target, but it will compile correctly for WASM.
     let surface = instance
-      // The SurfaceTarget::OffscreenCanvas is fine here
-      // ignore the build warning that this is bad.
-      .create_surface(wgpu::SurfaceTarget::OffscreenCanvas(canvas))
+      .create_surface(get_surface_target(canvas))
       .map_err(|e| SimulationError::SurfaceCreation(format!("{e:?}")))?;
 
     let adapter = instance
@@ -131,13 +141,23 @@ impl SimulationProgram {
       ..Default::default()
     });
 
+    // Calculate optimal workgroup size based on texture dimensions
+    let (workgroup_size_x, workgroup_size_y) = get_optimal_workgroup_size(width, height);
+
+    let create_state = SimulationCreateState {
+      device: device.clone(),
+      surface_config: surface_config.clone(),
+      workgroup_size_x,
+      workgroup_size_y,
+    };
+
     let steps = vec![
       Box::new(
-        SimulationStepCompute::create(&device, &surface_config)
+        SimulationStepCompute::create(&create_state)
           .map_err(|e| SimulationError::StepCreation(format!("Compute step: {e:?}")))?,
       ) as Box<dyn SimulationStep>,
       Box::new(
-        SimulationStepRender::create(&device, &surface_config)
+        SimulationStepRender::create(&create_state)
           .map_err(|e| SimulationError::StepCreation(format!("Render step: {e:?}")))?,
       ) as Box<dyn SimulationStep>,
     ];
@@ -157,6 +177,8 @@ impl SimulationProgram {
       seed_texture_view,
       depth,
       pass_index: 0,
+      workgroup_size_x,
+      workgroup_size_y,
     })
   }
 
@@ -176,6 +198,8 @@ impl SimulationProgram {
       seed_texture_view: self.seed_texture_view.clone(),
       sampler: self.sampler.clone(),
       surface: &self.surface,
+      workgroup_size_x: self.workgroup_size_x,
+      workgroup_size_y: self.workgroup_size_y,
     };
 
     for step in &self.steps {
@@ -379,6 +403,7 @@ impl SimulationProgram {
       * self.depth as u64
       * 4) // R32Float = 4 bytes per pixel (single channel)
       / (1024 * 1024);
+    let workgroup_size = format!("{}x{}", self.workgroup_size_x, self.workgroup_size_y);
 
     log_table(
       "Simulation Stats",
@@ -389,10 +414,18 @@ impl SimulationProgram {
         ("Depth", self.depth.to_string().as_str()),
         ("Pass index", self.pass_index.to_string().as_str()),
         ("Memory usage", format!("{memory_usage} MB").as_str()),
+        ("Workgroup size", workgroup_size.as_str()),
       ],
     );
     Ok(())
   }
+}
+
+pub struct SimulationCreateState {
+  pub device: Device,
+  pub surface_config: SurfaceConfiguration,
+  pub workgroup_size_x: u32,
+  pub workgroup_size_y: u32,
 }
 
 pub struct SimulationRunState<'a> {
@@ -407,10 +440,12 @@ pub struct SimulationRunState<'a> {
   pub seed_texture_view: TextureView,
   pub sampler: Sampler,
   pub surface: &'a Surface<'a>,
+  pub workgroup_size_x: u32,
+  pub workgroup_size_y: u32,
 }
 
 pub trait SimulationStep {
-  fn create(device: &Device, surface_config: &SurfaceConfiguration) -> Result<Self, JsValue>
+  fn create(state: &SimulationCreateState) -> Result<Self, JsValue>
   where
     Self: Sized;
   fn run(&self, state: &mut SimulationRunState) -> Result<(), JsValue>;

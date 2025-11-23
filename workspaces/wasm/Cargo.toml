@@ -6,6 +6,9 @@ authors = ["Harry Hogg <harry@hogg.io>"]
 description = ""
 repository = "https://github.com/hhogg/hogg.io"
 
+[package.metadata]
+default-target = "wasm32-unknown-unknown"
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 name = "hogg_wasm"

@@ -1,7 +1,13 @@
+#[path = "./utils_tests.rs"]
+#[cfg(test)]
+mod tests;
+
 use wasm_bindgen::closure::Closure;
 use wasm_bindgen::JsCast;
 use wasm_bindgen::JsValue;
 use web_sys::DedicatedWorkerGlobalScope;
+use web_sys::OffscreenCanvas;
+use wgpu::SurfaceTarget;
 use wgpu::TextureDescriptor;
 use wgpu::TextureFormat;
 use wgpu::TextureUsages;
@@ -33,6 +39,17 @@ pub fn create_shader_module(device: &Device, source: &str) -> ShaderModule {
     label: None,
     source: wgpu::ShaderSource::Wgsl(source.into()),
   })
+}
+
+pub fn get_surface_target(_canvas: OffscreenCanvas) -> SurfaceTarget<'static> {
+  #[cfg(target_arch = "wasm32")]
+  {
+    SurfaceTarget::OffscreenCanvas(_canvas)
+  }
+  #[cfg(not(target_arch = "wasm32"))]
+  {
+    unreachable!()
+  }
 }
 
 pub fn create_3d_texture_and_view(
@@ -272,4 +289,37 @@ pub fn log_device_limits(limits: &wgpu::Limits) {
   ];
 
   log_table("Device Limits", &rows);
+}
+
+pub fn get_optimal_workgroup_size(width: u32, height: u32) -> (u32, u32) {
+  // Consider common workgroup sizes (powers of 2, up to 16x16 which is the max invocation limit)
+  let candidates = [(4, 4), (8, 8), (16, 16)];
+
+  let mut best_waste = u64::MAX;
+  let mut best_size = (8, 8); // Default fallback
+
+  for (wg_x, wg_y) in candidates.iter() {
+    // Calculate how many workgroups we'd need
+    let workgroups_x = width.div_ceil(*wg_x);
+    let workgroups_y = height.div_ceil(*wg_y);
+
+    // Calculate total threads dispatched
+    let total_threads =
+      (workgroups_x as u64) * (workgroups_y as u64) * (*wg_x as u64) * (*wg_y as u64);
+
+    // Calculate useful threads (actual texture pixels)
+    let useful_threads = (width as u64) * (height as u64);
+
+    // Calculate waste
+    let waste = total_threads - useful_threads;
+
+    // Prefer larger workgroups when waste is equal (better for GPU scheduling)
+    if waste < best_waste || (waste == best_waste && (*wg_x * *wg_y) > (best_size.0 * best_size.1))
+    {
+      best_waste = waste;
+      best_size = (*wg_x, *wg_y);
+    }
+  }
+
+  best_size
 }

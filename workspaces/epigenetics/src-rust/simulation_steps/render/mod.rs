@@ -1,8 +1,8 @@
 use wasm_bindgen::JsValue;
-use wgpu::{BindGroupLayout, Buffer, Device, RenderPipeline, SurfaceConfiguration};
+use wgpu::{BindGroupLayout, Buffer, RenderPipeline};
 
 use crate::{
-  simulation_program::{SimulationRunState, SimulationStep},
+  simulation_program::{SimulationCreateState, SimulationRunState, SimulationStep},
   utils::{create_quad_vertices, create_shader_module},
 };
 
@@ -18,7 +18,13 @@ pub struct SimulationStepRender {
 }
 
 impl SimulationStep for SimulationStepRender {
-  fn create(device: &Device, surface_config: &SurfaceConfiguration) -> Result<Self, JsValue> {
+  fn create(state: &SimulationCreateState) -> Result<Self, JsValue> {
+    let SimulationCreateState {
+      device,
+      surface_config,
+      ..
+    } = state;
+
     let vert_shader = create_shader_module(device, VERTEX_SHADER);
     let frag_shader = create_shader_module(device, FRAGMENT_SHADER);
     let vertex_buffer = create_quad_vertices(device);

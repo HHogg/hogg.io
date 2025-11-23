@@ -7,10 +7,11 @@
   "main": "./src/index.ts",
   "scripts": {
     "build": "yarn build:types && yarn build:wasm",
-    "build:types": "typeshare --lang=typescript --output-file=./src/types.ts  ../",
+    "build:types": "typeshare --lang=typescript --output-file=./src/types.generated.ts  ../",
     "build:wasm": "wasm-pack build --target web --no-opt",
-    "clean": "rm -rf ./pkg && rm -rf ./src/types.ts",
-    "dev": "./watch.sh"
+    "dev": "./watch.sh",
+    "lint:rust": "cargo clippy --lib -p hogg_wasm",
+    "test:rust": "cargo test --lib -p hogg_wasm -- --test-threads=1"
   },
   "dependencies": {
     "@hogg/common": "workspace:^",

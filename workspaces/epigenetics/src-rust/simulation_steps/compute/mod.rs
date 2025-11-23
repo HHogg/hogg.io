@@ -1,12 +1,20 @@
 use wasm_bindgen::JsValue;
-use wgpu::{BindGroupLayout, Buffer, ComputePipeline, Device, SurfaceConfiguration};
+use wgpu::{BindGroupLayout, Buffer, ComputePipeline};
 
 use crate::{
-  simulation_program::{SimulationRunState, SimulationStep},
+  simulation_program::{SimulationCreateState, SimulationRunState, SimulationStep},
   utils::create_shader_module,
 };
 
-const COMPUTE_SHADER: &str = include_str!("./wgsl/compute.wgsl");
+const COMPUTE_SHADER_TEMPLATE: &str = include_str!("./wgsl/compute.wgsl");
+
+// Generate shader source with specified workgroup size
+fn generate_shader_source(workgroup_size_x: u32, workgroup_size_y: u32) -> String {
+  COMPUTE_SHADER_TEMPLATE.replace(
+    "@compute @workgroup_size(8, 8, 1)",
+    &format!("@compute @workgroup_size({workgroup_size_x}, {workgroup_size_y}, 1)"),
+  )
+}
 
 pub struct SimulationStepCompute {
   pub pipeline: ComputePipeline,
@@ -16,8 +24,17 @@ pub struct SimulationStepCompute {
 }
 
 impl SimulationStep for SimulationStepCompute {
-  fn create(device: &Device, _surface_config: &SurfaceConfiguration) -> Result<Self, JsValue> {
-    let compute_shader = create_shader_module(device, COMPUTE_SHADER);
+  fn create(state: &SimulationCreateState) -> Result<Self, JsValue> {
+    let SimulationCreateState {
+      device,
+      workgroup_size_x,
+      workgroup_size_y,
+      ..
+    } = state;
+
+    // Generate shader source with optimal workgroup size
+    let shader_source = generate_shader_source(*workgroup_size_x, *workgroup_size_y);
+    let compute_shader = create_shader_module(device, &shader_source);
 
     // Create uniform buffers
     let uniform_pass_index_buffer = device.create_buffer(&wgpu::BufferDescriptor {
@@ -189,9 +206,9 @@ impl SimulationStep for SimulationStepCompute {
       compute_pass.set_pipeline(&self.pipeline);
       compute_pass.set_bind_group(0, &bind_group, &[]);
 
-      // Dispatch workgroups (8x8x1 workgroup size, so divide dimensions by 8)
-      let workgroup_count_x = (*width).div_ceil(8);
-      let workgroup_count_y = (*height).div_ceil(8);
+      // Dispatch workgroups using the configured workgroup size
+      let workgroup_count_x = (*width).div_ceil(state.workgroup_size_x);
+      let workgroup_count_y = (*height).div_ceil(state.workgroup_size_y);
       let workgroup_count_z = *depth; // Process one z layer per workgroup
 
       compute_pass.dispatch_workgroups(workgroup_count_x, workgroup_count_y, workgroup_count_z);

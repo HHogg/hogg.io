@@ -1,0 +1,10 @@
+{
+  "name": "@hogg/geometry",
+  "version": "0.0.0",
+  "author": "Harry Hogg <harry@hogg.io>",
+  "private": true,
+  "scripts": {
+    "lint:rust": "cargo clippy --lib -p hogg_geometry",
+    "test:rust": "cargo test --lib -p hogg_geometry -- --test-threads=1"
+  }
+}

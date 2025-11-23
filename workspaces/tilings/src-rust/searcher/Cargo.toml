@@ -21,7 +21,13 @@ hogg_tiling_datastore = { path = "../datastore" }
 nanoid = "0.4.0"
 serde_json.workspace = true
 serde.workspace = true
-sqlx.workspace = true
+sqlx = { version = "0.8.2", features = [
+  "chrono",
+  "macros",
+  "postgres",
+  "runtime-async-std-native-tls",
+] }
+
 tokio-util.workspace = true
 tokio.workspace = true
 tracing-appender.workspace = true

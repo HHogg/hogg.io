@@ -6,7 +6,9 @@ import {
   ArticlePage,
   DeepPartial,
   ProjectPageLink,
- spatialGridMapMeta, tilingsMeta } from '@hogg/common';
+  spatialGridMapMeta,
+  tilingsMeta,
+} from '@hogg/common';
 import { TilingRenderer } from '@hogg/tilings';
 import { ColorPalette, Options, ScaleMode } from '@hogg/wasm';
 import {

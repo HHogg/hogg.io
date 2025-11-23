@@ -5,4 +5,4 @@ export { default as WasmWorkerLabel } from './WasmWorker/WasmWorkerLabel';
 
 export { addEventListener, addStateChangeListener } from './WasmWorker/state';
 
-export * from './types';
+export * from './types.generated';

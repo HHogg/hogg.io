@@ -5,11 +5,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "yarn run clean && yarn run build:client && yarn run build:server && yarn run ssg",
+    "build": "yarn run build:client && yarn run build:server && yarn run ssg",
     "build:client": "vite build --outDir dist/client",
     "build:server": "vite build --ssr src/entry-server.tsx --outDir dist/server",
-    "clean": "rm -rf ./dist",
-    "dev": "vite --host localhost --port 4001",
+    "dev": "vite --force --host localhost --port 4001",
     "preview": "superstatic dist/client --port 8080 --host 127.0.0.1",
     "ssg": "node prerender"
   },

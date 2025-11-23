@@ -8,4 +8,9 @@
 .parche-cache
 .yarn
 dist
+pkg
 public
+target
+
+workspaces/**/types.generated.ts
+workspaces/tilings/results/*

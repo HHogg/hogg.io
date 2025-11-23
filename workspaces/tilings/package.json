@@ -14,7 +14,9 @@
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file",
-    "verify:results": "./scripts/detect-result-changes.sh ./results/output.csv"
+    "verify:results": "./scripts/detect-result-changes.sh ./results/output.csv",
+    "lint:rust": "cargo clippy --lib -p hogg_tiling_datastore -p hogg_tiling_export -p hogg_tiling_generator -p hogg_tiling_renderer -p hogg_tiling_searcher",
+    "test:rust": "cargo test --lib -p hogg_tiling_datastore -p hogg_tiling_export -p hogg_tiling_generator -p hogg_tiling_renderer -p hogg_tiling_searcher -- --test-threads=1"
   },
   "dependencies": {
     "@hogg/common": "workspace:^",

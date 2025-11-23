@@ -1,3 +1,5 @@
+#![cfg_attr(target_arch = "wasm32", no_main)]
+
 mod error;
 mod post_message;
 mod post_update;

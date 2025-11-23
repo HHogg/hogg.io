@@ -5,3 +5,7 @@ target-dir = "target"
 [target.wasm32-unknown-unknown]
 # For wasm32, we don't need native dependencies
 runner = "wasm-bindgen-test-runner"
+
+# Treat warnings as errors for all packages
+[env]
+RUSTFLAGS = { value = "-D warnings", force = false }

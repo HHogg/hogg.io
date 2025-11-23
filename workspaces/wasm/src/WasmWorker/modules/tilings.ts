@@ -5,7 +5,7 @@ import {
   render_tiling as _renderTiling,
   TilingsPlayer,
 } from '@hogg/wasm/pkg';
-import { FeatureToggle, Options, Transform } from '../../types';
+import { FeatureToggle, Options, Transform } from '../../types.generated';
 
 const canvases = new Map<string, OffscreenCanvas>();
 

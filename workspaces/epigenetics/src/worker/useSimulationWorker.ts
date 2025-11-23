@@ -4,7 +4,7 @@ import {
   SimulationWorkerApi,
   terminateSimulationWorker,
 } from './simulationWorker';
-import { Message } from './types';
+import { Message } from './types.generated';
 
 export type Event = {
   type: 'info' | 'success' | 'error';

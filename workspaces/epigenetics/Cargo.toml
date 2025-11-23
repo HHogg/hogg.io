@@ -7,6 +7,9 @@ description = "A library for working with epigenetics"
 license = "MIT/Apache-2.0"
 repository = "https://github.com/hhogg/hogg.io"
 
+[package.metadata]
+default-target = "wasm32-unknown-unknown"
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 name = "hogg_epigenetics_worker"
@@ -37,3 +40,4 @@ web-sys = { workspace = true, features = [
 
 [dev-dependencies]
 pretty_assertions.workspace = true
+wasm-bindgen-test = "0.3"

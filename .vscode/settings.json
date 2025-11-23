@@ -1,8 +1,0 @@
-{
-  "rust-analyzer.cargo.allTargets": false,
-  "rust-analyzer.cargo.target": "wasm32-unknown-unknown",
-  "rust-analyzer.cargo.extraArgs": [
-    "--package",
-    "hogg_epigenetics"
-  ]
-}

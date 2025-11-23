@@ -1055,6 +1055,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@hogg/geometry@workspace:workspaces/geometry":
+  version: 0.0.0-use.local
+  resolution: "@hogg/geometry@workspace:workspaces/geometry"
+  languageName: unknown
+  linkType: soft
+
 "@hogg/grahams-scan@workspace:^, @hogg/grahams-scan@workspace:workspaces/graphams-scan":
   version: 0.0.0-use.local
   resolution: "@hogg/grahams-scan@workspace:workspaces/graphams-scan"

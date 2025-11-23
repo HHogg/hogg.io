@@ -9,6 +9,10 @@
     ".": "./src/index.ts",
     "./types": "./src/types.ts"
   },
+  "scripts": {
+    "lint:rust": "cargo clippy --lib -p hogg_tilings_validation_overlaps",
+    "test:rust": "cargo test --lib -p hogg_tilings_validation_overlaps -- --test-threads=1"
+  },
   "dependencies": {
     "@hogg/common": "workspace:^",
     "preshape": "^19.3.2",

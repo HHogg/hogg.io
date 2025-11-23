@@ -18,7 +18,6 @@
 - Use `preshape` design system components
 - Import order: external libraries first, then internal modules
 - Use trailing commas in objects and arrays
-- Prefer `const` over `let`, avoid `var`
 - Use descriptive variable names
 - Prefer explicit return types for functions
 
@@ -32,9 +31,8 @@
 ### React Patterns
 
 - Use custom hooks for complex state logic
-- Prefer composition over inheritance
 - Use `useMemo` and `useCallback` for performance optimization when needed
-- Use `useEffect` with proper dependency arrays
+- Use `useEffect` with proper dependency arrays, and should be placed just before the render output.
 - Prefer controlled components over uncontrolled
 
 ### State Management
@@ -42,13 +40,12 @@
 - Use React hooks for local state
 - Use context providers for shared state
 - Prefer lifting state up over prop drilling
-- Use `useResizeObserver` from `react-use` for responsive behavior
+- Use `useResizeObserver` from `preshape` for responsive behavior
 
 ### Styling
 
 - Use CSS custom properties (CSS variables) for theming
 - Prefer `preshape` components over custom CSS
-- Use `framer-motion` for animations and transitions
 - Use `style` prop for dynamic styles
 
 ## Rust Integration
@@ -73,14 +70,13 @@
 
 - Use `cargo test` for Rust tests
 - Use `cargo insta` for snapshot testing
-- Run tests with `yarn test:rust`
+- Run tests with `yarn test:rust:ci`
 - Use `--test-threads=1` for deterministic test execution
 
 ### TypeScript Testing
 
 - Use Vitest for TypeScript/JavaScript testing
-- Run tests from root level: `yarn test:js` or `yarn test:js:ci`
-- Use `yarn test:js:ui` for interactive test UI
+- Run tests from root level: `yarn test:js:ci`
 - Test files should be named `*.test.{ts,tsx}` and placed in workspace directories
 - Use descriptive test names that explain the expected behavior
 - Test edge cases and error conditions

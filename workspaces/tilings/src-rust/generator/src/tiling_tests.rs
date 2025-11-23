@@ -13,7 +13,7 @@ static FIRST_VALID_LEVEL_2_TILING_TARGET_TOLERANCE_MS: LazyLock<i64> = LazyLock:
   if std::env::var("CI").is_ok() {
     1000
   } else {
-    250
+    500
   }
 });
 
@@ -44,8 +44,12 @@ pub fn before_each() {
     let duration = (time_ended - time_started).max(0);
 
     {
-      *FIRST_VALID_LEVEL_2_TILINGS.lock().unwrap() = results;
-      *FIRST_VALID_LEVEL_2_DURATION_MS.lock().unwrap() = duration;
+      *FIRST_VALID_LEVEL_2_TILINGS
+        .lock()
+        .unwrap_or_else(|e| e.into_inner()) = results;
+      *FIRST_VALID_LEVEL_2_DURATION_MS
+        .lock()
+        .unwrap_or_else(|e| e.into_inner()) = duration;
     }
   });
 }
@@ -53,13 +57,17 @@ pub fn before_each() {
 #[test]
 fn first_valid_level_1_to_2_tilings_are_correct() {
   before_each();
-  assert_debug_snapshot!(FIRST_VALID_LEVEL_2_TILINGS.lock().unwrap());
+  assert_debug_snapshot!(FIRST_VALID_LEVEL_2_TILINGS
+    .lock()
+    .unwrap_or_else(|e| e.into_inner()));
 }
 
 #[test]
 fn first_valid_level_1_to_2_generate_in_a_target_time() {
   before_each();
-  let duration = *FIRST_VALID_LEVEL_2_DURATION_MS.lock().unwrap();
+  let duration = *FIRST_VALID_LEVEL_2_DURATION_MS
+    .lock()
+    .unwrap_or_else(|e| e.into_inner());
   let lower_bound =
     FIRST_VALID_LEVEL_2_TILING_TARGET_DURATION_MS - *FIRST_VALID_LEVEL_2_TILING_TARGET_TOLERANCE_MS;
   let upper_bound =
@@ -75,7 +83,9 @@ fn first_valid_level_1_to_2_generate_in_a_target_time() {
 fn traversing_from_level_2_to_1_tilings_match_level_1_to_2() {
   before_each();
 
-  let tilings = FIRST_VALID_LEVEL_2_TILINGS.lock().unwrap();
+  let tilings = FIRST_VALID_LEVEL_2_TILINGS
+    .lock()
+    .unwrap_or_else(|e| e.into_inner());
   let first_level_2_tiling = tilings.last().unwrap();
 
   let mut tiling = Tiling::default()

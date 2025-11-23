@@ -1,6 +1,6 @@
 import { PropertyAtPath } from '@hogg/common';
 import { v4 } from 'uuid';
-import { WasmWorkerEvent } from '../types';
+import { WasmWorkerEvent } from '../types.generated';
 import { WasmApi, WasmApiKey } from './WasmWorker';
 
 export type WasmWorkerMessageRequest = {

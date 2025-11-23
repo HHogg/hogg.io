@@ -17,6 +17,7 @@ members = [
   "workspaces/geometry",
   "workspaces/line-segment-extending",
   "workspaces/spatial-grid-map",
+  "workspaces/tilings/src-rust/*",
   "workspaces/tilings-validation-gaps",
   "workspaces/tilings-validation-overlaps",
   "workspaces/tilings-validation-vertex-types",

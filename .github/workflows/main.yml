@@ -24,6 +24,8 @@ jobs:
         run: cargo install typeshare-cli
       - name: 'Install dependencies: wasm32-unknown-unknown'
         run: rustup target add wasm32-unknown-unknown
+      - name: 'Format'
+        run: yarn format:check
       - name: 'Build'
         run: yarn build
       - name: 'Lint'
