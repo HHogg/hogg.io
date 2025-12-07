@@ -3,9 +3,7 @@
 mod error;
 mod post_message;
 mod post_update;
-mod simulation_loop;
-mod simulation_program;
-mod simulation_steps;
+mod sim;
 mod thread_storage;
 mod utils;
 
@@ -18,11 +16,12 @@ use wasm_bindgen::JsValue;
 use web_sys::OffscreenCanvas;
 
 use crate::error::SimulationError;
-use crate::post_message::Message;
-use crate::simulation_loop::SimulationLoop;
-use crate::simulation_program::SimulationProgram;
+use crate::post_message::{send_estimated_memory_usage, Message};
 use crate::thread_storage::{
-  get_canvas, get_simulation_loop, get_simulation_program, set_canvas, set_simulation_loop,
+  get_canvas, get_data_config as get_data_config_thread_local, get_simulation_dimensions,
+  get_simulation_loop, get_simulation_program, set_canvas,
+  set_data_config as set_data_config_thread_local,
+  set_simulation_dimensions as set_simulation_dimensions_thread_local, set_simulation_loop,
   set_simulation_program,
 };
 
@@ -30,8 +29,20 @@ use crate::thread_storage::{
 fn main() -> Result<(), JsError> {
   console_log::init_with_level(log::Level::Debug).expect("Failed to initialize logger");
   panic::set_hook(Box::new(console_error_panic_hook::hook));
+
+  // Initialize WESL
+  wesl::Wesl::new("src-rust/sim/steps").build_artifact(
+    &"hogg_epigenetics::main".parse().unwrap(),
+    "epigenetics_shaders",
+  );
+
   Message::Log("Epigenetics simulation".to_string()).send();
   Message::Log("----------------------".to_string()).send();
+
+  // Set default config and send it to frontend
+  let default_config = sim::data::Config::create();
+  set_data_config_thread_local(default_config.clone());
+  Message::DataConfigSet(default_config).send();
   Message::WasmReady.send();
   Ok(())
 }
@@ -52,40 +63,36 @@ pub fn set_post_update_interval(frames: u32) -> Result<(), JsValue> {
 }
 
 #[wasm_bindgen]
-pub fn get_max_texture_depth() -> Result<u32, JsValue> {
-  let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
-  let max_depth = simulation_program_rc
-    .borrow()
-    .device
-    .limits()
-    .max_texture_dimension_3d;
-  Ok(max_depth)
-}
-
-#[wasm_bindgen]
-pub fn get_texture_depth() -> Result<u32, JsValue> {
-  let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
-  let depth = simulation_program_rc.borrow().depth;
-  Ok(depth)
-}
-
-#[wasm_bindgen]
-pub fn set_texture_depth(depth: u32) -> Result<(), JsValue> {
-  let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
-  let mut simulation_program = simulation_program_rc.borrow_mut();
-  simulation_program
-    .set_texture_depth(depth)
-    .map_err(JsValue::from)?;
-  Message::TextureDepthSet(depth).send();
-  simulation_program.log_stats().map_err(JsValue::from)?;
+pub fn set_data_config(data_config: JsValue) -> Result<(), JsValue> {
+  let data_config: sim::data::Config =
+    serde_wasm_bindgen::from_value(data_config).map_err(JsValue::from)?;
+  set_data_config_thread_local(data_config.clone());
+  Message::DataConfigSet(data_config.clone()).send();
+  send_estimated_memory_usage();
   Ok(())
 }
 
 #[wasm_bindgen]
-pub async fn init_simulation(width: u32, height: u32) -> Result<(), JsValue> {
-  let canvas = get_canvas().ok_or(SimulationError::MissingCanvas)?;
+pub fn get_data_memory_usage_estimated(width: u32, height: u32) -> Result<u64, JsValue> {
+  let data_config = get_data_config_thread_local().ok_or(SimulationError::MissingDataConfig)?;
+  let memory_usage = sim::Data::memory_usage_estimated(&data_config, width, height);
+  Ok(memory_usage)
+}
 
-  let simulation_program = SimulationProgram::create(canvas, width, height)
+#[wasm_bindgen]
+pub fn set_simulation_dimensions(width: u32, height: u32) -> Result<(), JsValue> {
+  set_simulation_dimensions_thread_local(width, height);
+  send_estimated_memory_usage();
+  Ok(())
+}
+
+#[wasm_bindgen]
+pub async fn init_simulation() -> Result<(), JsValue> {
+  let canvas = get_canvas().ok_or(SimulationError::MissingCanvas)?;
+  let data_config = get_data_config_thread_local().ok_or(SimulationError::MissingDataConfig)?;
+  let (width, height) = get_simulation_dimensions().ok_or(SimulationError::MissingDimensions)?;
+
+  let simulation_program = sim::Program::create(canvas, width, height, data_config)
     .await
     .map_err(JsValue::from)?;
   let program_rc = Rc::new(RefCell::new(simulation_program));
@@ -94,7 +101,7 @@ pub async fn init_simulation(width: u32, height: u32) -> Result<(), JsValue> {
   set_simulation_program(program_rc.clone());
 
   // Create the simulation loop (this will also render the first frame)
-  let loop_instance = SimulationLoop::create(program_rc.clone()).map_err(JsValue::from)?;
+  let loop_instance = sim::Loop::create(program_rc.clone()).map_err(JsValue::from)?;
   let loop_rc = Rc::new(RefCell::new(loop_instance));
 
   // Store the loop in thread-local storage
@@ -187,10 +194,16 @@ pub fn step_simulation_frame() -> Result<(), JsValue> {
 pub fn resize_simulation(width: u32, height: u32) -> Result<(), JsValue> {
   let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
 
+  // Update stored dimensions
+  set_simulation_dimensions_thread_local(width, height);
+
   simulation_program_rc
     .borrow_mut()
     .resize(width, height)
     .map_err(JsValue::from)?;
+
+  // Recalculate and send memory usage estimate
+  send_estimated_memory_usage();
 
   Ok(())
 }

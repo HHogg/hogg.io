@@ -8,11 +8,7 @@ use wasm_bindgen::JsValue;
 use web_sys::DedicatedWorkerGlobalScope;
 use web_sys::OffscreenCanvas;
 use wgpu::SurfaceTarget;
-use wgpu::TextureDescriptor;
-use wgpu::TextureFormat;
-use wgpu::TextureUsages;
 use wgpu::{util::DeviceExt, Buffer, Device, ShaderModule};
-use wgpu::{Texture, TextureView};
 
 use crate::post_message::Message;
 
@@ -50,71 +46,6 @@ pub fn get_surface_target(_canvas: OffscreenCanvas) -> SurfaceTarget<'static> {
   {
     unreachable!()
   }
-}
-
-pub fn create_3d_texture_and_view(
-  label: &str,
-  device: &Device,
-  width: u32,
-  height: u32,
-  depth: u32,
-) -> (Texture, TextureView) {
-  let texture_label = format!("texture: {label}");
-  let texture = device.create_texture(&TextureDescriptor {
-    label: Some(&texture_label),
-    size: wgpu::Extent3d {
-      width,
-      height,
-      depth_or_array_layers: depth,
-    },
-    mip_level_count: 1,
-    sample_count: 1,
-    dimension: wgpu::TextureDimension::D3,
-    format: TextureFormat::R32Float,
-    usage: TextureUsages::TEXTURE_BINDING
-      | TextureUsages::STORAGE_BINDING
-      | TextureUsages::COPY_DST
-      | TextureUsages::COPY_SRC,
-    view_formats: &[],
-  });
-
-  let view_label = format!("texture_view: {label}");
-  let view = texture.create_view(&wgpu::TextureViewDescriptor {
-    label: Some(&view_label),
-    format: Some(TextureFormat::R32Float),
-    dimension: Some(wgpu::TextureViewDimension::D3),
-    aspect: wgpu::TextureAspect::All,
-    base_mip_level: 0,
-    mip_level_count: None,
-    base_array_layer: 0,
-    array_layer_count: None,
-    usage: Some(wgpu::TextureUsages::TEXTURE_BINDING | wgpu::TextureUsages::STORAGE_BINDING),
-  });
-  (texture, view)
-}
-
-pub fn create_seed_texture_and_view(
-  device: &Device,
-  width: u32,
-  height: u32,
-) -> (Texture, TextureView) {
-  let texture = device.create_texture(&TextureDescriptor {
-    label: Some("seed_texture"),
-    size: wgpu::Extent3d {
-      width,
-      height,
-      depth_or_array_layers: 1,
-    },
-    mip_level_count: 1,
-    sample_count: 1,
-    dimension: wgpu::TextureDimension::D2,
-    format: TextureFormat::R32Float,
-    usage: TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_DST,
-    view_formats: &[],
-  });
-
-  let view = texture.create_view(&Default::default());
-  (texture, view)
 }
 
 pub fn set_timeout<T: AsRef<JsValue>>(callback: T, timeout: u32) -> Result<u32, JsValue> {
@@ -174,6 +105,11 @@ pub fn clear_timeout(timeout_id: u32) -> Result<(), JsValue> {
   Ok(())
 }
 
+pub fn format_bytes_to_mb(bytes: u64) -> String {
+  let mb = bytes as f64 / 1024.0 / 1024.0;
+  format!("{:.2} MB", mb)
+}
+
 pub fn log_table(title: &str, rows: &[(&str, &str)]) {
   if rows.is_empty() {
     return;
@@ -220,10 +156,6 @@ pub fn log_table(title: &str, rows: &[(&str, &str)]) {
 }
 
 pub fn log_device_limits(limits: &wgpu::Limits) {
-  let max_buffer_size_mb = limits.max_buffer_size as f64 / (1024.0 * 1024.0);
-  let max_storage_buffer_binding_size_mb =
-    limits.max_storage_buffer_binding_size as f64 / (1024.0 * 1024.0);
-
   // Create string values first so we can reference them
   let texture_dim_3d = format!("{}", limits.max_texture_dimension_3d);
   let sampled_textures = format!("{}", limits.max_sampled_textures_per_shader_stage);
@@ -237,10 +169,11 @@ pub fn log_device_limits(limits: &wgpu::Limits) {
   );
   let compute_invocations = format!("{}", limits.max_compute_invocations_per_workgroup);
   let compute_workgroups = format!("{}", limits.max_compute_workgroups_per_dimension);
-  let compute_storage_size = format!("{} bytes", limits.max_compute_workgroup_storage_size);
-  let buffer_size = format!("{max_buffer_size_mb:.2} MB");
+  let compute_storage_size = format_bytes_to_mb(limits.max_compute_workgroup_storage_size as u64);
+  let buffer_size = format_bytes_to_mb(limits.max_buffer_size);
   let storage_buffers = format!("{}", limits.max_storage_buffers_per_shader_stage);
-  let storage_buffer_binding_size = format!("{max_storage_buffer_binding_size_mb:.2} MB");
+  let storage_buffer_binding_size =
+    format_bytes_to_mb(limits.max_storage_buffer_binding_size as u64);
   let bindings_per_group = format!("{}", limits.max_bindings_per_bind_group);
   let bind_groups = format!("{}", limits.max_bind_groups);
 

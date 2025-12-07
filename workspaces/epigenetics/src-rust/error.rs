@@ -21,6 +21,12 @@ pub enum SimulationError {
   #[error("Attempted to create simulation program without a canvas")]
   MissingCanvas,
 
+  #[error("Attempted to create simulation program without a data config")]
+  MissingDataConfig,
+
+  #[error("Attempted to create simulation program without dimensions")]
+  MissingDimensions,
+
   #[error("Simulation program not found")]
   ProgramNotFound,
 

@@ -4,7 +4,7 @@ import {
   SimulationWorkerApi,
   terminateSimulationWorker,
 } from './simulationWorker';
-import { Message } from './types.generated';
+import { Message, Config as DataConfig, RunStats } from './types.generated';
 
 export type Event = {
   type: 'info' | 'success' | 'error';
@@ -14,8 +14,11 @@ export type Event = {
 export type UseSimulationWorkerResult = {
   getSimulationWorker: () => SimulationWorkerApi;
   initSimulation: () => Promise<void>;
+  dataConfig: DataConfig | null;
+  estimatedMemoryUsage: string | null;
   events: Event[];
   eventsErrors: Event[];
+  runStats: RunStats | null;
   hasError: boolean;
   lastErrorMessage?: string;
   readyToInit: boolean;
@@ -31,8 +34,13 @@ export default function useSimulationWorker(
   width: number,
   height: number
 ): UseSimulationWorkerResult {
+  const [runStats, setRunStats] = useState<RunStats | null>(null);
   const [events, setEvents] = useState<Event[]>([]);
   const [eventsErrors, setEventsErrors] = useState<Event[]>([]);
+  const [dataConfig, setDataConfig] = useState<DataConfig | null>(null);
+  const [estimatedMemoryUsage, setEstimatedMemoryUsage] = useState<
+    string | null
+  >(null);
   const [isWasmReady, setIsWasmReady] = useState(false);
   const [isCanvasTransferred, setIsCanvasTransferred] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
@@ -98,11 +106,19 @@ export default function useSimulationWorker(
         case 'simulationReset':
           addEvent('success', 'Simulation reset');
           break;
+        case 'simulationRunStats':
+          setRunStats(message.data);
+          break;
         case 'postUpdateIntervalSet':
           addEvent('success', 'Post update interval set');
           break;
-        case 'textureDepthSet':
-          addEvent('success', `Texture depth set to ${message.data}`);
+        case 'dataConfigSet':
+          setDataConfig(message.data);
+          addEvent('success', 'Data config updated');
+          break;
+        case 'dataMemoryUsageEstimated':
+          setEstimatedMemoryUsage(message.data);
+          addEvent('info', `Estimated memory usage: ${message.data}`);
           break;
         case 'error':
           addEvent('error', message.data);
@@ -133,9 +149,9 @@ export default function useSimulationWorker(
   const initSimulation = useCallback(async () => {
     setIsInitializing(true);
     const simulationWorker = getSimulationWorker();
-    await simulationWorker.initSimulation(width, height);
+    await simulationWorker.initSimulation();
     setIsInitializing(false);
-  }, [getSimulationWorker, width, height]);
+  }, [getSimulationWorker]);
 
   useEffect(() => {
     getSimulationWorker();
@@ -149,10 +165,26 @@ export default function useSimulationWorker(
     };
   }, [getSimulationWorker, onError]);
 
+  useEffect(() => {
+    if (!isWasmReady || !width || !height) {
+      return;
+    }
+
+    const updateDimensions = async () => {
+      const worker = getSimulationWorker();
+      await worker.setSimulationDimensions(width, height);
+    };
+
+    updateDimensions();
+  }, [width, height, isWasmReady, getSimulationWorker]);
+
   return {
     getSimulationWorker,
     initSimulation,
+    dataConfig,
+    estimatedMemoryUsage,
     hasError,
+    runStats,
     events,
     eventsErrors,
     lastErrorMessage,

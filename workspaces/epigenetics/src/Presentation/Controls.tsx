@@ -87,17 +87,27 @@ export default function Controls({
   if (!isInitialized) {
     return (
       <ProjectControls>
-        <ButtonAsync
-          color="positive"
-          error={simulationWorker.lastErrorMessage}
-          isError={simulationWorker.hasError}
-          isLoading={isInitializing}
-          isSuccess={simulationWorker.isInitializing}
-          variant="primary"
-          onClick={initSimulation}
-        >
-          Initialize simulation
-        </ButtonAsync>
+        <ProjectControlGroup>
+          <ButtonAsync
+            color="positive"
+            error={simulationWorker.lastErrorMessage}
+            isError={simulationWorker.hasError}
+            isLoading={isInitializing}
+            isSuccess={simulationWorker.isInitializing}
+            variant="primary"
+            onClick={initSimulation}
+          >
+            Initialize simulation ({simulationWorker.estimatedMemoryUsage})
+          </ButtonAsync>
+        </ProjectControlGroup>
+
+        <ProjectControlGroup>
+          <ProjectControl
+            Icon={SettingsIcon}
+            title="Settings"
+            onClick={handleToggleConfigMenu}
+          />
+        </ProjectControlGroup>
       </ProjectControls>
     );
   }

@@ -27,6 +27,21 @@ export interface PointSequence {
 	entries: Entry[];
 }
 
+export interface Config {
+	genome_size: number;
+	genome_influence_min: number;
+	genome_influence_max: number;
+	epigenetic_influence_min: number;
+	epigenetic_influence_max: number;
+	local_environment_influence_min: number;
+	local_environment_influence_max: number;
+	regional_environment_count: number;
+	regional_environment_influence_min: number;
+	regional_environment_influence_max: number;
+	global_environment_influence_min: number;
+	global_environment_influence_max: number;
+}
+
 export interface BBox {
 	center: Point;
 	width: Fxx;
@@ -480,7 +495,8 @@ export type Message =
 	| { name: "simulationResumed", data?: undefined }
 	| { name: "simulationReset", data?: undefined }
 	| { name: "postUpdateIntervalSet", data: number }
-	| { name: "textureDepthSet", data: number }
+	| { name: "dataConfigSet", data: Config }
+	| { name: "dataMemoryUsageEstimated", data: string }
 	| { name: "error", data: string }
 	| { name: "log", data: string };
 

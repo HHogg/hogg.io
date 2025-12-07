@@ -4,20 +4,19 @@ import {
   RawWireValue,
   WireValue,
 } from 'comlink/dist/umd/protocol';
-import { Message } from './types.generated';
+import { Config as DataConfig, Message } from './types.generated';
 
 export interface SimulationWorkerApi {
-  initSimulation(width: number, height: number): Promise<void>;
-  setPostUpdateInterval(frames: number): Promise<void>;
-  getMaxTextureDepth(): Promise<number>;
-  getTextureDepth(): Promise<number>;
-  setTextureDepth(depth: number): Promise<void>;
-  startSimulationLoop(): Promise<void>;
-  stopSimulationLoop(): Promise<void>;
+  initSimulation(): Promise<void>;
   pauseSimulation(): Promise<void>;
-  resumeSimulation(): Promise<void>;
   resetSimulation(): Promise<void>;
+  resumeSimulation(): Promise<void>;
+  setDataConfig(dataConfig: DataConfig): Promise<void>;
+  setPostUpdateInterval(frames: number): Promise<void>;
+  setSimulationDimensions(width: number, height: number): Promise<void>;
+  startSimulationLoop(): Promise<void>;
   stepSimulationFrame(): Promise<void>;
+  stopSimulationLoop(): Promise<void>;
   transferCanvas(canvas: OffscreenCanvas): Promise<void>;
 }
 

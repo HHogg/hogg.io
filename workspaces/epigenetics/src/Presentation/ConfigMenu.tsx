@@ -1,11 +1,17 @@
-import { GaugeIcon, LayersIcon } from 'lucide-react';
+import {
+  GaugeIcon,
+  MinusIcon,
+  PlusIcon,
+  CircleIcon,
+  NetworkIcon,
+} from 'lucide-react';
 import {
   Box,
   ConfigMenu as PreshapeConfigMenu,
   MenuConfigEntryNumber,
-  MenuConfigEntryOneOf,
 } from 'preshape';
-import { useState, PointerEvent, useCallback, useEffect } from 'react';
+import { useState, PointerEvent, useCallback } from 'react';
+import { Config as DataConfig } from '../worker/types.generated';
 import { UseSimulationWorkerResult } from '../worker/useSimulationWorker';
 
 interface ConfigMenuProps {
@@ -18,9 +24,7 @@ export default function ConfigMenu({
   isConfigMenuOpen,
 }: ConfigMenuProps) {
   const [postUpdateInterval, setPostUpdateInterval] = useState(60);
-  const [maxTextureDepth, setMaxTextureDepth] = useState<number | null>(null);
-  const [textureDepth, setTextureDepth] = useState<number | null>(null);
-  const { getSimulationWorker, isInitialized } = simulationWorker;
+  const { getSimulationWorker, dataConfig } = simulationWorker;
 
   const handleSetPostUpdateInterval = useCallback(
     async (value: number) => {
@@ -31,35 +35,17 @@ export default function ConfigMenu({
     [getSimulationWorker]
   );
 
-  const handleSetTextureDepth = useCallback(
-    async (value: number) => {
-      const simulationWorker = getSimulationWorker();
-      setTextureDepth(value);
-      await simulationWorker.setTextureDepth(value);
-    },
-    [getSimulationWorker]
-  );
-
-  // Fetch max depth and current depth on mount and after simulation init
-  useEffect(() => {
-    const fetchDepths = async () => {
-      if (!isInitialized) {
+  const handleSetDataConfig = useCallback(
+    async (updates: Partial<DataConfig>) => {
+      if (!dataConfig) {
         return;
       }
       const simulationWorker = getSimulationWorker();
-      try {
-        const max = await simulationWorker.getMaxTextureDepth();
-        setMaxTextureDepth(max);
-        // Get current depth from simulation program
-        const current = await simulationWorker.getTextureDepth();
-        setTextureDepth(current);
-      } catch (error) {
-        console.error('Failed to get texture depth:', error);
-      }
-    };
-    fetchDepths();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isInitialized, getSimulationWorker]);
+      const newConfig = { ...dataConfig, ...updates };
+      await simulationWorker.setDataConfig(newConfig);
+    },
+    [getSimulationWorker, dataConfig]
+  );
 
   const postUpdateIntervalConfig: MenuConfigEntryNumber = {
     label: 'Update interval',
@@ -73,33 +59,254 @@ export default function ConfigMenu({
     onChange: handleSetPostUpdateInterval,
   };
 
-  // Generate options based on max depth (factors: max/8, max/4, max/2, max)
-  const textureDepthOptions = maxTextureDepth
-    ? [
-        Math.floor(maxTextureDepth / 8),
-        Math.floor(maxTextureDepth / 4),
-        Math.floor(maxTextureDepth / 2),
-        maxTextureDepth,
-      ].filter((v, i, arr) => v > 0 && (i === 0 || v !== arr[i - 1])) // Remove duplicates and zeros
-    : [];
+  if (!dataConfig) {
+    return null;
+  }
 
-  const textureDepthConfig: MenuConfigEntryOneOf<number> | null =
-    maxTextureDepth && textureDepth !== null
-      ? {
-          label: 'Texture depth',
-          icon: LayersIcon,
-          type: 'oneOf',
-          value: textureDepth,
-          options: textureDepthOptions,
-          formatter: (value) => `${value} layers`,
-          onChange: handleSetTextureDepth,
-        }
-      : null;
+  const genotypeSizeConfig: MenuConfigEntryNumber = {
+    label: 'Genotype size',
+    icon: CircleIcon,
+    type: 'number',
+    value: dataConfig.genotype_size,
+    min: 10,
+    max: 500,
+    step: 100,
+    onChange: (value) => handleSetDataConfig({ genotype_size: value }),
+  };
+
+  const phenotypeSizeConfig: MenuConfigEntryNumber = {
+    label: 'Phenotype size',
+    icon: CircleIcon,
+    type: 'number',
+    value: dataConfig.phenotype_size,
+    min: 10,
+    max: 500,
+    step: 100,
+    onChange: (value) => handleSetDataConfig({ phenotype_size: value }),
+  };
+
+  const epistasisEdgesMinConfig: MenuConfigEntryNumber = {
+    label: 'Epistasis edges min',
+    icon: MinusIcon,
+    type: 'number',
+    value: dataConfig.epistasis_edges_min,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) => handleSetDataConfig({ epistasis_edges_min: value }),
+  };
+
+  const epistasisEdgesMaxConfig: MenuConfigEntryNumber = {
+    label: 'Epistasis edges max',
+    icon: PlusIcon,
+    type: 'number',
+    value: dataConfig.epistasis_edges_max,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) => handleSetDataConfig({ epistasis_edges_max: value }),
+  };
+
+  const localEnvironmentEdgesMinConfig: MenuConfigEntryNumber = {
+    label: 'Local env edges min',
+    icon: MinusIcon,
+    type: 'number',
+    value: dataConfig.local_environment_edges_min,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ local_environment_edges_min: value }),
+  };
+
+  const localEnvironmentEdgesMaxConfig: MenuConfigEntryNumber = {
+    label: 'Local env edges max',
+    icon: PlusIcon,
+    type: 'number',
+    value: dataConfig.local_environment_edges_max,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ local_environment_edges_max: value }),
+  };
+
+  const regionalEnvironmentCountConfig: MenuConfigEntryNumber = {
+    label: 'Regional env count',
+    icon: NetworkIcon,
+    type: 'number',
+    value: dataConfig.regional_environment_count,
+    min: 1,
+    max: 20,
+    step: 1,
+    onChange: (value) =>
+      handleSetDataConfig({ regional_environment_count: value }),
+  };
+
+  const regionalEnvironmentEdgesMinConfig: MenuConfigEntryNumber = {
+    label: 'Regional env edges min',
+    icon: MinusIcon,
+    type: 'number',
+    value: dataConfig.regional_environment_edges_min,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ regional_environment_edges_min: value }),
+  };
+
+  const regionalEnvironmentEdgesMaxConfig: MenuConfigEntryNumber = {
+    label: 'Regional env edges max',
+    icon: PlusIcon,
+    type: 'number',
+    value: dataConfig.regional_environment_edges_max,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ regional_environment_edges_max: value }),
+  };
+
+  const globalEnvironmentEdgesMinConfig: MenuConfigEntryNumber = {
+    label: 'Global env edges min',
+    icon: MinusIcon,
+    type: 'number',
+    value: dataConfig.global_environment_edges_min,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ global_environment_edges_min: value }),
+  };
+
+  const globalEnvironmentEdgesMaxConfig: MenuConfigEntryNumber = {
+    label: 'Global env edges max',
+    icon: PlusIcon,
+    type: 'number',
+    value: dataConfig.global_environment_edges_max,
+    min: 0,
+    max: 1,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ global_environment_edges_max: value }),
+  };
+
+  const epistasisGainConfig: MenuConfigEntryNumber = {
+    label: 'Epistasis gain',
+    icon: GaugeIcon,
+    type: 'number',
+    value: dataConfig.epistasis_gain,
+    min: 0,
+    max: 10,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) => handleSetDataConfig({ epistasis_gain: value }),
+  };
+
+  const phenotypeGainConfig: MenuConfigEntryNumber = {
+    label: 'Phenotype gain',
+    icon: GaugeIcon,
+    type: 'number',
+    value: dataConfig.phenotype_gain,
+    min: 0,
+    max: 10,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) => handleSetDataConfig({ phenotype_gain: value }),
+  };
+
+  const localEnvironmentGainConfig: MenuConfigEntryNumber = {
+    label: 'Local env gain',
+    icon: GaugeIcon,
+    type: 'number',
+    value: dataConfig.local_environment_gain,
+    min: 0,
+    max: 10,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) => handleSetDataConfig({ local_environment_gain: value }),
+  };
+
+  const regionalEnvironmentGainConfig: MenuConfigEntryNumber = {
+    label: 'Regional env gain',
+    icon: GaugeIcon,
+    type: 'number',
+    value: dataConfig.regional_environment_gain,
+    min: 0,
+    max: 10,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ regional_environment_gain: value }),
+  };
+
+  const globalEnvironmentGainConfig: MenuConfigEntryNumber = {
+    label: 'Global env gain',
+    icon: GaugeIcon,
+    type: 'number',
+    value: dataConfig.global_environment_gain,
+    min: 0,
+    max: 10,
+    step: 0.1,
+    formatter: (value) => value.toFixed(1),
+    onChange: (value) =>
+      handleSetDataConfig({ global_environment_gain: value }),
+  };
+
+  const reproductionSearchRadiusConfig: MenuConfigEntryNumber = {
+    label: 'Reproduction search radius',
+    icon: NetworkIcon,
+    type: 'number',
+    value: dataConfig.reproduction_search_radius,
+    min: 1,
+    max: 10,
+    step: 1,
+    formatter: (value) => `${value} layer${value !== 1 ? 's' : ''}`,
+    onChange: (value) =>
+      handleSetDataConfig({ reproduction_search_radius: value }),
+  };
+
+  const cellSizeConfig: MenuConfigEntryNumber = {
+    label: 'Cell size',
+    icon: CircleIcon,
+    type: 'number',
+    value: dataConfig.cell_size,
+    min: 1,
+    max: 50,
+    step: 1,
+    formatter: (value) => `${value}x${value} pixels`,
+    onChange: (value) => handleSetDataConfig({ cell_size: value }),
+  };
 
   const configEntries = [
     postUpdateIntervalConfig,
-    ...(textureDepthConfig ? [textureDepthConfig] : []),
-  ];
+    genotypeSizeConfig,
+    phenotypeSizeConfig,
+    phenotypeGainConfig,
+    epistasisGainConfig,
+    epistasisEdgesMinConfig,
+    epistasisEdgesMaxConfig,
+    localEnvironmentGainConfig,
+    localEnvironmentEdgesMinConfig,
+    localEnvironmentEdgesMaxConfig,
+    regionalEnvironmentGainConfig,
+    regionalEnvironmentCountConfig,
+    regionalEnvironmentEdgesMinConfig,
+    regionalEnvironmentEdgesMaxConfig,
+    globalEnvironmentGainConfig,
+    globalEnvironmentEdgesMinConfig,
+    globalEnvironmentEdgesMaxConfig,
+    reproductionSearchRadiusConfig,
+    cellSizeConfig,
+  ].sort((a, b) => a.label.localeCompare(b.label));
 
   return (
     <Box

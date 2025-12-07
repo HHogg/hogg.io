@@ -1,6 +1,6 @@
 import { ProjectTab, ProjectTabs, ProjectWindow } from '@hogg/common';
 import { TerminalIcon } from 'lucide-react';
-import { Box, Text, useResizeObserver } from 'preshape';
+import { Box, Label, Labels, Text, useResizeObserver } from 'preshape';
 import { useState } from 'react';
 import { useCanvasTransfer } from '../worker/useCanvasTransfer';
 import useSimulationWorker from '../worker/useSimulationWorker';
@@ -47,6 +47,16 @@ const Presentation = () => {
               width={width}
               tag="canvas"
             />
+          )}
+
+          {simulationWorker.runStats && (
+            <Box absolute="top-right" padding="x6">
+              <Labels>
+                <Label>
+                  {simulationWorker.runStats.passesPerSecond.toFixed(2)}/fps
+                </Label>
+              </Labels>
+            </Box>
           )}
 
           {simulationWorker.hasError && (

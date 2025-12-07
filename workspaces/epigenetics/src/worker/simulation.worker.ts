@@ -1,6 +1,7 @@
 import * as Comlink from 'comlink';
 import init, {
   transfer_canvas as wasmTransferCanvas,
+  set_simulation_dimensions as wasmSetSimulationDimensions,
   init_simulation as wasmInitSimulation,
   start_simulation_loop as wasmStartSimulationLoop,
   stop_simulation_loop as wasmStopSimulationLoop,
@@ -9,9 +10,7 @@ import init, {
   reset_simulation as wasmResetSimulation,
   step_simulation_frame as wasmStepSimulationFrame,
   set_post_update_interval as wasmSetPostUpdateInterval,
-  get_max_texture_depth as wasmGetMaxTextureDepth,
-  get_texture_depth as wasmGetTextureDepth,
-  set_texture_depth as wasmSetTextureDepth,
+  set_data_config as wasmSetDataConfig,
 } from '../../pkg/hogg_epigenetics_worker/hogg_epigenetics_worker';
 
 let wasmReady = false;
@@ -41,9 +40,14 @@ const simulationWorkerApi = {
     wasmTransferCanvas(canvas);
   },
 
-  async initSimulation(width: number, height: number) {
+  async setSimulationDimensions(width: number, height: number) {
     await waitForWasmReady();
-    await wasmInitSimulation(width, height);
+    wasmSetSimulationDimensions(width, height);
+  },
+
+  async initSimulation() {
+    await waitForWasmReady();
+    await wasmInitSimulation();
   },
 
   async startSimulationLoop() {
@@ -81,19 +85,9 @@ const simulationWorkerApi = {
     wasmSetPostUpdateInterval(frames);
   },
 
-  async getMaxTextureDepth() {
+  async setDataConfig(dataConfig: unknown) {
     await waitForWasmReady();
-    return wasmGetMaxTextureDepth();
-  },
-
-  async getTextureDepth() {
-    await waitForWasmReady();
-    return wasmGetTextureDepth();
-  },
-
-  async setTextureDepth(depth: number) {
-    await waitForWasmReady();
-    wasmSetTextureDepth(depth);
+    wasmSetDataConfig(dataConfig);
   },
 };
 

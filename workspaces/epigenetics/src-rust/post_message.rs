@@ -1,3 +1,6 @@
+use crate::sim;
+use crate::thread_storage::{get_data_config, get_simulation_dimensions};
+use crate::utils::format_bytes_to_mb;
 use serde::Serialize;
 use typeshare::typeshare;
 use wasm_bindgen::{JsCast, JsValue};
@@ -16,8 +19,10 @@ pub enum Message {
   SimulationPaused,
   SimulationResumed,
   SimulationReset,
+  SimulationRunStats(sim::program::RunStats),
   PostUpdateIntervalSet(u32),
-  TextureDepthSet(u32),
+  DataConfigSet(sim::data::Config),
+  DataMemoryUsageEstimated(String),
   Error(String),
   Log(String),
 }
@@ -44,4 +49,13 @@ fn post_message_inner(message: Message) -> Result<(), JsValue> {
 
   global.post_message(&js_value)?;
   Ok(())
+}
+
+pub fn send_estimated_memory_usage() {
+  if let (Some(data_config), Some((width, height))) =
+    (get_data_config(), get_simulation_dimensions())
+  {
+    let memory_usage = sim::Data::memory_usage_estimated(&data_config, width, height);
+    Message::DataMemoryUsageEstimated(format_bytes_to_mb(memory_usage)).send();
+  }
 }
