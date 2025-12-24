@@ -20,16 +20,20 @@ pub struct Loop {
 #[derive(Clone)]
 struct LoopState {
   is_running: bool,
-  is_paused: bool,
+  // is_paused: bool,
   post_update_interval: u32,
-  start_time: f64,
-  simulation_time: f64, // Tracks simulation time for step-by-step advancement
-  paused_elapsed_time: f64, // Stores elapsed time when paused, to resume from the same point
+  start_time: Option<f64>,
+  paused_time: Option<f64>,
+  paused_elapsed_time: f64,
 }
 
 impl LoopState {
-  pub fn get_elapsed_seconds(&self) -> f64 {
-    (js_sys::Date::now() - self.start_time) / 1000.0_f64
+  pub fn get_elapsed_seconds(&self) -> Option<f64> {
+    if let Some(start_time) = self.start_time {
+      Some((js_sys::Date::now() - start_time - self.paused_elapsed_time) / 1000.0_f64)
+    } else {
+      None
+    }
   }
 
   pub fn set_post_update_interval(&mut self, interval: u32) {
@@ -41,10 +45,10 @@ impl Default for LoopState {
   fn default() -> Self {
     Self {
       is_running: false,
-      is_paused: false,
+      // is_paused: false,
       post_update_interval: 30,
-      start_time: js_sys::Date::now(),
-      simulation_time: 0.0,
+      start_time: None,
+      paused_time: None,
       paused_elapsed_time: 0.0,
     }
   }
@@ -60,20 +64,9 @@ impl Loop {
     };
 
     // Render the first frame
-    loop_instance.render_frame(&program)?;
+    loop_instance.render_frame(&program, Some(0.0))?;
 
     Ok(loop_instance)
-  }
-
-  fn render_frame(&mut self, program: &Rc<RefCell<sim::Program>>) -> Result<(), SimulationError> {
-    // Calculate elapsed time in seconds
-    let elapsed = self.loop_state.get_elapsed_seconds();
-    program
-      .borrow_mut()
-      .run(elapsed)
-      .map_err(|e| SimulationError::StepExecution(format!("{e:?}")))?;
-
-    Ok(())
   }
 
   pub fn set_animation_frame_id(&mut self, animation_frame_id: u32) {
@@ -84,63 +77,40 @@ impl Loop {
     self.loop_state.set_post_update_interval(interval);
   }
 
-  pub fn is_running(&self) -> bool {
-    self.loop_state.is_running
-  }
-
-  pub fn is_paused(&self) -> bool {
-    self.loop_state.is_paused
-  }
-
   pub fn pause(&mut self) -> Result<(), SimulationError> {
-    if !self.is_running() {
-      return Err(SimulationError::LoopNotRunning);
+    if !self.loop_state.is_running {
+      return Ok(());
     }
 
     // Store the elapsed time when pausing
-    self.loop_state.paused_elapsed_time = self.loop_state.get_elapsed_seconds();
-    self.loop_state.is_paused = true;
+    self.loop_state.paused_time = Some(js_sys::Date::now());
+    self.loop_state.is_running = false;
+
+    Message::SimulationPaused.send();
+
     Ok(())
   }
 
   pub fn resume(&mut self) -> Result<(), SimulationError> {
-    if !self.is_running() {
-      return Err(SimulationError::LoopNotRunning);
+    if self.loop_state.is_running {
+      return Ok(());
     }
 
-    // Adjust start_time so that elapsed time continues from where we paused
-    // This prevents time from jumping forward when resuming after a long pause
-    let current_elapsed = self.loop_state.paused_elapsed_time;
-    self.loop_state.start_time = js_sys::Date::now() - (current_elapsed * 1000.0);
-    self.loop_state.is_paused = false;
-    Ok(())
-  }
+    // Increase the paused elapsed time
+    let paused_time = self
+      .loop_state
+      .paused_time
+      .ok_or(SimulationError::LoopNotPaused)?;
+    let pause_elapsed_time = js_sys::Date::now() - paused_time;
 
-  pub fn reset(&mut self) -> Result<(), SimulationError> {
-    self.loop_state.start_time = js_sys::Date::now();
+    self.loop_state.paused_elapsed_time += pause_elapsed_time;
+    self.loop_state.paused_time = None;
+    self.loop_state.is_running = true;
 
-    // Render a frame after reset to show the reset state
-    // Clone the program reference to avoid borrow checker issues
-    let program_opt = self.program.clone();
-    if let Some(program) = program_opt {
-      self.render_frame(&program)?;
-    }
+    // Resume the loop by scheduling the next frame now that we're running again
+    self.schedule_next_frame()?;
 
-    Ok(())
-  }
-
-  pub fn step_frame(&mut self) -> Result<(), SimulationError> {
-    // If running, pause first
-    if self.loop_state.is_running && !self.loop_state.is_paused {
-      self.loop_state.is_paused = true;
-    }
-
-    // Render the next frame using the simulation time
-    // Clone the program reference to avoid borrow checker issues
-    let program_opt = self.program.clone();
-    if let Some(program) = program_opt {
-      // self.render_frame_with_time(&program, self.loop_state.simulation_time)?;
-    }
+    Message::SimulationResumed.send();
 
     Ok(())
   }
@@ -151,22 +121,39 @@ impl Loop {
         .map_err(|e| SimulationError::ClearTimeoutFailed(format!("{e:?}")))?;
     }
 
-    self.loop_closure = None;
-    self.loop_state.is_running = false;
-    self.loop_state.is_paused = true; // Leave in paused state
+    // Reset the loop closure and animation frame id
     self.animation_frame_id = None;
+    self.loop_closure = None;
 
-    // Reset the timer
-    self.loop_state.start_time = js_sys::Date::now();
+    // Reset the loop state
+    self.loop_state.is_running = false;
+    self.loop_state.start_time = None;
+    self.loop_state.paused_time = None;
+    self.loop_state.paused_elapsed_time = 0.0;
 
-    // Render the first frame after stopping to show the reset state
+    // Reset the program and render the first frame
+    let program_opt = self.program.clone();
+    if let Some(program) = program_opt {
+      program.borrow_mut().reset()?;
+      self.render_frame(&program, Some(0.0))?;
+    }
+
+    Message::SimulationLoopStopped.send();
+
+    Ok(())
+  }
+
+  pub fn step_frame(&mut self) -> Result<(), SimulationError> {
+    if self.loop_state.is_running {
+      self.pause()?;
+    }
+
+    // Render the next frame using the simulation time
     // Clone the program reference to avoid borrow checker issues
     let program_opt = self.program.clone();
     if let Some(program) = program_opt {
-      self.render_frame(&program)?;
+      self.render_frame(&program, None)?;
     }
-
-    // Note: We keep the program reference so we can restart without re-initializing
 
     Ok(())
   }
@@ -177,47 +164,19 @@ impl Loop {
       return Err(SimulationError::ProgramNotFound);
     }
 
-    // Reset start time when starting the loop so elapsed time starts from now
-    self.loop_state.start_time = js_sys::Date::now();
-    // Reset simulation time to match elapsed time when starting
-    self.loop_state.simulation_time = 0.0;
-    // Clear paused state when starting
-    self.loop_state.is_paused = false;
+    if self.loop_state.is_running {
+      return Ok(());
+    }
 
     // Create closure for the simulation loop
     let closure = Rc::new(RefCell::new(None::<Closure<dyn FnMut()>>));
-
     let loop_rc_for_closure = loop_rc.clone();
-
-    // The closure can now directly access self via the Rc<RefCell<>>
-    let loop_closure = Closure::wrap(Box::new(move || {
-      let mut loop_ref = loop_rc_for_closure.borrow_mut();
-
-      if !loop_ref.is_running() {
-        loop_ref.stop().ok();
-        return;
-      }
-
-      // Get the program from the loop before running the frame
-      // We need to clone the program reference to avoid borrow checker issues
-      let program_opt = loop_ref.program.clone();
-      if let Some(program) = program_opt {
-        // Run simulation frame
-        if let Err(e) = loop_ref.run_simulation_frame(&program) {
-          log::error!("simulation_loop: Error running frame: {:?}", e);
-          Message::Error(format!("Simulation frame error: {e:?}")).send();
-          return;
-        }
-
-        // Schedule next frame
-        if let Err(e) = loop_ref.schedule_next_frame() {
-          log::error!("simulation_loop: Error scheduling next frame: {:?}", e);
-          Message::Error(format!("Failed to schedule next frame: {e:?}")).send();
-        }
-      }
-    }) as Box<dyn FnMut()>);
+    let loop_closure = Closure::wrap(Self::create_loop_closure(loop_rc_for_closure));
 
     closure.borrow_mut().replace(loop_closure);
+
+    // Reset start time when starting the loop so elapsed time starts from now
+    self.loop_state.start_time = Some(js_sys::Date::now());
     self.loop_closure = Some(closure.clone());
     self.loop_state.is_running = true;
 
@@ -236,35 +195,77 @@ impl Loop {
       }
     }
 
+    Message::SimulationLoopStarted.send();
+
     Ok(())
   }
 
-  fn run_simulation_frame(
-    &mut self,
-    simulation_program: &Rc<RefCell<sim::Program>>,
-  ) -> Result<(), SimulationError> {
-    // Skip simulation update if paused
-    if !self.loop_state.is_paused {
-      // Calculate elapsed time in seconds
-      let elapsed = self.loop_state.get_elapsed_seconds();
-      // Update simulation time to match elapsed time when running normally
-      self.loop_state.simulation_time = elapsed;
+  fn create_loop_closure(loop_rc: Rc<RefCell<Loop>>) -> Box<dyn FnMut()> {
+    Box::new(move || {
+      let mut loop_ref = loop_rc.borrow_mut();
 
-      let stats = simulation_program
-        .borrow_mut()
-        .run(elapsed)
-        .map_err(|e| SimulationError::StepExecution(format!("{e:?}")))?;
-
-      let is_update_frame = stats.pass_index % self.loop_state.post_update_interval == 0;
-
-      if is_update_frame {
-        schedule_post_update(self.loop_state.post_update_interval, stats).map_err(|e| {
-          SimulationError::LoopStopFailed(format!("Failed to schedule post update: {e:?}"))
-        })?;
+      if !loop_ref.loop_state.is_running {
+        return;
       }
-    }
 
-    Ok(())
+      // Get the program from the loop before running the frame
+      // We need to clone the program reference to avoid borrow checker issues
+      let program_opt = loop_ref.program.clone();
+      if let Some(program) = program_opt {
+        match loop_ref.render_frame(&program, None) {
+          Ok(stats) => {
+            let is_update_frame = stats.pass_index % loop_ref.loop_state.post_update_interval == 0;
+
+            if is_update_frame {
+              match schedule_post_update(loop_ref.loop_state.post_update_interval, stats) {
+                Ok(()) => {
+                  log::info!("simulation_loop: Scheduled post update");
+                }
+                Err(e) => {
+                  log::error!("simulation_loop: Error scheduling post update: {:?}", e);
+                  Message::Error(format!("Failed to schedule post update: {e:?}")).send();
+                  return;
+                }
+              }
+            }
+          }
+          Err(e) => {
+            log::error!("simulation_loop: Error rendering frame: {:?}", e);
+            Message::Error(format!("Failed to render frame: {e:?}")).send();
+            return;
+          }
+        }
+
+        // Schedule next frame
+        if let Err(e) = loop_ref.schedule_next_frame() {
+          log::error!("simulation_loop: Error scheduling next frame: {:?}", e);
+          Message::Error(format!("Failed to schedule next frame: {e:?}")).send();
+        }
+      }
+    }) as Box<dyn FnMut()>
+  }
+
+  fn render_frame(
+    &mut self,
+    program: &Rc<RefCell<sim::Program>>,
+    elapsed_time_override: Option<f64>,
+  ) -> Result<sim::program::RunStats, SimulationError> {
+    // Calculate elapsed time in seconds
+    let elapsed = if let Some(elapsed_time_override) = elapsed_time_override {
+      elapsed_time_override
+    } else {
+      self
+        .loop_state
+        .get_elapsed_seconds()
+        .ok_or(SimulationError::LoopNotRunning)?
+    };
+
+    let stats = program
+      .borrow_mut()
+      .run(elapsed)
+      .map_err(|e| SimulationError::StepExecution(format!("{e:?}")))?;
+
+    Ok(stats)
   }
 
   fn schedule_next_frame(&mut self) -> Result<(), SimulationError> {

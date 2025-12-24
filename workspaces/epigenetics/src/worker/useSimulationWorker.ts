@@ -105,6 +105,8 @@ export default function useSimulationWorker(
           break;
         case 'simulationReset':
           addEvent('success', 'Simulation reset');
+          setIsInitialized(false);
+          setRunStats(null);
           break;
         case 'simulationRunStats':
           setRunStats(message.data);

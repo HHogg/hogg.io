@@ -17,6 +17,8 @@ use web_sys::OffscreenCanvas;
 
 use crate::error::SimulationError;
 use crate::post_message::{send_estimated_memory_usage, Message};
+use crate::thread_storage::remove_simulation_loop;
+use crate::thread_storage::remove_simulation_program;
 use crate::thread_storage::{
   get_canvas, get_data_config as get_data_config_thread_local, get_simulation_dimensions,
   get_simulation_loop, get_simulation_program, set_canvas,
@@ -29,12 +31,6 @@ use crate::thread_storage::{
 fn main() -> Result<(), JsError> {
   console_log::init_with_level(log::Level::Debug).expect("Failed to initialize logger");
   panic::set_hook(Box::new(console_error_panic_hook::hook));
-
-  // Initialize WESL
-  wesl::Wesl::new("src-rust/sim/steps").build_artifact(
-    &"hogg_epigenetics::main".parse().unwrap(),
-    "epigenetics_shaders",
-  );
 
   Message::Log("Epigenetics simulation".to_string()).send();
   Message::Log("----------------------".to_string()).send();
@@ -116,76 +112,68 @@ pub async fn init_simulation() -> Result<(), JsValue> {
 pub fn start_simulation_loop() -> Result<(), JsValue> {
   let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
 
-  if loop_rc.borrow().is_running() {
-    return Ok(());
-  }
-
   loop_rc
     .borrow_mut()
     .start(loop_rc.clone())
     .map_err(JsValue::from)?;
-  Message::SimulationLoopStarted.send();
+
   Ok(())
 }
 
 #[wasm_bindgen]
 pub fn stop_simulation_loop() -> Result<(), JsValue> {
-  let loop_rc = get_simulation_loop();
-  if let Some(loop_ref) = loop_rc {
-    if !loop_ref.borrow().is_running() {
-      return Ok(());
-    }
-    loop_ref.borrow_mut().stop().map_err(JsValue::from)?;
-    Message::SimulationLoopStopped.send();
-  }
-  Ok(())
+  get_simulation_loop()
+    .ok_or(SimulationError::LoopNotCreated)?
+    .borrow_mut()
+    .stop()
+    .map_err(JsValue::from)
 }
 
 #[wasm_bindgen]
 pub fn pause_simulation() -> Result<(), JsValue> {
-  let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
-  loop_rc.borrow_mut().pause().map_err(JsValue::from)?;
-  Message::SimulationPaused.send();
-  Ok(())
+  get_simulation_loop()
+    .ok_or(SimulationError::LoopNotCreated)?
+    .borrow_mut()
+    .pause()
+    .map_err(JsValue::from)
 }
 
 #[wasm_bindgen]
 pub fn resume_simulation() -> Result<(), JsValue> {
-  let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
-  loop_rc.borrow_mut().resume().map_err(JsValue::from)?;
-  Message::SimulationResumed.send();
-  Ok(())
-}
-
-#[wasm_bindgen]
-pub fn is_simulation_paused() -> bool {
-  if let Some(loop_rc) = get_simulation_loop() {
-    loop_rc.borrow().is_paused()
-  } else {
-    false
-  }
-}
-
-#[wasm_bindgen]
-pub fn reset_simulation() -> Result<(), JsValue> {
-  let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
-  // Reset doesn't stop the loop, so if it was running, it will keep running
-  loop_rc.borrow_mut().reset().map_err(JsValue::from)?;
-  Message::SimulationReset.send();
-  Ok(())
+  get_simulation_loop()
+    .ok_or(SimulationError::LoopNotCreated)?
+    .borrow_mut()
+    .resume()
+    .map_err(JsValue::from)
 }
 
 #[wasm_bindgen]
 pub fn step_simulation_frame() -> Result<(), JsValue> {
-  let loop_rc = get_simulation_loop().ok_or(SimulationError::LoopNotCreated)?;
-  let was_running = loop_rc.borrow().is_running() && !loop_rc.borrow().is_paused();
+  get_simulation_loop()
+    .ok_or(SimulationError::LoopNotCreated)?
+    .borrow_mut()
+    .step_frame()
+    .map_err(JsValue::from)
+}
 
-  loop_rc.borrow_mut().step_frame().map_err(JsValue::from)?;
+#[wasm_bindgen]
+pub fn reset_simulation() -> Result<(), JsValue> {
+  get_simulation_loop()
+    .ok_or(SimulationError::LoopNotCreated)?
+    .borrow_mut()
+    .stop()
+    .map_err(JsValue::from)?;
 
-  // If it was running, send paused message
-  if was_running {
-    Message::SimulationPaused.send();
-  }
+  get_simulation_program()
+    .ok_or(SimulationError::ProgramNotFound)?
+    .borrow_mut()
+    .clear_canvas()
+    .map_err(JsValue::from)?;
+
+  remove_simulation_program();
+  remove_simulation_loop();
+
+  Message::SimulationReset.send();
 
   Ok(())
 }

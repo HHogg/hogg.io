@@ -18,7 +18,7 @@ path = "src-rust/lib.rs"
 [dependencies]
 console_log.workspace = true
 console_error_panic_hook.workspace = true
-fastrand.workspace = true
+fastrand = { workspace = true, features = ["js"] }
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true

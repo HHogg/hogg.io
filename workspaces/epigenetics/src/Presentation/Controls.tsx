@@ -29,10 +29,15 @@ export default function Controls({
   const {
     getSimulationWorker,
     initSimulation,
+    isCanvasTransferred,
+    isWasmReady,
     isInitializing,
     isInitialized,
     isLoopRunning,
     isPaused,
+    hasError,
+    lastErrorMessage,
+    estimatedMemoryUsage,
   } = simulationWorker;
 
   const handlePlay = useCallback(async () => {
@@ -76,13 +81,15 @@ export default function Controls({
 
   // Play is disabled if worker not ready, not initialized, or if running and not paused
   // If paused, play should be enabled to resume
+  const isInitializeDisabled =
+    !isWasmReady || !isCanvasTransferred || isInitializing || hasError;
   const isPlayDisabled =
     (!isInitializing && !isInitialized) || (isLoopRunning && !isPaused);
   const isPauseDisabled =
     (!isInitializing && !isInitialized) || !isLoopRunning || isPaused;
   const isStopDisabled = (!isInitializing && !isInitialized) || !isLoopRunning;
-  const isResetDisabled = !isInitializing && !isInitialized;
   const isStepFrameDisabled = !isInitializing && !isInitialized;
+  const isResetDisabled = !isInitializing && !isInitialized;
 
   if (!isInitialized) {
     return (
@@ -90,14 +97,15 @@ export default function Controls({
         <ProjectControlGroup>
           <ButtonAsync
             color="positive"
-            error={simulationWorker.lastErrorMessage}
-            isError={simulationWorker.hasError}
+            disabled={isInitializeDisabled}
+            error={lastErrorMessage}
+            isError={hasError}
             isLoading={isInitializing}
-            isSuccess={simulationWorker.isInitializing}
+            isSuccess={false}
             variant="primary"
             onClick={initSimulation}
           >
-            Initialize simulation ({simulationWorker.estimatedMemoryUsage})
+            Initialize ({isInitializeDisabled ? '...' : estimatedMemoryUsage})
           </ButtonAsync>
         </ProjectControlGroup>
 
@@ -138,7 +146,7 @@ export default function Controls({
         />
         <ProjectControl
           Icon={StepForwardIcon}
-          title="Next Frame"
+          title="Next generation"
           onClick={handleStepFrame}
           disabled={isStepFrameDisabled}
         />

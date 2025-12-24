@@ -7,10 +7,10 @@ struct Uniforms {
   phenotype_size: u32,
   epistasis_gain: f32,
   phenotype_gain: f32,
-  local_environment_gain: f32,
-  local_environment_effect_radius: u32,
-  regional_environment_gain: f32,
-  global_environment_gain: f32,
+  regional_env_count: u32,
+  regional_env_overlap: f32,
+  regional_env_epi_gain: f32,
+  global_env_epi_gain: f32,
 }
 
 @group(0) @binding(0) var<uniform> u: Uniforms;

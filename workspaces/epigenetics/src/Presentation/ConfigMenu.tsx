@@ -109,94 +109,71 @@ export default function ConfigMenu({
     onChange: (value) => handleSetDataConfig({ epistasis_edges_max: value }),
   };
 
-  const localEnvironmentEdgesMinConfig: MenuConfigEntryNumber = {
-    label: 'Local env edges min',
-    icon: MinusIcon,
-    type: 'number',
-    value: dataConfig.local_environment_edges_min,
-    min: 0,
-    max: 1,
-    step: 0.1,
-    formatter: (value) => value.toFixed(1),
-    onChange: (value) =>
-      handleSetDataConfig({ local_environment_edges_min: value }),
-  };
-
-  const localEnvironmentEdgesMaxConfig: MenuConfigEntryNumber = {
-    label: 'Local env edges max',
-    icon: PlusIcon,
-    type: 'number',
-    value: dataConfig.local_environment_edges_max,
-    min: 0,
-    max: 1,
-    step: 0.1,
-    formatter: (value) => value.toFixed(1),
-    onChange: (value) =>
-      handleSetDataConfig({ local_environment_edges_max: value }),
-  };
-
   const regionalEnvironmentCountConfig: MenuConfigEntryNumber = {
     label: 'Regional env count',
     icon: NetworkIcon,
     type: 'number',
-    value: dataConfig.regional_environment_count,
+    value: dataConfig.regional_env_count,
     min: 1,
     max: 20,
     step: 1,
-    onChange: (value) =>
-      handleSetDataConfig({ regional_environment_count: value }),
+    onChange: (value) => handleSetDataConfig({ regional_env_count: value }),
   };
 
   const regionalEnvironmentEdgesMinConfig: MenuConfigEntryNumber = {
     label: 'Regional env edges min',
     icon: MinusIcon,
     type: 'number',
-    value: dataConfig.regional_environment_edges_min,
+    value: dataConfig.regional_env_epi_edges_min,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
     onChange: (value) =>
-      handleSetDataConfig({ regional_environment_edges_min: value }),
+      handleSetDataConfig({
+        regional_env_epi_edges_min: value,
+      }),
   };
 
   const regionalEnvironmentEdgesMaxConfig: MenuConfigEntryNumber = {
     label: 'Regional env edges max',
     icon: PlusIcon,
     type: 'number',
-    value: dataConfig.regional_environment_edges_max,
+    value: dataConfig.regional_env_epi_edges_max,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
     onChange: (value) =>
-      handleSetDataConfig({ regional_environment_edges_max: value }),
+      handleSetDataConfig({
+        regional_env_epi_edges_max: value,
+      }),
   };
 
   const globalEnvironmentEdgesMinConfig: MenuConfigEntryNumber = {
     label: 'Global env edges min',
     icon: MinusIcon,
     type: 'number',
-    value: dataConfig.global_environment_edges_min,
+    value: dataConfig.global_env_epi_edges_min,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
     onChange: (value) =>
-      handleSetDataConfig({ global_environment_edges_min: value }),
+      handleSetDataConfig({ global_env_epi_edges_min: value }),
   };
 
   const globalEnvironmentEdgesMaxConfig: MenuConfigEntryNumber = {
     label: 'Global env edges max',
     icon: PlusIcon,
     type: 'number',
-    value: dataConfig.global_environment_edges_max,
+    value: dataConfig.global_env_epi_edges_max,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
     onChange: (value) =>
-      handleSetDataConfig({ global_environment_edges_max: value }),
+      handleSetDataConfig({ global_env_epi_edges_max: value }),
   };
 
   const epistasisGainConfig: MenuConfigEntryNumber = {
@@ -223,42 +200,28 @@ export default function ConfigMenu({
     onChange: (value) => handleSetDataConfig({ phenotype_gain: value }),
   };
 
-  const localEnvironmentGainConfig: MenuConfigEntryNumber = {
-    label: 'Local env gain',
-    icon: GaugeIcon,
-    type: 'number',
-    value: dataConfig.local_environment_gain,
-    min: 0,
-    max: 10,
-    step: 0.1,
-    formatter: (value) => value.toFixed(1),
-    onChange: (value) => handleSetDataConfig({ local_environment_gain: value }),
-  };
-
   const regionalEnvironmentGainConfig: MenuConfigEntryNumber = {
     label: 'Regional env gain',
     icon: GaugeIcon,
     type: 'number',
-    value: dataConfig.regional_environment_gain,
+    value: dataConfig.regional_env_epi_gain,
     min: 0,
     max: 10,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) =>
-      handleSetDataConfig({ regional_environment_gain: value }),
+    onChange: (value) => handleSetDataConfig({ regional_env_epi_gain: value }),
   };
 
   const globalEnvironmentGainConfig: MenuConfigEntryNumber = {
     label: 'Global env gain',
     icon: GaugeIcon,
     type: 'number',
-    value: dataConfig.global_environment_gain,
+    value: dataConfig.global_env_epi_gain,
     min: 0,
     max: 10,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) =>
-      handleSetDataConfig({ global_environment_gain: value }),
+    onChange: (value) => handleSetDataConfig({ global_env_epi_gain: value }),
   };
 
   const reproductionSearchRadiusConfig: MenuConfigEntryNumber = {
@@ -294,9 +257,6 @@ export default function ConfigMenu({
     epistasisGainConfig,
     epistasisEdgesMinConfig,
     epistasisEdgesMaxConfig,
-    localEnvironmentGainConfig,
-    localEnvironmentEdgesMinConfig,
-    localEnvironmentEdgesMaxConfig,
     regionalEnvironmentGainConfig,
     regionalEnvironmentCountConfig,
     regionalEnvironmentEdgesMinConfig,

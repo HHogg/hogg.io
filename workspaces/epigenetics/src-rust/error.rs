@@ -33,6 +33,9 @@ pub enum SimulationError {
   #[error("Simulation loop is not running")]
   LoopNotRunning,
 
+  #[error("Simulation loop is not paused")]
+  LoopNotPaused,
+
   #[error("Simulation loop has not been created")]
   LoopNotCreated,
 

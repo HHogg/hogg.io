@@ -28,18 +28,38 @@ export interface PointSequence {
 }
 
 export interface Config {
-	genome_size: number;
-	genome_influence_min: number;
-	genome_influence_max: number;
-	epigenetic_influence_min: number;
-	epigenetic_influence_max: number;
-	local_environment_influence_min: number;
-	local_environment_influence_max: number;
-	regional_environment_count: number;
-	regional_environment_influence_min: number;
-	regional_environment_influence_max: number;
-	global_environment_influence_min: number;
-	global_environment_influence_max: number;
+	cell_size: number;
+	genotype_size: number;
+	phenotype_size: number;
+	epistasis_enabled: boolean;
+	epistasis_gain: number;
+	epistasis_edges_min: number;
+	epistasis_edges_max: number;
+	phenotype_gain: number;
+	phenotype_edges_min: number;
+	phenotype_edges_max: number;
+	regional_env_enabled: boolean;
+	regional_env_count: number;
+	regional_env_overlap: number;
+	regional_env_epi_gain: number;
+	regional_env_epi_edges_min: number;
+	regional_env_epi_edges_max: number;
+	regional_env_fit_gain: number;
+	regional_env_fit_edges_min: number;
+	regional_env_fit_edges_max: number;
+	global_env_enabled: boolean;
+	global_env_epi_gain: number;
+	global_env_epi_edges_min: number;
+	global_env_epi_edges_max: number;
+	global_env_fit_gain: number;
+	global_env_fit_edges_min: number;
+	global_env_fit_edges_max: number;
+	reproduction_search_radius: number;
+}
+
+export interface RunStats {
+	passIndex: number;
+	passesPerSecond: number;
 }
 
 export interface BBox {
@@ -494,6 +514,7 @@ export type Message =
 	| { name: "simulationPaused", data?: undefined }
 	| { name: "simulationResumed", data?: undefined }
 	| { name: "simulationReset", data?: undefined }
+	| { name: "simulationRunStats", data: RunStats }
 	| { name: "postUpdateIntervalSet", data: number }
 	| { name: "dataConfigSet", data: Config }
 	| { name: "dataMemoryUsageEstimated", data: string }

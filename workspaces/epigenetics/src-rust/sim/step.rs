@@ -201,14 +201,14 @@ impl ComputeStep {
     );
 
     let bind_group = device.create_bind_group(&wgpu::BindGroupDescriptor {
-      label: None,
+      label: Some(self.config.label),
       layout: &self.bind_group_layout,
       entries: &bind_group_entries,
     });
 
     {
       let mut compute_pass = encoder.begin_compute_pass(&wgpu::ComputePassDescriptor {
-        label: None,
+        label: Some(self.config.label),
         timestamp_writes: None,
       });
 
@@ -307,19 +307,19 @@ impl RenderStep {
 
     // Create bind group layout
     let bind_group_layout = device.create_bind_group_layout(&wgpu::BindGroupLayoutDescriptor {
-      label: None,
+      label: Some(config.label),
       entries: &buffer_entries.as_slice(),
     });
 
     // Create render pipeline
     let pipeline_layout = device.create_pipeline_layout(&wgpu::PipelineLayoutDescriptor {
-      label: None,
+      label: Some(config.label),
       bind_group_layouts: &[&bind_group_layout],
       push_constant_ranges: &[],
     });
 
     let pipeline = device.create_render_pipeline(&wgpu::RenderPipelineDescriptor {
-      label: None,
+      label: Some(config.label),
       layout: Some(&pipeline_layout),
       vertex: wgpu::VertexState {
         module: &vert_shader,

@@ -1,7 +1,6 @@
 use serde::Serialize;
 use typeshare::typeshare;
 use web_sys::OffscreenCanvas;
-use wesl::Wesl;
 
 use crate::error::SimulationError;
 use crate::sim;
@@ -105,7 +104,7 @@ impl Program {
       width,
       height,
       present_mode: surface_caps.present_modes[0],
-      alpha_mode: surface_caps.alpha_modes[0],
+      alpha_mode: wgpu::CompositeAlphaMode::PreMultiplied,
       view_formats: vec![],
       desired_maximum_frame_latency: 2,
     };
@@ -132,15 +131,15 @@ impl Program {
           compute_shader: include_str!("./steps/1.compute_environment_shifts.wgsl"),
           buffers: vec![
             sim::step::BufferConfig {
-              label: "regional_environment_topology",
+              label: "regional_env_epi_topology",
               read_only: true,
             },
             sim::step::BufferConfig {
-              label: "global_environment_topology",
+              label: "global_env_epi_topology",
               read_only: true,
             },
             sim::step::BufferConfig {
-              label: "environment_shifts",
+              label: "genotype_weights_shifts",
               read_only: false,
             },
           ],
@@ -155,11 +154,15 @@ impl Program {
           buffers: vec![
             sim::step::BufferConfig {
               label: "genotype_weights",
-              read_only: false,
+              read_only: true,
             },
             sim::step::BufferConfig {
               label: "genotype_epistasis_topology",
               read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "genotype_weights_shifts",
+              read_only: false,
             },
           ],
         },
@@ -170,7 +173,24 @@ impl Program {
         sim::step::ComputeConfig {
           label: "compute_phenotypes",
           compute_shader: include_str!("./steps/3.compute_phenotypes.wgsl"),
-          buffers: vec![],
+          buffers: vec![
+            sim::step::BufferConfig {
+              label: "genotype_weights",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "genotype_weights_shifts",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "phenotype_topology",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "phenotype_weights",
+              read_only: false,
+            },
+          ],
         },
       )?
       .into(),
@@ -179,7 +199,24 @@ impl Program {
         sim::step::ComputeConfig {
           label: "compute_fitness_scores",
           compute_shader: include_str!("./steps/4.compute_fitness_scores.wgsl"),
-          buffers: vec![],
+          buffers: vec![
+            sim::step::BufferConfig {
+              label: "regional_env_fit_topology",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "global_env_fit_topology",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "phenotype_weights",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "fitness_scores",
+              read_only: false,
+            },
+          ],
         },
       )?
       .into(),
@@ -198,10 +235,20 @@ impl Program {
           label: "render",
           fragment_shader: include_str!("./steps/render_fragment.wgsl"),
           vertex_shader: include_str!("./steps/render_vertex.wgsl"),
-          buffers: vec![sim::step::BufferConfig {
-            label: "phenotype_weights",
-            read_only: true,
-          }],
+          buffers: vec![
+            sim::step::BufferConfig {
+              label: "regional_env_fit_topology",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "phenotype_weights",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "fitness_scores",
+              read_only: true,
+            },
+          ],
         },
       )?
       .into(),
@@ -268,6 +315,55 @@ impl Program {
       pass_index: self.pass_index,
       passes_per_second: self.pass_index as f64 / elapsed,
     })
+  }
+
+  pub fn reset(&mut self) -> Result<(), SimulationError> {
+    self.pass_index = 0;
+    Ok(())
+  }
+
+  pub fn clear_canvas(&mut self) -> Result<(), SimulationError> {
+    // Get the current surface texture
+    let output = self.surface.get_current_texture().map_err(|e| {
+      SimulationError::SurfaceTexture(format!("Failed to get surface texture: {e:?}"))
+    })?;
+
+    let view = output.texture.create_view(&Default::default());
+
+    // Create a command encoder
+    let mut encoder = self
+      .device
+      .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+
+    // Begin a render pass that clears the canvas to transparent
+    {
+      encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+        label: Some("clear_canvas"),
+        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+          view: &view,
+          resolve_target: None,
+          ops: wgpu::Operations {
+            load: wgpu::LoadOp::Clear(wgpu::Color {
+              r: 0.0,
+              g: 0.0,
+              b: 0.0,
+              a: 0.0,
+            }),
+            store: wgpu::StoreOp::Store,
+          },
+          depth_slice: None,
+        })],
+        depth_stencil_attachment: None,
+        occlusion_query_set: None,
+        timestamp_writes: None,
+      });
+    }
+
+    // Submit the command to clear the canvas
+    self.queue.submit(std::iter::once(encoder.finish()));
+    output.present();
+
+    Ok(())
   }
 
   pub fn resize(&mut self, _width: u32, _height: u32) -> Result<(), SimulationError> {

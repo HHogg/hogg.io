@@ -43,6 +43,12 @@ pub fn get_simulation_program() -> Option<Rc<RefCell<sim::Program>>> {
   SIMULATION_PROGRAM.with(|s| s.borrow().clone())
 }
 
+pub fn remove_simulation_program() {
+  SIMULATION_PROGRAM.with(|s| {
+    *s.borrow_mut() = None;
+  });
+}
+
 pub fn get_simulation_loop() -> Option<Rc<RefCell<sim::Loop>>> {
   SIMULATION_LOOP.with(|l| l.borrow().clone())
 }
@@ -50,6 +56,12 @@ pub fn get_simulation_loop() -> Option<Rc<RefCell<sim::Loop>>> {
 pub fn set_simulation_loop(loop_rc: Rc<RefCell<sim::Loop>>) {
   SIMULATION_LOOP.with(|l| {
     *l.borrow_mut() = Some(loop_rc);
+  });
+}
+
+pub fn remove_simulation_loop() {
+  SIMULATION_LOOP.with(|l| {
+    *l.borrow_mut() = None;
   });
 }
 
