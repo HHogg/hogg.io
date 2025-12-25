@@ -4,7 +4,12 @@ import {
   SimulationWorkerApi,
   terminateSimulationWorker,
 } from './simulationWorker';
-import { Message, Config as DataConfig, RunStats } from './types.generated';
+import {
+  Message,
+  Config as DataConfig,
+  RunStats,
+  DataBufferReadContent,
+} from './types.generated';
 
 export type Event = {
   type: 'info' | 'success' | 'error';
@@ -14,6 +19,7 @@ export type Event = {
 export type UseSimulationWorkerResult = {
   getSimulationWorker: () => SimulationWorkerApi;
   initSimulation: () => Promise<void>;
+  readBufferSlice: (label: string, cellIndex: number) => Promise<void>;
   dataConfig: DataConfig | null;
   estimatedMemoryUsage: string | null;
   events: Event[];
@@ -28,6 +34,7 @@ export type UseSimulationWorkerResult = {
   isInitialized: boolean;
   isLoopRunning: boolean;
   isPaused: boolean;
+  bufferReadResults: Record<number, Record<string, DataBufferReadContent>>;
 };
 
 export default function useSimulationWorker(
@@ -47,6 +54,9 @@ export default function useSimulationWorker(
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoopRunning, setIsLoopRunning] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [bufferReadResults, setBufferReadResults] = useState<
+    Record<number, Record<string, DataBufferReadContent>>
+  >({});
 
   const addEvent = useCallback((type: Event['type'], message: string) => {
     if (type === 'error') {
@@ -122,6 +132,23 @@ export default function useSimulationWorker(
           setEstimatedMemoryUsage(message.data);
           addEvent('info', `Estimated memory usage: ${message.data}`);
           break;
+        case 'dataBufferRead':
+          setBufferReadResults((prev) => {
+            const cellIndex = message.data.cellIndex;
+            const cellData = prev[cellIndex] || {};
+            return {
+              ...prev,
+              [cellIndex]: {
+                ...cellData,
+                [message.data.label]: message.data,
+              },
+            };
+          });
+          addEvent(
+            'info',
+            `Buffer read for cell ${message.data.cellIndex}: ${message.data.label}`
+          );
+          break;
         case 'error':
           addEvent('error', message.data);
           break;
@@ -155,6 +182,14 @@ export default function useSimulationWorker(
     setIsInitializing(false);
   }, [getSimulationWorker]);
 
+  const readBufferSlice = useCallback(
+    async (label: string, cellIndex: number) => {
+      const simulationWorker = getSimulationWorker();
+      await simulationWorker.readBufferSlice(label, cellIndex);
+    },
+    [getSimulationWorker]
+  );
+
   useEffect(() => {
     getSimulationWorker();
 
@@ -180,9 +215,14 @@ export default function useSimulationWorker(
     updateDimensions();
   }, [width, height, isWasmReady, getSimulationWorker]);
 
+  useEffect(() => {
+    console.log('bufferReadResults', bufferReadResults);
+  }, [bufferReadResults]);
+
   return {
     getSimulationWorker,
     initSimulation,
+    readBufferSlice,
     dataConfig,
     estimatedMemoryUsage,
     hasError,
@@ -197,5 +237,6 @@ export default function useSimulationWorker(
     isInitialized,
     isLoopRunning,
     isPaused,
+    bufferReadResults,
   };
 }

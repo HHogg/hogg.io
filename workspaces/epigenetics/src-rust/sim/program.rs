@@ -15,7 +15,7 @@ pub struct Program {
   pub surface: wgpu::Surface<'static>,
   pub surface_config: wgpu::SurfaceConfiguration,
   pub data: sim::Data,
-  pub data_config: sim::data::Config,
+  pub data_config: sim::Config,
   pub pass_index: u32,
   pub workgroup_size_x: u32,
   pub workgroup_size_y: u32,
@@ -34,7 +34,7 @@ impl Program {
     canvas: OffscreenCanvas,
     width: u32,
     height: u32,
-    data_config: sim::data::Config,
+    data_config: sim::Config,
   ) -> Result<Self, SimulationError> {
     let instance = wgpu::Instance::new(&wgpu::InstanceDescriptor {
       backends: wgpu::Backends::BROWSER_WEBGPU | wgpu::Backends::GL,
@@ -225,7 +225,16 @@ impl Program {
         sim::step::ComputeConfig {
           label: "compute_next_generation",
           compute_shader: include_str!("./steps/5.compute_next_generation.wgsl"),
-          buffers: vec![],
+          buffers: vec![
+            sim::step::BufferConfig {
+              label: "fitness_scores",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "genotype_weights",
+              read_only: false,
+            },
+          ],
         },
       )?
       .into(),
@@ -395,6 +404,13 @@ impl Program {
         ),
       ],
     );
+    Ok(())
+  }
+
+  pub fn read_buffer_slice(&self, label: &str, cell_index: u32) -> Result<(), String> {
+    self
+      .data
+      .read_buffer_slice(&self.device, &self.queue, label, cell_index);
     Ok(())
   }
 }

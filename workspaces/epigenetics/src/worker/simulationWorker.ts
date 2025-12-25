@@ -18,6 +18,7 @@ export interface SimulationWorkerApi {
   stepSimulationFrame(): Promise<void>;
   stopSimulationLoop(): Promise<void>;
   transferCanvas(canvas: OffscreenCanvas): Promise<void>;
+  readBufferSlice(label: string, cellIndex: number): Promise<void>;
 }
 
 let simulationWorker: Worker | undefined;

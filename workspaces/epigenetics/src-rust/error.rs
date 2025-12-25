@@ -59,6 +59,9 @@ pub enum SimulationError {
 
   #[error("Resize operation failed: {0}")]
   ResizeFailed(String),
+
+  #[error("Buffer mapping failed: {0}")]
+  BufferMappingFailed(String),
 }
 
 impl From<SimulationError> for JsValue {

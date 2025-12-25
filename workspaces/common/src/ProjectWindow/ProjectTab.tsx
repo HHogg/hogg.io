@@ -54,7 +54,7 @@ export default function ProjectTab({
   }, [contentSize.height]);
 
   return (
-    <Box>
+    <Box style={{ pointerEvents: 'auto' }}>
       <Motion container layout="position" zIndex={2}>
         <Button
           backgroundColor="transparent"

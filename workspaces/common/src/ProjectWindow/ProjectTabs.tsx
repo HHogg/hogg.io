@@ -23,6 +23,7 @@ export default function ProjectTabs({ children }: PropsWithChildren<{}>) {
         }px)`,
       }}
       style={{
+        pointerEvents: 'none',
         filter:
           theme === 'night'
             ? 'drop-shadow(0px 0px 60px black)'

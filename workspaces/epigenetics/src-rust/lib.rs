@@ -36,7 +36,7 @@ fn main() -> Result<(), JsError> {
   Message::Log("----------------------".to_string()).send();
 
   // Set default config and send it to frontend
-  let default_config = sim::data::Config::create();
+  let default_config = sim::Config::create();
   set_data_config_thread_local(default_config.clone());
   Message::DataConfigSet(default_config).send();
   Message::WasmReady.send();
@@ -60,7 +60,7 @@ pub fn set_post_update_interval(frames: u32) -> Result<(), JsValue> {
 
 #[wasm_bindgen]
 pub fn set_data_config(data_config: JsValue) -> Result<(), JsValue> {
-  let data_config: sim::data::Config =
+  let data_config: sim::Config =
     serde_wasm_bindgen::from_value(data_config).map_err(JsValue::from)?;
   set_data_config_thread_local(data_config.clone());
   Message::DataConfigSet(data_config.clone()).send();
@@ -192,6 +192,18 @@ pub fn resize_simulation(width: u32, height: u32) -> Result<(), JsValue> {
 
   // Recalculate and send memory usage estimate
   send_estimated_memory_usage();
+
+  Ok(())
+}
+
+#[wasm_bindgen]
+pub fn read_buffer_slice(label: &str, cell_index: u32) -> Result<(), JsValue> {
+  let simulation_program_rc = get_simulation_program().ok_or(SimulationError::ProgramNotFound)?;
+  let program = simulation_program_rc.borrow();
+
+  program
+    .read_buffer_slice(&label, cell_index)
+    .map_err(JsValue::from)?;
 
   Ok(())
 }

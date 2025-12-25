@@ -11,6 +11,7 @@ import init, {
   step_simulation_frame as wasmStepSimulationFrame,
   set_post_update_interval as wasmSetPostUpdateInterval,
   set_data_config as wasmSetDataConfig,
+  read_buffer_slice as wasmReadBufferSlice,
 } from '../../pkg/hogg_epigenetics_worker/hogg_epigenetics_worker';
 
 let wasmReady = false;
@@ -88,6 +89,11 @@ const simulationWorkerApi = {
   async setDataConfig(dataConfig: unknown) {
     await waitForWasmReady();
     wasmSetDataConfig(dataConfig);
+  },
+
+  async readBufferSlice(label: string, cellIndex: number) {
+    await waitForWasmReady();
+    wasmReadBufferSlice(label, cellIndex);
   },
 };
 

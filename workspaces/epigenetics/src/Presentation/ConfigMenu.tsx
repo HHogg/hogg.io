@@ -67,71 +67,71 @@ export default function ConfigMenu({
     label: 'Genotype size',
     icon: CircleIcon,
     type: 'number',
-    value: dataConfig.genotype_size,
+    value: dataConfig.genotypeSize,
     min: 10,
     max: 500,
     step: 100,
-    onChange: (value) => handleSetDataConfig({ genotype_size: value }),
+    onChange: (value) => handleSetDataConfig({ genotypeSize: value }),
   };
 
   const phenotypeSizeConfig: MenuConfigEntryNumber = {
     label: 'Phenotype size',
     icon: CircleIcon,
     type: 'number',
-    value: dataConfig.phenotype_size,
+    value: dataConfig.phenotypeSize,
     min: 10,
     max: 500,
     step: 100,
-    onChange: (value) => handleSetDataConfig({ phenotype_size: value }),
+    onChange: (value) => handleSetDataConfig({ phenotypeSize: value }),
   };
 
   const epistasisEdgesMinConfig: MenuConfigEntryNumber = {
     label: 'Epistasis edges min',
     icon: MinusIcon,
     type: 'number',
-    value: dataConfig.epistasis_edges_min,
+    value: dataConfig.epistasisEdgesMin,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) => handleSetDataConfig({ epistasis_edges_min: value }),
+    onChange: (value) => handleSetDataConfig({ epistasisEdgesMin: value }),
   };
 
   const epistasisEdgesMaxConfig: MenuConfigEntryNumber = {
     label: 'Epistasis edges max',
     icon: PlusIcon,
     type: 'number',
-    value: dataConfig.epistasis_edges_max,
+    value: dataConfig.epistasisEdgesMax,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) => handleSetDataConfig({ epistasis_edges_max: value }),
+    onChange: (value) => handleSetDataConfig({ epistasisEdgesMax: value }),
   };
 
   const regionalEnvironmentCountConfig: MenuConfigEntryNumber = {
     label: 'Regional env count',
     icon: NetworkIcon,
     type: 'number',
-    value: dataConfig.regional_env_count,
+    value: dataConfig.regionalEnvCount,
     min: 1,
     max: 20,
     step: 1,
-    onChange: (value) => handleSetDataConfig({ regional_env_count: value }),
+    onChange: (value) => handleSetDataConfig({ regionalEnvCount: value }),
   };
 
   const regionalEnvironmentEdgesMinConfig: MenuConfigEntryNumber = {
     label: 'Regional env edges min',
     icon: MinusIcon,
     type: 'number',
-    value: dataConfig.regional_env_epi_edges_min,
+    value: dataConfig.regionalEnvEpiEdgesMin,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
     onChange: (value) =>
       handleSetDataConfig({
-        regional_env_epi_edges_min: value,
+        regionalEnvEpiEdgesMin: value,
       }),
   };
 
@@ -139,14 +139,14 @@ export default function ConfigMenu({
     label: 'Regional env edges max',
     icon: PlusIcon,
     type: 'number',
-    value: dataConfig.regional_env_epi_edges_max,
+    value: dataConfig.regionalEnvEpiEdgesMax,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
     onChange: (value) =>
       handleSetDataConfig({
-        regional_env_epi_edges_max: value,
+        regionalEnvEpiEdgesMax: value,
       }),
   };
 
@@ -154,99 +154,97 @@ export default function ConfigMenu({
     label: 'Global env edges min',
     icon: MinusIcon,
     type: 'number',
-    value: dataConfig.global_env_epi_edges_min,
+    value: dataConfig.globalEnvEpiEdgesMin,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) =>
-      handleSetDataConfig({ global_env_epi_edges_min: value }),
+    onChange: (value) => handleSetDataConfig({ globalEnvEpiEdgesMin: value }),
   };
 
   const globalEnvironmentEdgesMaxConfig: MenuConfigEntryNumber = {
     label: 'Global env edges max',
     icon: PlusIcon,
     type: 'number',
-    value: dataConfig.global_env_epi_edges_max,
+    value: dataConfig.globalEnvEpiEdgesMax,
     min: 0,
     max: 1,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) =>
-      handleSetDataConfig({ global_env_epi_edges_max: value }),
+    onChange: (value) => handleSetDataConfig({ globalEnvEpiEdgesMax: value }),
   };
 
   const epistasisGainConfig: MenuConfigEntryNumber = {
     label: 'Epistasis gain',
     icon: GaugeIcon,
     type: 'number',
-    value: dataConfig.epistasis_gain,
+    value: dataConfig.epistasisGain,
     min: 0,
     max: 10,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) => handleSetDataConfig({ epistasis_gain: value }),
+    onChange: (value) => handleSetDataConfig({ epistasisGain: value }),
   };
 
   const phenotypeGainConfig: MenuConfigEntryNumber = {
     label: 'Phenotype gain',
     icon: GaugeIcon,
     type: 'number',
-    value: dataConfig.phenotype_gain,
+    value: dataConfig.phenotypeGain,
     min: 0,
     max: 10,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) => handleSetDataConfig({ phenotype_gain: value }),
+    onChange: (value) => handleSetDataConfig({ phenotypeGain: value }),
   };
 
   const regionalEnvironmentGainConfig: MenuConfigEntryNumber = {
     label: 'Regional env gain',
     icon: GaugeIcon,
     type: 'number',
-    value: dataConfig.regional_env_epi_gain,
+    value: dataConfig.regionalEnvEpiGain,
     min: 0,
     max: 10,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) => handleSetDataConfig({ regional_env_epi_gain: value }),
+    onChange: (value) => handleSetDataConfig({ regionalEnvEpiGain: value }),
   };
 
   const globalEnvironmentGainConfig: MenuConfigEntryNumber = {
     label: 'Global env gain',
     icon: GaugeIcon,
     type: 'number',
-    value: dataConfig.global_env_epi_gain,
+    value: dataConfig.globalEnvEpiGain,
     min: 0,
     max: 10,
     step: 0.1,
     formatter: (value) => value.toFixed(1),
-    onChange: (value) => handleSetDataConfig({ global_env_epi_gain: value }),
+    onChange: (value) => handleSetDataConfig({ globalEnvEpiGain: value }),
   };
 
   const reproductionSearchRadiusConfig: MenuConfigEntryNumber = {
     label: 'Reproduction search radius',
     icon: NetworkIcon,
     type: 'number',
-    value: dataConfig.reproduction_search_radius,
+    value: dataConfig.reproductionSearchRadius,
     min: 1,
     max: 10,
     step: 1,
     formatter: (value) => `${value} layer${value !== 1 ? 's' : ''}`,
     onChange: (value) =>
-      handleSetDataConfig({ reproduction_search_radius: value }),
+      handleSetDataConfig({ reproductionSearchRadius: value }),
   };
 
   const cellSizeConfig: MenuConfigEntryNumber = {
     label: 'Cell size',
     icon: CircleIcon,
     type: 'number',
-    value: dataConfig.cell_size,
+    value: dataConfig.cellSize,
     min: 1,
     max: 50,
     step: 1,
     formatter: (value) => `${value}x${value} pixels`,
-    onChange: (value) => handleSetDataConfig({ cell_size: value }),
+    onChange: (value) => handleSetDataConfig({ cellSize: value }),
   };
 
   const configEntries = [

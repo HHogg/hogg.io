@@ -104,7 +104,12 @@ export default function ProjectWindowContents({
             {children}
           </Box>
 
-          <Box absolute="bottom" ref={refTabs} width="100%">
+          <Box
+            absolute="bottom"
+            ref={refTabs}
+            style={{ pointerEvents: 'none' }}
+            width="100%"
+          >
             {tabs}
           </Box>
         </PatternBackground>

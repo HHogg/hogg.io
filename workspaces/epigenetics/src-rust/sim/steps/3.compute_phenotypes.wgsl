@@ -94,16 +94,23 @@ fn compute_phenotype_weights(cell_index: u32) {
   let edge_offset = node_offset + 1u;
 
   for (var phenotype_index: u32 = 0; phenotype_index < u.phenotype_size; phenotype_index++) {
+    var phenotype_base_weight: f32 = 0.0;
+    var phenotype_weight_shift: f32 = 0.0;
+
     for (var edge_index: u32 = 0; edge_index < edges_count; edge_index++) {
       let edge_index_offset = edge_offset + edge_index * 2u;
       let genotype_cell_index = u32(phenotype_topology[edge_index_offset]);
-      let genotype_influence_weight = phenotype_topology[edge_index_offset + 1u];
-      let genotype_base_weight = genotype_weights[genotype_cell_offset + genotype_cell_index];
+
+      let genotype_weight = genotype_weights[genotype_cell_offset + genotype_cell_index];
       let genotype_shift = genotype_weights_shifts[genotype_cell_offset + genotype_cell_index];
 
-      let phenotype_weight = sigmoid(logit(genotype_base_weight) + genotype_shift);
 
-      phenotype_weights[phenotype_offset + phenotype_index] = phenotype_weight;
+      phenotype_base_weight = (phenotype_base_weight + genotype_weight) * 0.5;
+      phenotype_weight_shift += genotype_shift;
     }
+
+    let phenotype_weight = sigmoid(logit(phenotype_base_weight) + phenotype_weight_shift);
+
+    phenotype_weights[phenotype_offset + phenotype_index] = phenotype_weight;
   }
 }

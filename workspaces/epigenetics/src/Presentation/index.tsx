@@ -1,9 +1,10 @@
 import { ProjectTab, ProjectTabs, ProjectWindow } from '@hogg/common';
-import { TerminalIcon } from 'lucide-react';
+import { ChartScatterIcon, TerminalIcon } from 'lucide-react';
 import { Box, Label, Labels, Text, useResizeObserver } from 'preshape';
 import { useState } from 'react';
 import { useCanvasTransfer } from '../worker/useCanvasTransfer';
 import useSimulationWorker from '../worker/useSimulationWorker';
+import CellGrid from './CellGrid';
 import ConfigMenu from './ConfigMenu';
 import Controls from './Controls';
 import LogsPanel from './LogsPanel';
@@ -31,6 +32,10 @@ const Presentation = () => {
       padding="x0"
       tabs={
         <ProjectTabs>
+          <ProjectTab name="Stats" Icon={ChartScatterIcon}>
+            <LogsPanel messageHandler={simulationWorker} />
+          </ProjectTab>
+
           <ProjectTab name="Logs" Icon={TerminalIcon}>
             <LogsPanel messageHandler={simulationWorker} />
           </ProjectTab>
@@ -58,6 +63,12 @@ const Presentation = () => {
               </Labels>
             </Box>
           )}
+
+          <CellGrid
+            width={width}
+            height={height}
+            simulationWorker={simulationWorker}
+          />
 
           {simulationWorker.hasError && (
             <Box absolute="center" maxWidth="300px">

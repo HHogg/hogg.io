@@ -21,10 +21,20 @@ pub enum Message {
   SimulationReset,
   SimulationRunStats(sim::program::RunStats),
   PostUpdateIntervalSet(u32),
-  DataConfigSet(sim::data::Config),
+  DataConfigSet(sim::Config),
   DataMemoryUsageEstimated(String),
+  DataBufferRead(DataBufferReadContent),
   Error(String),
   Log(String),
+}
+
+#[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+#[typeshare]
+pub struct DataBufferReadContent {
+  pub label: String,
+  pub cell_index: u32,
+  pub data: Vec<f32>,
 }
 
 impl Message {

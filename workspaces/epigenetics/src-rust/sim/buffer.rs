@@ -129,6 +129,7 @@ impl TopologiesConfig {
 #[derive(Clone)]
 pub struct Buffer {
   pub label: &'static str,
+  pub config: Config,
   pub read: wgpu::Buffer,
   pub write: Option<wgpu::Buffer>,
 }
@@ -146,7 +147,9 @@ impl Buffer {
       Some(device.create_buffer(&wgpu::BufferDescriptor {
         label: Some(format!("{}_write", config.label()).as_str()),
         size: read.size() as u64,
-        usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+        usage: wgpu::BufferUsages::STORAGE
+          | wgpu::BufferUsages::COPY_DST
+          | wgpu::BufferUsages::COPY_SRC,
         mapped_at_creation: false,
       }))
     } else {
@@ -155,6 +158,7 @@ impl Buffer {
 
     Self {
       label: config.label(),
+      config: config.clone(),
       read,
       write,
     }
@@ -174,7 +178,9 @@ impl Buffer {
     return device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
       label: Some(format!("{}_read", label).as_str()),
       contents: bytemuck::cast_slice(&topology_data),
-      usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+      usage: wgpu::BufferUsages::STORAGE
+        | wgpu::BufferUsages::COPY_DST
+        | wgpu::BufferUsages::COPY_SRC,
     });
   }
 
@@ -386,7 +392,9 @@ impl Buffer {
     let read = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
       label: Some(format!("{}_read", label).as_str()),
       contents: bytemuck::cast_slice(&random_weights),
-      usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+      usage: wgpu::BufferUsages::STORAGE
+        | wgpu::BufferUsages::COPY_DST
+        | wgpu::BufferUsages::COPY_SRC,
     });
 
     read

@@ -17,7 +17,7 @@ pub struct RunOptions<'a> {
   pub width: u32,
   pub height: u32,
   pub data: &'a sim::Data,
-  pub data_config: &'a sim::data::Config,
+  pub data_config: &'a sim::Config,
   pub surface_view: &'a wgpu::TextureView,
   pub workgroup_size_x: u32,
   pub workgroup_size_y: u32,
@@ -217,9 +217,10 @@ impl ComputeStep {
       compute_pass.set_bind_group(0, &bind_group, &[]);
 
       // Dispatch workgroups based on cells, not pixels
-      // Each cell is cell_size x cell_size pixels
-      let cell_width = (*width).div_ceil(data_config.cell_size);
-      let cell_height = (*height).div_ceil(data_config.cell_size);
+      // Match the cell count calculation: (width / cell_size) * (height / cell_size)
+      // Use integer division to match the actual number of cells
+      let cell_width = *width / data_config.cell_size;
+      let cell_height = *height / data_config.cell_size;
       let workgroup_count_x = cell_width.div_ceil(*workgroup_size_x);
       let workgroup_count_y = cell_height.div_ceil(*workgroup_size_y);
       let workgroup_count_z = 1;

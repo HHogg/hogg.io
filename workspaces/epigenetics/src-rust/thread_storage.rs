@@ -6,7 +6,7 @@ use crate::sim;
 
 thread_local! {
   pub static CANVAS: RefCell<Option<OffscreenCanvas>> = const { RefCell::new(None) };
-  pub static DATA_CONFIG: RefCell<Option<sim::data::Config>> = const { RefCell::new(None) };
+  pub static DATA_CONFIG: RefCell<Option<sim::Config>> = const { RefCell::new(None) };
   pub static SIMULATION_WIDTH: RefCell<Option<u32>> = const { RefCell::new(None) };
   pub static SIMULATION_HEIGHT: RefCell<Option<u32>> = const { RefCell::new(None) };
   pub static SIMULATION_LOOP: RefCell<Option<Rc<RefCell<sim::Loop>>>> = const { RefCell::new(None) };
@@ -23,13 +23,13 @@ pub fn get_canvas() -> Option<OffscreenCanvas> {
   CANVAS.with(|c| c.borrow().clone())
 }
 
-pub fn set_data_config(config: sim::data::Config) {
+pub fn set_data_config(config: sim::Config) {
   DATA_CONFIG.with(|d| {
     *d.borrow_mut() = Some(config);
   });
 }
 
-pub fn get_data_config() -> Option<sim::data::Config> {
+pub fn get_data_config() -> Option<sim::Config> {
   DATA_CONFIG.with(|d| d.borrow().clone())
 }
 

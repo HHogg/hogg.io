@@ -27,34 +27,40 @@ export interface PointSequence {
 	entries: Entry[];
 }
 
+export interface DataBufferReadContent {
+	label: string;
+	cellIndex: number;
+	data: number[];
+}
+
 export interface Config {
-	cell_size: number;
-	genotype_size: number;
-	phenotype_size: number;
-	epistasis_enabled: boolean;
-	epistasis_gain: number;
-	epistasis_edges_min: number;
-	epistasis_edges_max: number;
-	phenotype_gain: number;
-	phenotype_edges_min: number;
-	phenotype_edges_max: number;
-	regional_env_enabled: boolean;
-	regional_env_count: number;
-	regional_env_overlap: number;
-	regional_env_epi_gain: number;
-	regional_env_epi_edges_min: number;
-	regional_env_epi_edges_max: number;
-	regional_env_fit_gain: number;
-	regional_env_fit_edges_min: number;
-	regional_env_fit_edges_max: number;
-	global_env_enabled: boolean;
-	global_env_epi_gain: number;
-	global_env_epi_edges_min: number;
-	global_env_epi_edges_max: number;
-	global_env_fit_gain: number;
-	global_env_fit_edges_min: number;
-	global_env_fit_edges_max: number;
-	reproduction_search_radius: number;
+	cellSize: number;
+	genotypeSize: number;
+	phenotypeSize: number;
+	epistasisEnabled: boolean;
+	epistasisGain: number;
+	epistasisEdgesMin: number;
+	epistasisEdgesMax: number;
+	phenotypeGain: number;
+	phenotypeEdgesMin: number;
+	phenotypeEdgesMax: number;
+	regionalEnvEnabled: boolean;
+	regionalEnvCount: number;
+	regionalEnvOverlap: number;
+	regionalEnvEpiGain: number;
+	regionalEnvEpiEdgesMin: number;
+	regionalEnvEpiEdgesMax: number;
+	regionalEnvFitGain: number;
+	regionalEnvFitEdgesMin: number;
+	regionalEnvFitEdgesMax: number;
+	globalEnvEnabled: boolean;
+	globalEnvEpiGain: number;
+	globalEnvEpiEdgesMin: number;
+	globalEnvEpiEdgesMax: number;
+	globalEnvFitGain: number;
+	globalEnvFitEdgesMin: number;
+	globalEnvFitEdgesMax: number;
+	reproductionSearchRadius: number;
 }
 
 export interface RunStats {
@@ -518,6 +524,7 @@ export type Message =
 	| { name: "postUpdateIntervalSet", data: number }
 	| { name: "dataConfigSet", data: Config }
 	| { name: "dataMemoryUsageEstimated", data: string }
+	| { name: "dataBufferRead", data: DataBufferReadContent }
 	| { name: "error", data: string }
 	| { name: "log", data: string };
 
