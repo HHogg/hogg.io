@@ -22,8 +22,7 @@ mod tests {
         edges_index_pool_size: 1,
         edges_index_min: 1.0,
         edges_index_max: 1.0,
-        weight_min: 0.5,
-        weight_max: 0.5,
+        weight_type: WeightType::RandomMinMax { min: 0.5, max: 0.5 },
       }],
     });
 
@@ -58,8 +57,7 @@ mod tests {
         edges_index_pool_size: 1,
         edges_index_min: 1.0,
         edges_index_max: 1.0,
-        weight_min: 0.5,
-        weight_max: 0.5,
+        weight_type: WeightType::RandomMinMax { min: 0.5, max: 0.5 },
       }],
     });
 
@@ -96,8 +94,7 @@ mod tests {
         edges_index_pool_size: 2,
         edges_index_min: 1.0,
         edges_index_max: 1.0,
-        weight_min: 0.5,
-        weight_max: 0.5,
+        weight_type: WeightType::RandomMinMax { min: 0.5, max: 0.5 },
       }],
     });
 
@@ -150,8 +147,7 @@ mod tests {
           edges_index_pool_size: 2,
           edges_index_min: 1.0,
           edges_index_max: 1.0,
-          weight_min: 0.5,
-          weight_max: 0.5,
+          weight_type: WeightType::RandomMinMax { min: 0.5, max: 0.5 },
         },
         TopologyConfig {
           node_count: 2,
@@ -159,8 +155,7 @@ mod tests {
           edges_index_pool_size: 2,
           edges_index_min: 1.0,
           edges_index_max: 1.0,
-          weight_min: 0.5,
-          weight_max: 0.5,
+          weight_type: WeightType::RandomMinMax { min: 0.5, max: 0.5 },
         },
       ],
     });

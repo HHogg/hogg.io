@@ -3,13 +3,19 @@ struct Uniforms {
   height: u32,
   cell_size: u32,
   cell_count: u32,
+  partnership_opportunities_max: u32,
+  partnership_fitness_amplification: f32,
+  partnership_monogamy_amplification: f32,
   genotype_size: u32,
   phenotype_size: u32,
+  epistasis_enabled: u32,
   epistasis_gain: f32,
   phenotype_gain: f32,
+  regional_env_enabled: u32,
   regional_env_count: u32,
   regional_env_overlap: f32,
   regional_env_epi_gain: f32,
+  global_env_enabled: u32,
   global_env_epi_gain: f32,
 }
 
@@ -40,6 +46,37 @@ struct Uniforms {
 @group(0) @binding(3) var<storage, read> phenotype_weights: array<f32>;
 @group(0) @binding(4) var<storage, read_write> fitness_scores: array<f32>;
 
+@compute @workgroup_size(8, 8, 1)
+fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
+  if (is_outside_cell_grid(global_id.xy)) {
+    return;
+  }
+
+  let cell_xy = global_id.xy;
+  let cell_index = get_cell_index_for_xy(cell_xy);
+  let cell_position = get_cell_position_for_xy(cell_xy);
+
+  if (u.regional_env_enabled == 1u) {
+    calculate_regional_environment_fitness_scores(cell_index, cell_position);
+  }
+
+  if (u.global_env_enabled == 1u) {
+    calculate_global_environment_fitness_scores(cell_index);
+  }
+}
+
+fn is_outside_cell_grid(cell_xy: vec2<u32>) -> bool {
+  if (u.cell_size == 0u) {
+    return true;
+  }
+  let cell_grid_width = u.width / u.cell_size;
+  let cell_grid_height = u.height / u.cell_size;
+  return cell_grid_width == 0u
+    || cell_grid_height == 0u
+    || cell_xy.x >= cell_grid_width
+    || cell_xy.y >= cell_grid_height;
+}
+
 fn get_cell_index_for_xy(cell_xy: vec2<u32>) -> u32 {
   let cell_grid_width = u.width / u.cell_size;
   return cell_xy.x + cell_xy.y * cell_grid_width;
@@ -56,32 +93,6 @@ fn get_cell_position_for_xy(cell_xy: vec2<u32>) -> vec2<f32> {
   );
 }
 
-fn is_outside_cell_grid(cell_xy: vec2<u32>) -> bool {
-  if (u.cell_size == 0u) {
-    return true;
-  }
-  let cell_grid_width = u.width / u.cell_size;
-  let cell_grid_height = u.height / u.cell_size;
-  return cell_grid_width == 0u
-    || cell_grid_height == 0u
-    || cell_xy.x >= cell_grid_width
-    || cell_xy.y >= cell_grid_height;
-}
-
-@compute @workgroup_size(8, 8, 1)
-fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
-  let cell_xy = global_id.xy;
-  let cell_index = get_cell_index_for_xy(cell_xy);
-  let cell_position = get_cell_position_for_xy(cell_xy);
-
-  if (is_outside_cell_grid(cell_xy)) {
-    return;
-  }
-
-  calculate_regional_environment_fitness_scores(cell_index, cell_position);
-  calculate_global_environment_fitness_scores(cell_index);
-}
-
 fn calculate_regional_environment_fitness_scores(cell_index: u32, cell_position: vec2<f32>) {
   let phenotype_offset = cell_index * u.phenotype_size;
 
@@ -94,6 +105,7 @@ fn calculate_regional_environment_fitness_scores(cell_index: u32, cell_position:
   let node_offsets_offset = metadata_offset + metadata_count + 1u;
 
   // [x, y, r, R, G, B].
+  var fitness_score_average = -1.0;
   let metadata_stride = metadata_count / node_count;
 
   for (var node_index: u32 = 0; node_index < node_count; node_index++) {
@@ -131,6 +143,28 @@ fn calculate_regional_environment_fitness_scores(cell_index: u32, cell_position:
     let fitness_offset = cell_index * fitness_stride;
 
     fitness_scores[fitness_offset + node_index] = score;
+
+    if (fitness_score_average == -1.0) {
+      fitness_score_average = score;
+    } else {
+      fitness_score_average = (fitness_score_average + score) / 2.0;
+    }
+  }
+
+  for (var node_index: u32 = 0; node_index < node_count; node_index++) {
+    let metadata_base = metadata_offset + node_index * metadata_stride;
+    let region_x = regional_env_fit_topology[metadata_base];
+    let region_y = regional_env_fit_topology[metadata_base + 1u];
+    let region_r_inner = regional_env_fit_topology[metadata_base + 2u];
+    let region_r = region_r_inner * (1.0 + u.regional_env_overlap);
+
+    let cell_distance = distance(cell_position, vec2(region_x, region_y));
+
+    if (cell_distance > region_r) {
+      let fitness_stride = node_count + 1u;
+      let fitness_offset = cell_index * fitness_stride;
+      fitness_scores[fitness_offset + node_index] = fitness_score_average;
+    }
   }
 }
 

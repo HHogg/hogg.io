@@ -35,7 +35,13 @@ export interface Config {
 	globalEnvFitGain: number;
 	globalEnvFitEdgesMin: number;
 	globalEnvFitEdgesMax: number;
-	reproductionSearchRadius: number;
+	partnershipOpportunitiesMax: number;
+	partnershipFitnessAmplification: number;
+	partnershipFitnessEdgesMin: number;
+	partnershipFitnessEdgesMax: number;
+	partnershipMonogamyAmplification: number;
+	partnershipMonogamyEdgesMin: number;
+	partnershipMonogamyEdgesMax: number;
 }
 
 export interface RunStats {

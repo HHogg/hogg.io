@@ -3,13 +3,19 @@ struct Uniforms {
   height: u32,
   cell_size: u32,
   cell_count: u32,
+  partnership_opportunities_max: u32,
+  partnership_fitness_amplification: f32,
+  partnership_monogamy_amplification: f32,
   genotype_size: u32,
   phenotype_size: u32,
+  epistasis_enabled: u32,
   epistasis_gain: f32,
   phenotype_gain: f32,
+  regional_env_enabled: u32,
   regional_env_count: u32,
   regional_env_overlap: f32,
   regional_env_epi_gain: f32,
+  global_env_enabled: u32,
   global_env_epi_gain: f32,
 }
 
@@ -39,34 +45,6 @@ struct Uniforms {
 @group(0) @binding(2) var<storage, read> global_env_epi_topology: array<f32>;
 @group(0) @binding(3) var<storage, read_write> genotype_weights_shifts: array<f32>;
 
-fn get_cell_index_for_xy(cell_xy: vec2<u32>) -> u32 {
-  let cell_grid_width = u.width / u.cell_size;
-  return cell_xy.x + cell_xy.y * cell_grid_width;
-}
-
-fn get_cell_position_for_xy(cell_xy: vec2<u32>) -> vec2<f32> {
-  let cell_grid_width = f32(u.width / u.cell_size);
-  let cell_grid_height = f32(u.height / u.cell_size);
-
-  // Return normalized coordinates (0..1) to match regional/global env positions
-  return vec2<f32>(
-    (f32(cell_xy.x) + 0.5) / cell_grid_width,
-    (f32(cell_xy.y) + 0.5) / cell_grid_height,
-  );
-}
-
-fn is_outside_cell_grid(cell_xy: vec2<u32>) -> bool {
-  if (u.cell_size == 0u) {
-    return true;
-  }
-  let cell_grid_width = u.width / u.cell_size;
-  let cell_grid_height = u.height / u.cell_size;
-  return cell_grid_width == 0u
-    || cell_grid_height == 0u
-    || cell_xy.x >= cell_grid_width
-    || cell_xy.y >= cell_grid_height;
-}
-
 /**
  * This step sums all of the environment topology influence
  * weights (scaled by the environment gain) for each cells
@@ -89,24 +67,49 @@ fn is_outside_cell_grid(cell_xy: vec2<u32>) -> bool {
  */
 @compute @workgroup_size(8, 8, 1)
 fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
+  if (is_outside_cell_grid(global_id.xy)) {
+    return;
+  }
+
   let cell_xy = global_id.xy;
   let cell_index = get_cell_index_for_xy(cell_xy);
   let cell_position = get_cell_position_for_xy(cell_xy);
 
-  if (is_outside_cell_grid(cell_xy)) {
-    return;
+  if (u.regional_env_enabled == 1u) {
+    apply_regional_environment_shifts(cell_index, cell_position);
   }
 
-  reset_genotype_weights_shifts(cell_index);
-  apply_regional_environment_shifts(cell_index, cell_position);
-  apply_global_environment_shifts(cell_index);
+  if (u.global_env_enabled == 1u) {
+    apply_global_environment_shifts(cell_index);
+  }
 }
 
-fn reset_genotype_weights_shifts(cell_index: u32) {
-  let genotype_cell_offset = cell_index * u.genotype_size;
-  for (var i: u32 = 0u; i < u.genotype_size; i++) {
-    genotype_weights_shifts[genotype_cell_offset + i] = 0.0;
+fn is_outside_cell_grid(cell_xy: vec2<u32>) -> bool {
+  if (u.cell_size == 0u) {
+    return true;
   }
+  let cell_grid_width = u.width / u.cell_size;
+  let cell_grid_height = u.height / u.cell_size;
+  return cell_grid_width == 0u
+    || cell_grid_height == 0u
+    || cell_xy.x >= cell_grid_width
+    || cell_xy.y >= cell_grid_height;
+}
+
+fn get_cell_index_for_xy(cell_xy: vec2<u32>) -> u32 {
+  let cell_grid_width = u.width / u.cell_size;
+  return cell_xy.x + cell_xy.y * cell_grid_width;
+}
+
+fn get_cell_position_for_xy(cell_xy: vec2<u32>) -> vec2<f32> {
+  let cell_grid_width = f32(u.width / u.cell_size);
+  let cell_grid_height = f32(u.height / u.cell_size);
+
+  // Return normalized coordinates (0..1) to match regional/global env positions
+  return vec2<f32>(
+    (f32(cell_xy.x) + 0.5) / cell_grid_width,
+    (f32(cell_xy.y) + 0.5) / cell_grid_height,
+  );
 }
 
 fn apply_regional_environment_shifts(cell_index: u32, cell_position: vec2<f32>) {

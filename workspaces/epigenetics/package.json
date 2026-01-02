@@ -17,7 +17,7 @@
     "@hogg/common": "workspace:^",
     "comlink": "^4.4.1",
     "lucide-react": "0.445.0",
-    "preshape": "^19.3.2",
+    "preshape": "^19.5.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },

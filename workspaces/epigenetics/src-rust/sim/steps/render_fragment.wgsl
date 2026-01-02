@@ -3,13 +3,19 @@ struct Uniforms {
   height: u32,
   cell_size: u32,
   cell_count: u32,
+  partnership_opportunities_max: u32,
+  partnership_fitness_amplification: f32,
+  partnership_monogamy_amplification: f32,
   genotype_size: u32,
   phenotype_size: u32,
+  epistasis_enabled: u32,
   epistasis_gain: f32,
   phenotype_gain: f32,
+  regional_env_enabled: u32,
   regional_env_count: u32,
   regional_env_overlap: f32,
   regional_env_epi_gain: f32,
+  global_env_enabled: u32,
   global_env_epi_gain: f32,
 }
 
@@ -55,7 +61,7 @@ fn main(input: FragmentInput) -> @location(0) vec4<f32> {
   let shifted_color = shift_color(base_color, n, n, n, n);
 
   // Use alpha from global environment fitness score
-  return vec4<f32>(shifted_color, 1.0);
+  return vec4<f32>(shifted_color, n);
 }
 
 fn get_cell_index_for_pixel(pixel_xy: vec2<f32>) -> u32 {
@@ -106,14 +112,14 @@ fn get_base_color_for_cell(cell_index: u32, cell_position: vec2<f32>) -> vec3<f3
 
   for (var node_index: u32 = 0; node_index < node_count; node_index++) {
     let metadata_base = metadata_offset + node_index * metadata_stride;
-    let region_x = regional_env_fit_topology[metadata_base];
+    let region_x = regional_env_fit_topology[metadata_base + 0u];
     let region_y = regional_env_fit_topology[metadata_base + 1u];
-    let region_r_inner = regional_env_fit_topology[metadata_base + 2u];
-    let region_r = region_r_inner * (1.0 + u.regional_env_overlap);
+    let region_r = regional_env_fit_topology[metadata_base + 2u];
+    let region_r_ext = region_r * (1.0 + u.regional_env_overlap);
 
     let cell_distance = distance(cell_position, vec2(region_x, region_y));
 
-    if (cell_distance > region_r) {
+    if (cell_distance > region_r_ext) {
       continue;
     }
 
@@ -122,7 +128,7 @@ fn get_base_color_for_cell(cell_index: u32, cell_position: vec2<f32>) -> vec3<f3
     let region_color_b = regional_env_fit_topology[metadata_base + 5u];
     let region_color = vec3<f32>(region_color_r, region_color_g, region_color_b);
 
-    let overlap_scale = clamp((cell_distance - region_r_inner) / (region_r - region_r_inner), 0.0, 1.0);
+    let overlap_scale = clamp((cell_distance - region_r) / (region_r_ext - region_r), 0.0, 1.0);
     let distance_weight = 1.0 - overlap_scale;
 
     let fitness_weight = fitness_scores[fitness_offset + node_index];
@@ -145,24 +151,35 @@ fn get_base_color_for_cell(cell_index: u32, cell_position: vec2<f32>) -> vec3<f3
 // n3: value shift (0 = black, 1 = original)
 // n4: RGB inversion blend (0 = inverted, 1 = original)
 fn shift_color(base_color: vec3<f32>, n1: f32, n2: f32, n3: f32, n4: f32) -> vec3<f32> {
+  // Early return if all parameters are 1.0 (no shift)
+  if (n1 == 1.0 && n2 == 1.0 && n3 == 1.0 && n4 == 1.0) {
+    return base_color;
+  }
+
   // Convert to HSV
   var hsv = rgb_to_hsv(base_color);
 
   // Apply hue shift: H = H₀ + (1-n₁) * 0.5
   // When n1=0, shifts 180° (0.5 in normalized hue)
   // When n1=1, no shift
-  let h_shifted = hsv.x + (1.0 - n1) * 0.5;
-  hsv.x = h_shifted - floor(h_shifted); // Manual modulo 1.0
+  if (n1 != 1.0) {
+    let h_shifted = hsv.x + (1.0 - n1) * 0.5;
+    hsv.x = h_shifted - floor(h_shifted); // Manual modulo 1.0
+  }
 
   // Apply saturation shift: S = S₀ * n₂
   // When n2=0, desaturated (gray)
   // When n2=1, original saturation
-  hsv.y = hsv.y * n2;
+  if (n2 != 1.0) {
+    hsv.y = hsv.y * n2;
+  }
 
   // Apply value shift: V = V₀ * n₃
   // When n3=0, black
   // When n3=1, original brightness
-  hsv.z = hsv.z * n3;
+  if (n3 != 1.0) {
+    hsv.z = hsv.z * n3;
+  }
 
   // Convert back to RGB
   var shifted_rgb = hsv_to_rgb(hsv);
@@ -170,8 +187,10 @@ fn shift_color(base_color: vec3<f32>, n1: f32, n2: f32, n3: f32, n4: f32) -> vec
   // Apply RGB inversion blend: lerp between inverted and original
   // When n4=0, fully inverted (opposite)
   // When n4=1, no change
-  let inverted_rgb = vec3<f32>(1.0, 1.0, 1.0) - shifted_rgb;
-  shifted_rgb = mix(inverted_rgb, shifted_rgb, n4);
+  if (n4 != 1.0) {
+    let inverted_rgb = vec3<f32>(1.0, 1.0, 1.0) - shifted_rgb;
+    shifted_rgb = mix(inverted_rgb, shifted_rgb, n4);
+  }
 
   return shifted_rgb;
 }

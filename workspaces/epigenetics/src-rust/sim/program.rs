@@ -127,6 +127,36 @@ impl Program {
       sim::ComputeStep::create(
         &create_options,
         sim::step::ComputeConfig {
+          label: "reset_buffers",
+          compute_shader: include_str!("./steps/0.reset_buffers.wgsl"),
+          buffers: vec![
+            sim::step::BufferConfig {
+              label: "genotype_weights_shifts",
+              read_only: false,
+            },
+            sim::step::BufferConfig {
+              label: "phenotype_weights",
+              read_only: false,
+            },
+            sim::step::BufferConfig {
+              label: "fitness_scores",
+              read_only: false,
+            },
+            sim::step::BufferConfig {
+              label: "partnership_selection_weights",
+              read_only: false,
+            },
+            sim::step::BufferConfig {
+              label: "partnership_indexes",
+              read_only: false,
+            },
+          ],
+        },
+      )?
+      .into(),
+      sim::ComputeStep::create(
+        &create_options,
+        sim::step::ComputeConfig {
           label: "compute_environment_shifts",
           compute_shader: include_str!("./steps/1.compute_environment_shifts.wgsl"),
           buffers: vec![
@@ -223,16 +253,50 @@ impl Program {
       sim::ComputeStep::create(
         &create_options,
         sim::step::ComputeConfig {
-          label: "compute_next_generation",
-          compute_shader: include_str!("./steps/5.compute_next_generation.wgsl"),
+          label: "compute_partnerships",
+          compute_shader: include_str!("./steps/5.compute_partnerships.wgsl"),
           buffers: vec![
+            sim::step::BufferConfig {
+              label: "phenotype_weights",
+              read_only: true,
+            },
             sim::step::BufferConfig {
               label: "fitness_scores",
               read_only: true,
             },
             sim::step::BufferConfig {
+              label: "partnership_topology",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
+              label: "partnership_selection_weights",
+              read_only: false,
+            },
+            sim::step::BufferConfig {
+              label: "partnership_indexes",
+              read_only: false,
+            },
+          ],
+        },
+      )?
+      .into(),
+      sim::ComputeStep::create(
+        &create_options,
+        sim::step::ComputeConfig {
+          label: "compute_next_generation",
+          compute_shader: include_str!("./steps/6.compute_next_generation.wgsl"),
+          buffers: vec![
+            sim::step::BufferConfig {
+              label: "genotype_weights",
+              read_only: true,
+            },
+            sim::step::BufferConfig {
               label: "genotype_weights",
               read_only: false,
+            },
+            sim::step::BufferConfig {
+              label: "partnership_indexes",
+              read_only: true,
             },
           ],
         },

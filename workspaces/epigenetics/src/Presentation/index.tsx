@@ -64,11 +64,13 @@ const Presentation = () => {
             </Box>
           )}
 
-          <CellGrid
-            width={width}
-            height={height}
-            simulationWorker={simulationWorker}
-          />
+          {simulationWorker.isInitialized && (
+            <CellGrid
+              width={width}
+              height={height}
+              simulationWorker={simulationWorker}
+            />
+          )}
 
           {simulationWorker.hasError && (
             <Box absolute="center" maxWidth="300px">

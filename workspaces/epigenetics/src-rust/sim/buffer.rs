@@ -58,8 +58,7 @@ pub struct WeightsConfig {
   pub ping_pong: bool,
   pub count: u32,
   pub weight_count: u32,
-  pub weight_min: Fxx,
-  pub weight_max: Fxx,
+  pub weight_type: WeightType,
 }
 
 impl WeightsConfig {
@@ -89,8 +88,17 @@ pub struct TopologyConfig {
   pub edges_index_pool_size: u32,
   pub edges_index_min: f32,
   pub edges_index_max: f32,
-  pub weight_min: f32,
-  pub weight_max: f32,
+  pub weight_type: WeightType,
+}
+
+#[derive(Clone)]
+pub enum WeightType {
+  Blank,
+  Fixed(f32),
+  Random,
+  RandomContribution,
+  RandomMinMax { min: f32, max: f32 },
+  RandomShift,
 }
 
 impl TopologiesConfig {
@@ -104,8 +112,7 @@ impl TopologiesConfig {
         edges_index_pool_size,
         edges_index_min: _,
         edges_index_max,
-        weight_min: _,
-        weight_max: _,
+        ..
       } = topology;
 
       let max_edges_count = (edges_index_max * *edges_index_pool_size as f32).round() as usize;
@@ -243,8 +250,7 @@ impl Buffer {
           metadata: _,
           edges_index_max,
           edges_index_min,
-          weight_min: _,
-          weight_max: _,
+          ..
         } = topology_config;
 
         let edge_count_min = (edges_index_min * *edges_index_pool_size as f32).round() as u32;
@@ -312,8 +318,7 @@ impl Buffer {
         metadata,
         edges_index_max: _,
         edges_index_min: _,
-        weight_min,
-        weight_max,
+        weight_type,
       } = topology_config;
 
       let topology_offset = topology_data[topology_index + 1] as usize;
@@ -356,11 +361,13 @@ impl Buffer {
         // Add the edges count for this topology node
         topology_data.push(*node_edge_count as Fxx);
 
-        for _ in 0..*node_edge_count {
+        let edge_weights = Self::create_n_weights(node_edge_count, weight_type);
+
+        for edge_weight in edge_weights {
           let edge_index = fastrand::u32(0..*edges_index_pool_size);
-          let edge_weight = *weight_min + fastrand::f32() * (*weight_max - *weight_min);
+
           topology_data.push(edge_index as Fxx);
-          topology_data.push(edge_weight as Fxx);
+          topology_data.push(edge_weight);
         }
       }
     }
@@ -368,24 +375,19 @@ impl Buffer {
     topology_data
   }
 
-  pub fn create_weights_buffer(device: &wgpu::Device, config: &WeightsConfig) -> wgpu::Buffer {
+  fn create_weights_buffer(device: &wgpu::Device, config: &WeightsConfig) -> wgpu::Buffer {
     let WeightsConfig {
       label,
       ping_pong: _,
       count,
       weight_count,
-      weight_min,
-      weight_max,
+      weight_type,
     } = config;
 
     let mut random_weights = Vec::with_capacity(*count as usize * *weight_count as usize);
 
     for _ in 0..*count {
-      for _ in 0..*weight_count {
-        let random = fastrand::f32();
-        let value = *weight_min + random * (*weight_max - *weight_min);
-        random_weights.push(value as Fxx);
-      }
+      random_weights.extend(Self::create_n_weights(weight_count, weight_type));
     }
 
     // Create buffer with mapped_at_creation to write directly from CPU
@@ -398,6 +400,33 @@ impl Buffer {
     });
 
     read
+  }
+
+  fn create_n_weights(n: &u32, weight_type: &WeightType) -> Vec<Fxx> {
+    match weight_type {
+      WeightType::Blank => vec![0.0; *n as usize],
+      WeightType::Fixed(value) => vec![*value; *n as usize],
+      WeightType::Random => Self::create_n_random_weights_min_max(n, &0.0, &1.0),
+      WeightType::RandomContribution => Self::create_n_random_weights_distribution(n),
+      WeightType::RandomMinMax { min, max } => Self::create_n_random_weights_min_max(n, min, max),
+      WeightType::RandomShift => Self::create_n_random_weights_min_max(n, &-1.0, &1.0),
+    }
+  }
+
+  fn create_n_random_weights_min_max(n: &u32, min: &f32, max: &f32) -> Vec<Fxx> {
+    (0..*n)
+      .map(|_| fastrand::f32() * (max - min) + min)
+      .collect::<Vec<Fxx>>()
+  }
+
+  fn create_n_random_weights_distribution(n: &u32) -> Vec<Fxx> {
+    let weights = (0..*n).map(|_| fastrand::f32()).collect::<Vec<Fxx>>();
+    let weights_sum = weights.iter().sum::<Fxx>();
+
+    weights
+      .iter()
+      .map(|weight| weight / weights_sum)
+      .collect::<Vec<Fxx>>()
   }
 
   pub fn read_binding(&self) -> wgpu::BindingResource {

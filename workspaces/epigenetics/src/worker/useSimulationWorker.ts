@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import {
   getSimulationWorker as getSimulationWorkerRaw,
   SimulationWorkerApi,
@@ -20,6 +20,7 @@ export type UseSimulationWorkerResult = {
   getSimulationWorker: () => SimulationWorkerApi;
   initSimulation: () => Promise<void>;
   readBufferSlice: (label: string, cellIndex: number) => Promise<void>;
+  updateDataConfig: (dataConfig: Partial<DataConfig>) => void;
   dataConfig: DataConfig | null;
   estimatedMemoryUsage: string | null;
   events: Event[];
@@ -45,6 +46,9 @@ export default function useSimulationWorker(
   const [events, setEvents] = useState<Event[]>([]);
   const [eventsErrors, setEventsErrors] = useState<Event[]>([]);
   const [dataConfig, setDataConfig] = useState<DataConfig | null>(null);
+  const [localDataConfig, setLocalDataConfig] = useState<DataConfig | null>(
+    null
+  );
   const [estimatedMemoryUsage, setEstimatedMemoryUsage] = useState<
     string | null
   >(null);
@@ -57,6 +61,10 @@ export default function useSimulationWorker(
   const [bufferReadResults, setBufferReadResults] = useState<
     Record<number, Record<string, DataBufferReadContent>>
   >({});
+
+  const updateDataConfigTimeoutRef = useRef<number | null>(null);
+  const updateDataConfigPendingUpdatesRef = useRef<Partial<DataConfig>>({});
+  const localDataConfigRef = useRef<DataConfig | null>(localDataConfig);
 
   const addEvent = useCallback((type: Event['type'], message: string) => {
     if (type === 'error') {
@@ -126,6 +134,7 @@ export default function useSimulationWorker(
           break;
         case 'dataConfigSet':
           setDataConfig(message.data);
+          setLocalDataConfig(message.data);
           addEvent('success', 'Data config updated');
           break;
         case 'dataMemoryUsageEstimated':
@@ -190,10 +199,73 @@ export default function useSimulationWorker(
     [getSimulationWorker]
   );
 
+  // Sync localDataConfig with dataConfig when it updates from worker
+  useEffect(() => {
+    if (dataConfig) {
+      setLocalDataConfig(dataConfig);
+    }
+  }, [dataConfig]);
+
+  // Keep ref in sync with localDataConfig state
+  useEffect(() => {
+    localDataConfigRef.current = localDataConfig;
+  }, [localDataConfig]);
+
+  const updateDataConfig = useCallback(
+    (updates: Partial<DataConfig>) => {
+      if (!localDataConfigRef.current) {
+        return;
+      }
+
+      // Update local state immediately for responsive UI
+      const newLocalConfig: DataConfig = {
+        ...localDataConfigRef.current,
+        ...updates,
+      };
+      setLocalDataConfig(newLocalConfig);
+
+      // Accumulate updates for debounced worker update
+      updateDataConfigPendingUpdatesRef.current = {
+        ...updateDataConfigPendingUpdatesRef.current,
+        ...updates,
+      };
+
+      // Clear existing timeout
+      if (updateDataConfigTimeoutRef.current !== null) {
+        clearTimeout(updateDataConfigTimeoutRef.current);
+      }
+
+      // Set new timeout to apply updates after delay
+      updateDataConfigTimeoutRef.current = window.setTimeout(async () => {
+        const currentConfig = localDataConfigRef.current;
+        if (!currentConfig) {
+          updateDataConfigPendingUpdatesRef.current = {};
+          updateDataConfigTimeoutRef.current = null;
+          return;
+        }
+
+        const simulationWorker = getSimulationWorker();
+        const mergedConfig: DataConfig = {
+          ...currentConfig,
+          ...updateDataConfigPendingUpdatesRef.current,
+        };
+        await simulationWorker.setDataConfig(mergedConfig);
+        updateDataConfigPendingUpdatesRef.current = {};
+        updateDataConfigTimeoutRef.current = null;
+      }, 300);
+    },
+    [getSimulationWorker]
+  );
+
   useEffect(() => {
     getSimulationWorker();
 
     return () => {
+      // Clear debounce timeout on unmount
+      if (updateDataConfigTimeoutRef.current !== null) {
+        clearTimeout(updateDataConfigTimeoutRef.current);
+      }
+
       try {
         terminateSimulationWorker();
       } catch (err) {
@@ -215,15 +287,12 @@ export default function useSimulationWorker(
     updateDimensions();
   }, [width, height, isWasmReady, getSimulationWorker]);
 
-  useEffect(() => {
-    console.log('bufferReadResults', bufferReadResults);
-  }, [bufferReadResults]);
-
   return {
     getSimulationWorker,
     initSimulation,
     readBufferSlice,
-    dataConfig,
+    updateDataConfig,
+    dataConfig: localDataConfig,
     estimatedMemoryUsage,
     hasError,
     runStats,
