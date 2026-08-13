@@ -79,8 +79,4 @@ impl Draw for Chevron {
       .get_line_segment(scale)
       .draw(context, canvas_bbox, content_bbox, scale, theia)
   }
-
-  fn style(&self) -> &Style {
-    &self.style
-  }
 }

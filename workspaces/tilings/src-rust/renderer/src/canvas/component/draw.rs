@@ -86,6 +86,4 @@ pub trait Draw {
   fn interactive(&self) -> Option<bool> {
     Some(true)
   }
-
-  fn style(&self) -> &Style;
 }

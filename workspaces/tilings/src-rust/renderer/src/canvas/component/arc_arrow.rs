@@ -116,8 +116,4 @@ impl Draw for ArcArrow {
   fn interactive(&self) -> Option<bool> {
     self.interactive
   }
-
-  fn style(&self) -> &Style {
-    &self.style
-  }
 }

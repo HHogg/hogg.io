@@ -113,8 +113,4 @@ impl Draw for LineSegmentArrows {
   fn component(&self) -> super::Component {
     self.clone().into()
   }
-
-  fn style(&self) -> &Style {
-    &self.style
-  }
 }

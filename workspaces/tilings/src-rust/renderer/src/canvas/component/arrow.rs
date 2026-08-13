@@ -43,10 +43,6 @@ impl Arrow {
 }
 
 impl Draw for Arrow {
-  fn style(&self) -> &Style {
-    &self.style
-  }
-
   fn bbox(
     &self,
     context: &web_sys::OffscreenCanvasRenderingContext2d,

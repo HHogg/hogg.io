@@ -30,10 +30,6 @@ impl Polygon {
 }
 
 impl Draw for Polygon {
-  fn style(&self) -> &Style {
-    &self.style
-  }
-
   fn bbox(
     &self,
     _context: &web_sys::OffscreenCanvasRenderingContext2d,

@@ -69,10 +69,6 @@ impl Draw for Component {
     self.clone()
   }
 
-  fn style(&self) -> &Style {
-    self.inner().style()
-  }
-
   fn bbox(
     &self,
     context: &web_sys::OffscreenCanvasRenderingContext2d,

@@ -129,10 +129,6 @@ impl Draw for Arc {
     self.clone().into()
   }
 
-  fn style(&self) -> &Style {
-    &self.style
-  }
-
   fn draw(
     &self,
     context: &web_sys::OffscreenCanvasRenderingContext2d,

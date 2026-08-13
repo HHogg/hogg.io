@@ -11,7 +11,8 @@
 ### Setup
 
 1. [Install Rust (recommended through rustup)](https://rustup.rs/)
-1. [Install wasm-pack](https://rustwasm.github.io/wasm-pack/installer/)
+1. Install wasm-pack -> `cargo install wasm-pack --version 0.15.0 --locked`
+1. Install wasm-bindgen-cli -> `cargo install wasm-bindgen-cli --version 0.2.100 --locked`
 1. [Install typeshare-cli](https://github.com/1Password/typeshare) -> `cargo install typeshare-cli`
 1. [Install Node (recommended through NVM)](https://github.com/nvm-sh/nvm)
 1. Install Yarn -> `npm i yarn -g`
