@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::point::sort_points_around_origin;
-use super::{BBox, LineSegment, Point};
+use super::{Affine2, BBox, LineSegment, Point};
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
@@ -70,25 +70,24 @@ impl Polygon {
   }
 
   pub fn reflect(self, line_segment: &LineSegment) -> Self {
-    let mut points = vec![];
-    points.reserve_exact(self.points.len());
+    let transform = Affine2::reflection(line_segment)
+      .expect("reflection line must be finite and have non-zero length");
 
-    for point in &self.points {
-      points.push(point.reflect(&line_segment.start, &line_segment.end));
-    }
-
-    Self::from_points(points)
+    self.transform(&transform)
   }
 
   pub fn rotate(self, radians: Fxx, origin: Option<&Point>) -> Self {
-    let mut points = vec![];
-    points.reserve_exact(self.points.len());
+    self.transform(&Affine2::rotation(radians, origin))
+  }
 
-    for point in &self.points {
-      points.push(point.rotate(radians, origin));
-    }
-
-    Self::from_points(points)
+  pub fn transform(self, transform: &Affine2) -> Self {
+    Self::from_points(
+      self
+        .points
+        .iter()
+        .map(|point| transform.apply(point))
+        .collect(),
+    )
   }
 
   pub fn translate(self, point: Point) -> Self {

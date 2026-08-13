@@ -31,6 +31,7 @@ console_error_panic_hook = "0.1.7"
 console_log = "1.0.0"
 futures = "0.3.27"
 futures-util = "0.3.31"
+hex = "0.4.3"
 insta = { version = "1.41.1", features = ["json", "redactions"] }
 js-sys = "0.3.77"
 log = "0.4.22"
@@ -42,6 +43,7 @@ serde_arrays = "0.1.0"
 serde_json = { version = "1.0.133", features = ["arbitrary_precision"] }
 serde-wasm-bindgen = "0.6.5"
 serde_with = "3.11.0"
+sha2 = "0.10.9"
 thiserror = "2.0.7"
 tokio = { version = "1.42.0", features = ["full"] }
 tokio-util = "0.7.13"

@@ -2,7 +2,7 @@
 #[cfg(test)]
 mod tests;
 
-use hogg_geometry::{LineSegment, Point};
+use hogg_geometry::{Affine2, LineSegment, Point};
 use hogg_spatial_grid_map::{location, Fxx, PI};
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
@@ -126,13 +126,19 @@ impl Tile {
     self.with_points(points)
   }
 
-  pub fn reflect(mut self, line_segment: &LineSegment) -> Self {
-    self.geometry = self.geometry.reflect(line_segment);
-    self
+  pub fn reflect(self, line_segment: &LineSegment) -> Self {
+    let transform = Affine2::reflection(line_segment)
+      .expect("reflection line must be finite and have non-zero length");
+
+    self.transform(&transform)
   }
 
-  pub fn rotate(mut self, radians: Fxx, origin: Option<&Point>) -> Self {
-    self.geometry = self.geometry.rotate(radians, origin);
+  pub fn rotate(self, radians: Fxx, origin: Option<&Point>) -> Self {
+    self.transform(&Affine2::rotation(radians, origin))
+  }
+
+  pub fn transform(mut self, transform: &Affine2) -> Self {
+    self.geometry = self.geometry.transform(transform);
     self
   }
 }

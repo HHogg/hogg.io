@@ -11,6 +11,7 @@
   },
   "scripts": {
     "dev:searcher": "cargo watch -w workspaces/spatial-grid-map/src-rust -w workspaces/circular-sequence/src-rust -w workspaces/line-segment-extending/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --refresh-insights --reset --migrations-dir=workspaces/tilings/migrations\"",
+    "backfill:output-hashes": "cargo run --manifest-path ../../Cargo.toml --release -p hogg_tiling_generator --bin backfill-output-hashes --",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
     "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file",

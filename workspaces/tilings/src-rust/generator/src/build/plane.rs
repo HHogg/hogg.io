@@ -5,7 +5,7 @@ mod tests;
 use std::collections::HashMap;
 
 use hogg_circular_sequence::SequenceStore;
-use hogg_geometry::{ConvexHull, LineSegment, Point};
+use hogg_geometry::{Affine2, ConvexHull, LineSegment, Point};
 use hogg_spatial_grid_map::{location, ResizeMethod, SpatialGridMap, PI};
 use hogg_tilings_validation_gaps::validate_gaps;
 use hogg_tilings_validation_overlaps::validate_overlaps;
@@ -32,6 +32,7 @@ pub struct Plane {
   pub option_validate_vertex_types: bool,
 
   pub hash: Option<Hash>,
+  pub(crate) resolved_symmetries: Vec<Affine2>,
   pub metrics: Metrics,
   pub point_sequences: PointSequences,
   pub stages: Vec<Stage>,
@@ -104,6 +105,8 @@ impl Plane {
 
   fn build_unchecked(&mut self, notation: &Notation) -> Result<(), TilingError> {
     self.metrics.start("build");
+    self.hash = None;
+    self.resolved_symmetries.clear();
 
     self.apply_path(&notation.path)?;
 
@@ -359,6 +362,7 @@ impl Plane {
 
   pub fn create_hash(&mut self) -> Result<(), TilingError> {
     self.metrics.start("hashing");
+    self.hash = None;
 
     self
       .tiles
@@ -366,8 +370,12 @@ impl Plane {
       .filter(|tile| tile.stage != Stage::Placement)
       .for_each(|tile| self.point_sequences.register_tile(tile, true));
 
-    self.hash = Some(Hash::build(self));
+    let hash = Hash::build(self);
+    let result = hash.check();
     self.metrics.finish("hashing");
+
+    result?;
+    self.hash = Some(hash);
 
     Ok(())
   }
@@ -388,6 +396,12 @@ impl Plane {
     if self.stage_added_tile {
       self.stage_added_tile = false;
       self.stages.push(stage);
+    }
+  }
+
+  fn record_resolved_symmetry(&mut self, symmetry: Affine2) {
+    if !self.resolved_symmetries.contains(&symmetry) {
+      self.resolved_symmetries.push(symmetry);
     }
   }
 
@@ -596,7 +610,7 @@ impl Plane {
   /// Applies an eccentric reflection transform to the tiling.
   fn apply_continuous_reflect_transform(
     &mut self,
-    _transform: &Transform,
+    transform: &Transform,
     stage: Stage,
     transform_value: &TransformValue,
   ) -> Result<(), TilingError> {
@@ -605,6 +619,12 @@ impl Plane {
       let p1 = Point::at(0.0, 0.0);
       let p2 = Point::at((value - PI * 0.5).cos(), (value - PI * 0.5).sin());
       let line_segment = LineSegment::default().with_start(p1).with_end(p2);
+      let resolved_symmetry =
+        Affine2::reflection(&line_segment).ok_or(TilingError::InvalidTransform {
+          transform: transform.to_string(),
+          reason: "reflection line segment has zero length".into(),
+        })?;
+      self.record_resolved_symmetry(resolved_symmetry);
 
       for i in 0..self.tiles_to_transform.len() {
         let tile = self
@@ -619,7 +639,7 @@ impl Plane {
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
-          .reflect(&line_segment);
+          .transform(&resolved_symmetry);
 
         self.add_tile(next_tile)?;
       }
@@ -639,6 +659,8 @@ impl Plane {
   ) -> Result<(), TilingError> {
     for value in transform_value.get_transform_values() {
       let stage_index = self.stages.len() as u16;
+      let resolved_symmetry = Affine2::rotation(value, None);
+      self.record_resolved_symmetry(resolved_symmetry);
 
       for i in 0..self.tiles_to_transform.len() {
         let tile = self
@@ -653,7 +675,7 @@ impl Plane {
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
-          .rotate(value, None);
+          .transform(&resolved_symmetry);
 
         self.add_tile(next_tile)?;
       }
@@ -679,6 +701,12 @@ impl Plane {
           transform: transform.to_string(),
           reason: "reflection line segment not found".into(),
         })?;
+    let resolved_symmetry =
+      Affine2::reflection(&line_segment).ok_or(TilingError::InvalidTransform {
+        transform: transform.to_string(),
+        reason: "reflection line segment has zero length".into(),
+      })?;
+    self.record_resolved_symmetry(resolved_symmetry);
 
     let stage_index = self.stages.len() as u16;
 
@@ -689,7 +717,7 @@ impl Plane {
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
-          .reflect(&line_segment)
+          .transform(&resolved_symmetry)
       })
       .try_for_each(|tile| self.add_tile(tile))?;
 
@@ -714,6 +742,8 @@ impl Plane {
         transform: transform.to_string(),
         reason: "origin point not found".into(),
       })?;
+    let resolved_symmetry = Affine2::rotation(PI, Some(&origin));
+    self.record_resolved_symmetry(resolved_symmetry);
 
     let stage_index = self.stages.len() as u16;
 
@@ -724,7 +754,7 @@ impl Plane {
           .clone()
           .with_stage(stage)
           .with_stage_index(stage_index)
-          .rotate(PI, Some(&origin))
+          .transform(&resolved_symmetry)
       })
       .try_for_each(|tile| self.add_tile(tile))?;
 
@@ -801,6 +831,7 @@ impl Default for Plane {
       option_validate_vertex_types: false,
 
       hash: None,
+      resolved_symmetries: Vec::new(),
       metrics: Metrics::default(),
       point_sequences: PointSequences::default(),
       stages: Vec::new(),

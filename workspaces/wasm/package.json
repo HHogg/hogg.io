@@ -10,7 +10,8 @@
     "build:types": "typeshare --lang=typescript --output-file=./src/types.ts  ../",
     "build:wasm": "wasm-pack build --target web --no-opt",
     "clean": "rm -rf ./pkg && rm -rf ./src/types.ts",
-    "dev": "./watch.sh"
+    "dev": "yarn build:wasm && yarn dev:watch",
+    "dev:watch": "node ../../scripts/watch-build.mjs"
   },
   "dependencies": {
     "@hogg/common": "workspace:^",

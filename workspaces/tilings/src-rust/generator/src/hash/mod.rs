@@ -1,56 +1,71 @@
+#[path = "./hash_tests.rs"]
+#[cfg(test)]
+mod tests;
+
 use serde::{Serialize, Serializer};
+use sha2::{Digest, Sha256};
 
 use crate::build::Plane;
+use crate::TilingError;
 
-mod edge;
-mod shape;
-mod vertex;
+mod canonical;
+mod error;
+mod isometry;
+mod quotient;
+
+const FORMAT_VERSION: u8 = 1;
 
 #[derive(Clone, Debug, Default)]
 pub struct Hash {
-  iterations: u32,
-  vertex_hash: vertex::Hash,
-  edge_hash: edge::Hash,
-  shape_hash: shape::Hash,
+  state: State,
+}
+
+#[derive(Clone, Debug, Default)]
+enum State {
+  #[default]
+  Empty,
+  Ready {
+    display: String,
+    _canonical: Vec<u8>,
+  },
+  Failed(error::Error),
 }
 
 impl Hash {
   pub fn build(plane: &Plane) -> Self {
-    let mut hash = Hash::default();
+    let state = match canonical::build(plane, &plane.resolved_symmetries) {
+      Ok(bytes) => State::Ready {
+        display: format_display(&bytes),
+        _canonical: bytes,
+      },
+      Err(error) => State::Failed(error),
+    };
 
-    while hash.iterations == 0
-      || hash.vertex_hash.updated
-      || hash.edge_hash.updated
-      || hash.shape_hash.updated
-    {
-      let is_first_run = hash.iterations == 0;
-
-      hash
-        .vertex_hash
-        .update(plane, is_first_run, &plane.edge_types, &hash.edge_hash);
-
-      hash
-        .edge_hash
-        .update(plane, is_first_run, &plane.shape_types, &hash.shape_hash);
-
-      hash
-        .shape_hash
-        .update(plane, is_first_run, &plane.vertex_types, &hash.vertex_hash);
-
-      hash.iterations += 1;
-    }
-
-    hash
+    Self { state }
   }
+
+  pub(crate) fn check(&self) -> Result<(), TilingError> {
+    match &self.state {
+      State::Failed(error) => Err(TilingError::InvalidState {
+        reason: format!("hash construction failed: {error}"),
+      }),
+      State::Empty | State::Ready { .. } => Ok(()),
+    }
+  }
+}
+
+fn format_display(canonical: &[u8]) -> String {
+  let digest = Sha256::digest(canonical);
+
+  format!("th{FORMAT_VERSION}:{}", hex::encode(digest))
 }
 
 impl std::fmt::Display for Hash {
   fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(
-      f,
-      "{}/{}/{}",
-      self.vertex_hash, self.edge_hash, self.shape_hash
-    )
+    match &self.state {
+      State::Ready { display, .. } => f.write_str(display),
+      State::Empty | State::Failed(_) => Ok(()),
+    }
   }
 }
 
