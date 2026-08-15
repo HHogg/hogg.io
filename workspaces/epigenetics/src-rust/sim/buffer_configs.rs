@@ -190,7 +190,7 @@ impl BufferConfigs {
     let angle_increment = (std::f32::consts::PI * 2.0) / regional_env_count as f32;
     let angle_offset = std::f32::consts::PI / 2.0;
 
-    let mut positions = (0..regional_env_count)
+    let positions = (0..regional_env_count)
       .map(|i| {
         (
           (angle_increment * (i as f32) + angle_offset).cos(),
@@ -200,8 +200,6 @@ impl BufferConfigs {
       // Convert -1..1 to 0..1
       .map(|(x, y)| ((x + 1.0) / 2.0, (y + 1.0) / 2.0))
       .collect::<Vec<(f32, f32)>>();
-
-    fastrand::shuffle(&mut positions);
 
     // We calculate the radii based on the distance between all of the positions.
     // The radius of each environment should overlap the next environment by 25%
@@ -230,7 +228,7 @@ impl BufferConfigs {
       })
       .collect::<Vec<f32>>();
 
-    let colors = sim::utils::get_random_colors(regional_env_count as usize);
+    let colors = sim::utils::get_colors(regional_env_count as usize);
 
     (0..regional_env_count as usize)
       .flat_map(|i| {

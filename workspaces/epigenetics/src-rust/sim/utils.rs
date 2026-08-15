@@ -11,22 +11,10 @@ fn hex_to_rgb(hex: &str) -> (f32, f32, f32) {
   (r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0)
 }
 
-fn get_random_color() -> (f32, f32, f32) {
-  let random_index = fastrand::usize(0..REGIONAL_ENV_COLOR_PALETTE.len());
-  let color = REGIONAL_ENV_COLOR_PALETTE[random_index];
-  hex_to_rgb(color)
-}
-
-pub fn get_random_colors(count: usize) -> Vec<(f32, f32, f32)> {
-  let mut colors = Vec::new();
-
-  while colors.len() < count {
-    let color = get_random_color();
-
-    if !colors.contains(&color) {
-      colors.push(color);
-    }
-  }
-
-  colors
+pub fn get_colors(count: usize) -> Vec<(f32, f32, f32)> {
+  return REGIONAL_ENV_COLOR_PALETTE
+    .iter()
+    .take(count)
+    .map(|color| hex_to_rgb(color))
+    .collect();
 }

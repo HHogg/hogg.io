@@ -59,12 +59,18 @@ pub fn set_post_update_interval(frames: u32) -> Result<(), JsValue> {
 }
 
 #[wasm_bindgen]
-pub fn set_data_config(data_config: JsValue) -> Result<(), JsValue> {
+pub async fn set_data_config(data_config: JsValue) -> Result<(), JsValue> {
   let data_config: sim::Config =
     serde_wasm_bindgen::from_value(data_config).map_err(JsValue::from)?;
   set_data_config_thread_local(data_config.clone());
   Message::DataConfigSet(data_config.clone()).send();
   send_estimated_memory_usage();
+
+  if get_simulation_program().is_some() {
+    reset_simulation().map_err(JsValue::from)?;
+    init_simulation().await.map_err(JsValue::from)?;
+  }
+
   Ok(())
 }
 
