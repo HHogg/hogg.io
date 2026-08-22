@@ -10,11 +10,11 @@
     "./types": "./src/types.ts"
   },
   "scripts": {
-    "dev:searcher": "cargo watch -w workspaces/spatial-grid-map/src-rust -w workspaces/circular-sequence/src-rust -w workspaces/line-segment-extending/src-rust -w workspaces/tilings/src-rust -q -x \"run --bin tiling-searcher -- --drop-outstanding --refresh-insights --reset --migrations-dir=workspaces/tilings/migrations\"",
+    "export:database": "pg_dump -U harry -h localhost tilings >> data.sql",
     "export:results": "cargo run  --release --bin tiling-export",
     "generate:images": "node ./scripts/generate-images.js",
-    "generate:results": "cargo run  --release --bin tiling-searcher -- --reset --log-to-file",
-    "verify:results": "./scripts/detect-result-changes.sh ./results/output.csv",
+    "generate:results": "cargo run  --release --bin tiling-searcher -- --log-to-file --to-path=6-6,3-4,3,3-4",
+    "update:results": "cargo run --release --bin tiling-updater --",
     "lint:rust": "cargo clippy --lib -p hogg_tiling_datastore -p hogg_tiling_export -p hogg_tiling_generator -p hogg_tiling_renderer -p hogg_tiling_searcher",
     "test:rust": "cargo test --lib -p hogg_tiling_datastore -p hogg_tiling_export -p hogg_tiling_generator -p hogg_tiling_renderer -p hogg_tiling_searcher -- --test-threads=1"
   },

@@ -194,7 +194,7 @@ export enum Shape {
 	Dodecagon = "Dodecagon",
 }
 
-export interface TilingsFacetsRequest {
+export interface TilingsGetFacetsRequest {
 	showNodes: Shape[];
 	showUniform: string[];
 }
@@ -204,7 +204,7 @@ export enum Direction {
 	Descending = "Descending",
 }
 
-export interface TilingsRequest {
+export interface TilingsGetPagedRequest {
 	page: number;
 	pageDirection: Direction;
 	pageSize: number;
@@ -231,22 +231,11 @@ export interface Facet {
 	values: FacetValue[];
 }
 
-export interface VisitRequest {
+export interface VisitsGetByPathRequest {
 	path: string;
 }
 
-export interface VisitsFacetsRequest {
-	showNodes: Shape[];
-	showInvalidTilings: boolean;
-	showValidTilings: boolean;
-}
-
-export interface VisitsFacet {
-	key: string;
-	values: string[];
-}
-
-export interface VisitsRequest {
+export interface VisitsGetPagedRequest {
 	page: number;
 	pageDirection: Direction;
 	pageSize: number;

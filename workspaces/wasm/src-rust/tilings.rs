@@ -25,13 +25,14 @@ pub fn find_previous_tiling(
 ) -> Result<Option<String>, JsError> {
   let feature_toggles = serde_wasm_bindgen::from_value::<Option<HashMap<FeatureToggle, bool>>>(
     feature_toggles.to_owned(),
-  )?;
+  )?
+  .unwrap_or_default();
 
   let mut tiling = Tiling::default()
     .with_repetitions(repetitions)
     .with_first_transform()
     .with_link_paths()
-    .with_feature_toggles(feature_toggles)
+    .with_feature_toggles_set(feature_toggles)
     .with_notation(notation);
 
   Ok(
@@ -51,13 +52,14 @@ pub fn find_next_tiling(
 ) -> Result<Option<String>, JsError> {
   let feature_toggles = serde_wasm_bindgen::from_value::<Option<HashMap<FeatureToggle, bool>>>(
     feature_toggles.to_owned(),
-  )?;
+  )?
+  .unwrap_or_default();
 
   let mut tiling = Tiling::default()
     .with_repetitions(repetitions)
     .with_first_transform()
     .with_link_paths()
-    .with_feature_toggles(feature_toggles)
+    .with_feature_toggles_set(feature_toggles)
     .with_notation(notation);
 
   Ok(
@@ -80,12 +82,13 @@ pub fn render_tiling(
   let offscreen_canvas: OffscreenCanvas = canvas.dyn_into().expect("Failed to convert canvas");
   let feature_toggles = serde_wasm_bindgen::from_value::<Option<HashMap<FeatureToggle, bool>>>(
     feature_toggles.to_owned(),
-  )?;
+  )?
+  .unwrap_or_default();
 
   let options = serde_wasm_bindgen::from_value::<Options>(options.to_owned())?;
   let tiling = Tiling::default()
     .with_repetitions(repetitions)
-    .with_feature_toggles(feature_toggles)
+    .with_feature_toggles_set(feature_toggles)
     .with_type_ahead()
     .from_string(notation);
 

@@ -13,7 +13,9 @@
     "build": "yarn workspaces foreach -ptvR --from @hogg/website run build",
     "ci:check": "CI=true yarn format:check && yarn ts:check && yarn lint && yarn test:ci && yarn build",
     "deploy": "firebase deploy",
-    "dev": "yarn workspaces foreach -pviR --from @hogg/website -j unlimited run dev",
+    "dev": "yarn dev:prepare && yarn dev:watch",
+    "dev:prepare": "yarn workspaces foreach -piv --include @hogg/wasm --include @hogg/epigenetics run build:wasm",
+    "dev:watch": "yarn workspaces foreach -piv -j unlimited --include @hogg/website --include @hogg/wasm --include @hogg/epigenetics run dev:watch",
     "format": "yarn format:prettier && yarn format:rust",
     "format:check": "yarn format:prettier:check && yarn format:rust:check",
     "format:prettier": "prettier --write .",
@@ -51,6 +53,7 @@
     "prettier": "^2.8.8",
     "stylelint": "^15.6.1",
     "stylelint-config-standard": "^33.0.0",
+    "toml": "^5.0.0",
     "typescript": "^5.0.4",
     "vite": "^5.2.9",
     "vitest": "^3.2.4"

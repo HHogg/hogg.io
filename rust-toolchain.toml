@@ -1,4 +1,4 @@
 [toolchain]
-version = "1.88.0"
+version = "1.97.1"
 components = ["rustfmt", "clippy"]
 profile = "minimal"

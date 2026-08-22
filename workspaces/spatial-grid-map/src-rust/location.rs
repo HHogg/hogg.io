@@ -78,7 +78,7 @@ impl Eq for Location {}
 
 impl PartialEq for Location {
   fn eq(&self, other: &Self) -> bool {
-    coordinate_equals(self.point.0, other.point.0) && coordinate_equals(self.point.0, other.point.0)
+    coordinate_equals(self.point.0, other.point.0) && coordinate_equals(self.point.1, other.point.1)
   }
 }
 

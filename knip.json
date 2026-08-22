@@ -11,6 +11,6 @@
     "workspaces/tilings/src/Presentation/**",
     "workspaces/epigenetics/src/worker/simulation.worker.ts"
   ],
-  "ignoreBinaries": ["cargo", "typeshare", "wasm-pack"],
+  "ignoreBinaries": ["cargo", "pg_dump", "typeshare", "wasm-pack"],
   "ignoreExportsUsedInFile": true
 }

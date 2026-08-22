@@ -1,0 +1,34 @@
+[package]
+name = "hogg_tiling_updater"
+version = "0.0.0"
+edition = "2021"
+authors = ["Harry Hogg <harry@hogg.io>"]
+description = "Update util for looping over the valid tilings and updating them"
+license = "MIT/Apache-2.0"
+repository = "https://github.com/hhogg/hogg.io"
+
+[[bin]]
+name = "tiling-updater"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+clap = { version = "4.5.4", features = ["derive"] }
+crossterm.workspace = true
+hogg_tiling_generator = { path = "../tilings-generator" }
+hogg_tiling_datastore = { path = "../tilings-datastore" }
+progressing.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sqlx = { version = "0.8.2", features = [
+  "chrono",
+  "macros",
+  "postgres",
+  "runtime-async-std-native-tls",
+] }
+tracing.workspace = true
+tokio.workspace = true
+tokio-util.workspace = true
+tracing-appender.workspace = true
+tracing-subscriber.workspace = true

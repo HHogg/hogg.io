@@ -9,7 +9,9 @@
     "build": "yarn build:types && yarn build:wasm",
     "build:types": "typeshare --lang=typescript --output-file=./src/types.generated.ts  ../",
     "build:wasm": "wasm-pack build --target web --no-opt",
-    "dev": "./watch.sh",
+    "clean": "rm -rf ./pkg && rm -rf ./src/types.ts",
+    "dev": "yarn build:wasm && yarn dev:watch",
+    "dev:watch": "node ../../scripts/watch-build.mjs",
     "lint:rust": "cargo clippy --lib -p hogg_wasm",
     "test:rust": "cargo test --lib -p hogg_wasm -- --test-threads=1"
   },

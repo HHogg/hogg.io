@@ -1,0 +1,35 @@
+use anyhow::Result;
+use hogg_tiling_generator::notation::Path;
+use serde::Deserialize;
+use sqlx::{Pool, Postgres};
+use typeshare::typeshare;
+
+use super::Visit;
+
+#[derive(Clone, Debug, Deserialize)]
+#[serde(rename = "VisitsGetByPathRequest")]
+#[serde(rename_all = "camelCase")]
+#[typeshare]
+pub struct Request {
+  #[typeshare(serialized_as = "string")]
+  pub path: Path,
+}
+
+pub async fn get_by_path(pool: &Pool<Postgres>, request: Request) -> Result<Option<Visit>> {
+  Ok(
+    sqlx::query_as::<_, Visit>(
+      "SELECT
+        path,
+        is_invalid,
+        valid_tilings,
+        count_total_tilings,
+        session_id,
+        index
+    FROM visits
+    WHERE path = $1",
+    )
+    .bind(request.path.to_string())
+    .fetch_optional(pool)
+    .await?,
+  )
+}

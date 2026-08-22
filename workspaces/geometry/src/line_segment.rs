@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
 use super::point::Point;
-use super::BBox;
+use super::{Affine2, BBox};
 
 fn get_point_at_percentage(p1: Point, p2: Point, percentage: Fxx, offset: Fxx) -> Point {
   let x = p1.x + (p2.x - p1.x) * percentage + offset;
@@ -122,11 +122,15 @@ impl LineSegment {
 
   pub fn rotate(&self, theta: Fxx, origin: Option<&Point>) -> Self {
     let mid_point = self.mid_point();
-    let origin = origin.or(Some(&mid_point));
+    let origin = origin.unwrap_or(&mid_point);
 
+    self.transform(&Affine2::rotation(theta, Some(origin)))
+  }
+
+  pub fn transform(&self, transform: &Affine2) -> Self {
     Self::default()
-      .with_start(self.start.rotate(theta, origin))
-      .with_end(self.end.rotate(theta, origin))
+      .with_start(transform.apply(&self.start))
+      .with_end(transform.apply(&self.end))
   }
 
   pub fn scale(&self, scale: Fxx) -> Self {

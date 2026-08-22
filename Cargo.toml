@@ -11,39 +11,49 @@ strip = true
 
 
 [workspace]
+resolver = "2"
 members = [
   "workspaces/circular-sequence",
   "workspaces/epigenetics",
   "workspaces/geometry",
   "workspaces/line-segment-extending",
   "workspaces/spatial-grid-map",
-  "workspaces/tilings/src-rust/*",
+  "workspaces/tilings-datastore",
+  "workspaces/tilings-export",
+  "workspaces/tilings-generator",
+  "workspaces/tilings-renderer",
+  "workspaces/tilings-searcher",
+  "workspaces/tilings-updater",
   "workspaces/tilings-validation-gaps",
   "workspaces/tilings-validation-overlaps",
   "workspaces/tilings-validation-vertex-types",
   "workspaces/wasm",
 ]
-resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1.0.94"
+cargo_metadata = "0.23.1"
 chrono = { version = "0.4.39", features = ["serde"] }
 console_error_panic_hook = "0.1.7"
 console_log = "1.0.0"
+crossterm = "0.29.0"
 fastrand = "2.3.0"
 futures = "0.3.27"
 futures-util = "0.3.31"
+hex = "0.4.3"
 insta = { version = "1.41.1", features = ["json", "redactions"] }
 js-sys = "0.3.77"
 log = "0.4.22"
 ordered-float = { version = "4.6.0", features = ["serde"] }
 pretty_assertions = "1.4.1"
+progressing = "3.0.2"
 rand = "0.8.4"
 serde = { version = "1.0.216", features = ["derive"] }
 serde_arrays = "0.1.0"
 serde_json = { version = "1.0.133", features = ["arbitrary_precision"] }
 serde-wasm-bindgen = "0.6.5"
 serde_with = "3.11.0"
+sha2 = "0.10.9"
 thiserror = "2.0.7"
 tokio = { version = "1.42.0", features = ["full"] }
 tokio-util = "0.7.13"

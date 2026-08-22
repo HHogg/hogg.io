@@ -10,6 +10,8 @@ use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
+use super::Affine2;
+
 #[derive(Clone, Copy, Debug, Default, Deserialize, Serialize)]
 #[typeshare]
 pub struct Point {
@@ -63,28 +65,13 @@ impl Point {
   }
 
   pub fn reflect(&self, p1: &Self, p2: &Self) -> Self {
-    let dx = p2.x - p1.x;
-    let dy = p2.y - p1.y;
-    let a = (dx * dx - dy * dy) / (dx * dx + dy * dy);
-    let b = 2.0 * dx * dy / (dx * dx + dy * dy);
-
-    let x = a * (self.x - p1.x) + b * (self.y - p1.y) + p1.x;
-    let y = b * (self.x - p1.x) - a * (self.y - p1.y) + p1.y;
-
-    Self::at(x, y).with_index(self.index)
+    Affine2::reflection_between(p1, p2)
+      .expect("reflection points must define a finite, non-zero-length line")
+      .apply(self)
   }
 
   pub fn rotate(&self, radians: Fxx, origin: Option<&Self>) -> Self {
-    let default_origin = Self::default();
-    let origin = origin.unwrap_or(&default_origin);
-
-    let cos = radians.cos();
-    let sin = radians.sin();
-
-    let x = cos * (self.x - origin.x) - sin * (self.y - origin.y) + origin.x;
-    let y = sin * (self.x - origin.x) + cos * (self.y - origin.y) + origin.y;
-
-    Self::at(x, y).with_index(self.index)
+    Affine2::rotation(radians, origin).apply(self)
   }
 
   pub fn translate(&self, shift: &Self) -> Self {

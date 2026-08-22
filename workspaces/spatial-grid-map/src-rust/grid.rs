@@ -132,7 +132,10 @@ impl<TEntryValue: Clone + std::fmt::Debug + Default> SpatialGridMap<TEntryValue>
       .and_then(|bucket| bucket.get_value(point))
   }
 
-  pub fn get_value_mut(&mut self, point: &location::Point) -> Option<MutBucketEntry<TEntryValue>> {
+  pub fn get_value_mut(
+    &mut self,
+    point: &location::Point,
+  ) -> Option<MutBucketEntry<'_, TEntryValue>> {
     self
       .get_bucket_by_point_mut(point)
       .and_then(|bucket| bucket.get_entry_mut(point))

@@ -121,7 +121,7 @@ impl TilingsPlayerInner {
         *needs_render = false;
         *tiling = Some(
           Tiling::default()
-            .with_feature_toggles(Some(state.feature_toggles.clone()))
+            .with_feature_toggles_set(state.feature_toggles.clone())
             .with_repetitions(state.repetitions)
             .with_type_ahead()
             .from_string(state.notation.as_str()),

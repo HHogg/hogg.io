@@ -8651,6 +8651,7 @@ __metadata:
     prettier: ^2.8.8
     stylelint: ^15.6.1
     stylelint-config-standard: ^33.0.0
+    toml: ^5.0.0
     typescript: ^5.0.4
     vite: ^5.2.9
     vitest: ^3.2.4
@@ -15325,6 +15326,13 @@ __metadata:
   version: 1.0.1
   resolution: "toidentifier@npm:1.0.1"
   checksum: 952c29e2a85d7123239b5cfdd889a0dde47ab0497f0913d70588f19c53f7e0b5327c95f4651e413c74b785147f9637b17410ac8c846d5d4a20a5a33eb6dc3a45
+  languageName: node
+  linkType: hard
+
+"toml@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "toml@npm:5.0.0"
+  checksum: 2f2493e4be2ecf71595e77d4d1c7658d9c4bf4f5de400e772cc4841c35b61b1a13464b05b3d0aaf49522205680092c7cc264a9f464787c7d8c8d6d30d010be14
   languageName: node
   linkType: hard
 

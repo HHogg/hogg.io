@@ -20,8 +20,8 @@ console_error_panic_hook.workspace = true
 hogg_circular_sequence = { path = "../circular-sequence" }
 hogg_line_segment_extending = { path = "../line-segment-extending" }
 hogg_spatial_grid_map = { path = "../spatial-grid-map" }
-hogg_tiling_generator = { path = "../tilings/src-rust/generator" }
-hogg_tiling_renderer = { path = "../tilings/src-rust/renderer" }
+hogg_tiling_generator = { path = "../tilings-generator" }
+hogg_tiling_renderer = { path = "../tilings-renderer" }
 log.workspace = true
 serde.workspace = true
 serde_json.workspace = true
