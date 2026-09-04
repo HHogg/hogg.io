@@ -69,6 +69,14 @@ fn snap_y_just_under() {
 }
 
 #[test]
+fn equality_compares_both_coordinates() {
+  let first = Location::new(1.0, Point(1.0, 2.0), None);
+  let second = Location::new(1.0, Point(1.0, 3.0), None);
+
+  assert_ne!(first, second);
+}
+
+#[test]
 fn top_oob() {
   assert_debug_snapshot!(Location::new(1.0, Point(0.0, -8.1), None));
 }

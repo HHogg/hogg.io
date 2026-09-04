@@ -5,13 +5,13 @@ mod tests;
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
 use hogg_geometry::{Affine2, Vector2};
+use hogg_spatial_grid_map::{location, EntryId, ToroidalSpatialGridMap, Winding};
 
 use crate::build::Plane;
 
 use super::error::{Error, Result};
 use super::isometry::{derive_periodicity, Lattice};
 
-const COORDINATE_SCALE: i64 = 1_000_000;
 const MAX_LATTICE_REFINEMENTS: usize = 8;
 
 #[derive(Clone, Debug)]
@@ -25,11 +25,11 @@ pub(super) fn build(plane: &Plane, source: &[Affine2]) -> Result<ChamberGraph> {
   let mut lattice = periodicity.lattice;
 
   for _ in 0..MAX_LATTICE_REFINEMENTS {
-    let faces = collect_faces(plane, &periodicity.representatives, &lattice)?;
-    let translations = find_extra_translations(&faces);
+    let quotient = collect_faces(plane, &periodicity.representatives, &lattice)?;
+    let translations = find_extra_translations(&quotient.faces, &quotient.points);
 
     if translations.is_empty() {
-      return build_graph(&faces);
+      return build_graph(&quotient.faces);
     }
 
     let refined = lattice.refine_coordinates(&translations)?;
@@ -48,11 +48,16 @@ pub(super) fn build(plane: &Plane, source: &[Affine2]) -> Result<ChamberGraph> {
   ))
 }
 
+struct FaceQuotient {
+  faces: Vec<FaceKey>,
+  points: ToroidalSpatialGridMap<()>,
+}
+
 fn collect_faces(
   plane: &Plane,
   representatives: &[Affine2],
   lattice: &Lattice,
-) -> Result<Vec<FaceKey>> {
+) -> Result<FaceQuotient> {
   let placement_tiles = plane.iter_placement_tiles().collect::<Vec<_>>();
 
   if placement_tiles.is_empty() {
@@ -60,6 +65,7 @@ fn collect_faces(
   }
 
   let mut faces = BTreeSet::new();
+  let mut point_map = ToroidalSpatialGridMap::unit("hash.quotient.points");
 
   for representative in representatives {
     for tile in &placement_tiles {
@@ -69,7 +75,10 @@ fn collect_faces(
         .iter()
         .map(|point| {
           let transformed = representative.apply(point);
-          QPoint::from_vector(lattice.coordinates(Vector2::from(transformed)))
+          LiftedPoint::intern(
+            lattice.coordinates(Vector2::from(transformed)),
+            &mut point_map,
+          )
         })
         .collect::<Result<Vec<_>>>()?;
 
@@ -85,24 +94,35 @@ fn collect_faces(
     return Err(Error::new("the periodic quotient contains no faces"));
   }
 
-  Ok(faces.into_iter().collect())
+  Ok(FaceQuotient {
+    faces: faces.into_iter().collect(),
+    points: point_map,
+  })
 }
 
-fn find_extra_translations(faces: &[FaceKey]) -> Vec<Vector2> {
+fn find_extra_translations(faces: &[FaceKey], points: &ToroidalSpatialGridMap<()>) -> Vec<Vector2> {
   let Some(reference) = faces.first() else {
     return Vec::new();
   };
 
   let face_set = faces.iter().cloned().collect::<BTreeSet<_>>();
-  let mut candidates = BTreeSet::new();
+  let mut candidate_map = ToroidalSpatialGridMap::unit("hash.quotient.translations");
+  let mut candidates = Vec::new();
 
   for target in faces.iter().filter(|face| face.sides == reference.sides) {
     for reference_point in &reference.points {
       for target_point in &target.points {
-        let translation = (*target_point - *reference_point).modulo_lattice();
+        let reference_vector = reference_point.vector(points);
+        let target_vector = target_point.vector(points);
+        let translation = target_vector - reference_vector;
+        let (id, _, inserted) =
+          candidate_map.intern(location::Point(translation.x, translation.y), ());
+        let normalized = candidate_map
+          .point(id)
+          .expect("an interned translation must have a point");
 
-        if translation != QPoint::default() {
-          candidates.insert(translation);
+        if inserted && (normalized.0 != 0.0 || normalized.1 != 0.0) {
+          candidates.push(Vector2::new(normalized.0, normalized.1));
         }
       }
     }
@@ -113,93 +133,50 @@ fn find_extra_translations(faces: &[FaceKey]) -> Vec<Vector2> {
     .filter(|translation| {
       faces.iter().all(|face| {
         face
-          .translated(*translation)
-          .is_ok_and(|translated| face_set.contains(&translated))
+          .translated(*translation, points)
+          .is_ok_and(|translated| translated.is_some_and(|face| face_set.contains(&face)))
       })
-    })
-    .map(|translation| {
-      Vector2::new(
-        translation.x as f64 / COORDINATE_SCALE as f64,
-        translation.y as f64 / COORDINATE_SCALE as f64,
-      )
     })
     .collect()
 }
 
 #[derive(Clone, Copy, Debug, Default, Eq, Ord, PartialEq, PartialOrd)]
-struct QPoint {
-  x: i64,
-  y: i64,
+struct LiftedPoint {
+  id: EntryId,
+  winding: Winding,
 }
 
-impl QPoint {
-  fn from_vector(vector: Vector2) -> Result<Self> {
+impl LiftedPoint {
+  fn intern(vector: Vector2, points: &mut ToroidalSpatialGridMap<()>) -> Result<Self> {
     if !vector.x.is_finite() || !vector.y.is_finite() {
       return Err(Error::new("non-finite coordinate in periodic quotient"));
     }
 
-    let x = vector.x * COORDINATE_SCALE as f64;
-    let y = vector.y * COORDINATE_SCALE as f64;
-
-    if x.abs() > i64::MAX as f64 || y.abs() > i64::MAX as f64 {
+    if vector.x.abs() > i64::MAX as f64 || vector.y.abs() > i64::MAX as f64 {
       return Err(Error::new("periodic quotient coordinate overflow"));
     }
 
-    Ok(Self {
-      x: x.round() as i64,
-      y: y.round() as i64,
-    })
+    let (id, winding, _) = points.intern(location::Point(vector.x, vector.y), ());
+    Ok(Self { id, winding })
   }
 
-  fn modulo_lattice(self) -> Self {
-    Self {
-      x: self.x.rem_euclid(COORDINATE_SCALE),
-      y: self.y.rem_euclid(COORDINATE_SCALE),
-    }
-  }
+  fn vector(self, points: &ToroidalSpatialGridMap<()>) -> Vector2 {
+    let point = points
+      .lift(self.id, self.winding)
+      .expect("a quotient point ID must remain valid");
 
-  fn lattice_cell(self) -> Self {
-    Self {
-      x: self.x.div_euclid(COORDINATE_SCALE),
-      y: self.y.div_euclid(COORDINATE_SCALE),
-    }
-  }
-
-  fn is_lattice_vector(self) -> bool {
-    self.x.rem_euclid(COORDINATE_SCALE) == 0 && self.y.rem_euclid(COORDINATE_SCALE) == 0
-  }
-}
-
-impl std::ops::Add for QPoint {
-  type Output = Self;
-
-  fn add(self, other: Self) -> Self::Output {
-    Self {
-      x: self.x + other.x,
-      y: self.y + other.y,
-    }
-  }
-}
-
-impl std::ops::Sub for QPoint {
-  type Output = Self;
-
-  fn sub(self, other: Self) -> Self::Output {
-    Self {
-      x: self.x - other.x,
-      y: self.y - other.y,
-    }
+    Vector2::new(point.0, point.1)
   }
 }
 
 #[derive(Clone, Debug, Eq, Ord, PartialEq, PartialOrd)]
 struct FaceKey {
   sides: u8,
-  points: Vec<QPoint>,
+  points: Vec<LiftedPoint>,
 }
 
 impl FaceKey {
-  fn new(sides: u8, points: &[QPoint]) -> Result<Self> {
+  fn new(sides: u8, points: &[LiftedPoint]) -> Result<Self> {
     if points.len() < 3 || points.len() != sides as usize {
       return Err(Error::new("invalid face cycle in periodic quotient"));
     }
@@ -212,16 +189,11 @@ impl FaceKey {
       return Err(Error::new("periodic face contains a zero-length edge"));
     }
 
-    let mut best: Option<Vec<QPoint>> = None;
+    let mut best: Option<Vec<LiftedPoint>> = None;
 
     for reversed in [false, true] {
       for start in 0..points.len() {
-        let first = points[start];
-        let cell = first.lattice_cell();
-        let shift = QPoint {
-          x: cell.x * COORDINATE_SCALE,
-          y: cell.y * COORDINATE_SCALE,
-        };
+        let shift = points[start].winding;
         let candidate = (0..points.len())
           .map(|offset| {
             let index = if reversed {
@@ -230,7 +202,10 @@ impl FaceKey {
               (start + offset) % points.len()
             };
 
-            points[index] - shift
+            LiftedPoint {
+              id: points[index].id,
+              winding: points[index].winding - shift,
+            }
           })
           .collect::<Vec<_>>();
 
@@ -246,35 +221,48 @@ impl FaceKey {
     })
   }
 
-  fn translated(&self, translation: QPoint) -> Result<Self> {
-    let points = self
-      .points
-      .iter()
-      .map(|point| *point + translation)
-      .collect::<Vec<_>>();
+  fn translated(
+    &self,
+    translation: Vector2,
+    point_map: &ToroidalSpatialGridMap<()>,
+  ) -> Result<Option<Self>> {
+    let mut points = Vec::with_capacity(self.points.len());
 
-    Self::new(self.sides, &points)
+    for point in &self.points {
+      let translated = point.vector(point_map) + translation;
+      let Some((id, winding)) = point_map.locate(location::Point(translated.x, translated.y))
+      else {
+        return Ok(None);
+      };
+
+      points.push(LiftedPoint { id, winding });
+    }
+
+    Self::new(self.sides, &points).map(Some)
   }
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 struct DirectedEdgeKey {
-  start: QPoint,
-  delta: QPoint,
+  start: EntryId,
+  end: EntryId,
+  winding: Winding,
 }
 
 #[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
 struct EdgeKey(DirectedEdgeKey);
 
 impl EdgeKey {
-  fn new(start: QPoint, end: QPoint) -> Self {
+  fn new(start: LiftedPoint, end: LiftedPoint) -> Self {
     let forward = DirectedEdgeKey {
-      start: start.modulo_lattice(),
-      delta: end - start,
+      start: start.id,
+      end: end.id,
+      winding: end.winding - start.winding,
     };
     let reverse = DirectedEdgeKey {
-      start: end.modulo_lattice(),
-      delta: start - end,
+      start: end.id,
+      end: start.id,
+      winding: start.winding - end.winding,
     };
 
     Self(forward.min(reverse))
@@ -285,14 +273,14 @@ impl EdgeKey {
 struct EdgeOccurrence {
   face: usize,
   edge: usize,
-  start: QPoint,
-  end: QPoint,
+  start: LiftedPoint,
+  end: LiftedPoint,
 }
 
 fn build_graph(faces: &[FaceKey]) -> Result<ChamberGraph> {
   let mut edges = BTreeMap::<EdgeKey, Vec<EdgeOccurrence>>::new();
   let mut vertices = BTreeSet::new();
-  let mut vertex_chambers = BTreeMap::<QPoint, Vec<usize>>::new();
+  let mut vertex_chambers = BTreeMap::<EntryId, Vec<usize>>::new();
   let mut face_offsets = Vec::with_capacity(faces.len());
   let mut chamber_count = 0_usize;
 
@@ -302,7 +290,7 @@ fn build_graph(faces: &[FaceKey]) -> Result<ChamberGraph> {
 
     for (edge_index, start) in face.points.iter().copied().enumerate() {
       let end = face.points[(edge_index + 1) % face.points.len()];
-      vertices.insert(start.modulo_lattice());
+      vertices.insert(start.id);
       edges
         .entry(EdgeKey::new(start, end))
         .or_default()
@@ -333,11 +321,11 @@ fn build_graph(faces: &[FaceKey]) -> Result<ChamberGraph> {
       let start = chamber(&face_offsets, face_index, edge, 0);
       let end = chamber(&face_offsets, face_index, edge, 1);
       vertex_chambers
-        .entry(face.points[edge].modulo_lattice())
+        .entry(face.points[edge].id)
         .or_default()
         .push(start);
       vertex_chambers
-        .entry(face.points[(edge + 1) % edge_count].modulo_lattice())
+        .entry(face.points[(edge + 1) % edge_count].id)
         .or_default()
         .push(end);
       graph.neighbors[start][0] = end;
@@ -366,8 +354,7 @@ fn build_graph(faces: &[FaceKey]) -> Result<ChamberGraph> {
     };
     let mapping = endpoint_mapping(first, second)?;
 
-    for first_endpoint in 0..2 {
-      let second_endpoint = mapping[first_endpoint];
+    for (first_endpoint, second_endpoint) in mapping.into_iter().enumerate() {
       let first_chamber = chamber(&face_offsets, first.face, first.edge, first_endpoint);
       let second_chamber = chamber(&face_offsets, second.face, second.edge, second_endpoint);
 
@@ -386,18 +373,22 @@ fn chamber(face_offsets: &[usize], face: usize, edge: usize, endpoint: usize) ->
 }
 
 fn endpoint_mapping(first: &EdgeOccurrence, second: &EdgeOccurrence) -> Result<[usize; 2]> {
-  let start_shift = second.start - first.start;
-  let end_shift = second.end - first.end;
+  if first.start.id == second.start.id && first.end.id == second.end.id {
+    let start_shift = second.start.winding - first.start.winding;
+    let end_shift = second.end.winding - first.end.winding;
 
-  if start_shift == end_shift && start_shift.is_lattice_vector() {
-    return Ok([0, 1]);
+    if start_shift == end_shift {
+      return Ok([0, 1]);
+    }
   }
 
-  let start_to_end_shift = second.end - first.start;
-  let end_to_start_shift = second.start - first.end;
+  if first.start.id == second.end.id && first.end.id == second.start.id {
+    let start_to_end_shift = second.end.winding - first.start.winding;
+    let end_to_start_shift = second.start.winding - first.end.winding;
 
-  if start_to_end_shift == end_to_start_shift && start_to_end_shift.is_lattice_vector() {
-    return Ok([1, 0]);
+    if start_to_end_shift == end_to_start_shift {
+      return Ok([1, 0]);
+    }
   }
 
   Err(Error::new(
@@ -444,7 +435,7 @@ fn validate_graph(graph: &ChamberGraph) -> Result<()> {
 
 fn validate_vertex_links(
   graph: &ChamberGraph,
-  vertex_chambers: &BTreeMap<QPoint, Vec<usize>>,
+  vertex_chambers: &BTreeMap<EntryId, Vec<usize>>,
 ) -> Result<()> {
   for chambers in vertex_chambers.values() {
     let chamber_set = chambers.iter().copied().collect::<BTreeSet<_>>();

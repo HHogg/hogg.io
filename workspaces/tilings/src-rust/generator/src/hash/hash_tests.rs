@@ -68,12 +68,12 @@ fn square_translation_rotation_generator_and_supercell_are_equivalent() {
 
 #[test]
 fn alternate_triangular_generators_are_equivalent() {
-  assert_same_hash(&[("3/m30/m(h1)", 3), ("3/m60/m(h1)", 3)]);
+  assert_same_hash(&[("3/m30/m(h1)", 3), ("3/m60/m(h1)", 3), ("3/m30/r(h2)", 3)]);
 }
 
 #[test]
 fn alternate_hexagonal_generators_are_equivalent() {
-  assert_same_hash(&[("6/m30/m(h1)", 3), ("6/r60/m(h1)", 3)]);
+  assert_same_hash(&[("6/m30/m(h1)", 3), ("6/r60/m(h1)", 3), ("6-6/m30/r(h4)", 3)]);
 }
 
 #[test]
