@@ -1,3 +1,1644 @@
 {
-  "insights_per_minute": []
+  "insights_per_minute": [
+    {
+      "minute": "2026-09-05T21:15:00",
+      "level": 3,
+      "countSessions": 1,
+      "countNodes": 149,
+      "countValidTilings": 1381,
+      "countTotalTilings": 71638
+    },
+    {
+      "minute": "2026-09-05T21:16:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 1586,
+      "countValidTilings": 4703,
+      "countTotalTilings": 1183678
+    },
+    {
+      "minute": "2026-09-05T21:17:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 2614,
+      "countValidTilings": 1822,
+      "countTotalTilings": 1526834
+    },
+    {
+      "minute": "2026-09-05T21:18:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 3068,
+      "countValidTilings": 3577,
+      "countTotalTilings": 1407466
+    },
+    {
+      "minute": "2026-09-05T21:19:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 1615,
+      "countValidTilings": 2847,
+      "countTotalTilings": 1237726
+    },
+    {
+      "minute": "2026-09-05T21:20:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 1014,
+      "countValidTilings": 2461,
+      "countTotalTilings": 1389274
+    },
+    {
+      "minute": "2026-09-05T21:21:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 656,
+      "countValidTilings": 132,
+      "countTotalTilings": 1253088
+    },
+    {
+      "minute": "2026-09-05T21:22:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 619,
+      "countValidTilings": 92,
+      "countTotalTilings": 1283264
+    },
+    {
+      "minute": "2026-09-05T21:23:00",
+      "level": 5,
+      "countSessions": 1,
+      "countNodes": 301,
+      "countValidTilings": 132,
+      "countTotalTilings": 727712
+    },
+    {
+      "minute": "2026-09-05T21:24:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 931,
+      "countValidTilings": 1388,
+      "countTotalTilings": 1430282
+    },
+    {
+      "minute": "2026-09-05T21:25:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1715,
+      "countValidTilings": 1139,
+      "countTotalTilings": 1213660
+    },
+    {
+      "minute": "2026-09-05T21:26:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2171,
+      "countValidTilings": 1333,
+      "countTotalTilings": 1509522
+    },
+    {
+      "minute": "2026-09-05T21:27:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2130,
+      "countValidTilings": 201,
+      "countTotalTilings": 1546930
+    },
+    {
+      "minute": "2026-09-05T21:28:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2340,
+      "countValidTilings": 204,
+      "countTotalTilings": 1687518
+    },
+    {
+      "minute": "2026-09-05T21:29:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1677,
+      "countValidTilings": 917,
+      "countTotalTilings": 1297968
+    },
+    {
+      "minute": "2026-09-05T21:30:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1970,
+      "countValidTilings": 1161,
+      "countTotalTilings": 1493422
+    },
+    {
+      "minute": "2026-09-05T21:31:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2120,
+      "countValidTilings": 116,
+      "countTotalTilings": 1839516
+    },
+    {
+      "minute": "2026-09-05T21:32:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1486,
+      "countValidTilings": 0,
+      "countTotalTilings": 1463784
+    },
+    {
+      "minute": "2026-09-05T21:33:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1830,
+      "countValidTilings": 0,
+      "countTotalTilings": 1731646
+    },
+    {
+      "minute": "2026-09-05T21:34:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 3476,
+      "countValidTilings": 1625,
+      "countTotalTilings": 1927346
+    },
+    {
+      "minute": "2026-09-05T21:35:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 4019,
+      "countValidTilings": 1590,
+      "countTotalTilings": 1654776
+    },
+    {
+      "minute": "2026-09-05T21:36:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 3112,
+      "countValidTilings": 1995,
+      "countTotalTilings": 1358632
+    },
+    {
+      "minute": "2026-09-05T21:37:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 4025,
+      "countValidTilings": 502,
+      "countTotalTilings": 1799176
+    },
+    {
+      "minute": "2026-09-05T21:38:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 3432,
+      "countValidTilings": 21,
+      "countTotalTilings": 1708576
+    },
+    {
+      "minute": "2026-09-05T21:39:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2858,
+      "countValidTilings": 0,
+      "countTotalTilings": 1584232
+    },
+    {
+      "minute": "2026-09-05T21:40:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 3539,
+      "countValidTilings": 2525,
+      "countTotalTilings": 1666794
+    },
+    {
+      "minute": "2026-09-05T21:41:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2283,
+      "countValidTilings": 2461,
+      "countTotalTilings": 1760570
+    },
+    {
+      "minute": "2026-09-05T21:42:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2429,
+      "countValidTilings": 1088,
+      "countTotalTilings": 1894480
+    },
+    {
+      "minute": "2026-09-05T21:43:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1035,
+      "countValidTilings": 51,
+      "countTotalTilings": 804202
+    },
+    {
+      "minute": "2026-09-05T21:44:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1065,
+      "countValidTilings": 143,
+      "countTotalTilings": 897442
+    },
+    {
+      "minute": "2026-09-05T21:45:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2242,
+      "countValidTilings": 309,
+      "countTotalTilings": 1792112
+    },
+    {
+      "minute": "2026-09-05T21:46:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1508,
+      "countValidTilings": 411,
+      "countTotalTilings": 1167530
+    },
+    {
+      "minute": "2026-09-05T21:47:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 910,
+      "countValidTilings": 2505,
+      "countTotalTilings": 796292
+    },
+    {
+      "minute": "2026-09-05T21:48:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1311,
+      "countValidTilings": 1451,
+      "countTotalTilings": 1122772
+    },
+    {
+      "minute": "2026-09-05T21:49:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2170,
+      "countValidTilings": 3404,
+      "countTotalTilings": 1903188
+    },
+    {
+      "minute": "2026-09-05T21:50:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1285,
+      "countValidTilings": 1380,
+      "countTotalTilings": 1161608
+    },
+    {
+      "minute": "2026-09-05T21:51:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1045,
+      "countValidTilings": 0,
+      "countTotalTilings": 1099896
+    },
+    {
+      "minute": "2026-09-05T21:52:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1476,
+      "countValidTilings": 0,
+      "countTotalTilings": 1480822
+    },
+    {
+      "minute": "2026-09-05T21:53:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1738,
+      "countValidTilings": 88,
+      "countTotalTilings": 1810998
+    },
+    {
+      "minute": "2026-09-05T21:54:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 2372,
+      "countValidTilings": 4529,
+      "countTotalTilings": 1751946
+    },
+    {
+      "minute": "2026-09-05T21:55:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1066,
+      "countValidTilings": 1983,
+      "countTotalTilings": 1025106
+    },
+    {
+      "minute": "2026-09-05T21:56:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 505,
+      "countValidTilings": 102,
+      "countTotalTilings": 1030560
+    },
+    {
+      "minute": "2026-09-05T21:57:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 756,
+      "countValidTilings": 334,
+      "countTotalTilings": 1631872
+    },
+    {
+      "minute": "2026-09-05T21:58:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 516,
+      "countValidTilings": 265,
+      "countTotalTilings": 1185664
+    },
+    {
+      "minute": "2026-09-05T21:59:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 923,
+      "countValidTilings": 204,
+      "countTotalTilings": 1808288
+    },
+    {
+      "minute": "2026-09-05T22:00:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1008,
+      "countValidTilings": 88,
+      "countTotalTilings": 2111200
+    },
+    {
+      "minute": "2026-09-05T22:01:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 413,
+      "countValidTilings": 562,
+      "countTotalTilings": 1004352
+    },
+    {
+      "minute": "2026-09-05T22:02:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 632,
+      "countValidTilings": 607,
+      "countTotalTilings": 1307104
+    },
+    {
+      "minute": "2026-09-05T22:03:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 501,
+      "countValidTilings": 38,
+      "countTotalTilings": 1028608
+    },
+    {
+      "minute": "2026-09-05T22:04:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 419,
+      "countValidTilings": 4,
+      "countTotalTilings": 902240
+    },
+    {
+      "minute": "2026-09-05T22:05:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 313,
+      "countValidTilings": 0,
+      "countTotalTilings": 695392
+    },
+    {
+      "minute": "2026-09-05T22:06:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 374,
+      "countValidTilings": 4,
+      "countTotalTilings": 881984
+    },
+    {
+      "minute": "2026-09-05T22:07:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 277,
+      "countValidTilings": 3,
+      "countTotalTilings": 724352
+    },
+    {
+      "minute": "2026-09-05T22:08:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 511,
+      "countValidTilings": 109,
+      "countTotalTilings": 1055392
+    },
+    {
+      "minute": "2026-09-05T22:09:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 673,
+      "countValidTilings": 38,
+      "countTotalTilings": 1369344
+    },
+    {
+      "minute": "2026-09-05T22:10:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 743,
+      "countValidTilings": 61,
+      "countTotalTilings": 1586240
+    },
+    {
+      "minute": "2026-09-05T22:11:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 870,
+      "countValidTilings": 159,
+      "countTotalTilings": 2076032
+    },
+    {
+      "minute": "2026-09-05T22:12:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 573,
+      "countValidTilings": 81,
+      "countTotalTilings": 1209280
+    },
+    {
+      "minute": "2026-09-05T22:13:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 530,
+      "countValidTilings": 0,
+      "countTotalTilings": 1147680
+    },
+    {
+      "minute": "2026-09-05T22:14:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 327,
+      "countValidTilings": 0,
+      "countTotalTilings": 723360
+    },
+    {
+      "minute": "2026-09-05T22:15:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 380,
+      "countValidTilings": 69,
+      "countTotalTilings": 860512
+    },
+    {
+      "minute": "2026-09-05T22:16:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 344,
+      "countValidTilings": 0,
+      "countTotalTilings": 803072
+    },
+    {
+      "minute": "2026-09-05T22:17:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 288,
+      "countValidTilings": 0,
+      "countTotalTilings": 733184
+    },
+    {
+      "minute": "2026-09-05T22:18:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 245,
+      "countValidTilings": 0,
+      "countTotalTilings": 677696
+    },
+    {
+      "minute": "2026-09-05T22:19:00",
+      "level": 6,
+      "countSessions": 2,
+      "countNodes": 378,
+      "countValidTilings": 0,
+      "countTotalTilings": 925248
+    },
+    {
+      "minute": "2026-09-06T06:08:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 413,
+      "countValidTilings": 49,
+      "countTotalTilings": 866592
+    },
+    {
+      "minute": "2026-09-06T06:09:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 715,
+      "countValidTilings": 69,
+      "countTotalTilings": 1565152
+    },
+    {
+      "minute": "2026-09-06T06:10:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 1005,
+      "countValidTilings": 122,
+      "countTotalTilings": 2276768
+    },
+    {
+      "minute": "2026-09-06T06:11:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 873,
+      "countValidTilings": 15,
+      "countTotalTilings": 2202112
+    },
+    {
+      "minute": "2026-09-06T06:12:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 422,
+      "countValidTilings": 10,
+      "countTotalTilings": 1022656
+    },
+    {
+      "minute": "2026-09-06T06:13:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 369,
+      "countValidTilings": 0,
+      "countTotalTilings": 938368
+    },
+    {
+      "minute": "2026-09-06T06:14:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 272,
+      "countValidTilings": 0,
+      "countTotalTilings": 708608
+    },
+    {
+      "minute": "2026-09-06T06:15:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 375,
+      "countValidTilings": 0,
+      "countTotalTilings": 986752
+    },
+    {
+      "minute": "2026-09-06T06:16:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 295,
+      "countValidTilings": 0,
+      "countTotalTilings": 807296
+    },
+    {
+      "minute": "2026-09-06T06:17:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 339,
+      "countValidTilings": 0,
+      "countTotalTilings": 970784
+    },
+    {
+      "minute": "2026-09-06T06:18:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 192,
+      "countValidTilings": 28,
+      "countTotalTilings": 620224
+    },
+    {
+      "minute": "2026-09-06T06:19:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 326,
+      "countValidTilings": 97,
+      "countTotalTilings": 1005760
+    },
+    {
+      "minute": "2026-09-06T06:20:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 394,
+      "countValidTilings": 181,
+      "countTotalTilings": 942432
+    },
+    {
+      "minute": "2026-09-06T06:21:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 262,
+      "countValidTilings": 115,
+      "countTotalTilings": 659872
+    },
+    {
+      "minute": "2026-09-06T06:22:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 583,
+      "countValidTilings": 296,
+      "countTotalTilings": 1472352
+    },
+    {
+      "minute": "2026-09-06T06:23:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 955,
+      "countValidTilings": 0,
+      "countTotalTilings": 2540928
+    },
+    {
+      "minute": "2026-09-06T06:24:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 668,
+      "countValidTilings": 0,
+      "countTotalTilings": 2020288
+    },
+    {
+      "minute": "2026-09-06T06:25:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 564,
+      "countValidTilings": 207,
+      "countTotalTilings": 1282144
+    },
+    {
+      "minute": "2026-09-06T06:26:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 905,
+      "countValidTilings": 764,
+      "countTotalTilings": 1663264
+    },
+    {
+      "minute": "2026-09-06T06:27:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 931,
+      "countValidTilings": 251,
+      "countTotalTilings": 1923872
+    },
+    {
+      "minute": "2026-09-06T06:28:00",
+      "level": 6,
+      "countSessions": 1,
+      "countNodes": 757,
+      "countValidTilings": 858,
+      "countTotalTilings": 1639104
+    },
+    {
+      "minute": "2026-09-06T06:29:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1413,
+      "countValidTilings": 712,
+      "countTotalTilings": 1048030
+    },
+    {
+      "minute": "2026-09-06T06:30:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1984,
+      "countValidTilings": 1164,
+      "countTotalTilings": 1530634
+    },
+    {
+      "minute": "2026-09-06T06:31:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2325,
+      "countValidTilings": 0,
+      "countTotalTilings": 1794254
+    },
+    {
+      "minute": "2026-09-06T06:32:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2023,
+      "countValidTilings": 165,
+      "countTotalTilings": 1574874
+    },
+    {
+      "minute": "2026-09-06T06:33:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1240,
+      "countValidTilings": 15,
+      "countTotalTilings": 1067164
+    },
+    {
+      "minute": "2026-09-06T06:34:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1698,
+      "countValidTilings": 595,
+      "countTotalTilings": 1379560
+    },
+    {
+      "minute": "2026-09-06T06:35:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1210,
+      "countValidTilings": 0,
+      "countTotalTilings": 1135820
+    },
+    {
+      "minute": "2026-09-06T06:49:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1162,
+      "countValidTilings": 0,
+      "countTotalTilings": 1187774
+    },
+    {
+      "minute": "2026-09-06T06:51:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1403,
+      "countValidTilings": 0,
+      "countTotalTilings": 1369256
+    },
+    {
+      "minute": "2026-09-06T06:52:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1819,
+      "countValidTilings": 506,
+      "countTotalTilings": 1508962
+    },
+    {
+      "minute": "2026-09-06T06:53:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1747,
+      "countValidTilings": 2066,
+      "countTotalTilings": 1228780
+    },
+    {
+      "minute": "2026-09-06T06:54:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2316,
+      "countValidTilings": 2429,
+      "countTotalTilings": 1806784
+    },
+    {
+      "minute": "2026-09-06T06:55:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2715,
+      "countValidTilings": 0,
+      "countTotalTilings": 2093448
+    },
+    {
+      "minute": "2026-09-06T06:56:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2869,
+      "countValidTilings": 0,
+      "countTotalTilings": 2207170
+    },
+    {
+      "minute": "2026-09-06T06:57:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2563,
+      "countValidTilings": 0,
+      "countTotalTilings": 2169552
+    },
+    {
+      "minute": "2026-09-06T06:58:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1962,
+      "countValidTilings": 0,
+      "countTotalTilings": 1874922
+    },
+    {
+      "minute": "2026-09-06T06:59:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1858,
+      "countValidTilings": 0,
+      "countTotalTilings": 1853782
+    },
+    {
+      "minute": "2026-09-06T07:00:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2146,
+      "countValidTilings": 1175,
+      "countTotalTilings": 1663270
+    },
+    {
+      "minute": "2026-09-06T07:01:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 986,
+      "countValidTilings": 53,
+      "countTotalTilings": 767200
+    },
+    {
+      "minute": "2026-09-06T07:02:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1213,
+      "countValidTilings": 392,
+      "countTotalTilings": 933660
+    },
+    {
+      "minute": "2026-09-06T07:03:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1692,
+      "countValidTilings": 148,
+      "countTotalTilings": 1342320
+    },
+    {
+      "minute": "2026-09-06T07:04:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2507,
+      "countValidTilings": 0,
+      "countTotalTilings": 1997618
+    },
+    {
+      "minute": "2026-09-06T07:05:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2513,
+      "countValidTilings": 0,
+      "countTotalTilings": 2054332
+    },
+    {
+      "minute": "2026-09-06T07:06:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2200,
+      "countValidTilings": 0,
+      "countTotalTilings": 1884386
+    },
+    {
+      "minute": "2026-09-06T07:07:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1950,
+      "countValidTilings": 0,
+      "countTotalTilings": 1730092
+    },
+    {
+      "minute": "2026-09-06T07:08:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1598,
+      "countValidTilings": 0,
+      "countTotalTilings": 1611974
+    },
+    {
+      "minute": "2026-09-06T07:09:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1697,
+      "countValidTilings": 0,
+      "countTotalTilings": 1699516
+    },
+    {
+      "minute": "2026-09-06T07:10:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1761,
+      "countValidTilings": 85,
+      "countTotalTilings": 1594880
+    },
+    {
+      "minute": "2026-09-06T07:11:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1581,
+      "countValidTilings": 365,
+      "countTotalTilings": 1175426
+    },
+    {
+      "minute": "2026-09-06T07:12:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2111,
+      "countValidTilings": 71,
+      "countTotalTilings": 1684480
+    },
+    {
+      "minute": "2026-09-06T07:13:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2472,
+      "countValidTilings": 188,
+      "countTotalTilings": 1841406
+    },
+    {
+      "minute": "2026-09-06T07:14:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2682,
+      "countValidTilings": 0,
+      "countTotalTilings": 2127720
+    },
+    {
+      "minute": "2026-09-06T07:15:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2489,
+      "countValidTilings": 0,
+      "countTotalTilings": 2081352
+    },
+    {
+      "minute": "2026-09-06T07:16:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2325,
+      "countValidTilings": 0,
+      "countTotalTilings": 2055858
+    },
+    {
+      "minute": "2026-09-06T07:17:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1778,
+      "countValidTilings": 0,
+      "countTotalTilings": 1757462
+    },
+    {
+      "minute": "2026-09-06T07:18:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1756,
+      "countValidTilings": 0,
+      "countTotalTilings": 1788458
+    },
+    {
+      "minute": "2026-09-06T07:19:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2049,
+      "countValidTilings": 247,
+      "countTotalTilings": 1667302
+    },
+    {
+      "minute": "2026-09-06T07:20:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1560,
+      "countValidTilings": 101,
+      "countTotalTilings": 1342642
+    },
+    {
+      "minute": "2026-09-06T07:21:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2139,
+      "countValidTilings": 430,
+      "countTotalTilings": 1708966
+    },
+    {
+      "minute": "2026-09-06T07:22:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2350,
+      "countValidTilings": 272,
+      "countTotalTilings": 1972824
+    },
+    {
+      "minute": "2026-09-06T07:23:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2600,
+      "countValidTilings": 0,
+      "countTotalTilings": 2170042
+    },
+    {
+      "minute": "2026-09-06T07:24:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1617,
+      "countValidTilings": 48,
+      "countTotalTilings": 1409142
+    },
+    {
+      "minute": "2026-09-06T07:25:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1121,
+      "countValidTilings": 338,
+      "countTotalTilings": 980630
+    },
+    {
+      "minute": "2026-09-06T07:26:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 971,
+      "countValidTilings": 504,
+      "countTotalTilings": 964460
+    },
+    {
+      "minute": "2026-09-06T08:22:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1428,
+      "countValidTilings": 579,
+      "countTotalTilings": 1204294
+    },
+    {
+      "minute": "2026-09-06T08:23:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1786,
+      "countValidTilings": 1309,
+      "countTotalTilings": 1689282
+    },
+    {
+      "minute": "2026-09-06T08:24:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1380,
+      "countValidTilings": 0,
+      "countTotalTilings": 1418186
+    },
+    {
+      "minute": "2026-09-06T08:25:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1274,
+      "countValidTilings": 0,
+      "countTotalTilings": 1434916
+    },
+    {
+      "minute": "2026-09-06T08:26:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1979,
+      "countValidTilings": 0,
+      "countTotalTilings": 2038386
+    },
+    {
+      "minute": "2026-09-06T08:27:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1692,
+      "countValidTilings": 481,
+      "countTotalTilings": 1571108
+    },
+    {
+      "minute": "2026-09-06T08:28:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1703,
+      "countValidTilings": 701,
+      "countTotalTilings": 1402310
+    },
+    {
+      "minute": "2026-09-06T08:29:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1684,
+      "countValidTilings": 921,
+      "countTotalTilings": 1246210
+    },
+    {
+      "minute": "2026-09-06T08:30:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1193,
+      "countValidTilings": 1001,
+      "countTotalTilings": 1095500
+    },
+    {
+      "minute": "2026-09-06T08:31:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1856,
+      "countValidTilings": 1054,
+      "countTotalTilings": 1503180
+    },
+    {
+      "minute": "2026-09-06T08:32:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2216,
+      "countValidTilings": 0,
+      "countTotalTilings": 1948016
+    },
+    {
+      "minute": "2026-09-06T08:33:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2297,
+      "countValidTilings": 0,
+      "countTotalTilings": 1922256
+    },
+    {
+      "minute": "2026-09-06T08:34:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1761,
+      "countValidTilings": 0,
+      "countTotalTilings": 1681708
+    },
+    {
+      "minute": "2026-09-06T08:35:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2035,
+      "countValidTilings": 0,
+      "countTotalTilings": 1864044
+    },
+    {
+      "minute": "2026-09-06T08:36:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2332,
+      "countValidTilings": 0,
+      "countTotalTilings": 2545676
+    },
+    {
+      "minute": "2026-09-06T08:37:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2162,
+      "countValidTilings": 483,
+      "countTotalTilings": 2058812
+    },
+    {
+      "minute": "2026-09-06T08:38:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1796,
+      "countValidTilings": 0,
+      "countTotalTilings": 1679398
+    },
+    {
+      "minute": "2026-09-06T08:39:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1336,
+      "countValidTilings": 0,
+      "countTotalTilings": 1323014
+    },
+    {
+      "minute": "2026-09-06T08:40:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1664,
+      "countValidTilings": 0,
+      "countTotalTilings": 1666616
+    },
+    {
+      "minute": "2026-09-06T08:41:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1659,
+      "countValidTilings": 0,
+      "countTotalTilings": 1607102
+    },
+    {
+      "minute": "2026-09-06T08:42:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1339,
+      "countValidTilings": 0,
+      "countTotalTilings": 1397354
+    },
+    {
+      "minute": "2026-09-06T08:43:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1684,
+      "countValidTilings": 0,
+      "countTotalTilings": 1612338
+    },
+    {
+      "minute": "2026-09-06T08:44:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1600,
+      "countValidTilings": 0,
+      "countTotalTilings": 1695246
+    },
+    {
+      "minute": "2026-09-06T08:45:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1100,
+      "countValidTilings": 0,
+      "countTotalTilings": 1135960
+    },
+    {
+      "minute": "2026-09-06T08:46:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 946,
+      "countValidTilings": 0,
+      "countTotalTilings": 1117326
+    },
+    {
+      "minute": "2026-09-06T08:47:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1501,
+      "countValidTilings": 0,
+      "countTotalTilings": 1475922
+    },
+    {
+      "minute": "2026-09-06T08:48:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1541,
+      "countValidTilings": 0,
+      "countTotalTilings": 1732766
+    },
+    {
+      "minute": "2026-09-06T08:49:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 521,
+      "countValidTilings": 0,
+      "countTotalTilings": 576184
+    },
+    {
+      "minute": "2026-09-07T07:03:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 937,
+      "countValidTilings": 0,
+      "countTotalTilings": 1109934
+    },
+    {
+      "minute": "2026-09-07T07:04:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 800,
+      "countValidTilings": 0,
+      "countTotalTilings": 1052058
+    },
+    {
+      "minute": "2026-09-07T07:05:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 929,
+      "countValidTilings": 0,
+      "countTotalTilings": 1136324
+    },
+    {
+      "minute": "2026-09-07T07:06:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1296,
+      "countValidTilings": 0,
+      "countTotalTilings": 1528492
+    },
+    {
+      "minute": "2026-09-07T07:07:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1233,
+      "countValidTilings": 0,
+      "countTotalTilings": 1598240
+    },
+    {
+      "minute": "2026-09-07T07:08:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1566,
+      "countValidTilings": 0,
+      "countTotalTilings": 1410962
+    },
+    {
+      "minute": "2026-09-07T07:09:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1366,
+      "countValidTilings": 0,
+      "countTotalTilings": 1361374
+    },
+    {
+      "minute": "2026-09-07T07:10:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1348,
+      "countValidTilings": 0,
+      "countTotalTilings": 1237446
+    },
+    {
+      "minute": "2026-09-07T07:11:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1107,
+      "countValidTilings": 0,
+      "countTotalTilings": 1201858
+    },
+    {
+      "minute": "2026-09-07T07:12:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1415,
+      "countValidTilings": 0,
+      "countTotalTilings": 1338638
+    },
+    {
+      "minute": "2026-09-07T07:13:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1421,
+      "countValidTilings": 0,
+      "countTotalTilings": 1407686
+    },
+    {
+      "minute": "2026-09-07T07:14:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1036,
+      "countValidTilings": 0,
+      "countTotalTilings": 1113644
+    },
+    {
+      "minute": "2026-09-07T07:15:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 746,
+      "countValidTilings": 0,
+      "countTotalTilings": 754782
+    },
+    {
+      "minute": "2026-09-07T07:16:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1251,
+      "countValidTilings": 0,
+      "countTotalTilings": 1294258
+    },
+    {
+      "minute": "2026-09-07T07:17:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2120,
+      "countValidTilings": 0,
+      "countTotalTilings": 2268112
+    },
+    {
+      "minute": "2026-09-07T07:18:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1987,
+      "countValidTilings": 0,
+      "countTotalTilings": 2155244
+    },
+    {
+      "minute": "2026-09-07T07:19:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1141,
+      "countValidTilings": 0,
+      "countTotalTilings": 1313942
+    },
+    {
+      "minute": "2026-09-07T07:20:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 982,
+      "countValidTilings": 0,
+      "countTotalTilings": 1253532
+    },
+    {
+      "minute": "2026-09-07T07:21:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1160,
+      "countValidTilings": 0,
+      "countTotalTilings": 1375458
+    },
+    {
+      "minute": "2026-09-07T07:22:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1187,
+      "countValidTilings": 0,
+      "countTotalTilings": 1335474
+    },
+    {
+      "minute": "2026-09-07T07:23:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2144,
+      "countValidTilings": 2093,
+      "countTotalTilings": 1687714
+    },
+    {
+      "minute": "2026-09-07T07:24:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2694,
+      "countValidTilings": 1729,
+      "countTotalTilings": 1908858
+    },
+    {
+      "minute": "2026-09-07T07:25:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2837,
+      "countValidTilings": 0,
+      "countTotalTilings": 2089290
+    },
+    {
+      "minute": "2026-09-07T07:26:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 3141,
+      "countValidTilings": 0,
+      "countTotalTilings": 2387952
+    },
+    {
+      "minute": "2026-09-07T07:27:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2788,
+      "countValidTilings": 0,
+      "countTotalTilings": 2403660
+    },
+    {
+      "minute": "2026-09-07T07:28:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2068,
+      "countValidTilings": 0,
+      "countTotalTilings": 1938958
+    },
+    {
+      "minute": "2026-09-07T07:29:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2684,
+      "countValidTilings": 680,
+      "countTotalTilings": 1562390
+    },
+    {
+      "minute": "2026-09-07T07:30:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 3056,
+      "countValidTilings": 154,
+      "countTotalTilings": 1372744
+    },
+    {
+      "minute": "2026-09-07T07:31:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 3407,
+      "countValidTilings": 106,
+      "countTotalTilings": 1594568
+    },
+    {
+      "minute": "2026-09-07T07:32:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 3687,
+      "countValidTilings": 84,
+      "countTotalTilings": 1860848
+    },
+    {
+      "minute": "2026-09-07T07:33:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2559,
+      "countValidTilings": 24,
+      "countTotalTilings": 1487632
+    },
+    {
+      "minute": "2026-09-07T07:34:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 3657,
+      "countValidTilings": 518,
+      "countTotalTilings": 1696432
+    },
+    {
+      "minute": "2026-09-07T07:35:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 4072,
+      "countValidTilings": 759,
+      "countTotalTilings": 1798024
+    },
+    {
+      "minute": "2026-09-07T07:36:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 5670,
+      "countValidTilings": 179,
+      "countTotalTilings": 2610056
+    },
+    {
+      "minute": "2026-09-07T07:37:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 5009,
+      "countValidTilings": 30,
+      "countTotalTilings": 2614976
+    },
+    {
+      "minute": "2026-09-07T07:38:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 4190,
+      "countValidTilings": 287,
+      "countTotalTilings": 2181272
+    },
+    {
+      "minute": "2026-09-07T07:39:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2710,
+      "countValidTilings": 111,
+      "countTotalTilings": 1244688
+    },
+    {
+      "minute": "2026-09-07T07:40:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2868,
+      "countValidTilings": 835,
+      "countTotalTilings": 1309448
+    },
+    {
+      "minute": "2026-09-07T07:41:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1851,
+      "countValidTilings": 1017,
+      "countTotalTilings": 892040
+    },
+    {
+      "minute": "2026-09-07T07:42:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2432,
+      "countValidTilings": 1064,
+      "countTotalTilings": 1178696
+    },
+    {
+      "minute": "2026-09-07T07:43:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1608,
+      "countValidTilings": 0,
+      "countTotalTilings": 856408
+    },
+    {
+      "minute": "2026-09-07T07:44:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 2734,
+      "countValidTilings": 0,
+      "countTotalTilings": 1398584
+    },
+    {
+      "minute": "2026-09-07T07:45:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1434,
+      "countValidTilings": 0,
+      "countTotalTilings": 852184
+    },
+    {
+      "minute": "2026-09-07T07:46:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 1967,
+      "countValidTilings": 0,
+      "countTotalTilings": 1168040
+    },
+    {
+      "minute": "2026-09-07T07:47:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 4021,
+      "countValidTilings": 1633,
+      "countTotalTilings": 1904880
+    },
+    {
+      "minute": "2026-09-07T07:48:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 3687,
+      "countValidTilings": 89,
+      "countTotalTilings": 1723840
+    },
+    {
+      "minute": "2026-09-07T07:49:00",
+      "level": 7,
+      "countSessions": 1,
+      "countNodes": 69,
+      "countValidTilings": 0,
+      "countTotalTilings": 29368
+    }
+  ]
 }

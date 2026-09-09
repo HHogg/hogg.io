@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { launch } from 'puppeteer';
 import sharp from 'sharp';
-import tilings from '../results/output.json' assert { type: 'json' };
+import tilings from '../results/output.json' with { type: 'json' };
 
 const TIMEOUT = 60_000;
 const MAX_RENDER_ATTEMPTS = 20;
@@ -13,7 +13,7 @@ const toId = (notation) => notation.replace(/\//g, ':');
 
 const generateTilingImage = async (page, notation, filePath) => {
   await page.goto(
-    `http://127.0.0.1:8080/_tiling_generation?notation=${notation}`
+    `http://127.0.0.1:8080/projects/tilings/generate?notation=${notation}`
   );
 
   const element = await page.waitForSelector('canvas', {

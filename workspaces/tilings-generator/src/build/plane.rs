@@ -378,7 +378,7 @@ impl Plane {
 
     let hash = build_hash(self, &self.option_hash_version);
     self.metrics.finish("hashing");
-    self.hash = Some(hash);
+    self.hash = Some(hash?);
 
     Ok(())
   }

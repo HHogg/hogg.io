@@ -4,7 +4,7 @@ use std::rc::Rc;
 
 use hogg_spatial_grid_map::Fxx;
 use hogg_tiling_generator::build::Metrics;
-use hogg_tiling_generator::{FeatureToggle, Tiling};
+use hogg_tiling_generator::{hash, FeatureToggle, Tiling};
 use hogg_tiling_renderer::draw;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
@@ -122,6 +122,7 @@ impl TilingsPlayerInner {
         *tiling = Some(
           Tiling::default()
             .with_feature_toggles_set(state.feature_toggles.clone())
+            .with_hash_version(hash::Version::V2)
             .with_repetitions(state.repetitions)
             .with_type_ahead()
             .from_string(state.notation.as_str()),

@@ -1,12 +1,15 @@
 import { Box, Grid, Motion, Text } from 'preshape';
 import { useNotationContext } from '../Notation/useNotationContext';
 import TilingResult from '../Tiling/TilingResult';
-import { formatShape } from '../utils/formatting';
 import { useLibraryContext } from './useLibraryContext';
 
-export default function LibraryResultsGrid() {
+export type LibraryResultsGridProps = {
+  size: string;
+};
+
+export default function LibraryResultsGrid({ size }: LibraryResultsGridProps) {
   const { setNotation } = useNotationContext();
-  const { filteredResultsBySeed } = useLibraryContext();
+  const { filteredResultsByGroup } = useLibraryContext();
 
   const handleSelect = (notation: string) => {
     setNotation(notation);
@@ -14,26 +17,26 @@ export default function LibraryResultsGrid() {
 
   return (
     <Box>
-      {Object.entries(filteredResultsBySeed).map(([seed, notations]) => (
+      {Object.entries(filteredResultsByGroup).map(([group, notations]) => (
         <Motion
           layout
-          key={seed}
-          id={`seed-${seed}`}
+          key={group}
+          id={`group-${group}`}
           paddingBottom="x8"
           borderBottom
           borderColor="background-shade-4"
           margin="x8"
         >
           <Text margin="x8" size="x3" weight="x2">
-            {formatShape(seed)} ({notations.length})
+            {group} ({notations.length})
           </Text>
 
-          <Grid gap="x8" repeatWidthMin="180px">
+          <Grid gap="x8" repeatWidthMin={size} repeatWidthMax={size}>
             {notations.map(({ notation }) => (
               <Motion layout key={notation}>
                 <TilingResult
                   borderRadius="x2"
-                  height="140px"
+                  height={size}
                   notation={notation}
                   onClick={() => handleSelect(notation)}
                   scale={1.5}

@@ -2,7 +2,7 @@
 
 pub mod build;
 mod error;
-mod hash;
+pub mod hash;
 pub mod notation;
 pub mod tiling;
 pub mod utils;

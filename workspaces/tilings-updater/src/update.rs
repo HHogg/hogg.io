@@ -11,10 +11,10 @@ use hogg_tiling_datastore::{
   state::{self, State},
   tilings, visits, Direction,
 };
-use hogg_tiling_generator::{notation, FeatureToggle, Tiling};
+use hogg_tiling_generator::{hash, notation, FeatureToggle, Tiling};
 
 pub async fn run_update(pool: &Pool<Postgres>, dry_run: bool) -> Result<()> {
-  run_update_visits(pool, dry_run).await?;
+  // run_update_visits(pool, dry_run).await?;
   run_update_tilings(pool, dry_run).await?;
   run_update_state(pool, dry_run).await?;
   Ok(())
@@ -116,6 +116,7 @@ pub async fn run_update_tilings(pool: &Pool<Postgres>, dry_run: bool) -> Result<
     for result in response.results.iter() {
       let tiling = Tiling::default()
         .with_feature_toggles([FeatureToggle::Hashing])
+        .with_hash_version(hash::Version::V2)
         .with_repetitions(3)
         .from_string(&result.notation);
 
@@ -129,7 +130,7 @@ pub async fn run_update_tilings(pool: &Pool<Postgres>, dry_run: bool) -> Result<
       .await?
       .expect("Visit to exist");
 
-      if !dry_run && result.path_index != visit.index && result.hash != hash {
+      if !dry_run {
         tilings::insert(
           pool,
           tilings::insert::Request {
@@ -139,6 +140,9 @@ pub async fn run_update_tilings(pool: &Pool<Postgres>, dry_run: bool) -> Result<
               notation: result.notation.clone(),
               hash: hash.clone(),
               transform_index: result.transform_index,
+              vertex_types: tiling.result.vertex_types.clone().into(),
+              edge_types: tiling.result.edge_types.clone().into(),
+              shape_types: tiling.result.shape_types.clone().into(),
             }],
           },
         )

@@ -2,7 +2,7 @@ use std::cell::RefCell;
 
 use actix::prelude::*;
 use anyhow::Result;
-use hogg_tiling_generator::{ApplicationError, FeatureToggle, Tiling, TilingError};
+use hogg_tiling_generator::{hash, ApplicationError, FeatureToggle, Tiling, TilingError};
 
 use super::messages::VisitResult;
 use super::Visit;
@@ -22,6 +22,7 @@ impl Handler<Visit> for Worker {
 
     let mut tiling = Tiling::default()
       .with_feature_toggles(FeatureToggle::all())
+      .with_hash_version(hash::Version::V2)
       .with_repetitions(3)
       .with_path(path.clone())
       .with_first_transform();

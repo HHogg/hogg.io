@@ -45,11 +45,10 @@ export default function ProjectTab({
     }
   }, [isActive, contentSize.height, setActiveTabContentHeight]);
 
-  // Scroll to bottom when content height changes
+  // Scroll to top when content height changes
   useLayoutEffect(() => {
     if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTop =
-        scrollContainerRef.current.scrollHeight;
+      scrollContainerRef.current.scrollTop = 0;
     }
   }, [contentSize.height]);
 

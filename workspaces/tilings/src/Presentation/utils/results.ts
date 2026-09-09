@@ -13,10 +13,21 @@ export const getRandomNotation = (previous?: string): string => {
     : randomResult.notation;
 };
 
-export const groupResults = (
+export const groupResultsBySeed = (
   results: OutputResult[]
 ): Record<string, OutputResult[]> =>
   groupBy(results, (r) => r.notation.split('/')[0].split('-')[0]);
+
+export const groupResultsByTypes = (
+  results: OutputResult[]
+): Record<string, OutputResult[]> =>
+  groupBy(results, (r) =>
+    [
+      r.vertex_types.join(':'),
+      r.edge_types.join(':'),
+      r.shape_types.join(':'),
+    ].join(';')
+  );
 
 const indexResultsBy = (key: keyof Pick<OutputResult, 'notation'>) =>
   results.reduce<Record<string, OutputResult>>((acc, tiling) => {
@@ -24,7 +35,7 @@ const indexResultsBy = (key: keyof Pick<OutputResult, 'notation'>) =>
     return acc;
   }, {});
 
-export const resultsByUniform = groupResults(results);
+export const resultsByUniform = groupResultsByTypes(results);
 export const resultsByNotation = indexResultsBy('notation');
 
 export const resultsImages: Record<string, string> = {};

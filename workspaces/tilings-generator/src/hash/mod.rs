@@ -8,6 +8,7 @@ mod v2;
 use std::fmt::Display;
 
 use crate::build::Plane;
+use crate::TilingError;
 
 use v1::HashV1;
 use v2::HashV2;
@@ -32,9 +33,13 @@ pub trait Hash: Display {
   fn build(plane: &Plane) -> Self;
 }
 
-pub fn build_hash(plane: &Plane, version: &Version) -> String {
+pub fn build_hash(plane: &Plane, version: &Version) -> Result<String, TilingError> {
   match version {
-    Version::V1 => HashV1::build(plane).to_string(),
-    Version::V2 => HashV2::build(plane).to_string(),
+    Version::V1 => Ok(HashV1::build(plane).to_string()),
+    Version::V2 => {
+      let hash = HashV2::build(plane);
+      hash.check()?;
+      Ok(hash.to_string())
+    }
   }
 }

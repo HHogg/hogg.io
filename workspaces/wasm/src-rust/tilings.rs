@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use hogg_tiling_generator::notation::{Path, Transform};
-use hogg_tiling_generator::{FeatureToggle, Tiling};
+use hogg_tiling_generator::{hash, FeatureToggle, Tiling};
 use hogg_tiling_renderer::{draw, Options};
 use wasm_bindgen::prelude::wasm_bindgen;
 use wasm_bindgen::{JsCast, JsError, JsValue};
@@ -31,6 +31,7 @@ pub fn find_previous_tiling(
   let mut tiling = Tiling::default()
     .with_repetitions(repetitions)
     .with_first_transform()
+    .with_hash_version(hash::Version::V2)
     .with_link_paths()
     .with_feature_toggles_set(feature_toggles)
     .with_notation(notation);
@@ -58,6 +59,7 @@ pub fn find_next_tiling(
   let mut tiling = Tiling::default()
     .with_repetitions(repetitions)
     .with_first_transform()
+    .with_hash_version(hash::Version::V2)
     .with_link_paths()
     .with_feature_toggles_set(feature_toggles)
     .with_notation(notation);
@@ -89,6 +91,7 @@ pub fn render_tiling(
   let tiling = Tiling::default()
     .with_repetitions(repetitions)
     .with_feature_toggles_set(feature_toggles)
+    .with_hash_version(hash::Version::V2)
     .with_type_ahead()
     .from_string(notation);
 

@@ -23,4 +23,7 @@ pub struct Tiling {
   pub path_index: i32,
   pub transform_index: i32,
   pub timestamp: NaiveDateTime,
+  pub vertex_types: Vec<String>,
+  pub edge_types: Vec<String>,
+  pub shape_types: Vec<String>,
 }

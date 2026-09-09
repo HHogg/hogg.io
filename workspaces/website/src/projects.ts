@@ -35,6 +35,7 @@ import { ComponentType } from '@react-spring/web';
 export const projects: {
   meta: Project;
   Component?: ComponentType<Pick<ProjectPageProps, 'layout'>>;
+  routes?: { path: string; Component: ComponentType }[];
 }[] = [
   {
     meta: circleIntersectionsMeta,
@@ -58,6 +59,7 @@ export const projects: {
   {
     meta: tilingsMeta,
     Component: Tilings.Project,
+    routes: Tilings.routes,
   },
   {
     meta: circularSequenceMeta,

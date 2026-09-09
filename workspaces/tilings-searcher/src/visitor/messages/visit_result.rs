@@ -32,6 +32,9 @@ impl VisitResult {
       notation: result.notation.to_string(),
       hash: result.hash.clone(),
       transform_index: result.transform_index,
+      vertex_types: result.vertex_types.clone().into(),
+      edge_types: result.edge_types.clone().into(),
+      shape_types: result.shape_types.clone().into(),
     });
   }
 }

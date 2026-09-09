@@ -1,17 +1,31 @@
 import { createContext, useContext } from 'react';
 import { OutputResult, results } from '../utils/results';
 
-const FILTER_KEYS = [] as const;
+export const GROUP_KEYS = ['seed', 'types'] as const;
 
-export type FilterKeys = (typeof FILTER_KEYS)[number];
-export type LibraryFilters = Record<FilterKeys, boolean>;
-export type LibraryResultCounts = Record<FilterKeys, number>;
+export const FILTER_KEYS = [
+  'has_3',
+  'has_4',
+  'has_6',
+  'has_8',
+  'has_12',
+  'vertex_types',
+  'edge_types',
+  'shape_types',
+] as const;
+
+export type FilterKey = (typeof FILTER_KEYS)[number];
+export type GroupKeys = (typeof GROUP_KEYS)[number];
+export type LibraryFilters = Record<FilterKey, boolean>;
+export type LibraryResultCounts = Record<FilterKey, number>;
 
 export type LibraryContextProps = {
   countsByShapes: LibraryResultCounts;
   filteredResults: OutputResult[];
-  filteredResultsBySeed: Record<string, OutputResult[]>;
+  filteredResultsByGroup: Record<string, OutputResult[]>;
   filters: LibraryFilters;
+  groupBy: GroupKeys;
+  setGroupBy: (groupBy: GroupKeys) => void;
   toggleFilter: (filter: keyof LibraryFilters) => void;
 };
 
@@ -38,7 +52,7 @@ export const getFilteredResults = (
       Object.entries(filters)
         // .filter(([, selected]) => selected)
         .every(([key, value]) => {
-          return result[key as FilterKeys] === value;
+          return result[key as FilterKey] === value;
         })
     );
   });
@@ -75,11 +89,13 @@ export const getCountsByShapes = (
 
 const noop = () => {};
 
-export const defaultContext = {
+export const defaultContext: LibraryContextProps = {
   countsByShapes: defaultResultsCounts,
   filteredResults: [],
-  filteredResultsBySeed: {},
+  filteredResultsByGroup: {},
   filters: defaultFilters,
+  groupBy: 'types',
+  setGroupBy: noop,
   toggleFilter: noop,
 };
 

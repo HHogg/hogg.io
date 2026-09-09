@@ -168,6 +168,7 @@ impl Tiling {
   pub fn build(&mut self, on_visit: &Option<&dyn Fn(&build::Result)>) -> Result<(), TilingError> {
     self.plane = Plane::default()
       .with_repetitions(self.option_repetitions)
+      .with_hash_version(self.option_hash_version.clone())
       .with_feature_toggles(&self.option_feature_toggles);
 
     let build_result = self.plane.build(&self.notation);

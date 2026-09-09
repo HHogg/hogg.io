@@ -18,6 +18,9 @@ pub struct VisitResultValid {
   pub notation: String,
   pub hash: String,
   pub transform_index: i32,
+  pub vertex_types: Vec<String>,
+  pub edge_types: Vec<String>,
+  pub shape_types: Vec<String>,
 }
 
 pub async fn insert(pool: &Pool<Postgres>, request: Request) -> Result<()> {
@@ -47,7 +50,10 @@ pub async fn insert(pool: &Pool<Postgres>, request: Request) -> Result<()> {
           has_4,
           has_6,
           has_8,
-          has_12
+          has_12,
+          vertex_types,
+          edge_types,
+          shape_types
         ) VALUES (
             $1,
             $2,
@@ -59,7 +65,10 @@ pub async fn insert(pool: &Pool<Postgres>, request: Request) -> Result<()> {
             $8,
             $9,
             $10,
-            $11
+            $11,
+            $12,
+            $13,
+            $14
         ) ON CONFLICT (notation) DO UPDATE SET
           hash = $2,
           path = $3,
@@ -70,7 +79,10 @@ pub async fn insert(pool: &Pool<Postgres>, request: Request) -> Result<()> {
           has_4 = $8,
           has_6 = $9,
           has_8 = $10,
-          has_12 = $11
+          has_12 = $11,
+          vertex_types = $12,
+          edge_types = $13,
+          shape_types = $14
       ",
     )
     .bind(result.notation)
@@ -84,6 +96,9 @@ pub async fn insert(pool: &Pool<Postgres>, request: Request) -> Result<()> {
     .bind(has_6)
     .bind(has_8)
     .bind(has_12)
+    .bind(result.vertex_types)
+    .bind(result.edge_types)
+    .bind(result.shape_types)
     .execute(pool)
   });
 

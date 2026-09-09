@@ -7,7 +7,6 @@ import { Route, Routes } from 'react-router-dom';
 import Page404 from './pages/404';
 import Landing from './pages/Landing/Landing';
 import ProjectPage from './pages/Project/Project';
-import TilingGenerationPage from './pages/TilingGenerationPage';
 import { projects } from './projects';
 import 'preshape/dist/style.css';
 import './App.css';
@@ -29,21 +28,27 @@ export default function App({ helmetContext = {} }: Props) {
 
                   {projects
                     .filter(({ Component }) => Component)
-                    .map(({ Component, meta }) => (
-                      <Route
-                        key={meta.id}
-                        path={getProjectRoutePath(meta)}
-                        element={
-                          <ProjectPage Component={Component!} meta={meta} />
-                        }
-                      />
+                    .map(({ Component, meta, routes }) => (
+                      <>
+                        <Route
+                          key={meta.id}
+                          path={getProjectRoutePath(meta)}
+                          element={
+                            <ProjectPage Component={Component!} meta={meta} />
+                          }
+                        />
+
+                        {routes &&
+                          routes.map(({ path, Component }) => (
+                            <Route
+                              key={path}
+                              path={`${getProjectRoutePath(meta)}${path}`}
+                              element={<Component />}
+                            />
+                          ))}
+                      </>
                     ))}
                 </Route>
-
-                <Route
-                  path="_tiling_generation"
-                  element={<TilingGenerationPage />}
-                />
 
                 <Route path="*" element={<Page404 />} />
               </Routes>

@@ -13,12 +13,11 @@ const routesToPrerender = [
   '/projects/circle-art',
   '/projects/circle-intersections',
   '/projects/circular-sequence',
-  // '/projects/evolution',
   '/projects/line-segment-extending',
   '/projects/snake',
-  // '/projects/spatial-grid-map',
   '/projects/spirals',
   '/projects/tilings',
+  '/projects/tilings-validate-gaps',
 ];
 
 // pre-render each route...
